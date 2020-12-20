@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true"  debug="false">
+
+    <springProperty scop="context" name="spring.application.name" source="spring.application.name" defaultValue=""/>
+    <!--日志存放路径-->
+    <property name="PATH" value="logs"/>
+
+    <property name="FILE_NAME" value="${spring.application.name}"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %magenta([PID:${PID:-}]) %green([%15.15thread]) %cyan(%40.40logger:%-5.5L):%msg%n</pattern>
+        </encoder>
+    </appender>
+    <!--trace-->
+    <appender name="TRACE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${PATH}/${FILE_NAME}_trace.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${PATH}/${FILE_NAME}_trace.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %highlight([%-5level]) %green([%15.15thread]) %cyan([%logger:%line])--%mdc{client} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--error-->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${PATH}/${FILE_NAME}_error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${PATH}/${FILE_NAME}_error.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %highlight([%-5level]) %green([%15.15thread]) %cyan([%logger:%line])--%mdc{client} %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="TRACE_FILE" />
+        <appender-ref ref="ERROR_FILE" />
+    </root>
+
+</configuration>
+
+
+        <!--<?xml version="1.0" encoding="UTF-8"?>-->
+        <!--&lt;!&ndash; 说明：-->
+        <!--    1、日志级别及文件 日志记录采用分级记录，级别与日志文件名相对应，不同级别的日志信息记录到不同的日志文件中。-->
+        <!--    2、日志级别可以根据开发环境进行配置，为方便统一管理查看日志，日志文件路径统一由LOG_PATH:-.配置在/home/项目名称/logs-->
+        <!--&ndash;&gt;-->
+        <!--<configuration>-->
+        <!--    &lt;!&ndash; 引入默认设置 &ndash;&gt;-->
+        <!--    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>-->
+
+        <!--    &lt;!&ndash; 编码格式设置 &ndash;&gt;-->
+        <!--    <property name="ENCODING" value="UTF-8" />-->
+        <!--    &lt;!&ndash; 日志文件的存储地址，由application.yml中的logging.path配置，根路径默认同项目路径 &ndash;&gt;-->
+        <!--    <property name="LOG_HOME" value="${LOG_PATH:-.}" />-->
+        <!--    &lt;!&ndash; 常规输出格式：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 &ndash;&gt;-->
+        <!--    <property name="NORMAL_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}.%method@%line - %msg%n"/>-->
+        <!--    &lt;!&ndash; 彩色输出格式：magenta：洋红，boldMagenta：粗红，yan：青色，·#══> &ndash;&gt;-->
+        <!--    <property name="CONSOLE_LOG_PATTERN" value="%boldMagenta([%d{yyyy-MM-dd HH:mm:ss.SSS}]) %red([%thread]) %boldMagenta(%-5level) %blue(%logger{20}.%method@%line) %magenta(·#═>) %cyan(%msg%n)"/>-->
+
+        <!--    &lt;!&ndash; ==========================控制台输出设置========================== &ndash;&gt;-->
+        <!--    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
+        <!--        <encoder>-->
+        <!--            <pattern>${CONSOLE_LOG_PATTERN}</pattern>-->
+        <!--            <charset>${ENCODING}</charset>-->
+        <!--        </encoder>-->
+        <!--    </appender>-->
+
+        <!--    &lt;!&ndash; ==========================按天输出日志设置========================== &ndash;&gt;-->
+        <!--    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--        <file>${LOG_HOME}/system-info.log</file>-->
+        <!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+        <!--            &lt;!&ndash; 按天回滚 daily &ndash;&gt;-->
+        <!--            <FileNamePattern>${LOG_HOME}/system-info.%d{yyyy-MM-dd}.log</FileNamePattern>-->
+        <!--            &lt;!&ndash; 日志文件保留天数 &ndash;&gt;-->
+        <!--            <MaxHistory>30</MaxHistory>-->
+        <!--        </rollingPolicy>-->
+        <!--        <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+        <!--            <level>INFO</level>             &lt;!&ndash; 设置拦截的对象为INFO级别日志 &ndash;&gt;-->
+        <!--            <onMatch>ACCEPT</onMatch>       &lt;!&ndash; 当遇到了INFO级别时，启用该段配置 &ndash;&gt;-->
+        <!--            <onMismatch>DENY</onMismatch>   &lt;!&ndash; 没有遇到INFO级别日志时，屏蔽该段配置 &ndash;&gt;-->
+        <!--        </filter>-->
+        <!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+        <!--            <pattern>${NORMAL_LOG_PATTERN}</pattern>-->
+        <!--            <charset>${ENCODING}</charset>-->
+        <!--        </encoder>-->
+        <!--        &lt;!&ndash; 日志文件最大的大小 &ndash;&gt;-->
+        <!--        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">-->
+        <!--            <MaxFileSize>10MB</MaxFileSize>-->
+        <!--        </triggeringPolicy>-->
+        <!--    </appender>-->
+
+        <!--    &lt;!&ndash; ==========================按天输出ERROR级别日志设置========================== &ndash;&gt;-->
+        <!--    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--        <file>${LOG_HOME}/system-error.log</file>-->
+        <!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+        <!--            &lt;!&ndash; 按天回滚 daily &ndash;&gt;-->
+        <!--            <FileNamePattern>${LOG_HOME}/system-error.%d{yyyy-MM-dd}.log</FileNamePattern>-->
+        <!--            &lt;!&ndash; 日志文件保留天数 &ndash;&gt;-->
+        <!--            <MaxHistory>30</MaxHistory>-->
+        <!--        </rollingPolicy>-->
+        <!--        <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+        <!--            <level>ERROR</level>            &lt;!&ndash; 设置拦截的对象为ERROR级别日志 &ndash;&gt;-->
+        <!--            <onMatch>ACCEPT</onMatch>       &lt;!&ndash; 当遇到了ERROR级别时，启用该段配置 &ndash;&gt;-->
+        <!--            <onMismatch>DENY</onMismatch>   &lt;!&ndash; 没有遇到ERROR级别日志时，屏蔽该段配置 &ndash;&gt;-->
+        <!--        </filter>-->
+        <!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+        <!--            <pattern>${NORMAL_LOG_PATTERN}</pattern>-->
+        <!--            <charset>${ENCODING}</charset>-->
+        <!--        </encoder>-->
+        <!--        &lt;!&ndash; 日志文件最大的大小 &ndash;&gt;-->
+        <!--        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">-->
+        <!--            <MaxFileSize>10MB</MaxFileSize>-->
+        <!--        </triggeringPolicy>-->
+        <!--    </appender>-->
+
+        <!--    &lt;!&ndash; ==========================用户登录日志设置========================== &ndash;&gt;-->
+        <!--    <appender name="USER_LOGIN" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--        <file>${LOG_HOME}/user-login.log</file>-->
+        <!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+        <!--            &lt;!&ndash; 按天回滚 daily &ndash;&gt;-->
+        <!--            <fileNamePattern>${LOG_HOME}/auth-user.%d{yyyy-MM-dd}.log</fileNamePattern>-->
+        <!--            &lt;!&ndash; 日志最大的历史 30天 &ndash;&gt;-->
+        <!--            <maxHistory>30</maxHistory>-->
+        <!--        </rollingPolicy>-->
+        <!--        <encoder>-->
+        <!--            <pattern>${NORMAL_LOG_PATTERN}</pattern>-->
+        <!--            <charset>${ENCODING}</charset>-->
+        <!--        </encoder>-->
+        <!--    </appender>-->
+
+        <!--    &lt;!&ndash; ===日志输出级别，OFF level > FATAL > ERROR > WARN > INFO > DEBUG > ALL level=== &ndash;&gt;-->
+        <!--    <logger name="com.sand" level="INFO"/>-->
+        <!--    <logger name="com.apache.ibatis" level="INFO"/>-->
+        <!--    <logger name="java.sql.Statement" level="INFO"/>-->
+        <!--    <logger name="java.sql.Connection" level="INFO"/>-->
+        <!--    <logger name="java.sql.PreparedStatement" level="INFO"/>-->
+        <!--    <logger name="org.springframework" level="bebug"/>-->
+        <!--    <logger name="com.baomidou.mybatisplus" level="bebug"/>-->
+        <!--    &lt;!&ndash; 用户登录日志 &ndash;&gt;-->
+        <!--    <logger name="user-login" level="INFO">-->
+        <!--        <appender-ref ref="USER_LOGIN"/>-->
+        <!--    </logger>-->
+
+        <!--    &lt;!&ndash; ======开发环境：打印控制台和输出到文件====== &ndash;&gt;-->
+        <!--    <springProfile name="dev">&lt;!&ndash; 由application.yml中的spring.profiles.active配置 &ndash;&gt;-->
+        <!--        <root level="INFO">-->
+        <!--            <appender-ref ref="CONSOLE"/>-->
+        <!--            <appender-ref ref="INFO_FILE"/>-->
+        <!--            <appender-ref ref="ERROR_FILE"/>-->
+        <!--        </root>-->
+        <!--    </springProfile>-->
+
+        <!--    &lt;!&ndash; ======测试环境：打印控制台和输出到文件====== &ndash;&gt;-->
+        <!--    <springProfile name="test">&lt;!&ndash; 由application.yml中的spring.profiles.active配置 &ndash;&gt;-->
+        <!--        <root level="INFO">-->
+        <!--            <appender-ref ref="CONSOLE"/>-->
+        <!--            <appender-ref ref="INFO_FILE"/>-->
+        <!--            <appender-ref ref="ERROR_FILE"/>-->
+        <!--        </root>-->
+        <!--    </springProfile>-->
+
+        <!--    &lt;!&ndash; ======生产环境：打印控制台和输出到文件====== &ndash;&gt;-->
+        <!--    <springProfile name="prod">&lt;!&ndash; 由application.yml中的spring.profiles.active配置 &ndash;&gt;-->
+        <!--        <root level="INFO">-->
+        <!--            <appender-ref ref="CONSOLE"/>-->
+        <!--            <appender-ref ref="INFO_FILE"/>-->
+        <!--            <appender-ref ref="ERROR_FILE"/>-->
+        <!--        </root>-->
+        <!--    </springProfile>-->
+        <!--</configuration>-->

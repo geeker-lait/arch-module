@@ -1,0 +1,96 @@
+server:
+  servlet:
+    context-path: /api
+spring:
+  data:
+    rest:
+      base-path: /rest
+  application:
+    name: test
+  jackson:
+    time-zone: GMT+8
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+#  datasource:
+#    dynamic:
+#      hikari:
+#        connection-timeout: 30000
+#        max-lifetime: 1800000
+#        max-pool-size: 15
+#        min-idle: 5
+#        connection-test-query: select 1
+#        pool-name: demoHikariCP
+#      # 配置默认数据源
+#      primary: base
+#      datasource:
+#        # 数据源-1，名称为 base
+#        base:
+#          username: root
+#          password: root
+#          driver-class-name: com.mysql.cj.jdbc.Driver
+#          url: [mysqlUrl]
+#        # 数据源-2，名称为 db1
+#        master:
+#          username: ***
+#          password: ***
+#          driver-class-name: [oracleDriver]
+#          url: [oracleUrl]
+#          hikari:
+#            connection-test-query: select 1 from dual
+
+builder:
+  author: lait
+  comments: 这是类的注释
+  cover: true
+  template:
+    dir: src/main/resources/templates
+  base:
+    project:
+      #path:
+  entity:
+    package: org.arch.demo.test.entity
+    template: entity.ftl
+    suffix: 
+    id:
+      class: Integer
+      package: 
+  dto:
+    package: org.arch.demo.test.dto.request
+    template: dto.ftl
+    suffix: RequestDto
+  response:
+    package: org.arch.demo.test.dto.response
+    template: response.ftl
+    suffix: Response
+  search:
+    package: org.arch.demo.test.dto.search
+    template: search.ftl
+    suffix: SearchDto
+  controller:
+    package: org.arch.demo.test.endpoint
+    template: endpoint.ftl
+    suffix: Endpoint
+  service:
+    package: org.arch.demo.test.service
+    template: service.ftl
+    suffix: Service
+  repository:
+    package: org.arch.demo.test.repository
+    template: repository.ftl
+    suffix: Repository
+  db:
+    driver: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
+    username: root
+    password: root

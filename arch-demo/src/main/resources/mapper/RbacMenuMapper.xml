@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghui.arch.demo.mapper.RbacMenuMapper">
+    <sql id="tableName">
+        rbac_menu
+    </sql>
+
+    <sql id="baseColumn">
+        id,pid,menu_code,menu_name,menu_val,level,sorted,is_frame,icon,app_id,tenant_id,is_active,created_by,created_date
+    </sql>
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.arch.projects</groupId>
+        <artifactId>payment-channel</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>channel-huifu</artifactId>
+
+    <dependencies>
+
+        <!--<dependency>
+            <groupId>com.huifu.cfca</groupId>
+            <artifactId>cryptokit.jni</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.huifu.cfca</groupId>
+            <artifactId>sadk</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.huifu.cfca</groupId>
+            <artifactId>sansec.swxajce</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.huifu.saturn</groupId>
+            <artifactId>saturn-cfca</artifactId>
+        </dependency>-->
+
+        <!--<dependency>
+           <groupId>com.huifu.cfca</groupId>
+           <artifactId>sadk</artifactId>
+       </dependency>-->
+
+       <!-- <dependency>
+            <groupId>org.jodd</groupId>
+            <artifactId>jodd-http</artifactId>
+        </dependency>-->
+
+
+
+
+
+    </dependencies>
+
+
+</project>

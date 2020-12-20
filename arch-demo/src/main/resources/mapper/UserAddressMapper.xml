@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghui.arch.demo.mapper.UserAddressMapper">
+    <sql id="tableName">
+        user_address
+    </sql>
+
+    <sql id="baseColumn">
+        id,uid,province,city,district,street,typ,indx,contacts,phone_num,app_id,tenant_id,is_active,created_by,created_date
+    </sql>
+
+</mapper>

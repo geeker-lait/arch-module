@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghui.arch.demo.mapper.UserRelationshipMapper">
+    <sql id="tableName">
+        user_relationship
+    </sql>
+
+    <sql id="baseColumn">
+        id,pid,org,deep,seq,from_uid,from_user_name,from_user_phone,to_uid,to_user_phone,to_user_name,app_id,tenant_id,is_active,created_by,created_date
+    </sql>
+
+</mapper>

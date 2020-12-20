@@ -1,0 +1,37 @@
+spring:
+#  datasource:
+#    dynamic:
+#      hikari:
+#        connection-test-query: SELECT 1
+#        connection-timeout: 30000
+#        max-lifetime: 1800000
+#        max-pool-size: 15
+#        min-idle: 5
+#      primary: master
+
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/uni?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
+    username: root
+    password: root
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  typeAliasesPackage: com.yonghui.arch.demo.entity
+  global-config:
+    db-config:
+      id-type: id_worker
+      insert-strategy: not_empty
+      update-strategy: not_empty
+      select-strategy: not_empty
+    datacenter-id: ${nodeId:${spring.nodeId:1}}
+    worker-id: ${nodeId:${spring.nodeId:1}}
+    banner: false
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    jdbc-type-for-null: null

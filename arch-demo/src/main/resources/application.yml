@@ -1,0 +1,26 @@
+server:
+  port: 9501
+
+spring:
+  application:
+    name: arch-demo-auth-crud
+
+  profiles:
+    active: dev,db
+
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+mica:
+  lock:
+    address: redis://localhost:6379
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

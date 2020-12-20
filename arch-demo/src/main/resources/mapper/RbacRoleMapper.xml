@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghui.arch.demo.mapper.RbacRoleMapper">
+    <sql id="tableName">
+        rbac_role
+    </sql>
+
+    <sql id="baseColumn">
+        id,role_name,role_code,icon,descr,app_id,tenant_id,is_active,created_by,created_date
+    </sql>
+
+</mapper>

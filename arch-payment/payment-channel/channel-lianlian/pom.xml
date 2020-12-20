@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.arch.projects</groupId>
+        <artifactId>payment-channel</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>channel-lianlian</artifactId>
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.lianpay.product</groupId>
+            <artifactId>lianpay_common_security</artifactId>
+            <version>0.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/libs/lianpay_common_security-0.0.1.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lianpay.product</groupId>
+            <artifactId>lianpay_common_util</artifactId>
+            <version>0.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/libs/lianpay_common_util-0.0.1.jar</systemPath>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+
+    </build>
+</project>
