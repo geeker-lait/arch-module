@@ -50,7 +50,7 @@ spring:
 #          hikari:
 #            connection-test-query: select 1 from dual
 
-builder:
+schema:
   author: lait
   comments: 这是类的注释
   cover: true

@@ -32,8 +32,7 @@ public class FreeMarkerUtils {
 
     static {
         configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
-        configuration.setObjectWrapper(
-                Configuration.getDefaultObjectWrapper(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS));
+        configuration.setObjectWrapper(Configuration.getDefaultObjectWrapper(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS));
         configuration.setDefaultEncoding("UTF-8");
         ftlProcessors = new ArrayList<>();
     }

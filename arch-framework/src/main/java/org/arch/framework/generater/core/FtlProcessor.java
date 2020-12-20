@@ -1,5 +1,6 @@
 package org.arch.framework.generater.core;
 
+import org.arch.framework.generater.metadata.ModuleInfo;
 import org.arch.framework.generater.render.RenderingRequest;
 
 /**
@@ -8,7 +9,7 @@ import org.arch.framework.generater.render.RenderingRequest;
  * @weixin PN15855012581
  * @date 12/18/2020 8:02 PM
  */
-public interface FtlProcessor {
+public interface FtlProcessor{
 
     /**
      * 获取文件
@@ -16,10 +17,8 @@ public interface FtlProcessor {
      */
     String getFile();
 
-    /**
-     * 处理
-     * @param code
-     * @param renderingRequest
-     */
+
+
+
     void process(String code, RenderingRequest renderingRequest);
 }

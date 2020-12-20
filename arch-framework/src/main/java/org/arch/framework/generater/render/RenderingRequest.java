@@ -14,6 +14,7 @@ import java.util.Set;
 @Data
 //@Builder
 public class RenderingRequest {
+    private String moduleName;
     private String ftlName;
     private String ftlPath;
     private String savePath;

@@ -1,6 +1,7 @@
 package org.arch.framework.generater.core;
 
 import org.arch.framework.generater.ex.CodegenException;
+import org.arch.framework.generater.metadata.ModuleInfo;
 import org.arch.framework.generater.render.RenderingRequest;
 
 import java.io.IOException;
@@ -11,19 +12,33 @@ import java.io.IOException;
  * @weixin PN15855012581
  * @date 12/20/2020 9:57 AM
  */
-public class DdlFtlProcessor  extends AbstractFtlProcessor implements FtlProcessor {
+public class DaoProcessor extends AbstractProcessor implements FtlProcessor {
     @Override
     public String getFile() {
-        return "ddl.ftl";
+        return "dao.ftl";
     }
 
     @Override
     public void process(String code, RenderingRequest renderingRequest) {
+        createModule(renderingRequest);
+        createFile(code,renderingRequest);
+    }
+
+    @Override
+    public void createModule(RenderingRequest renderingRequest) {
+        creatMavenDirectory(renderingRequest);
+    }
+
+
+
+    @Override
+    public void createFile(String code, RenderingRequest renderingRequest) {
         try {
-            saveToFile(code, renderingRequest.getSavePath(), "ddl-schema.sql", renderingRequest.isCover());
+            saveToFile(code, renderingRequest.getSavePath(), renderingRequest.getClassName() + ".java", renderingRequest.isCover());
         } catch (IOException e) {
             e.printStackTrace();
             throw new CodegenException(String.format("render %s code source failed.", renderingRequest.getEntity().getClassName()), e);
         }
     }
+
 }
