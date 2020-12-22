@@ -22,8 +22,8 @@
         <module>arch-framework</module>
         <module>arch-gateway</module>
         <module>arch-payment</module>
-        <module>event-center</module>
-        <module>rule-center</module>
+        <module>arch-watchdog</module>
+        <module>arch-rule</module>
     </modules>
 
 
@@ -40,6 +40,26 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
         </dependency>
     </dependencies>
 
