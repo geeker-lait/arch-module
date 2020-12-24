@@ -24,6 +24,7 @@
         <module>arch-payment</module>
         <module>arch-watchdog</module>
         <module>arch-rule</module>
+
     </modules>
 
 
