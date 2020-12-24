@@ -17,7 +17,7 @@ public class FieldInfo extends BaseClassInfo {
      */
     private String name;
 
-    private Integer length;
+    private String length;
 
     private String type;
 

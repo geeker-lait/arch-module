@@ -16,11 +16,11 @@ public final class TableSchema implements NameToField {
     private String table;
     private String column;
     private String type;
-    private Integer length;
-    private Boolean isnull;
+    private String length;
+    private String isnull;
     private String defaultValue;
-    private Boolean primaryKey;
-    private Boolean unique;
+    private String primaryKey;
+    private String unique;
     private String forienKey;
     private String comment;
 
