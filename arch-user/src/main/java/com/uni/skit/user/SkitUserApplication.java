@@ -1,7 +1,6 @@
 package com.uni.skit.user;
 
 import com.uni.skit.user.config.properties.SecurityProperties;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

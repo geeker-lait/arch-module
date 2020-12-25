@@ -1,8 +1,8 @@
 package com.uni.skit.user;
 
+import com.uni.common.utils.RedisUtils;
 import com.uni.user.service.IUUserBankcardService;
 import com.uni.user.service.IUUserService;
-import com.uni.common.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

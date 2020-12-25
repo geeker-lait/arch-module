@@ -2,7 +2,6 @@ package com.uni.skit.user.controller;
 
 import com.uni.skit.user.biz.IBankCardBiz;
 import com.uni.skit.user.dto.BankCardDelDto;
-import com.uni.skit.user.dto.BankCardDto;
 import com.uni.skit.user.vo.ApiBaseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,12 +1,9 @@
 package com.uni.skit.user.dto;
 
-import com.uni.user.entity.UUserAddress;
-import com.uni.user.entity.UUserEducation;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * author: guoyuanhao

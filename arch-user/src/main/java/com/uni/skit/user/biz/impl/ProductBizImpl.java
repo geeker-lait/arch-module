@@ -1,16 +1,10 @@
 package com.uni.skit.user.biz.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.uni.common.utils.RedisUtils;
-import com.uni.product.entity.mybatis.Category;
-import com.uni.product.entity.mybatis.CategoryTags;
-import com.uni.product.entity.mybatis.Product;
-import com.uni.product.entity.mybatis.ProductTags;
-import com.uni.product.service.*;
-import com.uni.skit.user.biz.IProductBiz;
 import com.uni.product.dto.ProductDto;
+import com.uni.product.service.*;
 import com.uni.product.vo.ProductVo;
+import com.uni.skit.user.biz.IProductBiz;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

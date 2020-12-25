@@ -2,7 +2,6 @@ package com.uni.skit.user.biz;
 
 import com.uni.skit.user.dto.PromotionDto;
 import com.uni.skit.user.vo.ApiBaseResult;
-import com.uni.skit.user.vo.PromotionVo;
 
 import javax.servlet.http.HttpServletRequest;
 

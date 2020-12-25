@@ -2,8 +2,6 @@ package com.uni.skit.user.controller;
 
 import com.uni.account.entity.mybatis.AAccount;
 import com.uni.account.service.IAAccountService;
-import com.uni.common.exception.BizException;
-import com.uni.common.sms.ChuangLanSmsService;
 import com.uni.common.utils.SecurityUtils;
 import com.uni.skit.user.biz.IAccountBiz;
 import com.uni.skit.user.dto.AuthAccountDto;
@@ -13,7 +11,6 @@ import com.uni.skit.user.vo.JwtUserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
