@@ -1,0 +1,27 @@
+server:
+  port: 8081
+spring:
+  freemarker:
+    check-template-location: false
+    settings:
+      classic_compatible: true
+  profiles:
+    active: dev
+  jackson:
+    time-zone: GMT+8
+  redis:
+    #数据库索引
+    database: 0
+    host: 192.168.71.15
+    port: 6379
+    password:
+    #连接超时时间
+    timeout: 5000
+
+#密码加密传输，前端公钥加密，后端私钥解密
+rsa:
+  private_key: MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAJDE8njvcSdtnRL0wqRWwLvrdCoLmXz6hSWLkcGrFDtN5tkbg13I54V34pB2WbIl0cs2iPvkyf/lHrA1wociJFX9oxgzRBz57rS9/SxaafFxZz76nDFcTu/rHLHv8s3So0kLpH/h9suYysRPFZVKl+Tmc+fILgnQ6tPf2k9Y/NaxAgMBAAECgYAEFrvudHzSq0LjdSxGLfkVlanbQiacpAq8q7t7J9TTc/jQKvnD3VfEqkUo5V7VLEJHpguqaaTW6Ga8fVg4Ltut0vFNm3UneTtVMQGM8kcyaHSmdhMOIJYLh5qFJU7oPIDhy6b3GS8GzK7kQ762HuQznIdFU8jtOeavi7Jc65ugUQJBAO8yaILrvRo8LWG6meq2TVg6QrKmF7EZO73m93aGHW0JRO1zOYdMYCThgk324Hy5cf7gR+yjKoGTfliTRuZQ8F0CQQCa8GcczukEg08GIfBeQXIUmoiPHcP4W/92XZgy4eUsDQsY+FQGj1CGEldad6dxk2syakqnpLvKKr0QoCdLLeplAkEAhgzB9V0XxTQkWriwuZEhF2jPKD9c16tEh9CArrPKmeiv8EK64tAysXiQBhFtDXkAIc6fgEaQ870s+YbQHRMPIQJBAIm9ao2LzE+8xEX5ag0BNX/nmbtRhOSINOVvc1zYwbmVpuX97gUe50EpkQrWEL/BhKz/HXtH0cJ6mDXtisElApkCQQCHUj07ve+Vu4CjBRwoehZ818IKOSfedKdGPez6AeAslb7oP+NeI68ycH5UXY6d8L495SLJYXtzByoWCi7PWcHn
+
+smsCode:
+  expiration: 5
+  maxCount: 10
