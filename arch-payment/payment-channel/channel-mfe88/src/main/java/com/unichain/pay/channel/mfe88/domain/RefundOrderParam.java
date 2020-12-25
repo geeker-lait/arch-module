@@ -2,10 +2,9 @@ package com.unichain.pay.channel.mfe88.domain;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
-import com.unichain.pay.core.PayParam;
-import com.unichain.pay.core.PayRequest;
-import com.unichain.pay.core.util.AmountUtils;
 import lombok.Data;
+import org.arch.payment.sdk.PayParam;
+import org.arch.payment.sdk.PayRequest;
 
 import java.math.BigDecimal;
 import java.util.Map;

@@ -1,9 +1,8 @@
 package com.unichain.pay.channel.mfe88.domain;
 
-
-import com.unichain.pay.core.PayParam;
-import com.unichain.pay.core.PayRequest;
 import lombok.Data;
+import org.arch.payment.sdk.PayParam;
+import org.arch.payment.sdk.PayRequest;
 
 import java.util.Map;
 

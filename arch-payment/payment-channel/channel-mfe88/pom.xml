@@ -38,7 +38,12 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/libs/mfe88/cncxApi.jar</systemPath>
         </dependency>
-
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>payment-sdk</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
 
     </dependencies>

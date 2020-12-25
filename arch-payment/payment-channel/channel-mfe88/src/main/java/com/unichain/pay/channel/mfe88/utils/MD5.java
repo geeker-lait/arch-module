@@ -6,8 +6,6 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * MD5具体实现类
- *
- * @author TWL
  */
 public class MD5 {
     static final int S11 = 7;

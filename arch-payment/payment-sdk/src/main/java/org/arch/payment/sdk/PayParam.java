@@ -1,31 +1,7 @@
 package org.arch.payment.sdk;
 
 
-import java.util.Map;
-
 public interface PayParam {
-
-    /**
-     * @See PayParam#signature()
-     * @param prikeyvalue
-     */
-    @Deprecated
-    void setSign(String prikeyvalue);
-
-    /**
-     * @See PayParam#convert(PayRequest payRequest)
-     * @param map
-     * @param payRequest
-     * @return
-     */
-    @Deprecated
-    PayParam convert(Map<String, Object> map, PayRequest payRequest);
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
     /**
      * 转换参数

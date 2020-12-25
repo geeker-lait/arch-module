@@ -1,6 +1,5 @@
 package com.unichain.pay.channel.mfe88;
 
-import com.unichain.pay.core.ChannelDirective;
 import lombok.Data;
 
 @Data

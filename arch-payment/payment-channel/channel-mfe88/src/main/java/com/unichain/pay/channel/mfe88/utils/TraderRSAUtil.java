@@ -9,8 +9,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 
 /**
  * RSA签名公共类
- *
- * @author shmily
  */
 public class TraderRSAUtil {
 
