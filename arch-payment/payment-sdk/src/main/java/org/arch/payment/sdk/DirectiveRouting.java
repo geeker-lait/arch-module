@@ -11,7 +11,7 @@ public interface DirectiveRouting {
     PayResponse routing(PayRequest payRequest);
 
     default PayConfigurable buildChannelConfig(PayMerchantChannel merchantChannel, PayDirective directive) {
-        ChannelDirectiveConfiguration merchantChannelConfig = new ChannelDirectiveConfiguration();
+        ChannelConfiguration merchantChannelConfig = new ChannelConfiguration();
 
         merchantChannelConfig.setDirectiveUri(directive.getUri());
         merchantChannelConfig.setCallbackUrl(directive.getCallbackUrl());
@@ -23,4 +23,6 @@ public interface DirectiveRouting {
         merchantChannelConfig.setPublicKey(merchantChannel.getPublicKey());
         return merchantChannelConfig;
     }
+
+    Object getDirectiveName();
 }

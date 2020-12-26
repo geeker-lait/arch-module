@@ -17,16 +17,15 @@
 
 
     <modules>
-        <module>arch-admin</module>
+        <module>arch-application</module>
         <module>arch-auth</module>
         <module>arch-demo</module>
         <module>arch-framework</module>
         <module>arch-gateway</module>
-        <module>arch-merchant</module>
         <module>arch-payment</module>
         <module>arch-watchdog</module>
         <module>arch-rule</module>
-        <module>arch-user</module>
+        <module>arch-ums</module>
     </modules>
 
 
