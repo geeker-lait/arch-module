@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,28 +23,27 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class RedisIdService implements IdService {
-    private Logger logger = LoggerFactory.getLogger(RedisIdService.class);
+
+    private final Logger logger = LoggerFactory.getLogger(RedisIdService.class);
 
     @Autowired
     private RedisTemplate redisTemplate;
 
     /**
-     * @param idBizCode
-     * @return 11 17 354 23 000002
-     * @Description 支持一个小时100w个订单号的生成
-     * 1 2023410332500000001
+     * @see IdService#generateId(IdKey)
      */
     @Override
     public String generateId(IdKey idBizCode) {
 
         String prefix = getTimePrefix(idBizCode);
+        // idKey 20 123 13 24 34
         String key = idBizCode.getKey().concat(prefix);
         try {
             long index = redisTemplate.opsForValue().increment(key);
             // 设置一秒后超时，清楚key
             redisTemplate.expire(key, idBizCode.getTimeout(), idBizCode.getTimeUnit());
 
-            // 补位操作 保证满足6位  id = 时间 + 000000
+            // 补位操作 保证满足6位  id = BizPrefix + 时间 + 000000
             String id = idBizCode.getBizPrefix().concat(prefix.concat(String.format(idBizCode.getFmtSuffix(), index)));
             return id;
         } catch (Exception ex) {
@@ -53,54 +53,37 @@ public class RedisIdService implements IdService {
         return prefix;
     }
 
-
     /**
-     * 20234000001 01 2023410332500000001
-     *
-     * @param appId
-     * @param idBizCode
-     * @return
+     * @see IdService#generateId(String, IdKey)
      */
     @Override
-    public String generateId(String appId, IdKey idBizCode) {
-        if (appId == null) {
-            appId = "";
+    public String generateId(String prefix, IdKey idBizCode) {
+        if (prefix == null) {
+            prefix = "";
         }
-        String prefix = getTimePrefix(idBizCode);
-        String key = idBizCode.getKey().concat(appId).concat(prefix);
+        String timePrefix = getTimePrefix(idBizCode);
+        // idKey 20 123 13 24 34
+        String key = idBizCode.getKey().concat(prefix).concat(timePrefix);
         try {
             long index = redisTemplate.opsForValue().increment(key);
             // 设置一个分钟后超时，清楚key
             redisTemplate.expire(key, idBizCode.getTimeout(), idBizCode.getTimeUnit());
-            // 补位操作 保证满足6位  id = 时间 + 000000
-            String id = appId.concat(idBizCode.getBizPrefix().concat(prefix.concat(String.format(idBizCode.getFmtSuffix(), index))));
+            // 补位操作 保证满足6位  id = BizPrefix + 时间 + 000000
+            String id = prefix.concat(idBizCode.getBizPrefix().concat(timePrefix.concat(String.format(idBizCode.getFmtSuffix(), index))));
             return id;
         } catch (Exception ex) {
             logger.error("分布式用户ID生成失败异常: " + ex.getMessage());
             //throw new UnichainException(ExceptionType.BusinessException, "分布式用户ID生成异常");
         }
-        return prefix;
+        return timePrefix;
     }
 
-
-    private String getTimePrefix(IdKey idBizCode) {
-        // 20 123 13 24 34
-        String prefix = getYDHMPrefix(new Date());
-        if (idBizCode.getTimeUnit() == TimeUnit.DAYS) {
-            prefix = prefix.substring(0, 5);
-        } else if (idBizCode.getTimeUnit() == TimeUnit.HOURS) {
-            prefix = prefix.substring(0, 7);
-        } else if (idBizCode.getTimeUnit() == TimeUnit.MINUTES) {
-            prefix = prefix.substring(0, 9);
-        } else if (idBizCode.getTimeUnit() == TimeUnit.SECONDS) {
-            prefix = prefix.substring(0, 11);
-        }
-        return prefix;
-    }
-
+    /**
+     * @see IdService#randomLongId(int)
+     */
     @Override
     public Long randomLongId(int length) {
-        return null;
+        return ThreadLocalRandom.current().nextLong();
     }
 
     /**
@@ -119,6 +102,21 @@ public class RedisIdService implements IdService {
             }
         }
         return Long.valueOf(prefix.concat(str.toString()));
+    }
+
+    private String getTimePrefix(IdKey idBizCode) {
+        // 20 123 13 24 34
+        String prefix = getYDHMPrefix(new Date());
+        if (idBizCode.getTimeUnit() == TimeUnit.DAYS) {
+            prefix = prefix.substring(0, 5);
+        } else if (idBizCode.getTimeUnit() == TimeUnit.HOURS) {
+            prefix = prefix.substring(0, 7);
+        } else if (idBizCode.getTimeUnit() == TimeUnit.MINUTES) {
+            prefix = prefix.substring(0, 9);
+        } else if (idBizCode.getTimeUnit() == TimeUnit.SECONDS) {
+            prefix = prefix.substring(0, 11);
+        }
+        return prefix;
     }
 
 
