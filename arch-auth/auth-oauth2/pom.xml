@@ -10,7 +10,17 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>auth-oauth2</artifactId>
 
+    <properties>
+        <ums.version>2.2.1</ums.version>
+    </properties>
+
     <dependencies>
+
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-core-spring-boot-starter</artifactId>
+            <version>${ums.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -56,6 +66,18 @@
             <artifactId>auth-rbac</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>ums-account</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>ums-user</artifactId>
+            <version>${parent.version}</version>
         </dependency>
 
     </dependencies>

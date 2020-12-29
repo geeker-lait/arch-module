@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.mapper.UserEducationMapper">
+    <sql id="tableName">
+        user_education
+    </sql>
+
+    <sql id="baseColumn">
+        id,user_id,certificate_no,certificate_name,certificate_org,certificate_level,sorted,awardtime,st
+    </sql>
+
+</mapper>

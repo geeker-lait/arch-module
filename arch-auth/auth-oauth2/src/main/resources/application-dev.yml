@@ -1,0 +1,27 @@
+server:
+  port: 9401
+  thymeleaf:
+    enabled: true
+    cache: false
+    mode: html
+    encoding: utf-8
+    prefix: classpath:/templates/
+    suffix: .html
+
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: localhost:8848
+  redis:
+    database: 0
+    port: 6379
+    host: localhost
+#    password: 123456
+
+#  profiles:
+#    active: dev,db,auth,oauth2,vc,jwt
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

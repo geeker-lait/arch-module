@@ -1,0 +1,67 @@
+ums:
+  # ========= JWT 功能 =========
+  jwt:
+    # 是否支持 jwt, 默认: false
+    enable: false
+    # JWT 的有效期, 默认: 1 小时
+    timeout: PT3600S
+    # 授权服务器的时钟与资源服务器的时钟可能存在偏差, 设置时钟偏移量以消除不同服务器间的时钟偏差的影响, 默认: 0 秒.
+    # 注意: 此默认值适合 "单服务器" 应用, "多服务器" 应用请更改此值
+    clock-skew: PT0S
+    # 通过 refreshToken 获取 JWT uri, 默认: /jwt/refreshToken
+    jwt-by-refresh-token-uri: /jwt/refreshToken
+    # JWT 剩余的有效期间隔小于此值后自动刷新 JWT, 此配置在 {@link JwtRefreshHandlerPolicy#AUTO_RENEW} 时有效, 默认: 600 秒
+    remaining-refresh-interval: PT600S
+    # ========= JWK 相关 =========
+    # 是否曝露 jwk-set-uri, 默认: false.  如果为 true, 需要实现 JwkEndpointPermissionService 权限服务接口
+    expose-jwk-set-uri: true
+    # 密钥键值对(KeyPair)的别名
+    jks-alias: zyw
+    # 用于 JWT 的密钥键值对(KeyPair)的文件位置; 当设置此属性时, 属性 jwsAlgorithms 必须是 RS256, RS384, RS512 中的一个.
+    # 注意: 属性 macsSecret 与 jksKeyPairLocation 同时配置, jksKeyPairLocation 属性优于 macsSecret.
+    jks-key-pair-location: classpath:zyw.jks
+    # 密钥键值对(KeyPair)的密码
+    jks-password: 123456
+    # Use the given signing algorithm . The value should be one of RS256, RS384, RS512, HS256, HS384, or HS512 . 默认: RS256
+    jws-algorithms: RS256
+    # 该JWT的签发者, 必须是 URL, 根据是否需要设置
+    iss: http://localhost:9090/demo/
+    bearer:
+      # 是否支持从 form encoded body parameter 传递参数名称为 bearerTokenParameterName 的 bearer token 或传递参数名称为
+      # refreshTokenParameterName 的 refresh token, 默认: false
+      # 注意:
+      # 1. 属性 allowFormEncodedBodyParameter, allowUriQueryParameter 只能是其中一个值为 true,
+      #    表示使用 bearerTokenParameterName 的值, bearerTokenHeaderName 失效;
+      # 2. 两个值为 false 时表示使用 bearerTokenHeaderName 的值, bearerTokenParameterName 失效.
+      # 3. 此属性也控制认证成功后 jwt 与 refresh token 返回的方式, false 表示从 header 中返回, true 表示 json 返回.
+      # 4. 当启用通过 request 的 form 来传递 JWT 时会带来很多局限性, 前端只能通过 org.springframework.http.HttpMethod.POST
+      #    来访问需要权限的 API; 一般情况下请保持此默认值, 通过请求头传递.
+      allow-form-encoded-body-parameter: false
+      # bearer token header name. 默认: Authorization . 不能为 null 值.
+      # 注意:
+      # 1. 属性 bearerTokenHeaderName 只有在 allowFormEncodedBodyParameter, allowUriQueryParameter 都为 false 时生效.
+      # 2. 如果是跨域的场景, 需要设置 ums.client.cors.accessControlExposeHeaders.
+      # 3. 当 usm.jwt.refreshHandlerPolicy=AUTO_RENEW 时, 不管此字段是否生效, 刷新的 jwt 直接设置到此 header 中,
+      #    前端可以从相应的 header 中获取.
+      bearer-token-header-name: Authorization
+      # request parameter name, 默认为: access_token. 不能为 null 值.
+      # 注意:
+      # 属性 bearerTokenParameterName 只有在 allowFormEncodedBodyParameter 或 allowUriQueryParameter 其中一方为 true 时生效.
+      bearer-token-parameter-name: access_token
+      # bearer token header name. 默认: refresh_token . 不能为 null 值.
+      # 注意:
+      # 1. 属性 refreshTokenHeaderName 只有在 allowFormEncodedBodyParameter, allowUriQueryParameter 都为 false 时生效.
+      # 2. 如果是跨域的场景, 需要设置 ums.client.cors.accessControlExposeHeaders
+      refresh-token-header-name: refresh_token
+      # request parameter name, 默认为: refresh_token . 不能为 null 值.
+      # 注意:
+      # 1. 属性 refreshTokenParameterName 只有在 allowFormEncodedBodyParameter 或 allowUriQueryParameter 其中一方为 true 时生效.
+      # 2. 目前 allowFormEncodedBodyParameter, allowUriQueryParameter 属性还不能配置, 默认都为 false, refreshTokenParameterName 总是失效.
+      refresh-token-parameter-name: refresh_token
+    cache:
+      # JWT 黑名单缓存前缀, 默认: JWT:BLACKLIST:
+      blacklist-prefix: 'JWT:BLACKLIST:'
+      # JWT refresh token 缓存前缀, 默认: JWT:refreshToken:
+      refresh-token-prefix: 'JWT:refreshToken:'
+      # JWT refresh token ttl(有效期), 默认: 30 天
+      refresh-token-ttl: PT720H
