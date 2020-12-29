@@ -1,4 +1,4 @@
-package org.arch.payment.core.api;
+package org.arch.payment.sdk;
 
 /**
  * @author lait.zhang@gmail.com
@@ -7,4 +7,6 @@ package org.arch.payment.core.api;
  * @date 12/29/2020 7:31 PM
  */
 public interface PayAccount {
+
+
 }

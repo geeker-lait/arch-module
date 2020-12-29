@@ -1,6 +1,7 @@
 package org.arch.payment.core.bean;
 
 import org.arch.framework.utils.StringUtils;
+import org.arch.payment.sdk.TransactionType;
 
 import java.math.BigDecimal;
 import java.util.Date;

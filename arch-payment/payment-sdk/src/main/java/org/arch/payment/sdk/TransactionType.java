@@ -1,4 +1,4 @@
-package org.arch.payment.core.bean;
+package org.arch.payment.sdk;
 
 /**
  * 交易类型

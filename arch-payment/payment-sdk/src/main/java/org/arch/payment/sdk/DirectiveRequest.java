@@ -5,4 +5,8 @@ public interface DirectiveRequest {
 
     String getRequestId();
 
+    TransactionType getTransactionType();
+
+    DirectiveRequest setTransactionType(TransactionType transactionType);
+
 }

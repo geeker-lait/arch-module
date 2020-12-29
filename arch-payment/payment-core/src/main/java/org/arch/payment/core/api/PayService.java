@@ -1,6 +1,7 @@
 package org.arch.payment.core.api;
 
 import org.arch.payment.core.bean.*;
+import org.arch.payment.sdk.TransactionType;
 import org.springframework.web.client.RestTemplate;
 
 import java.awt.image.BufferedImage;
@@ -53,28 +54,6 @@ public interface PayService<PC extends PayConfigStorage> {
 
     boolean verify(Map<String, Object> params);
 
-    /**
-     * 签名校验
-     * 后面版本废弃
-     *
-     * @param params 参数集
-     * @param sign   签名原文
-     * @return 签名校验 true通过
-     */
-    @Deprecated
-    boolean signVerify(Map<String, Object> params, String sign);
-
-
-    /**
-     * 支付宝需要,微信是否也需要再次校验来源，进行订单查询
-     * 校验数据来源
-     * 后面版本废弃
-     *
-     * @param id 业务id, 数据的真实性.
-     * @return true通过
-     */
-    @Deprecated
-    boolean verifySource(String id);
 
 
     /**

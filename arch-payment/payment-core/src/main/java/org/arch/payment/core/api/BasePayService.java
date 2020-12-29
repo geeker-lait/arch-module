@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.arch.payment.core.bean.*;
+import org.arch.payment.sdk.TransactionType;
 import org.springframework.web.client.RestTemplate;
 
 import java.awt.image.BufferedImage;
@@ -86,7 +87,7 @@ public abstract class BasePayService<PC extends PayConfigStorage> implements Pay
     protected String authorizationString(String user, String password) {
         String base64ClientID = null;
         try {
-            base64ClientID = com.egzosn.pay.common.util.sign.encrypt.Base64.encode(String.format("%s:%s", user, password).getBytes("UTF-8"));
+            base64ClientID = Base64.encode(String.format("%s:%s", user, password).getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             LOG.error(e);
         }

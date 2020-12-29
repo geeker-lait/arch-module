@@ -2,12 +2,16 @@ package org.arch.payment.core.directive;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.arch.framework.utils.BankCardNoUtil;
 import org.arch.payment.core.DirectiveExecutable;
 import org.arch.payment.core.entity.PayAppMerchantChannel;
 import org.arch.payment.core.entity.PayDirective;
 import org.arch.payment.core.entity.PayMerchantChannel;
 import org.arch.payment.core.service.*;
-import org.arch.payment.sdk.*;
+import org.arch.payment.sdk.DirectiveRouting;
+import org.arch.payment.sdk.PayConfigurable;
+import org.arch.payment.sdk.PayRequest;
+import org.arch.payment.sdk.PayResponse;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -41,14 +45,14 @@ public class BindCardDirective implements DirectiveRouting, ApplicationContextAw
     private IPayChannelBankService channelBankService;
     @Autowired
     private IPayDirectiveService directiveService;
-    @Autowired
-    private RedisUtils redisUtils;
-    @Autowired
-    private ChuangLanSmsService chuangLanSmsService;
+//    @Autowired
+//    private RedisUtils redisUtils;
+//    @Autowired
+//    private ChuangLanSmsService chuangLanSmsService;
 
     @Override
     public PayResponse routing(PayRequest payRequest) {
-        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        //TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
         PayResponse payResponse = new PayResponse();
         // 0、判断有无绑卡，如果已经绑定模拟发送验证码，让用户继续往下走支付流程
         if (bindedRecordervice.hasBindedCard(payRequest)) {

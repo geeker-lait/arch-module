@@ -1,5 +1,7 @@
 package org.arch.payment.core.bean;
 
+import org.arch.payment.sdk.TransactionType;
+
 /**
  * 基础的支付类型
  */
