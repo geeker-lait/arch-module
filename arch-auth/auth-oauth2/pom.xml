@@ -17,6 +17,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-core-spring-boot-starter</artifactId>
+            <version>${ums.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
@@ -60,6 +66,18 @@
             <artifactId>auth-rbac</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>ums-account</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>ums-user</artifactId>
+            <version>${parent.version}</version>
         </dependency>
 
     </dependencies>

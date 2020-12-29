@@ -9,10 +9,21 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>auth-rbac</artifactId>
+
+    <properties>
+        <ums.version>2.2.1</ums.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-rbac</artifactId>
+            <version>${ums.version}</version>
         </dependency>
 
         <dependency>

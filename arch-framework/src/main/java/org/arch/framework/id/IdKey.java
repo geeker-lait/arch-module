@@ -8,19 +8,19 @@ public enum IdKey {
     /** 账户 */
     ACCOUNT_ID("id.account.", 60, TimeUnit.MILLISECONDS, "01", "%1$08d"),
     /** 用户 */
-    USER_ID("id.user.", 60, TimeUnit.MILLISECONDS, "02", "%1$08d"),
+    USER_ID("id.account.", 60, TimeUnit.MILLISECONDS, "02", "%1$08d"),
     /** 绑卡 */
     BANGKCARD_ID("id.bankcard.", 60, TimeUnit.MILLISECONDS, "03", "%1$08d"),
     /** 产品 */
     PRODUCT_ID("id.product.", 60, TimeUnit.MILLISECONDS, "04", "%1$08d"),
     /** 会员 */
-    MEMBER_ID("id.member.", 60, TimeUnit.MILLISECONDS, "05", "%1$08d"),
+    MEMBER_ID("id.account.", 60, TimeUnit.MILLISECONDS, "05", "%1$08d"),
     /** 订单 */
     ORDER_ID("id.order.", 60, TimeUnit.MILLISECONDS, "06", "%1$08d"),
     /** 商户 */
-    MERCHANT_ID("id.merchant.", 60, TimeUnit.MILLISECONDS, "07", "%1$08d"),
+    MERCHANT_ID("id.account.", 60, TimeUnit.MILLISECONDS, "07", "%1$08d"),
     /** 账号-标识/AccountIdentifier */
-    ACCOUNT_IDENTIFIER_ID("id.merchant.", 60, TimeUnit.MILLISECONDS, "08", "%1$08d"),
+    ACCOUNT_IDENTIFIER_ID("id.identifier.", 60, TimeUnit.MILLISECONDS, "08", "%1$08d"),
 
 
     // =================== 支付系统ID ===================
