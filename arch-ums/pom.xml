@@ -16,6 +16,7 @@
         <module>ums-member</module>
         <module>ums-merchant</module>
         <module>ums-user</module>
+        <module>ums-api</module>
 
     </modules>
 

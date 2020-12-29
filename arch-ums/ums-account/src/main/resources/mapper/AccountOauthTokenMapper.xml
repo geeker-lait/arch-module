@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.account.mapper.AccountOauthTokenMapper">
+    <sql id="tableName">
+        account_oauth_token
+    </sql>
+
+    <sql id="baseColumn">
+        account_identifier_id,enable_refresh,provider_id,access_token,expire_in,refresh_token,uid,open_id,access_code,union_id,scope,token_type,id_token,mac_algorithm,mac_key,code,oauth_token,oauth_token_secret,user_id,screen_name,oauth_callback_confirmed,expire_time,st
+    </sql>
+
+</mapper>

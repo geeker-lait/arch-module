@@ -1,0 +1,95 @@
+ums:
+  client:
+    # 一级域名(不包括二级域名) 例如:
+    #       domain: www.example.com -> topDomain: example.com
+    #       domain: www.example.com.cn -> topDomain: example.com.cn
+    #       domain: aaa.bbb.example.net -> topDomain: example.net
+    # 测试时用的 IP 或 localhost 直接原样设置就行.
+    # 在应用启动时通过 SecurityAutoConfiguration 自动注入 MvcUtil 字段 topDomain 中. 如在设置跨域 cookie 时可以通过 MvcUtil.getTopDomain() 方法获取.
+    topDomain: localhost
+    # 登录页(必须自己实现)
+    login-page: /login
+    # 登录失败页(必须自己实现)
+    failure-url: /login
+    # 设置登录后返回格式(REDIRECT 与 JSON): 默认 JSON
+    login-process-type: redirect
+    # 设置处理登录表单的 uri，不需要用户实现此 uri，由 Spring security 自动实现， 默认为 /authentication/form
+    login-processing-url: /authentication/form
+    # 登录成功页(必须自己实现)
+    success-url: /me
+    # 登录后是否总是使用默认的 successUrl 进行跳转, 默认为: false
+    always-use-default-target-url: false
+    # 设置登出 url, 默认为 /logout
+    logout-url: /logout
+    # 设置登出后跳转的 url(必须自己实现), 默认为 /login
+    logout-success-url: /login
+    # 设置登录时用户名的 request 参数名称, 默认为 username
+    usernameParameter: username
+    # 设置登录时用户密码的 request 参数名称, 默认为 password
+    passwordParameter: password
+    # 登录后是否利用 Referer 进行跳转, 默认为: true
+    useReferer: true
+    # 设置由客户端决定认证成功要跳转的 url 的 request 参数名称, 默认为 redirectTargetUrl
+    targetUrlParameter: redirectTargetUrl
+    # 不需要认证的静态资源 urls, 例如: /resources/**, /static/**
+    ignoring-urls:
+      - /static/**
+    # 不需要认证的 uri(可以带 HttpMethod 后缀; 用:隔开), 例如: /user/** 或 /user/**:post, 默认为 空 Set.
+    permit-urls:
+      - /**/*.html:GET
+      - /**:OPTIONS
+      - /me:GET
+
+    # ============= 匿名用户配置 =============
+    anonymous:
+      # ANONYMOUS 是否开启, 默认为 true;
+      anonymous-is-open: true
+      # 匿名用户名称, 默认为 ANONYMOUS
+      principal: ANONYMOUS
+      # 匿名用户权限 list, 默认为 ROLE_ANONYMOUS
+      authorities:
+        - ROLE_VOTE
+
+
+    # ============= 跨域请求配置 =============
+    cors:
+      # 是否支持跨域, 默认为 false;
+      enable: true
+      # 允许跨域访问的域，可以是一个域的列表，也可以是通配符"*"。这里要注意 Origin 规则只对域名有效，并不会对子目录有效。
+      access-control-allow-origin:
+        - http://localhost:9090
+        - http://localhost:9092
+      # 是否允许请求带有验证信息, 当为 true 时, accessControlAllowOrigin 不能为 "*", 默认为 true;
+      access-control-allow-credentials: true
+      # 进行跨区请求允许曝露的 headers，请求成功后，ajax 可以在 XMLHttpRequest 中访问这些头的信息;
+      access-control-expose-headers:
+        - Authorization
+        - access_token
+        - refresh_token
+      # Set the list of headers that a pre-flight request can list as allowed for use during an actual request.
+      # The special value "*" allows actual requests to send any header. A header name is not required to be listed
+      # if it is one of: Cache-Control, Content-Language, Expires, Last-Modified, or Pragma. By default this is not set.
+      access-control-allow-headers:
+        - '*'
+      # 允许进行跨区请求的请求方法
+      access-control-allow-methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+      # 缓存此次请求的秒数。在这个时间范围内，所有同类型的请求都将不再发送预检请求而是直接使用此次返回的头作为判断依据，非常有用，大幅优化请求次数
+      access-control-max-age: PT30S
+      # 允许进行跨区请求的 url, 支持通配符.
+      url-list:
+        - /**
+
+  # ================ 手机登录配置 ================
+  mobile:
+    login:
+      # 手机验证码登录是否开启, 默认 false，
+      # 手机验证码登录开启后 必须配置 ums.codes.sms.auth-urls=/authentication/mobile
+      sms-code-login-is-open: true
+      # 手机验证码登录请求处理url, 默认 /authentication/mobile
+      login-processing-url-mobile: /authentication/mobile
+
+

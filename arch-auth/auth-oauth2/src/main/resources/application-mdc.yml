@@ -1,0 +1,17 @@
+ums:
+  # ================ 基于 SLF4J MDC 机制的日志链路追踪配置属性 ================
+  mdc:
+    # 是否支持基于 SLF4J MDC 机制日志的链路追踪, 默认: true
+    enable: true
+    # 基于 SLF4J MDC 机制实现日志链路追踪 id 的类型, 默认为 uuid.
+    # 当需要自定义 id 时, type = MdcIdType.CUSTOMIZE_ID, 再实现 MdcIdGenerator.getMdcId() 方法, 注入 IOC 容器即可.
+    type: uuid
+    # 需要添加 MDC 日志的链路追踪的 url, 默认: /**, 并在日志文件的 pattern 中添加 %X{MDC_TRACE_ID}
+    include-urls:
+      - /**
+    # 不需要 MDC 日志的链路追踪的 url, 如: 静态路径
+    exclude-urls:
+      - /**/*.js
+      - /**/*.html
+      - /**/*.css
+      - /static/**
