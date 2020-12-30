@@ -4,7 +4,7 @@ import org.arch.ums.account.dto.UUserRelationshipDto;
 import org.arch.ums.account.dto.UserDto;
 import org.arch.ums.account.dto.UserJobDto;
 import org.arch.ums.account.vo.ApiBaseResult;
-import com.uni.user.entity.UUser;
+import org.arch.ums.account.vo.UUser;
 
 import java.util.List;
 

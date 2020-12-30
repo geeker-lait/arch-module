@@ -22,7 +22,7 @@ public class AccountRegisterController {
 //    private final IdService idService;
 //
 //    @PostMapping("/signUp")
-//    public ResponseVo appSingUp(AuthRegAppDto authRegAppDto) {
+//    public ResponseVo appSingUp(AuthRegDto authRegAppDto) {
 //
 //        authClientService.exists(authRegAppDto.getClientId(), authRegAppDto.getClientSecret());
 //

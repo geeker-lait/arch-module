@@ -6,11 +6,25 @@
         <artifactId>arch-auth</artifactId>
         <groupId>org.arch.projects</groupId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>auth-oauth2</artifactId>
+
+    <artifactId>auth-sso</artifactId>
+    <name>auth-sso</name>
+    <description>本司应用单点登录模块</description>
+
+    <properties>
+        <ums.version>2.2.1</ums.version>
+    </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-core-spring-boot-starter</artifactId>
+            <version>${ums.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -54,14 +68,7 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-rbac</artifactId>
-            <version>${parent.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>auth-sso</artifactId>
-            <version>${parent.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -79,12 +86,4 @@
 
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>
