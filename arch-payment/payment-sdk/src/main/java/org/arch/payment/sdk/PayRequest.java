@@ -33,7 +33,6 @@ public class PayRequest {
 
     // 账号ID
     private String accountId;
-
     // 用户ID
     private String userId;
 

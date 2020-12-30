@@ -1,4 +1,4 @@
-package org.arch.payment.sdk.request;
+package org.arch.payment.sdk;
 
 import lombok.Data;
 import lombok.NonNull;
@@ -11,11 +11,10 @@ import org.arch.payment.sdk.PayType;
  * @date 12/30/2020 9:02 PM
  */
 @Data
-public class PayRequestHeader {
+public class PayHeader {
 
     // 支付类型 1支付宝 2微信 3三方支付公司 4四方支付
     private PayType payType;
-
     @NonNull
     // 商户ID
     private String merchantId;

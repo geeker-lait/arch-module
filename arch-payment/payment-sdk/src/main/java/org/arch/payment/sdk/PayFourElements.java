@@ -1,15 +1,15 @@
-package org.arch.payment.sdk.request;
+package org.arch.payment.sdk;
 
 import lombok.Data;
 
 /**
  * @author lait.zhang@gmail.com
- * @description: 绑卡四要素
+ * @description: 支付四要素
  * @weixin PN15855012581
  * @date 12/30/2020 8:59 PM
  */
 @Data
-public class BindCardElements {
+public class PayFourElements {
     // 用户姓名
     private String realName;
     // 预留手机号

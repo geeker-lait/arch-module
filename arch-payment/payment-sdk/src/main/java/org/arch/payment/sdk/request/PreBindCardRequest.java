@@ -2,6 +2,8 @@ package org.arch.payment.sdk.request;
 
 
 import lombok.Data;
+import org.arch.payment.sdk.PayFourElements;
+import org.arch.payment.sdk.PayHeader;
 
 /**
  * @author lait.zhang@gmail.com
@@ -11,13 +13,10 @@ import lombok.Data;
  */
 @Data
 public class PreBindCardRequest {
-    // 用户姓名
-    private String realName;
-    // 预留手机号
-    private String phoneNum;
-    // 英航卡号
-    private String bankcard;
-    // 身份证号
-    private String idcard;
+    // 支付请求头
+    private PayHeader payRequestHeader;
+    // 绑卡四要素
+    private PayFourElements bindCardElements;
+
 
 }
