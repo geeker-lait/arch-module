@@ -1,8 +1,7 @@
 package com.unichain.pay.channel.mfe88.dto;
 
-
-import com.unichain.pay.core.PayResponse;
 import lombok.Data;
+import org.arch.payment.sdk.PayResponse;
 
 /**
  * 基础reponse bean

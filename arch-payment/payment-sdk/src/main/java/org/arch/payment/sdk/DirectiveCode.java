@@ -9,14 +9,14 @@ import org.arch.payment.sdk.directive.PrePayingDirective;
 
 public enum DirectiveCode {
     // 预绑卡
-    PRE_BINDCARD_DIRECTIVE(PreBindCardDirective.class, IdKey.BANGKCARD_ID),
+    PRE_BINDCARD_DIRECTIVE(PreBindCardDirective.class, IdKey.PAY_BINDCARD_ID),
     // 确认绑卡
-    BINDCARD_DIRECTIVE(BindCardDirective.class, IdKey.BANGKCARD_ID),
+    BINDCARD_DIRECTIVE(BindCardDirective.class, IdKey.PAY_BINDCARD_ID),
 
     //  预支付
-    PRE_PAY_DIRECTIVE(PrePayingDirective.class, IdKey.BANGKCARD_ID),
+    PRE_PAY_DIRECTIVE(PrePayingDirective.class, IdKey.PAY_ORDER),
     //  确认支付
-    PAY_DIRECTIVE(PayingDirective.class, IdKey.BANGKCARD_ID),
+    PAY_DIRECTIVE(PayingDirective.class, IdKey.PAY_ORDER),
 
     // 预转账
     PRE_TRANSATION_DIRECTIVE(BindCardDirective.class, IdKey.BANGKCARD_ID),

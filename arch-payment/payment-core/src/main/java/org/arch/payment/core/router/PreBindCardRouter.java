@@ -16,7 +16,6 @@ import java.util.List;
 @Service
 public class PreBindCardRouter extends AbstractDirectiveRouter implements DirectiveRouter {
 
-
     @Override
     public void routing(List<Directive> directives) {
 

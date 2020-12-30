@@ -16,10 +16,11 @@ import java.util.List;
 @Service
 public class BindCardRouter extends AbstractDirectiveRouter implements DirectiveRouter {
 
-
-
     @Override
     public void routing(List<Directive> directives) {
+
+
+
 
     }
 

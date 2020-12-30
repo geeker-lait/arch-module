@@ -8,12 +8,13 @@ import com.unichain.pay.channel.mfe88.dto.response.BankcardBindResponse;
 import org.arch.payment.sdk.Directive;
 import org.arch.payment.sdk.PayRequest;
 import org.arch.payment.sdk.PayResponse;
+import org.arch.payment.sdk.directive.BindCardDirective;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 @Service("Mfe88BankcardBindDirective")
-public class Mfe88BankcardBindDirective implements Directive<Mfe88ChannelDirecvite, PreBindCardRequest> {
+public class Mfe88BankcardBindDirective implements BindCardDirective,Directive<Mfe88ChannelDirecvite, PreBindCardRequest> {
 
     @Autowired
     private ChannelDirectiveRecordService channelDirectiveRecordService;

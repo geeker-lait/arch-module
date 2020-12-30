@@ -7,7 +7,7 @@ import java.util.concurrent.locks.Lock;
 /**
  * 支付基础配置存储
  */
-public abstract class BasePayConfigStorage implements PayConfigStorage {
+public abstract class AbstractPayConfigStorage implements PayConfigStorage {
 
     private Object attach;
 

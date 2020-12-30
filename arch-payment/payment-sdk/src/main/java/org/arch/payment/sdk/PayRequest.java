@@ -3,10 +3,9 @@ package org.arch.payment.sdk;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
-import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -19,38 +18,47 @@ import java.util.Map;
 @Data
 public class PayRequest {
     private DirectiveCode directiveCode;
-    private String appId;
-    private String accountId;
-    private String userId;
-    private String merchantId;
-    private String channelId;
+    // 设备号
     private String deviceId;
-    private String paymentId;
+    // ip地址 可不穿
+    private String ip;
+
+
     // 订单ID
     private String orderId;
-    // 银行卡
-    private String bankcard;
+    // 支付ID
+    private String paymentId;
+    // 通道ID
+    private String channelId;
+
+    // 账号ID
+    private String accountId;
+
+    // 用户ID
+    private String userId;
+
+
+
     // 金额
     private String amount;
-    // 支付类型 1支付宝 2微信 3三方支付公司 4四方支付
-    private String payType;
-    @Getter
-    // 具体支付参数
-    private JSONObject payParams;
+//    @Getter
+//    // 具体支付参数
+//    private JSONObject payParams;
+
+    private T payRequest;
 
 
-    private PayRequest(){
+    private PayRequest() {
 
     }
 
 
-
-
-    public static PayRequest of(DirectiveCode directiveCode){
+    public static PayRequest of(DirectiveCode directiveCode) {
         PayRequest payRequest = new PayRequest();
         payRequest.directiveCode = directiveCode;
         return payRequest;
     }
+
     /**
      * 创建map请求参数
      *
@@ -58,47 +66,34 @@ public class PayRequest {
      * @return
      */
     public PayRequest init(HttpServletRequest httpServletRequest) {
-        payParams = getRequestParam(httpServletRequest);
-
-        appId = payParams.getString("appId");
-        // 移除
-        Object oAccountId = payParams.remove("accountId");
-        Object oCompanyId = payParams.remove("merchantId");
-        if(null != oAccountId && StringUtils.isNotBlank(oAccountId.toString())){
-            accountId = oAccountId.toString();
-        }
-
-        if(null != oCompanyId && StringUtils.isNotBlank(oCompanyId.toString())){
-            merchantId = oCompanyId.toString();
-        }
-
-
-        payType = payParams.getString("payType");
-        if (PayType.THIRD.toString().equalsIgnoreCase(payType)) {
-            bankcard = payParams.getString("bankcard");
-        } else if (PayType.ALIPAY.toString().equalsIgnoreCase(payType)) {
-            // 获取具体的支付宝账户，这里默认先写死
-            bankcard = "alipay";
-        } else {
-            // 获取具体的微信账户，这里默认先写死
-            bankcard = "weixin";
-        }
+//        payParams = getRequestParam(httpServletRequest);
+//
+//        appId = payParams.getString("appId");
+//        // 移除
+//        Object oAccountId = payParams.remove("accountId");
+//        Object oCompanyId = payParams.remove("merchantId");
+//        if (null != oAccountId && StringUtils.isNotBlank(oAccountId.toString())) {
+//            accountId = oAccountId.toString();
+//        }
+//
+//        if (null != oCompanyId && StringUtils.isNotBlank(oCompanyId.toString())) {
+//            merchantId = oCompanyId.toString();
+//        }
+//
+//
+//        payType = payParams.getObject("payType");
+//        if (PayType.THIRD.toString().equalsIgnoreCase(payType)) {
+//            bankcard = payParams.getString("bankcard");
+//        } else if (PayType.ALIPAY.toString().equalsIgnoreCase(payType)) {
+//            // 获取具体的支付宝账户，这里默认先写死
+//            bankcard = "alipay";
+//        } else if (PayType.WEIXIN.toString().equalsIgnoreCase(payType)) {
+//            // 获取具体的微信账户，这里默认先写死
+//            bankcard = "wxpay";
+//        }
         return this;
     }
 
-
-    public <T extends PayParam> T getPayParam(Class<T> payParamsClazz){
-        T t = null;
-        try {
-            t = payParamsClazz.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        //t.convert(this, );
-        return t;
-    }
 
     /**
      * @param request

@@ -16,9 +16,6 @@ import java.util.List;
 @Service
 public class PayingRouter extends AbstractDirectiveRouter implements DirectiveRouter {
 
-
-
-
     @Override
     public void routing(List<Directive> directives) {
 

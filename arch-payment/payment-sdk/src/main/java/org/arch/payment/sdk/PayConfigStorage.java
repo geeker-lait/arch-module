@@ -1,7 +1,6 @@
 package org.arch.payment.sdk;
 
-
-import jdk.internal.util.xml.impl.Attrs;
+import org.arch.payment.sdk.bean.Attrs;
 
 /**
  * 支付客户端配置存储
@@ -93,16 +92,6 @@ public interface PayConfigStorage extends Attrs {
      * @return 支付类型
      */
     String getPayType();
-
-    /**
-     * 消息类型
-     *
-     * @return "text" 或者 "xml"，json
-     * @see #getMsgType
-     * @see MsgType
-     */
-    @Deprecated
-    MsgType getMsgType();
 
 
     /**
