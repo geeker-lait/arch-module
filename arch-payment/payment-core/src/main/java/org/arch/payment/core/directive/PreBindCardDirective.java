@@ -7,7 +7,7 @@ import org.arch.payment.core.entity.PayAppMerchantChannel;
 import org.arch.payment.core.entity.PayDirective;
 import org.arch.payment.core.entity.PayMerchantChannel;
 import org.arch.payment.core.service.*;
-import org.arch.payment.sdk.DirectiveRouting;
+import org.arch.payment.core.DirectiveRouting;
 import org.arch.payment.sdk.PayConfigurable;
 import org.arch.payment.sdk.PayRequest;
 import org.arch.payment.sdk.PayResponse;

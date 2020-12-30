@@ -8,10 +8,9 @@ import org.arch.payment.sdk.DirectiveRequest;
  * @weixin PN15855012581
  * @date 12/26/2020 7:40 PM
  */
-public class BindCardDirectiveResponse implements DirectiveRequest {
+public class BindCardDirectiveResponse{
 
 
-    @Override
     public String getRequestId() {
         return null;
     }

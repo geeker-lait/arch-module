@@ -1,4 +1,7 @@
-package org.arch.payment.sdk;
+package org.arch.payment.core;
+
+import org.arch.payment.sdk.DirectiveRequest;
+import org.arch.payment.sdk.PayDirective;
 
 import java.util.List;
 
@@ -11,7 +14,8 @@ import java.util.List;
 public interface PayChannel {
 
     /**
-     * 根据指令请求得到一个指令集合
+     * 根据指令请求从支付通道中得到一个指令集合
+     *
      * @param directiveRequest
      * @return
      */
