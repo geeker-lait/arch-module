@@ -18,7 +18,7 @@ import java.util.Map;
 @ToString
 @Data
 public class PayRequest {
-    private DirectiveName directiveName;
+    private DirectiveCode directiveCode;
     private String appId;
     private String accountId;
     private String userId;
@@ -46,9 +46,9 @@ public class PayRequest {
 
 
 
-    public static PayRequest of(DirectiveName directiveName){
+    public static PayRequest of(DirectiveCode directiveCode){
         PayRequest payRequest = new PayRequest();
-        payRequest.directiveName = directiveName;
+        payRequest.directiveCode = directiveCode;
         return payRequest;
     }
     /**

@@ -3,8 +3,8 @@ package com.unichain.pay.channel.mfe88.directive;
 import cn.hutool.json.JSONUtil;
 import com.unichain.pay.channel.mfe88.Mfe88ChannelDirecvite;
 import com.unichain.pay.channel.mfe88.Mfe88PayRequestHandler;
-import com.unichain.pay.channel.mfe88.domain.RefundOrderParam;
-import com.unichain.pay.channel.mfe88.domain.RefundOrderResponse;
+import com.unichain.pay.channel.mfe88.dto.request.RefundRequest;
+import com.unichain.pay.channel.mfe88.dto.response.RefundOrderResponse;
 import org.arch.payment.sdk.PayRequest;
 import org.arch.payment.sdk.PayResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +17,13 @@ import org.springframework.stereotype.Service;
  * @Description ${Description}
  */
 @Service("Mfe88RefundOrderDirective")
-public class Mfe88RefundOrderDirective implements PayDirective<Mfe88ChannelDirecvite, RefundOrderParam> {
+public class Mfe88RefundOrderDirective implements PayDirective<Mfe88ChannelDirecvite, RefundRequest> {
 
     @Autowired
     private ChannelDirectiveRecordService channelDirectiveRecordService;
 
     @Override
-    public PayResponse exec(Mfe88ChannelDirecvite channelDirective, RefundOrderParam payParam, PayRequest payRequest) {
+    public PayResponse exec(Mfe88ChannelDirecvite channelDirective, RefundRequest payParam, PayRequest payRequest) {
 //        String privateKey = channelDirective.getPrivateKey();
         String oidPartner = channelDirective.getMerchantNo();
 //        String publicKey = channelDirective.getPublicKey();
@@ -41,10 +41,10 @@ public class Mfe88RefundOrderDirective implements PayDirective<Mfe88ChannelDirec
     }
 
     @Override
-    public RefundOrderParam buildPayParam(PayRequest payRequest) {
-        RefundOrderParam refundOrderParam = new RefundOrderParam();
-        Mfe88PayRequestHandler.buildPayParam(refundOrderParam, payRequest);
-        return refundOrderParam;
+    public RefundRequest buildPayParam(PayRequest payRequest) {
+        RefundRequest refundRequest = new RefundRequest();
+        Mfe88PayRequestHandler.buildPayParam(refundRequest, payRequest);
+        return refundRequest;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class Mfe88RefundOrderDirective implements PayDirective<Mfe88ChannelDirec
     }
 
     @Override
-    public PayResponse record(RefundOrderParam payParam, PayRequest payRequest, String data) {
+    public PayResponse record(RefundRequest payParam, PayRequest payRequest, String data) {
         RefundOrderResponse response = JSONUtil.toBean(data, RefundOrderResponse.class);
 
         ChannelDirectiveRecord save = new ChannelDirectiveRecord();

@@ -3,8 +3,8 @@ package com.unichain.pay.channel.mfe88.directive;
 import cn.hutool.json.JSONUtil;
 import com.unichain.pay.channel.mfe88.Mfe88ChannelDirecvite;
 import com.unichain.pay.channel.mfe88.Mfe88PayRequestHandler;
-import com.unichain.pay.channel.mfe88.domain.BankcardBindResponse;
-import com.unichain.pay.channel.mfe88.domain.BankcardBindVerifyParam;
+import com.unichain.pay.channel.mfe88.dto.response.BankcardBindResponse;
+import com.unichain.pay.channel.mfe88.dto.request.BindCardRequest;
 import org.arch.payment.sdk.PayRequest;
 import org.arch.payment.sdk.PayResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,29 +12,29 @@ import org.springframework.stereotype.Service;
 
 
 @Service("Mfe88BankcardBindVerifyDirective")
-public class Mfe88BankcardBindVerifyDirective implements PayDirective<Mfe88ChannelDirecvite, BankcardBindVerifyParam> /*implements PayDirective<BankcardBindParam>*/ {
+public class Mfe88BankcardBindVerifyDirective implements PayDirective<Mfe88ChannelDirecvite, BindCardRequest> /*implements PayDirective<BankcardBindParam>*/ {
 
 
     @Autowired
     private ChannelDirectiveRecordService channelDirectiveRecordService;
 
     @Override
-    public PayResponse exec(Mfe88ChannelDirecvite channelDirective, BankcardBindVerifyParam bankcardBindVerifyParam, PayRequest payRequest) {
+    public PayResponse exec(Mfe88ChannelDirecvite channelDirective, BindCardRequest bindCardRequest, PayRequest payRequest) {
 
         String uri = channelDirective.getDirectiveUri();
 //        String merchantNo = channelDirective.getMerchantNo();
 //        String publicKey = channelDirective.getPublicKey();
 //        String privateKey = channelDirective.getPrivateKey();
-        bankcardBindVerifyParam.setMerchantNo(channelDirective.getMerchantNo());
-        String data = Mfe88PayRequestHandler.build(bankcardBindVerifyParam, channelDirective).exec(uri);
-        return record(bankcardBindVerifyParam, payRequest, data);
+        bindCardRequest.setMerchantNo(channelDirective.getMerchantNo());
+        String data = Mfe88PayRequestHandler.build(bindCardRequest, channelDirective).exec(uri);
+        return record(bindCardRequest, payRequest, data);
     }
 
     @Override
-    public BankcardBindVerifyParam buildPayParam(PayRequest payRequest) {
-        BankcardBindVerifyParam bankcardBindVerifyParam = new BankcardBindVerifyParam();
-        Mfe88PayRequestHandler.buildPayParam(bankcardBindVerifyParam, payRequest);
-        return bankcardBindVerifyParam;
+    public BindCardRequest buildPayParam(PayRequest payRequest) {
+        BindCardRequest bindCardRequest = new BindCardRequest();
+        Mfe88PayRequestHandler.buildPayParam(bindCardRequest, payRequest);
+        return bindCardRequest;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Mfe88BankcardBindVerifyDirective implements PayDirective<Mfe88Chann
     }
 
     @Override
-    public PayResponse record(BankcardBindVerifyParam payParam, PayRequest payRequest, String data) {
+    public PayResponse record(BindCardRequest payParam, PayRequest payRequest, String data) {
         BankcardBindResponse response = JSONUtil.toBean(data, BankcardBindResponse.class);
 
         ChannelDirectiveRecord save = new ChannelDirectiveRecord();

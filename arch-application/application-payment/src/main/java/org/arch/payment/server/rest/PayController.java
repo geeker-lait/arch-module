@@ -1,7 +1,10 @@
 package org.arch.payment.server.rest;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.payment.sdk.DirectiveName;
+import org.arch.framework.id.IdService;
+import org.arch.payment.sdk.DirectiveCode;
 import org.arch.payment.sdk.PayRequest;
 import org.arch.payment.sdk.PayResponse;
 import org.arch.payment.sdk.PayRouting;
@@ -55,7 +58,7 @@ public class PayController {
     @ResponseBody
     @ApiOperation(value = "绑卡验证", authorizations = @Authorization(value = "token"))
     public ApiBaseResult preBindcard(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        PayRequest payRequest = PayRequest.of(DirectiveName.PRE_BINDCARD_DIRECTIVE).init(httpServletRequest);
+        PayRequest payRequest = PayRequest.of(DirectiveCode.PRE_BINDCARD_DIRECTIVE).init(httpServletRequest);
         TokenInfo token = SecurityUtils.getCurrentUser();
         initPayRequest(payRequest, token, BizIdCode.PAY_BINDCARD_ID);
         PayResponse payResponse = payRouting.routing(payRequest);
@@ -72,7 +75,7 @@ public class PayController {
     @ResponseBody
     @ApiOperation(value = "确认绑卡", authorizations = @Authorization(value = "token"))
     public ApiBaseResult bindcard(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        PayRequest payRequest = PayRequest.of(DirectiveName.bindCardDirective).init(httpServletRequest);
+        PayRequest payRequest = PayRequest.of(DirectiveCode.bindCardDirective).init(httpServletRequest);
         TokenInfo token = SecurityUtils.getCurrentUser();
         initPayRequest(payRequest, token, BizIdCode.PAY_BINDCARD_ID);
         PayResponse payResponse = payRouting.routing(payRequest);
@@ -91,7 +94,7 @@ public class PayController {
     @ApiOperation(value = "预付", authorizations = @Authorization(value = "token"))
 //    @Transactional(rollbackFor = Exception.class)
     public ApiBaseResult prePay(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        PayRequest payRequest = PayRequest.of(DirectiveName.prePaymentDirective).init(httpServletRequest);
+        PayRequest payRequest = PayRequest.of(DirectiveCode.prePaymentDirective).init(httpServletRequest);
         TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
         String amount = redisUtils.getStr("vip88.productAmount");
         if (StringUtils.isEmpty(amount)) {
@@ -125,7 +128,7 @@ public class PayController {
     @ApiOperation(value = "代付", authorizations = @Authorization(value = "token"))
 //    @Transactional(rollbackFor = Exception.class)
     public ApiBaseResult transferDirective(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        PayRequest payRequest = PayRequest.of(DirectiveName.paymentDirective).init(httpServletRequest);
+        PayRequest payRequest = PayRequest.of(DirectiveCode.paymentDirective).init(httpServletRequest);
         TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
         String amount = redisUtils.getStr("vip88.productAmount");
         if (StringUtils.isEmpty(amount)) {
