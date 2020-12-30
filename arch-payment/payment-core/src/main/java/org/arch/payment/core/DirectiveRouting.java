@@ -1,5 +1,8 @@
-package org.arch.payment.sdk;
+package org.arch.payment.core;
 
+
+import org.arch.payment.core.entity.PayMerchantChannel;
+import org.arch.payment.sdk.*;
 
 /**
  * @Author lait.zhang@gmail.com
