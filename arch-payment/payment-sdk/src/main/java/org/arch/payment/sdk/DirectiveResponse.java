@@ -1,9 +1,5 @@
 package org.arch.payment.sdk;
 
-import org.arch.payment.sdk.PayDirective;
-
-import java.util.List;
-
 /**
  * @Author lait.zhang@gmail.com
  * @Tel 15801818092

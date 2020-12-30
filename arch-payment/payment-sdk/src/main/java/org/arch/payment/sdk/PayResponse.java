@@ -1,6 +1,7 @@
 package org.arch.payment.sdk;
 
 import lombok.Data;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -9,13 +10,8 @@ import java.math.BigDecimal;
  * 支付响应
  */
 @Data
-public class PayResponse<T extends DirectiveResponse> implements Serializable {
-    private T data;
-    /**
-     * @Use PayResponse.data
-     */
-    @Deprecated
-    private Object t;
+public class PayResponse implements Serializable {
+    private Object data;
     //  返回码 讯联 1127 手机号码与预留时不符
     private String code;
     // 通道
