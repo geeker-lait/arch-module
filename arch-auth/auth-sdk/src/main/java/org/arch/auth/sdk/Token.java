@@ -1,4 +1,4 @@
-package org.arch.payment.server.rest;
+package org.arch.auth.sdk;
 
 /**
  * @author lait.zhang@gmail.com

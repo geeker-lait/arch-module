@@ -1,4 +1,4 @@
-package org.arch.payment.server.config;
+package org.arch.application.admin.config;
 
 import org.arch.auth.sdk.Token;
 import org.springframework.core.MethodParameter;
