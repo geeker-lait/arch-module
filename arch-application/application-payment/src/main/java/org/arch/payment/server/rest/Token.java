@@ -6,5 +6,5 @@ package org.arch.payment.server.rest;
  * @weixin PN15855012581
  * @date 12/30/2020 9:22 PM
  */
-public class TokenInfo {
+public class Token {
 }

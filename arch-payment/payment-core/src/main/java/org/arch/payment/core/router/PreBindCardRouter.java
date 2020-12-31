@@ -3,6 +3,7 @@ package org.arch.payment.core.router;
 import org.arch.payment.sdk.Directive;
 import org.arch.payment.sdk.DirectiveCode;
 import org.arch.payment.sdk.DirectiveRouter;
+import org.arch.payment.sdk.PayRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,11 +14,15 @@ import java.util.List;
  * @Date 12/24/2019
  * @Description 预绑卡指令路由
  */
+//@DirectiveTyp(DirectiveCode.PRE_BINDCARD_DIRECTIVE)
 @Service
 public class PreBindCardRouter extends AbstractDirectiveRouter implements DirectiveRouter {
 
     @Override
-    public void routing(List<Directive> directives) {
+    public void routing(List<Directive> directives, PayRequest payRequest) {
+        // 流水号
+        String paySn = idService.generateId(payRequest.getDirectiveCode().getIdKey());
+        
 
     }
 

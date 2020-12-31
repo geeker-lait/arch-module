@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.mapper.UserIdCardMapper">
+    <sql id="tableName">
+        user_id_card
+    </sql>
+
+    <sql id="baseColumn">
+        user_id,idcard,name,age,sex,birthday,nation,domicile,sign_org,st
+    </sql>
+
+</mapper>
