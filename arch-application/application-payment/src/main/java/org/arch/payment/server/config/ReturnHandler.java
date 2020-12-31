@@ -22,7 +22,8 @@ public class ReturnHandler implements HandlerMethodReturnValueHandler {
     @Override
     public boolean supportsReturnType(MethodParameter methodParameter) {
         //return methodParameter.getParameterType() == SessionContext.class;
-        return true;
+        // 先不处理
+        return false;
     }
 
     /**

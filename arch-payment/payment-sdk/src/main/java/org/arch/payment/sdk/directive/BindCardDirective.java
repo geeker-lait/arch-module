@@ -11,4 +11,5 @@ import org.arch.payment.sdk.Directive;
 public interface BindCardDirective extends Directive {
 
 
+
 }
