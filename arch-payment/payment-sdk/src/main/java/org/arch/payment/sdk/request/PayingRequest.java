@@ -2,6 +2,7 @@ package org.arch.payment.sdk.request;
 
 import lombok.Data;
 import org.arch.payment.sdk.PayHeader;
+import org.arch.payment.sdk.PayParams;
 
 /**
  * @author lait.zhang@gmail.com
@@ -10,9 +11,9 @@ import org.arch.payment.sdk.PayHeader;
  * @date 12/30/2020 9:08 PM
  */
 @Data
-public class PayingRequest {
+public class PayingRequest implements PayParams {
     // 支付请求头
-    private PayHeader payRequestHeader;
+    private PayHeader payHeader;
     // 金额
     private String amount;
     // 短信或其他类型到验证标示

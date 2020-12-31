@@ -2,8 +2,8 @@ package org.arch.payment.sdk.request;
 
 
 import lombok.Data;
-import org.arch.payment.sdk.PayFourElements;
 import org.arch.payment.sdk.PayHeader;
+import org.arch.payment.sdk.PayParams;
 
 /**
  * @author lait.zhang@gmail.com
@@ -12,9 +12,9 @@ import org.arch.payment.sdk.PayHeader;
  * @date 12/30/2020 7:32 PM
  */
 @Data
-public class BindCardRequest {
+public class BindCardRequest implements PayParams {
     // 支付请求头
-    private PayHeader payRequestHeader;
+    private PayHeader payHeader;
     // 协议号
     private String protocolId;
     // 短信验证码或其他类型到验证标示
