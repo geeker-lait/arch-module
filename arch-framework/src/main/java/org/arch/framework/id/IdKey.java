@@ -86,9 +86,23 @@ public enum IdKey {
     /**
      * 推荐ID
      */
-    RECOMMEND("id.recommend.", 60, TimeUnit.MILLISECONDS, "22", "%1$08d");
+    RECOMMEND("id.recommend.", 60, TimeUnit.MILLISECONDS, "22", "%1$08d"),
 
+    // =================== jwt ID ===================
+    /**
+     * JWT jti
+     */
+    JWT_JTI("id.jwt.", 60, TimeUnit.MILLISECONDS, "30", "%1$08d"),
+    /**
+     * JWT refresh Token
+     */
+    JWT_REFRESH_TOKEN("id.jwt.refresh.token.", 60, TimeUnit.MILLISECONDS, "31", "%1$08d"),
 
+    // =================== 注册来源来源 ID ===================
+    /**
+     * source ID
+     */
+    SOURCE("id.source.", 60, TimeUnit.MILLISECONDS, "40", "%1$08d");
 
     private String key;
     private String bizPrefix;

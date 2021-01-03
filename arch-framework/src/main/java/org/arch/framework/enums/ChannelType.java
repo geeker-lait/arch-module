@@ -1,5 +1,5 @@
 
-package org.arch.ums.account.enums;
+package org.arch.framework.enums;
 
 /**
  * 账号登录类型
@@ -23,4 +23,5 @@ public enum ChannelType {
      * 第三方授权登录类型
      */
     OAUTH
+
 }
