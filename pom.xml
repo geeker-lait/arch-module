@@ -28,6 +28,7 @@
         <module>arch-watchdog</module>
         <module>arch-rule</module>
         <module>arch-ums</module>
+        <module>arch-auth/auth-jwt</module>
     </modules>
 
 

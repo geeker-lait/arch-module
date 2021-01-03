@@ -1,5 +1,3 @@
-server:
-  port: 9401
 
 spring:
   #  datasource:
@@ -39,16 +37,6 @@ spring:
         max-idle: 8
         min-idle: 1
 
-
-  thymeleaf:
-    cache: false
-
-  mvc:
-    throw-exception-if-no-handler-found: true
-
-
-#  profiles:
-#    active: dev,db,auth,oauth2,vc,jwt
 management:
   endpoints:
     web:

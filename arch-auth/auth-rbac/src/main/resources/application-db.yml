@@ -12,9 +12,9 @@ spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3306/uni?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
+    url: jdbc:mysql://localhost:3306/ums?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
     username: root
-    password: root
+    password: 123456
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
@@ -28,8 +28,8 @@ mybatis-plus:
       insert-strategy: not_empty
       update-strategy: not_empty
       select-strategy: not_empty
-    datacenter-id: ${nodeId:${spring.nodeId:1}}
-    worker-id: ${nodeId:${spring.nodeId:1}}
+#    datacenter-id: ${nodeId:${spring.nodeId:1}}
+#    worker-id: ${nodeId:${spring.nodeId:1}}
     banner: false
   configuration:
     map-underscore-to-camel-case: true

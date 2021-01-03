@@ -3,16 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>arch-auth</artifactId>
+        <artifactId>arch-module</artifactId>
         <groupId>org.arch.projects</groupId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>auth-sso</artifactId>
-    <name>auth-sso</name>
-    <description>单点登录模块</description>
+    <artifactId>auth-jwt</artifactId>
+    <name>auth-jwt</name>
+    <description>jwt 解析模块</description>
 
     <properties>
         <ums.version>2.2.3</ums.version>
@@ -22,25 +22,8 @@
 
         <dependency>
             <groupId>top.dcenter</groupId>
-            <artifactId>ums-core-spring-boot-starter</artifactId>
+            <artifactId>ums-jwt</artifactId>
             <version>${ums.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>top.dcenter</groupId>
-            <artifactId>ums-oauth</artifactId>
-            <version>${ums.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>top.dcenter</groupId>
-            <artifactId>ums-vc</artifactId>
-            <version>${ums.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>auth-rbac</artifactId>
-            <version>${parent.version}</version>
         </dependency>
 
         <dependency>
@@ -58,8 +41,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-resource-server</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
         </dependency>
 
         <!-- redis -->

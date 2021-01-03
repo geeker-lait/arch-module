@@ -17,6 +17,7 @@ import java.util.Date;
  * @since 2020-12-26 21:57:25
  * @description 
  */
+@SuppressWarnings({"jol", "Lombok"})
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
@@ -42,9 +43,13 @@ public class AccountOauthToken extends Model<AccountOauthToken> implements Seria
      */
     private String accessToken;
     /**
-     * 过期时间 无过期时间默认为 -1
+     * accessToken过期时间 无过期时间默认为 -1
      */
     private Long expireIn;
+    /**
+     * refreshToken过期时间 无过期时间默认为 -1
+     */
+    private Long refreshTokenExpireIn;
     /**
      * refreshToken
      */

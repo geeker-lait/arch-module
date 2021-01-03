@@ -1,3 +1,21 @@
+spring:
+  # session 简单配置
+  session:
+    # session 存储模式设置, 要导入相应的 spring-session 类的依赖, 默认为 none, 分布式服务应用把 session 放入 redis 等中间件
+    store-type: none
+    # session 过期时间
+    timeout: PT168H
+
+server:
+  servlet:
+    # tomcat session 设置
+    session:
+      timeout: PT168H
+      cookie:
+        max-age: PT168H
+        # session 的 cookie name, 默认为: JSESSIONID
+        name: SID
+
 ums:
   client:
     # 一级域名(不包括二级域名) 例如:
@@ -37,8 +55,43 @@ ums:
     # 不需要认证的 uri(可以带 HttpMethod 后缀; 用:隔开), 例如: /user/** 或 /user/**:post, 默认为 空 Set.
     permit-urls:
       - /**/*.html:GET
+      - /testSign:GET
+      - /testSignOfLastSevenDays/**:GET
+      - /testDelOfCurrentMonth:GET
+      - /login2:GET
       - /**:OPTIONS
       - /me:GET
+
+    # ============= remember-me =============
+    # 设置记住我功能的缓存时长，默认 14 天. If a duration suffix is not specified, seconds will be used.
+    # 记住我功能默认通过 org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl 存入数据库中
+    # 实现 BasedRememberMeTokenRepositoryFactory 可以自定义缓存方式
+    remember-me:
+      # RememberMe 是否开启, 默认为 false;
+      enable: false
+      # 设置记住我功能的 session 的缓存时长，默认 14 天. If a duration suffix is not specified, seconds will be used.
+      remember-me-timeout: P14D
+      # 设置记住我功能的 CookieName，默认 REMEMBER_ME, 自定义 RememberMeServices 时, 此配置失效
+      remember-me-cookie-name: REMEMBER_ME
+      # 设置记住我功能的参数名称，默认 REMEMBER_ME
+      remember-me-parameter: rememberMe
+      # 当为 true 时 REMEMBER_ME 只能用于 https, 默认为 false
+      use-secure-cookie: true
+
+    # ============= csrf =============
+    csrf:
+      # csrf 是否开启, 默认为 false;
+      csrf-is-open: false
+      # 忽略指定请求的 CSRF 防护, 默认为 空 Set
+      ignoring-ant-matcher-urls:
+        #        - /authentication/form
+        #        - /authentication/mobile
+        #        - /authentication/social
+        #        - /logout
+        - /user/**
+        - /file/**
+      # csrf tokenRepository 的存储类型, 默认为 session. 因为 session 可以配置缓存在 redis 等, 也可以自己自定义, 例如: redis
+      token-repository-type: session
 
     # ============= 匿名用户配置 =============
     anonymous:
@@ -48,7 +101,10 @@ ums:
       principal: ANONYMOUS
       # 匿名用户权限 list, 默认为 ROLE_ANONYMOUS
       authorities:
-        - ROLE_VOTE
+        - ROLE_ANONYMOUS
+        - /test/permission:add
+        - /test/permission:list
+        - /test/pass/:list
 
 
     # ============= 跨域请求配置 =============
@@ -62,10 +118,7 @@ ums:
       # 是否允许请求带有验证信息, 当为 true 时, accessControlAllowOrigin 不能为 "*", 默认为 true;
       access-control-allow-credentials: true
       # 进行跨区请求允许曝露的 headers，请求成功后，ajax 可以在 XMLHttpRequest 中访问这些头的信息;
-      access-control-expose-headers:
-        - Authorization
-        - access_token
-        - refresh_token
+      access-control-expose-headers: Authorization
       # Set the list of headers that a pre-flight request can list as allowed for use during an actual request.
       # The special value "*" allows actual requests to send any header. A header name is not required to be listed
       # if it is one of: Cache-Control, Content-Language, Expires, Last-Modified, or Pragma. By default this is not set.
@@ -92,4 +145,19 @@ ums:
       # 手机验证码登录请求处理url, 默认 /authentication/mobile
       login-processing-url-mobile: /authentication/mobile
 
+  # ============= 用户签到配置 =============
+  # 签到功能 设置
+  sign:
+    # 获取最近几天的签到情况, 不能大于 28 天, 默认为 7 天
+    last-few-days: 7
+    # 用于 redis 签到 key 前缀，默认为： u:sign:
+    sign-key-prefix: 'u:sign:'
+    # 用于 redis 总签到 key 前缀，默认为： total:sign:
+    total-sign-key-prefix: 'total:sign:'
+    # redis key(String) 转 byte[] 转换时所用的 charset
+    charset: UTF-8
+    # 用户签到统计 redis key TTL, 默认: 二个月 , 单位: 秒
+    total-expired: 5356800
+    # 用户签到 redis key TTL, 默认: 二个月 , 单位: 秒
+    user-expired: 5356800
 
