@@ -12,7 +12,7 @@ import org.arch.payment.sdk.PayHeader;
 @Data
 public class PayingRequest {
     // 支付请求头
-    private PayHeader payRequestHeader;
+    private PayHeader payHeader;
     // 金额
     private String amount;
     // 短信或其他类型到验证标示
