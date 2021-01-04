@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.mapper.UserAddressMapper">
+    <sql id="tableName">
+        user_address
+    </sql>
+
+    <sql id="baseColumn">
+        id,user_id,province,city,district,street,typ,sorted,contacts,phone_num,st
+    </sql>
+
+</mapper>

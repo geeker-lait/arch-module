@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class PayDispatcher {
+
     @Autowired
     private ApplicationContext applicationContext;
     private static final Map<DirectiveCode, List<Directive>> directiveListMap = new HashMap<>();
@@ -47,7 +48,7 @@ public class PayDispatcher {
      * @param directiveCode
      * @return
      */
-    public DirectiveRouter getDirectiveRouter(DirectiveCode directiveCode) {
+    private DirectiveRouter getDirectiveRouter(DirectiveCode directiveCode) {
         return directiveRouterMap.get(directiveCode);
     }
 
@@ -57,7 +58,7 @@ public class PayDispatcher {
      * @param directiveCode
      * @return
      */
-    public List<Directive> getPayDirectives(DirectiveCode directiveCode) {
+    private List<Directive> getPayDirectives(DirectiveCode directiveCode) {
         List<Directive> directives = directiveListMap.get(directiveCode);
         return directives;
     }
@@ -70,6 +71,6 @@ public class PayDispatcher {
         // 获取当前指令码对应的指令集
         List<Directive> directives = this.getPayDirectives(directiveCode);
         // 路由指令
-        directiveRouter.routing(directives);
+        directiveRouter.routing(directives,payRequest);
     }
 }

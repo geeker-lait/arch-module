@@ -16,6 +16,7 @@ import java.io.Serializable;
  * @since 2020-12-26 21:57:25
  * @description 
  */
+@SuppressWarnings("Lombok")
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
@@ -31,14 +32,18 @@ public class AccountOauthClient extends Model<AccountOauthClient> implements Ser
     /**
      * appId 或 客户端ID
      */
-    private String clientId;
+    private String appId;
     /**
      * appSecret 或 客户端secret
      */
-    private String clientSecret;
+    private String appCode;
+    /**
+     * openid/userinfo/token/code/资源服务器标识等
+     */
+    private String scopes;
     /**
      * 客户端类型: web, 安卓, ios, 小程序…
      */
-    private String clientTyp;
+    private String appType;
 
 }

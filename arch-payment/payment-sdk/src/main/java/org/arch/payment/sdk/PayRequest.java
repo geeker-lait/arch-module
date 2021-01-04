@@ -1,51 +1,38 @@
 package org.arch.payment.sdk;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import lombok.Data;
 import lombok.ToString;
-import org.apache.commons.io.IOUtils;
-import org.apache.poi.ss.formula.functions.T;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * 支付请求
  */
 @ToString
-@Data
 public class PayRequest {
+    // 指令码
     private DirectiveCode directiveCode;
+
+
     // 设备号
     private String deviceId;
-    // ip地址 可不穿
+    // ip地址
     private String ip;
 
 
-    // 订单ID
+    // 实体用户对应的-账号ID
+    private String accountId;
+    // 实体用户对应的-用户ID
+    private String userId;
+    // 当前账号对应的支付订单ID
     private String orderId;
-    // 支付ID
-    private String paymentId;
     // 通道ID
     private String channelId;
-
-    // 账号ID
-    private String accountId;
-    // 用户ID
-    private String userId;
-
-
-
+    // 支付流水号
+    private String paySn;
     // 金额
     private String amount;
-//    @Getter
-//    // 具体支付参数
-//    private JSONObject payParams;
 
-    private T payRequest;
-
+    // 具体支付参数
+    private JSONObject payParams;
 
     private PayRequest() {
 
@@ -61,10 +48,13 @@ public class PayRequest {
     /**
      * 创建map请求参数
      *
-     * @param httpServletRequest
+     * @param payParams
      * @return
      */
-    public PayRequest init(HttpServletRequest httpServletRequest) {
+    public PayRequest init(PayParams payParams) {
+
+        this.payParams = payParams.getParams();
+
 //        payParams = getRequestParam(httpServletRequest);
 //
 //        appId = payParams.getString("appId");
@@ -93,44 +83,81 @@ public class PayRequest {
         return this;
     }
 
-
-    /**
-     * @param request
-     * @return
-     * @throws Exception
-     * @author tianwyam
-     * @description 从POST请求中获取参数
-     */
-    private JSONObject getRequestParam(HttpServletRequest request) {
-        // 返回参数
-        JSONObject params = new JSONObject();
-        // 获取内容格式
-        String contentType = request.getContentType();
-        if (contentType != null && !contentType.equals("")) {
-            contentType = contentType.split(";")[0];
-        }
-        // form表单格式  表单形式可以从 ParameterMap中获取
-        if ("appliction/x-www-form-urlencoded".equalsIgnoreCase(contentType)) {
-            // 获取参数
-            Map<String, String[]> parameterMap = request.getParameterMap();
-            if (parameterMap != null) {
-                for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
-                    params.put(entry.getKey(), entry.getValue()[0]);
-                }
-            }
-        }
-        // json格式 json格式需要从request的输入流中解析获取
-        if ("application/json".equalsIgnoreCase(contentType)) {
-            // 使用 commons-io中 IOUtils 类快速获取输入流内容
-            String paramJson = null;
-            try {
-                paramJson = IOUtils.toString(request.getInputStream(), "UTF-8");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            params.putAll(JSON.parseObject(paramJson));
-        }
-        return params;
+    public PayRequest setDirectiveCode(DirectiveCode directiveCode) {
+        this.directiveCode = directiveCode;
+        return this;
+    }
+    public PayRequest setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+        return this;
+    }
+    public PayRequest setIp(String ip) {
+        this.ip = ip;
+        return this;
+    }
+    public PayRequest setOrderId(String orderId) {
+        this.orderId = orderId;
+        return this;
+    }
+    public PayRequest setPaymentId(String paySn) {
+        this.paySn = paySn;
+        return this;
+    }
+    public PayRequest setChannelId(String channelId) {
+        this.channelId = channelId;
+        return this;
+    }
+    public PayRequest setAccountId(String accountId) {
+        this.accountId = accountId;
+        return this;
+    }
+    public PayRequest setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
+    public PayRequest setAmount(String amount) {
+        this.amount = amount;
+        return this;
+    }
+    public PayRequest setPaySn(String paySn) {
+        this.paySn = paySn;
+        return this;
     }
 
+
+
+
+
+
+
+    public DirectiveCode getDirectiveCode() {
+        return directiveCode;
+    }
+    public String getDeviceId() {
+        return deviceId;
+    }
+    public String getIp() {
+        return ip;
+    }
+    public String getOrderId() {
+        return orderId;
+    }
+    public String getPaySn() {
+        return paySn;
+    }
+    public String getChannelId() {
+        return channelId;
+    }
+    public String getAccountId() {
+        return accountId;
+    }
+    public String getUserId() {
+        return userId;
+    }
+    public String getAmount() {
+        return amount;
+    }
+    public JSONObject getPayParams() {
+        return payParams;
+    }
 }

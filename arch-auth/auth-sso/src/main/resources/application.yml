@@ -1,8 +1,10 @@
 server:
   port: 9401
+  servlet:
+    context-path: /sso
 spring:
   application:
-    name: auth-oauth2
+    name: auth-sso
   resources:
     static-locations: classpath:/public
   thymeleaf:
@@ -26,9 +28,5 @@ spring:
 #    password: 123456
 
   profiles:
-    active: dev,db
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+    active: auth,db,mdc,oauth2,redis,vc,dev
+

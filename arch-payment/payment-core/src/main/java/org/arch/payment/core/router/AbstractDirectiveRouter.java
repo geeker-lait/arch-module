@@ -1,7 +1,6 @@
 package org.arch.payment.core.router;
 
 import org.arch.framework.id.IdService;
-import org.arch.payment.core.PayChannel;
 import org.arch.payment.core.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -33,8 +32,7 @@ public abstract class AbstractDirectiveRouter {
 
     @Autowired
     protected IdService idService;
-    @Autowired
-    protected PayChannel payChannel;
+
 
 }
 

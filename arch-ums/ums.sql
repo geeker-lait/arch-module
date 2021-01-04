@@ -56,6 +56,7 @@ CREATE TABLE `account_identifier` (
   `credential` varchar(32) NOT NULL COMMENT '授权凭证【CREDENTIAL】：站内账号是密码、第三方登录是Token；',
   `channelType` varchar(32) NOT NULL COMMENT '登录类型【IDENTITYTYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；',
   PRIMARY KEY (`aid`),
+  UNIQUE KEY `IDX_IDENTIFIER` (`identifier`),
   KEY `IDX_AID` (`aid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-标识';
 
@@ -109,11 +110,12 @@ DROP TABLE IF EXISTS `account_oauth_client`;
 
 CREATE TABLE `account_oauth_client` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '授权客户端ID',
-  `client_id` varchar(32) NOT NULL COMMENT 'appId 或 客户端ID',
-  `client_secret` varchar(32) NOT NULL COMMENT 'appSecret 或 客户端secret',
-  `client_typ` int(2) NOT NULL COMMENT '客户端类型: web, 安卓, ios, 小程序…',
+  `app_id` varchar(32) NOT NULL COMMENT 'appId 或 客户端ID',
+  `app_code` varchar(32) NOT NULL COMMENT 'appSecret 或 客户端secret',
+  `scopes` varchar(255) NOT NULL COMMENT 'openid/userinfo/token/code/资源服务器标识等',
+  `app_type` int(2) NOT NULL COMMENT '客户端类型: web, 安卓, ios, 小程序…',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_CLIENT_ID_SECRET_TYP` (`client_id`,`client_secret`)
+  UNIQUE KEY `IDX_CLIENT_ID_SECRET_TYP` (`app_id`,`app_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='授权客户端';
 
 /*Table structure for table `account_oauth_token` */
@@ -125,7 +127,8 @@ CREATE TABLE `account_oauth_token` (
   `enable_refresh` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否支持 refreshToken, 默认: 0. 1 表示支持, 0 表示不支持',
   `provider_id` varchar(20) DEFAULT NULL COMMENT '第三方服务商,如: qq,github',
   `access_token` varchar(64) DEFAULT NULL COMMENT 'accessToken',
-  `expire_in` bigint(20) DEFAULT '-1' COMMENT '过期时间 无过期时间默认为 -1',
+  `expire_in` bigint(20) DEFAULT '-1' COMMENT 'accessToken过期时间 无过期时间默认为 -1',
+  `refreshTokenExpireIn` bigint(20) DEFAULT '-1' COMMENT 'refreshToken过期时间 无过期时间默认为 -1',
   `refresh_token` varchar(64) DEFAULT NULL COMMENT 'refreshToken',
   `uid` varchar(20) DEFAULT NULL COMMENT 'alipay userId',
   `open_id` varchar(64) DEFAULT NULL COMMENT 'qq/mi/toutiao/wechatMp/wechatOpen/weibo/jd/kujiale/dingTalk/douyin/feishu',

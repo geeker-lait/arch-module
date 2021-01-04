@@ -3,6 +3,7 @@ package org.arch.payment.core.router;
 import org.arch.payment.sdk.Directive;
 import org.arch.payment.sdk.DirectiveCode;
 import org.arch.payment.sdk.DirectiveRouter;
+import org.arch.payment.sdk.PayRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 public class BindCardRouter extends AbstractDirectiveRouter implements DirectiveRouter {
 
     @Override
-    public void routing(List<Directive> directives) {
+    public void routing(List<Directive> directives, PayRequest payRequest) {
 
 
 

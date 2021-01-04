@@ -1,7 +1,7 @@
 package org.arch.ums.account.dto;
 
 import lombok.Data;
-import org.arch.ums.account.enums.ChannelType;
+import org.arch.framework.enums.ChannelType;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

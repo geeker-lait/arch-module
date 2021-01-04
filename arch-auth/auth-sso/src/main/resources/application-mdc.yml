@@ -14,4 +14,4 @@ ums:
       - /**/*.js
       - /**/*.html
       - /**/*.css
-      - /static/**
+      - /public/**

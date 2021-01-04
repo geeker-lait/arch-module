@@ -2,8 +2,7 @@ package org.arch.payment.sdk.request;
 
 import lombok.Data;
 import org.arch.payment.sdk.PayHeader;
-
-import java.math.BigDecimal;
+import org.arch.payment.sdk.PayParams;
 
 /**
  * @author lait.zhang@gmail.com
@@ -12,10 +11,10 @@ import java.math.BigDecimal;
  * @date 12/30/2020 9:13 PM
  */
 @Data
-public class PrePayingRequest {
+public class PrePayingRequest implements PayParams {
 
     // 支付请求头
-    private PayHeader payRequestHeader;
+    private PayHeader payHeader;
 
     // 金额
     private String amount;

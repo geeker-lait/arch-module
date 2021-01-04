@@ -6,7 +6,7 @@
     </sql>
 
     <sql id="baseColumn">
-        id,client_id,client_secret,client_typ
+        id,app_id,app_code,scopes,app_type
     </sql>
 
 </mapper>

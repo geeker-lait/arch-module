@@ -1,0 +1,14 @@
+
+spring:
+  application:
+    name: auth-jwt
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  profiles:
+    active: db,jwt,redis,dev
+
+
+logging:
+  config: classpath:logback-spring.xml

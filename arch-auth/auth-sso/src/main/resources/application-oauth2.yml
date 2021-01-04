@@ -2,7 +2,7 @@ ums:
   # ================ 第三方授权登录相关配置 ================
   oauth:
     # 是否支持第三方授权登录功能, 默认: 空, 必须明确配置是否支持
-    enabled: false
+    enabled: true
     # 第三方授权登录后如未注册用户是否支持自动注册功能, 默认: true
     auto-sign-up: true
     # 第三方授权登录后如未注册用户不支持自动注册功能, 则跳转到此 url 进行注册逻辑, 此 url 必须开发者自己实现; 默认: /signUp.html;
@@ -19,10 +19,17 @@ ums:
     github:
       # 根据是否有设置 clientId 来动态加载相应 JustAuth 的 AuthXxxRequest
       client-id: 4d4ee00e82f669f2ea8d
-      client-secret: 953ddbe871a08d6924053531e89ecc01d87195a8
+      client-secret: 679eca4a6bde2d1a2437546b71ae952fb86514f6
+      scopes:
+      #  - 'repo:status'
+      #  - 'public_repo'
+      #  - 'repo:invite'
+      #  - 'user:follow'
     gitee:
       client-id: dcc38c801ee88f43cfc1d5c52ec579751c12610c37b87428331bd6694056648e
       client-secret: f7384969d0e93088cdab546a1cea026442c16e2476cedec02e202cc89ee773ae
+      scopes:
+        - user_info
     # 自定义 OAuth2 Login
     customize:
       client-id: c971cf1634460e18310a5d7cb0f55d7d143a72015b2f29aee6a0e8911efac7eb
@@ -78,13 +85,7 @@ ums:
       cacheType: session
       # JustAuth state 缓存 key 前缀
       cacheKeyPrefix: 'JUST_AUTH:'
-      # 支持自定义授权平台的 scope 内容, 格式为: source:scope, 例如: [QQ:write, QQ:read, GITEE:email, GITHUB:read]
-      scopes:
-      # 示例
-      # - QQ:write
-      # - QQ:read
-      # - GITEE:email
-      # - GITHUB:read
+
     # 用于 JustAuth 的代理(HttpClient)设置
     proxy:
       # 是否支持代理, 默认为: false.
@@ -105,7 +106,7 @@ ums:
     # redisCacheManager 设置, 默认实现: 对查询结果 null 值进行缓存, 添加时更新缓存 null 值.
     redis:
       # 是否开启缓存, 默认 false
-      open: false
+      open: true
       # 是否使用 spring IOC 容器中的 RedisConnectionFactory， 默认： false
       # 如果使用 spring IOC 容器中的 RedisConnectionFactory，则要注意 cache.database-index 要与 spring.redis.database 一样。
       use-ioc-redis-connection-factory: true

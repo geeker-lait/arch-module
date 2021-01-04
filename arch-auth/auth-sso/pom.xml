@@ -12,10 +12,10 @@
 
     <artifactId>auth-sso</artifactId>
     <name>auth-sso</name>
-    <description>本司应用单点登录模块</description>
+    <description>单点登录模块</description>
 
     <properties>
-        <ums.version>2.2.1</ums.version>
+        <ums.version>2.2.3</ums.version>
     </properties>
 
     <dependencies>
@@ -24,6 +24,23 @@
             <groupId>top.dcenter</groupId>
             <artifactId>ums-core-spring-boot-starter</artifactId>
             <version>${ums.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-oauth</artifactId>
+            <version>${ums.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-vc</artifactId>
+            <version>${ums.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>auth-rbac</artifactId>
+            <version>${parent.version}</version>
         </dependency>
 
         <dependency>
@@ -41,19 +58,10 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-oauth2</artifactId>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-resource-server</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-        </dependency>
-        <!--<dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <version>8.16</version>
-        </dependency>-->
         <!-- redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
