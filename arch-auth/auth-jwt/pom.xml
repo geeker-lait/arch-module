@@ -15,7 +15,7 @@
     <description>jwt 解析模块</description>
 
     <properties>
-        <ums.version>2.2.3</ums.version>
+        <ums.version>2.2.5</ums.version>
     </properties>
 
     <dependencies>

@@ -39,6 +39,8 @@ import top.dcenter.ums.security.jwt.jackson2.deserializer.JwtAuthenticationToken
  */
 public class ArchJackson2Module extends SimpleModule {
 
+	private static final long serialVersionUID = 5029625645865781935L;
+
 	public ArchJackson2Module() {
 		super(ArchJackson2Module.class.getName(), new Version(1, 0, 0, null, null, null));
 	}

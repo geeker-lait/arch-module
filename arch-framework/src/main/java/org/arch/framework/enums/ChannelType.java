@@ -22,6 +22,6 @@ public enum ChannelType {
     /**
      * 第三方授权登录类型
      */
-    OAUTH
+    OAUTH2
 
 }

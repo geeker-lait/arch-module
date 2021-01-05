@@ -11,7 +11,7 @@
   <artifactId>auth-rbac</artifactId>
 
     <properties>
-        <ums.version>2.2.3</ums.version>
+        <ums.version>2.2.5</ums.version>
     </properties>
 
     <dependencies>
@@ -32,6 +32,12 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>ums-account</artifactId>
+            <version>${parent.version}</version>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>com.baomidou</groupId>

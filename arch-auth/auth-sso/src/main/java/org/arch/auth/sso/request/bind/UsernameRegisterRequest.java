@@ -1,5 +1,7 @@
 package org.arch.auth.sso.request.bind;
 
+import org.arch.framework.enums.ChannelType;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -19,6 +21,11 @@ public class UsernameRegisterRequest {
      */
     @NotNull
     private String password;
+
+    /**
+     * 账号登录类型
+     */
+    private ChannelType channelType;
 
     /**
      * 用户昵称

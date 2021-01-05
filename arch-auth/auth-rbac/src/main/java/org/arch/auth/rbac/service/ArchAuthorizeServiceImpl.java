@@ -22,8 +22,8 @@
  */
 package org.arch.auth.rbac.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import top.dcenter.ums.security.core.api.premission.service.AbstractUriAuthorizeService;
 import top.dcenter.ums.security.core.api.premission.service.UpdateAndCacheRolesResourcesService;
@@ -36,13 +36,9 @@ import java.util.Set;
  * @author YongWu zheng
  * @since 2020.12.29 20:21
  */
+@RequiredArgsConstructor
 public class ArchAuthorizeServiceImpl extends AbstractUriAuthorizeService implements UpdateAndCacheRolesResourcesService, InitializingBean {
 
-    @SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
-    @Autowired
-    private RbacMenuService rbacMenuService;
-    private RbacResourceService rbacResourceService;
-    private RbacPermissionService rbacPermissionService;
 
     /**
      * 所有角色 uri(资源) 权限 Map(role, map(uri, Set(permission)))

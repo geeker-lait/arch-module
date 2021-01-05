@@ -1,4 +1,4 @@
-package org.arch.ums.account.config;
+package org.arch.ums.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  *
  * @author lait
  * @since 2020-12-26 21:57:25
+ * @description 
  **/
 @Configuration
 @EnableTransactionManagement

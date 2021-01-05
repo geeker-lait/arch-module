@@ -54,3 +54,5 @@ management:
     web:
       exposure:
         include: "*"
+logging:
+  config: classpath:logback-spring-dev.xml

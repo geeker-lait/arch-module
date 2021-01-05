@@ -30,7 +30,7 @@ public class AuthRegDto implements Serializable {
     @NotNull(message = "密码不能为空")
     private String password;
     /**
-     * 登录类型: 站内用户(ACCOUNT), 邮箱(EMAIL), 手机(PHONE), 第三方(OAUTH),
+     * 登录类型: 站内用户(ACCOUNT), 邮箱(EMAIL), 手机(PHONE), 第三方(OAUTH2),
      * 由后端赋值
      */
     private ChannelType channelType;

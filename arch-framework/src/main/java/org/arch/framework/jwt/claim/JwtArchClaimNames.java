@@ -11,10 +11,6 @@ public enum JwtArchClaimNames {
      */
     ACCOUNT_ID("accountId", "账号 ID"),
     /**
-     * 用户唯一标识, 与 {@link #IDENTIFIER} 意义一样
-     */
-    ACCOUNT_NAME("accountName", "用户唯一标识"),
-    /**
      * 昵称
      */
     NICK_NAME("nickName", "昵称"),
@@ -54,6 +50,10 @@ public enum JwtArchClaimNames {
      * 用户权限
      */
     AUTHORITIES("authorities", "用户权限"),
+    /**
+     * refresh token jti
+     */
+    REFRESH_TOKEN_JTI("rJti", "refresh token jti"),
     /**
      * scope 权限, 与 scp 意义一样
      */
