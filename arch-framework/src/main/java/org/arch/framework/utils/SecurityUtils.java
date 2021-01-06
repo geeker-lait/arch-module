@@ -9,6 +9,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtClaimNames;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -58,7 +59,10 @@ public class SecurityUtils {
     }
 
     /**
-     * {@link ArchUser} 转换为 {@link TokenInfo}
+     * {@link ArchUser} 转换为 {@link TokenInfo}. <br>
+     * 注意: {@link TokenInfo#getAccountName()} 对应于 {@code AccountIdentifier#getIdentifier()},
+     * 值必须与 ums.jwt.principalClaimName 值相同.
+     *
      * @param authentication {@link JwtAuthenticationToken}
      * @return  返回 {@link TokenInfo} 对象
      */
@@ -69,7 +73,8 @@ public class SecurityUtils {
         ChannelType channelType = ChannelType.valueOf(jwt.getClaimAsString(JwtArchClaimNames.CHANNEL_TYPE.getClaimName()));
         return TokenInfo.builder()
                         .accountId(accountId)
-                        .accountName(jwt.getClaimAsString(JwtArchClaimNames.ACCOUNT_NAME.getClaimName()))
+                        // 这里的 ClaimName 必须与属性 ums.jwt.principalClaimName 值相同.
+                        .accountName(jwt.getClaimAsString(JwtClaimNames.SUB))
                         .channelType(channelType)
                         .authorities(authentication.getAuthorities())
                         .build();

@@ -27,9 +27,9 @@ ums:
     # 当 JwtRefreshHandlerPolicy.AUTO_RENEW 时, JWT 剩余的有效期间隔小于此值后自动刷新 JWT;
     # 当 JwtRefreshHandlerPolicy.REFRESH_TOKEN 时, JWT 剩余的有效期间隔小于此值后通过 refreshToken 才会刷新新的 JWT,
     # 否则直接返回旧的 JWT. 默认: 600 秒.
-    remaining-refresh-interval: PT600S
+    remaining-refresh-interval: PT0S
     # Jwt 刷新处理策略, 默认: REJECT . 选项: auto_renew/refresh_token/reject
-    refresh-handler-policy: refresh_token
+    refresh-handler-policy: reject
 
     # ========= JWK 相关 =========
 
@@ -99,6 +99,8 @@ ums:
       # 是否支持 jwt 黑名单功能, 默认: true.
       # 如果为 false, jwtToken 与 refreshToken 会保存到 redis
       enable: false
+      # 是否需要重新登录认证的 redis key 前缀, 默认: "JWT:REAUTH:"
+      re-auth-prefix: 'WT:REAUTH:'
       # JWT 黑名单缓存前缀, 默认: JWT:BLACKLIST:
       blacklist-prefix: 'JWT:BLACKLIST:'
       # JWT refresh token 缓存前缀, 默认: JWT:refreshToken:

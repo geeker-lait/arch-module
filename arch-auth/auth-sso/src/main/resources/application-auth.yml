@@ -30,11 +30,11 @@ ums:
     # 登录失败页(必须自己实现)
     failure-url: /login
     # 设置登录后返回格式(REDIRECT 与 JSON): 默认 JSON
-    login-process-type: redirect
+    login-process-type: json
     # 设置处理登录表单的 uri，不需要用户实现此 uri，由 Spring security 自动实现， 默认为 /authentication/form
-    login-processing-url: /authentication/form
+    login-processing-url: /auth/form
     # 登录成功页(必须自己实现)
-    success-url: /me
+    success-url: /
     # 登录后是否总是使用默认的 successUrl 进行跳转, 默认为: false
     always-use-default-target-url: false
     # 设置登出 url, 默认为 /logout
@@ -51,16 +51,13 @@ ums:
     targetUrlParameter: redirectTargetUrl
     # 不需要认证的静态资源 urls, 例如: /resources/**, /static/**
     ignoring-urls:
-      - /static/**
+      - /public/**
     # 不需要认证的 uri(可以带 HttpMethod 后缀; 用:隔开), 例如: /user/** 或 /user/**:post, 默认为 空 Set.
     permit-urls:
       - /**/*.html:GET
-      - /testSign:GET
-      - /testSignOfLastSevenDays/**:GET
-      - /testDelOfCurrentMonth:GET
-      - /login2:GET
+      - /login:GET
       - /**:OPTIONS
-      - /me:GET
+      - /slider/check:POST
 
     # ============= remember-me =============
     # 设置记住我功能的缓存时长，默认 14 天. If a duration suffix is not specified, seconds will be used.
@@ -84,14 +81,14 @@ ums:
       csrf-is-open: false
       # 忽略指定请求的 CSRF 防护, 默认为 空 Set
       ignoring-ant-matcher-urls:
-        #        - /authentication/form
-        #        - /authentication/mobile
+        #        - /auth/form
+        #        - /auth/mobile
         #        - /authentication/social
         #        - /logout
         - /user/**
         - /file/**
       # csrf tokenRepository 的存储类型, 默认为 session. 因为 session 可以配置缓存在 redis 等, 也可以自己自定义, 例如: redis
-      token-repository-type: session
+      token-repository-type: redis
 
     # ============= 匿名用户配置 =============
     anonymous:
@@ -101,10 +98,7 @@ ums:
       principal: ANONYMOUS
       # 匿名用户权限 list, 默认为 ROLE_ANONYMOUS
       authorities:
-        - ROLE_ANONYMOUS
-        - /test/permission:add
-        - /test/permission:list
-        - /test/pass/:list
+        - ROLE_VOTE
 
 
     # ============= 跨域请求配置 =============
@@ -113,8 +107,14 @@ ums:
       enable: true
       # 允许跨域访问的域，可以是一个域的列表，也可以是通配符"*"。这里要注意 Origin 规则只对域名有效，并不会对子目录有效。
       access-control-allow-origin:
-        - http://localhost:9090
-        - http://localhost:9092
+        - http://sso.arch.org:9401
+        - http://oauth2.arhc.org:9402
+        - http://ums.arhc.org:9410
+        - http://nacos.arch.org:8848
+        - http://localhost:9401
+        - http://localhost:9402
+        - http://localhost:9410
+        - http://localhost:8848
       # 是否允许请求带有验证信息, 当为 true 时, accessControlAllowOrigin 不能为 "*", 默认为 true;
       access-control-allow-credentials: true
       # 进行跨区请求允许曝露的 headers，请求成功后，ajax 可以在 XMLHttpRequest 中访问这些头的信息;
@@ -130,6 +130,7 @@ ums:
         - POST
         - PUT
         - DELETE
+        - OPTIONS
       # 缓存此次请求的秒数。在这个时间范围内，所有同类型的请求都将不再发送预检请求而是直接使用此次返回的头作为判断依据，非常有用，大幅优化请求次数
       access-control-max-age: PT30S
       # 允许进行跨区请求的 url, 支持通配符.
@@ -140,10 +141,10 @@ ums:
   mobile:
     login:
       # 手机验证码登录是否开启, 默认 false，
-      # 手机验证码登录开启后 必须配置 ums.codes.sms.auth-urls=/authentication/mobile
+      # 手机验证码登录开启后 必须配置 ums.codes.sms.auth-urls=/auth/mobile
       sms-code-login-is-open: true
       # 手机验证码登录请求处理url, 默认 /authentication/mobile
-      login-processing-url-mobile: /authentication/mobile
+      login-processing-url-mobile: /auth/mobile
 
   # ============= 用户签到配置 =============
   # 签到功能 设置
@@ -161,3 +162,20 @@ ums:
     # 用户签到 redis key TTL, 默认: 二个月 , 单位: 秒
     user-expired: 5356800
 
+  # =============== login routing 功能: 解决跳转登录成功后不能跳转原始请求的问题 ===============
+
+  # 是否开启根据不同的uri跳转到相对应的登录页, 默认为: false, 当为 true 时还需要配置 loginUnAuthenticationRoutingUrl 和 authRedirectSuffixCondition
+  open-authentication-redirect: false
+  # 当请求需要身份认证时，默认跳转的url 会根据 authJumpSuffixCondition 条件判断的认证处理类型的 url，默认实现 /authentication/require,
+  # 当 openAuthenticationRedirect = true 时生效.
+  login-un-authentication-routing-url: /auth/require
+  # 设置 uri 相对应的跳转登录页, 例如：key=/**: value=/login.html, 用等号隔开key与value, 如: /**=/login.html, 默认为空.
+  # 当 openAuthenticationRedirect = true 时生效.
+  # 支持通配符, 匹配规则： /user/aa/bb/cc.html 匹配 pattern：/us?r/**/*.html, /user/**, /user/*/bb/c?.html, /user/**/*.*.
+  # 规则具体看 AntPathMatcher.match(pattern, path)
+  auth-redirect-suffix-condition:
+    - '/hello=/login2'
+    - '/user/**=/login'
+    - '/order/**=/login'
+    - '/file/**=/login'
+    - '/social/**=/signIn.html'

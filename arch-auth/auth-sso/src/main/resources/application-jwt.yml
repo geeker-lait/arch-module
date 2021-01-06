@@ -51,7 +51,7 @@ ums:
     # "kid" Header Parameter value.
     kid:
     # 该JWT的签发者, 必须是 URL, 根据是否需要设置
-    iss: http://localhost:9090/demo/
+    iss: http://localhost:9401/sso/
     # JWT 存储 principal 的 claimName, 默认: sub
     principal-claim-name: sub
 
@@ -87,10 +87,13 @@ ums:
       # 1. 属性 refreshTokenParameterName 只有在 allowFormEncodedBodyParameter 或 allowUriQueryParameter 其中一方为 true 时生效.
       # 2. 目前 allowFormEncodedBodyParameter, allowUriQueryParameter 属性还不能配置, 默认都为 false, refreshTokenParameterName 总是失效.
       refresh-token-parameter-name: refresh_token
+      
     blacklist:
       # 是否支持 jwt 黑名单功能, 默认: true.
       # 如果为 false, jwtToken 与 refreshToken 会保存到 redis
       enable: false
+      # 是否需要重新登录认证的 redis key 前缀, 默认: "JWT:REAUTH:"
+      re-auth-prefix: 'WT:REAUTH:'
       # JWT 黑名单缓存前缀, 默认: JWT:BLACKLIST:
       blacklist-prefix: 'JWT:BLACKLIST:'
       # JWT refresh token 缓存前缀, 默认: JWT:refreshToken:

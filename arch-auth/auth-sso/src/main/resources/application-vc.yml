@@ -2,7 +2,7 @@ ums:
   # 验证码配置
   codes:
     # 验证码缓存类型, 默认: SESSION, 可选: REDIS/SESSION
-    validate-code-cache-type: session
+    validate-code-cache-type: redis
     # 获取验证码的 url 的前缀, 默认: /code
     validate-code-url-prefix: /code
     # ===== 刷新图片验证码与滑块验证码缓存 定时任务 属性 =====
@@ -19,8 +19,7 @@ ums:
     image:
       # 设置需要图片验证码认证的 uri(必须是非 GET 请求)，多个 uri 用 “-” 或 ","号分开支持通配符，如：/hello,/user/*；默认为 /authentication/form
       auth-urls:
-        - /authentication/form
-        - /authentication/social
+        - /auth/form
       # 验证码长度
       length: 4
       # 图片验证码高
@@ -39,7 +38,7 @@ ums:
     slider:
       # 设置需要验证码认证的 uri(必须是非 GET 请求)，多个 uri 用 “-” 或 ","号分开支持通配符，如：/hello,/user/*；默认为 空
       auth-urls:
-        - /authentication/form
+        - /auth/form
         - /slider/check
       # 设置滑块验证码校验证的 uri, 默认: /slider/check, 默认: /slider/check
       slider-check-url: /slider/check
@@ -60,22 +59,24 @@ ums:
       imageSuffix: png
       # 滑块验证码默认过期时间, 180 秒
       expire: 180
+      # 校验 SliderCode.getLocationX() 时的允许的差异值: 默认: 3 PX
+      redundancy-value: 3
       # 原始图片目录，默认 classpath:static/image/slider/original
       # 不以 "classpath:" 开头时即认为是绝对路径, 以 "classpath:" 开头时即认为是基于 classpath 的相对路径.
-      original-image-directory: classpath:static/image/slider/original
+      original-image-directory: classpath:public/image/slider/original
       # 模板图片目录, 模板图片必须符合: 模板图片的宽 * 3 < 原始图片的宽, 且 模板图片的高 *2 < 原始图片的高; 背景必须是白色, 默认 classpath:static/image/slider/template,
       # 不以 "classpath:" 开头时即认为是绝对路径, 以 "classpath:" 开头时即认为是基于 classpath 的相对路径.
-      template-image-directory: classpath:static/image/slider/template
+      template-image-directory: classpath:public/image/slider/template
       # 根据原始图片生成的滑块图片目录，用于自定义缓存滑块图片的存储目录, 默认 classpath:static/image/slider/code,
       # 不以 "classpath:" 开头时即认为是绝对路径, 以 "classpath:" 开头时即认为是基于 classpath 的相对路径.
-      code-image-directory: classpath:static/image/slider/code
+      code-image-directory: classpath:public/image/slider/code
 
 
     # 短信验证码
     sms:
       # 设置需要短信验证码认证的 uri(必须是非 GET 请求)，多个 uri 用 “，”号分开支持通配符，如：/hello,/user/*；默认为 /authentication/form
       auth-urls:
-        - /authentication/mobile
+        - /auth/mobile
       length: 6
       expire: 120
       request-param-mobile-name: mobile
