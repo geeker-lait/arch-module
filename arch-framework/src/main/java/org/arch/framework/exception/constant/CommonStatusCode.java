@@ -31,6 +31,9 @@ public enum CommonStatusCode implements CommonExceptionAssert {
     DATE_NOT_NULL(5001, "日期不能为空"), DATETIME_NOT_NULL(5001, "时间不能为空"), TIME_NOT_NULL(5001, "时间不能为空"),
     DATE_PATTERN_MISMATCH(5002, "日期[%s]与格式[%s]不匹配，无法解析"), PATTERN_NOT_NULL(5003, "日期格式不能为空"),
     PATTERN_INVALID(5003, "日期格式[%s]无法识别"),
+
+
+    WORK_ID_GENERATE_FAILED(4000,"ID生成器的workerID已经被占满了")
     ;
 
     /**

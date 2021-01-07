@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @create 2017-11-24 16:06
  */
 @Service
-public class RedisIdService implements IdService {
+public class RedisIdService extends  SnowflakeIdGeneratorForJedis implements IdService {
 
     private final Logger logger = LoggerFactory.getLogger(RedisIdService.class);
 
@@ -84,6 +84,11 @@ public class RedisIdService implements IdService {
     @Override
     public Long randomLongId(int length) {
         return ThreadLocalRandom.current().nextLong();
+    }
+
+    @Override
+    public long nextId(IdKey idType) {
+        return super.nextId(idType);
     }
 
     /**

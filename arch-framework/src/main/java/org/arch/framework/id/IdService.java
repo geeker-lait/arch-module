@@ -53,4 +53,7 @@ public interface IdService {
     Long randomLongId(int length);
 
 
+    long nextId(IdKey idType);
+
+
 }

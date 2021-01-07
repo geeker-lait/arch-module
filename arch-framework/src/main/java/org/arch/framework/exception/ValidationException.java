@@ -8,6 +8,10 @@ public class ValidationException extends BaseException {
 
     private static final long serialVersionUID = 1L;
 
+    public ValidationException(StatusCode responseCode) {
+        super(responseCode);
+    }
+
     public ValidationException(StatusCode responseCode, Object[] args, String message) {
         super(responseCode, args, message);
     }
