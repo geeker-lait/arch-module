@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>登录</title>
@@ -90,7 +90,7 @@
 <h5>如果要调试 纯 jwt 模式, 请设置 application.yml -> ums.jwt.blacklist.enable = true</h5>
 <h2>社交登录</h2>
 <a href="#" onclick="auth2('/sso/auth2/gitee')">gitee登录ajax</a>
-<a href="#" onclick="auth2('/sso/auth2/github')">github登录ajax</a>
+<!--<a href="#" onclick="auth2('/sso/auth2/github')">github登录ajax</a>-->
 <h2>表单登录</h2>
 <h3>滑块验证码</h3>
 <h5>如果短信验证码与图片验证码同时配置同一 uri 时，优先使用短信验证码，图片验证码失效</h5>
@@ -207,89 +207,19 @@
             dataType: "json",
             contentType: 'application/json; charset=UTF-8',
             success: function (data) {
-                console.log("==========注册或登录成功============")
                 console.log("获取的第三方授权 status = " + data.status)
                 console.log("获取的第三方授权 url = " + data.url)
                 //...
+                if (data.status === 302) {
+                    window.location.href = data.url;
+                }
+
             },
             error: function (data) {
                 // 登录失败
                 console.log("********登录失败*********")
                 console.log(data)
 
-            },
-            complete: function (xhr, data) {
-
-                let tempUrl;
-                // 从第三方授权
-                if (xhr.responseJSON.status === 302) {
-                    window.location.href = xhr.responseJSON.url;
-
-                    setTimeout(sleep, 1000);
-                    console.log('document 1')
-                    console.log(document.body)
-
-                    // 访问 /me
-
-                    let accessToken;
-                    let Authorization;
-                    let refresh_token;
-                    let ajaxData;
-                    /*
-                        认证成功: 设置 jwt 到本地缓存
-                    */
-                    console.log("========== 认证成功: 设置 jwt 到本地缓存 ============")
-                    console.log("========== 通过 响应头 获取 JWT ============")
-                    //  jwt 传输的方式是 ums.jwt.bearer.bearerTokenHeaderName 方式
-                    Authorization = xhr.getResponseHeader('Authorization');
-                    console.log('Authorization: ' + Authorization);
-                    console.log("")
-                    console.log("========== 通过 响应头 获取 refresh_token ============")
-                    //  jwt 传输的方式是 ums.jwt.bearer.bearerTokenHeaderName 方式
-                    refresh_token = xhr.getResponseHeader('refresh_token');
-                    console.log('refresh_token: ' + refresh_token);
-                    console.log("")
-
-                    if (undefined !== Authorization && null === Authorization) {
-                        // jwt 传输的方式是 ums.jwt.bearer.bearerTokenHeaderName 方式
-                        console.log("========== 通过 响应体 获取 JWT ============")
-                        accessToken = xhr.responseJSON.data.token;
-                        console.log('accessToken: ' + accessToken);
-                        console.log("")
-                        if (undefined !== accessToken && null !== accessToken) {
-                            console.log("========== accessToken: JWT 缓存到本地缓存 ============")
-                            window.localStorage.setItem('jwt', accessToken);
-                        }
-
-                    } else {
-                        console.log("========== Authorization: JWT 缓存到本地缓存 ============")
-                        console.log("")
-                        window.localStorage.setItem('jwt', Authorization);
-                        if (undefined !== refresh_token && null !== refresh_token) {
-                            console.log("========== refresh_token: refresh_token 缓存到本地缓存 ============")
-                            window.localStorage.setItem('refresh_token', refresh_token);
-                        }
-                    }
-
-                    // 如果 jwt 传输的方式是 ums.jwt.bearer.bearerTokenParameterName 方式, 则设置到 请求体 中
-                    if (undefined !== accessToken && null !== accessToken) {
-                        // 添加 JWT 到 body 参数
-                        let jwt = window.localStorage.getItem('jwt');
-                        if (undefined !== jwt && null !== jwt) {
-                            console.log("========== 访问需要权限的 API: JWT 传输的方式是 ums.jwt.bearer.bearerTokenParameterName 方式, 则设置到 请求体 中 ============")
-                            ajaxData = '{"access_token":"' + jwt + '"}'
-                            console.log("JWT 设置到 body 的 access_token : " + ajaxData);
-                            console.log("")
-                        } else {
-                            ajaxData = null;
-                        }
-                    } else {
-                        ajaxData = null;
-                    }
-
-                    console.log(ajaxData)
-
-                }
             }
         })
         return;
@@ -544,8 +474,10 @@
                     console.log("targetUrl: " + targetUrl);
                     console.log(ajaxData)
 
-                    $.ajax({
-                        // 如果用的是模板，则 url 可以使用注入的方式，会跟着配置动态改变
+
+                    window.location.href = targetUrl;
+
+                    /*$.ajax({
                         url: targetUrl,
                         type: "POST",
                         data: ajaxData,
@@ -576,10 +508,10 @@
                             console.log()
                         },
                         complete: function (xhr, data) {
-                            /*
+                            /!*
                                如果 JWT 刷新策略是 JwtRefreshHandlerPolicy.AUTO_RENEW, 则后自动刷新 JWT,
                                如果刷新只会从 header 传输, 更新本地 JWT 缓存.
-                            */
+                            *!/
                             let Authorization = xhr.getResponseHeader('Authorization');
                             console.log(Authorization);
                             let oldJwt =  window.localStorage.getItem('jwt');
@@ -591,7 +523,7 @@
                                 console.log("")
                             }
                         }
-                    });
+                    });*/
                 }
             })
             return

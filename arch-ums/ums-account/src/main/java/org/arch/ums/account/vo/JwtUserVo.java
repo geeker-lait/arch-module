@@ -1,7 +1,7 @@
 package org.arch.ums.account.vo;
 
 import lombok.Data;
-import org.arch.framework.enums.ChannelType;
+import org.arch.framework.ums.enums.ChannelType;
 
 import java.io.Serializable;
 

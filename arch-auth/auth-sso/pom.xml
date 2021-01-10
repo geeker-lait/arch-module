@@ -15,7 +15,7 @@
     <description>单点登录模块</description>
 
     <properties>
-        <ums.version>2.2.5</ums.version>
+        <ums.version>2.2.10</ums.version>
     </properties>
 
     <dependencies>

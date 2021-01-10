@@ -1,6 +1,6 @@
 package org.arch.auth.sso.utils;
 
-import org.arch.framework.enums.AccountType;
+import org.arch.framework.ums.enums.AccountType;
 import org.springframework.lang.Nullable;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

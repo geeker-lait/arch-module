@@ -3,10 +3,10 @@ package org.arch.auth.sso.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthUser;
-import org.arch.framework.enums.ChannelType;
+import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.id.IdKey;
 import org.arch.framework.id.IdService;
-import org.arch.framework.userdetails.ArchUser;
+import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -136,12 +136,12 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     @Override
     public String[] generateUsernames(@NonNull AuthUser authUser) {
         // 待扩展
+        // providerId = authUser.getSource();
+        // 第三方系统的唯一id: authUser.getUuid()
+        // 用户名: authUser.getUsername()
         return new String[]{
-                authUser.getUsername(),
-                // providerId = authUser.getSource()
-                authUser.getUsername() + "_" + authUser.getSource(),
-                // providerUserId = authUser.getUuid()
-                authUser.getUsername() + "_" + authUser.getSource() + "_" + authUser.getUuid()
+                authUser.getSource() + "_" + authUser.getUuid(),
+                authUser.getSource() + "_" + authUser.getUuid() + "_" + authUser.getUsername()
         };
     }
 

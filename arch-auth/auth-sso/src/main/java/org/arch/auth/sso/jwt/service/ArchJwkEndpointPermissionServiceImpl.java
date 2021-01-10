@@ -19,7 +19,7 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
     @NonNull
     @Override
     public Boolean hasPermission(@NonNull HttpServletRequest request) {
-        // TODO
+        // TODO 关联 AccountOauthClient 的 scopes 权限
         return Boolean.TRUE;
     }
 }

@@ -35,6 +35,7 @@ ums:
       image-cache-directory: classpath:static/image/code
 
     # 滑块验证码
+    # 自定义滑块验证码背景图, 默认 350 * 213, 可自定义, 如果尺寸改变前端 css 宽也需要改变; mark 图片: 白底图片, 大小小于背景图片.
     slider:
       # 设置需要验证码认证的 uri(必须是非 GET 请求)，多个 uri 用 “-” 或 ","号分开支持通配符，如：/hello,/user/*；默认为 空
       auth-urls:

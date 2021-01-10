@@ -1,0 +1,15 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /ums
+spring:
+  freemarker:
+    check-template-location: false
+    settings:
+      classic_compatible: true
+  profiles:
+    active: db,dev
+  jackson:
+    time-zone: GMT+8
+
+

@@ -3,8 +3,9 @@ package org.arch.auth.sso.jackson2.model;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import me.zhyd.oauth.model.AuthUser;
-import org.arch.framework.jackson2.deserializer.ArchUserDeserializer;
-import org.arch.framework.userdetails.ArchUser;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.ums.jackson2.deserializer.ArchUserDeserializer;
+import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +34,7 @@ import top.dcenter.ums.security.jwt.jackson2.deserializer.DefaultOAuth2Authentic
 import top.dcenter.ums.security.jwt.jackson2.deserializer.JwtAuthenticationTokenDeserializer;
 
 /**
+ * TODO 测试是否需要增加 {@link TokenInfo} 反序列化器
  * auth-sso Jackson2 Module
  * @author YongWu zheng
  * @version V2.0  Created by 2020/10/28 10:58

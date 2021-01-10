@@ -47,6 +47,10 @@ spring:
     throw-exception-if-no-handler-found: true
 
 
+arch:
+  default-avatar: http://static.dcenter.top/static/img/random/user/14.jpg
+
+
 #  profiles:
 #    active: dev,db,auth,oauth2,vc,jwt
 management:
@@ -56,3 +60,4 @@ management:
         include: "*"
 logging:
   config: classpath:logback-spring-dev.xml
+

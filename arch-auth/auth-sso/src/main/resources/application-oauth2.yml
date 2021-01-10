@@ -26,8 +26,8 @@ ums:
       #  - 'repo:invite'
       #  - 'user:follow'
     gitee:
-      client-id: dcc38c801ee88f43cfc1d5c52ec579751c12610c37b87428331bd6694056648e
-      client-secret: f7384969d0e93088cdab546a1cea026442c16e2476cedec02e202cc89ee773ae
+      client-id: f1cc414ad7d72519781b0bb86c39d7ac677db60019d1704b7845977a1a3058b2
+      client-secret: 21dd3f8e1dffe73f3fbd1f1271447c0d43cdcb8552c66621a3e98d3f4e06d623
       scopes:
         - user_info
     # 第三方登录授权登录 url 前缀, 不包含 ServletContextPath，默认为 /auth2/authorization.
