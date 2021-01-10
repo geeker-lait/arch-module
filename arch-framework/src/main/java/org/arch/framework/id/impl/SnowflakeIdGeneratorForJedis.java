@@ -6,7 +6,7 @@ import org.arch.framework.exception.constant.CommonStatusCode;
 import org.arch.framework.id.IdKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import redis.clients.jedis.commands.JedisCommands;
 import redis.clients.jedis.params.SetParams;
 
@@ -28,14 +28,16 @@ public abstract class SnowflakeIdGeneratorForJedis {
     private long sequence = 0L;
     private long lastTimestamp = -1L;
 
+//    @Autowired
+//    private JedisConnectionFactory jedisConnectionFactory;
     @Autowired
-    private JedisConnectionFactory jedisConnectionFactory;
-
+    private RedisConnectionFactory redisConnectionFactory;
 
 
 
     private void init(IdKey idType) {
-        RedisConnection connection = this.jedisConnectionFactory.getConnection();
+//        RedisConnection connection = this.jedisConnectionFactory.getConnection();
+        RedisConnection connection = this.redisConnectionFactory.getConnection();
         JedisCommands jedis = (JedisCommands)connection.getNativeConnection();
 
         try {
@@ -62,7 +64,8 @@ public abstract class SnowflakeIdGeneratorForJedis {
 
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
             executor.scheduleAtFixedRate(() -> {
-                RedisConnection connection1 = this.jedisConnectionFactory.getConnection();
+//                RedisConnection connection1 = this.jedisConnectionFactory.getConnection();
+                RedisConnection connection1 = this.redisConnectionFactory.getConnection();
                 JedisCommands jedis1 = (JedisCommands)connection.getNativeConnection();
 
                 try {
