@@ -1,8 +1,8 @@
-package org.arch.framework.bean;
+package org.arch.framework.ums.bean;
 
 import lombok.Builder;
 import lombok.Data;
-import org.arch.framework.enums.ChannelType;
+import org.arch.framework.ums.enums.ChannelType;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;

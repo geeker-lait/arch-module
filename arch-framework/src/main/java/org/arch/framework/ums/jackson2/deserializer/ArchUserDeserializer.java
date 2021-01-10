@@ -1,4 +1,4 @@
-package org.arch.framework.jackson2.deserializer;
+package org.arch.framework.ums.jackson2.deserializer;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -12,8 +12,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.node.MissingNode;
-import org.arch.framework.enums.ChannelType;
-import org.arch.framework.userdetails.ArchUser;
+import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

@@ -1,4 +1,4 @@
-package org.arch.framework.jwt.claim;
+package org.arch.framework.ums.jwt.claim;
 
 /**
  * 财智有道的 claim names
@@ -18,10 +18,6 @@ public enum JwtArchClaimNames {
      * 头像
      */
     AVATAR("avatar", "头像"),
-    /**
-     * 用户唯一标识
-     */
-    IDENTIFIER("identifier", "用户唯一标识"),
     /**
      * 登录类型
      */

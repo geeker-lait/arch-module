@@ -1,7 +1,7 @@
-package org.arch.framework.userdetails;
+package org.arch.framework.ums.userdetails;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.enums.ChannelType;
+import org.arch.framework.ums.enums.ChannelType;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;

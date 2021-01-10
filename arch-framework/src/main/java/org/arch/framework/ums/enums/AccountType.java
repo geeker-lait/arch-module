@@ -1,4 +1,4 @@
-package org.arch.framework.enums;
+package org.arch.framework.ums.enums;
 
 /**
  * 账号类型

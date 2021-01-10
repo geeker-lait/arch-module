@@ -1,10 +1,10 @@
 package org.arch.framework.utils;
 
-import org.arch.framework.bean.TokenInfo;
-import org.arch.framework.enums.ChannelType;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.exception.UnAuthenticationException;
-import org.arch.framework.jwt.claim.JwtArchClaimNames;
-import org.arch.framework.userdetails.ArchUser;
+import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
+import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
