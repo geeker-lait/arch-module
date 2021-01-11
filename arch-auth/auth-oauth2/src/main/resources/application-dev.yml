@@ -8,10 +8,10 @@ server:
     prefix: classpath:/templates/
     suffix: .html
 
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: localhost:8848
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.50.2:8848
   redis:
     database: 0
     port: 6379

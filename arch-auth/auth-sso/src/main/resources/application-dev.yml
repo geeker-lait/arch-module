@@ -39,6 +39,11 @@ spring:
         max-idle: 8
         min-idle: 1
 
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.50.2:8848
+
 
   thymeleaf:
     cache: false
@@ -51,8 +56,6 @@ arch:
   default-avatar: http://static.dcenter.top/static/img/random/user/14.jpg
 
 
-#  profiles:
-#    active: dev,db,auth,oauth2,vc,jwt
 management:
   endpoints:
     web:

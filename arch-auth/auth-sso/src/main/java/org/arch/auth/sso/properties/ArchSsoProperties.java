@@ -26,6 +26,8 @@ public class ArchSsoProperties {
     @NotNull(message = "arch.defaultAvatar 属性必须数字默认用户头像")
     private String defaultAvatar;
 
+    // =========== 第三方登录相关 ============
+
     /**
      * 第三方登录成功后, 返回获取 token 自动脚本页面. 默认: /oauth2Token
      */

@@ -54,12 +54,12 @@
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-user</artifactId>
             <version>${parent.version}</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>-->
+        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
