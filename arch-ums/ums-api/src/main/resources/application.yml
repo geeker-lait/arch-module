@@ -1,5 +1,5 @@
 server:
-  port: 9090
+  port: 8088
   servlet:
     context-path: /ums
 spring:
@@ -10,6 +10,23 @@ spring:
   profiles:
     active: db,dev
   jackson:
-    time-zone: GMT+8
+    time-zone: GMT+
 
+  datasource:
+    hikari:
+      connection-test-query: SELECT 1
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3306/ums?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
+      username: "root"
+      password: "123456"
+      maximum-pool-size: 10
+      minimum-idle: 5
+    url: jdbc:mysql://localhost:3306/ums?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
 
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+logging:
+  config: classpath:logback-spring.xml
