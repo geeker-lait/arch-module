@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="icon" href="favicon.ico" mce_href="favicon.ico" type="image/x-icon">
+    <title>自定义表单</title>
+    <script src="./static/bootstrap/js/jquery-1.10.2.min.js"></script>
+    <script src="./static/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container" style="margin-top: 5px;">
+    <ul class="nav nav-pills">
+        <li role="presentation"><a href="./customize_form">首页</a></li>
+        <li role="presentation" class="active"><a href="./customize_form">自定义表单</a></li>
+        <li role="presentation" class="pull-right"><a href="./logout" >退出</a></li>
+    </ul>
+    <hr>
+    <div>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" >新增表单</button>
+        <button type="button" class="btn btn-danger" data-container="body" data-toggle="popover" data-placement="right" title="注意事项" data-content="新建的表单，必须添加字段并保存后才能填写数据！已经有数据的表单无法删除，无法编辑字段，必须先清空表单中的数据！">
+            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+        </button>
+        <div class="form-inline pull-right">
+            <label class="control-label">表单查询：</label>
+            <input class="form-control" id="search_value">
+            <button class="btn btn-success" onclick="getFormList(1, 10)">搜索</button>
+        </div>
+    </div>
+    <table class="table table-striped" id="table1">
+        <thead>
+        <tr>
+            <td>序号</td>
+            <td>名称</td>
+            <td>描述</td>
+            <td>数据行数</td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody id="form_tbody">
+
+        </tbody>
+        <colgroup>
+            <col style="width:10%;">
+       <col style="width:20%;">
+       <col style="width:20%;">
+       <col style="width:20%;">
+       <col style="width:30%;">        
+     </colgroup>
+    </table>
+    <center>
+        <nav aria-label="Page navigation" id="pageNav">
+            <ul class="pagination" id="pageUl">
+
+            </ul>
+        </nav>
+    </center>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">新增表单</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="formName" class="control-label" style="font-size: 20px;">表单名称:</label>
+                        <input type="text" class="form-control" id="formName" placeholder="表单名称">
+                    </div>
+                </form>
+                <form>
+                    <div class="form-group">
+                        <label for="formDesc" class="control-label" style="font-size: 20px;">表单描述:</label>
+                        <input type="text" class="form-control" id="formDesc" placeholder="表单描述">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="tijiao()">提交</button>
+<!--                <button type="button" class="btn btn-primary"></button>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabe2">表单修改</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="formId2" style="display:none">
+                <form>
+                    <div class="form-group">
+                        <label for="formName" class="control-label" style="font-size: 20px;">表单名称:</label>
+                        <input type="text" class="form-control" id="formName2" placeholder="表单名称">
+                    </div>
+                </form>
+                <form>
+                    <div class="form-group">
+                        <label for="formDesc" class="control-label" style="font-size: 20px;">表单描述:</label>
+                        <input type="text" class="form-control" id="formDesc2" placeholder="表单描述">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="update_tijiao()">提交</button>
+                <!--                <button type="button" class="btn btn-primary"></button>-->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var page_now = 1;
+    var size_now = 10;
+    $(function(){
+        // console.log(window.location.href);
+        // console.log(window.location.pathname);
+        // console.log(window.location.search);
+        var url = window.location.href +"";
+        var pathname = window.location.pathname + "";
+        if (url.indexOf("customize_form") == -1 && url.indexOf("username=") > 0) {
+            var pathnameArr = url.split(pathname);
+            var new_url = pathnameArr[0] + "/customize_form";
+            window.location.href = new_url;
+        }
+        $('[data-toggle="popover"]').popover();
+        getFormList(1,10);
+    });
+
+    function tijiao() {
+        var formName = $("#formName").val();
+        var formDesc = $("#formDesc").val();
+
+        $.ajax({
+            type : "post",
+            url : "./form",
+            dataType : "json",
+            data : {
+                "formName" : formName,
+                "formDesc" : formDesc
+            },
+            success : function(json) {
+                console.log(json);
+                $('#myModal').modal('hide');
+                alert(json.message);
+                getFormList(page_now, size_now);
+            },
+            error: function(){
+
+            }
+        });
+
+    }
+
+    function getFormList(page, size) {
+        var searchValue = $("#search_value").val();
+        $.ajax({
+            type : "get",
+            url : "./form",
+            dataType : "json",
+            data : {
+                "searchValue" : searchValue,
+                "page":page,
+                "size":size
+            },
+            success : function(json) {
+                console.log(json)
+                var data = json.data.list;
+                var len = 0;
+                if (data == null) {
+                    $("#form_tbody").html();
+                    $("#form_tbody").html("<tr align='center'><td colspan='6'>暂无数据</td></tr>");
+                } else {
+                    len = data.length;
+                    var str = "";
+                    $("#form_tbody").html();
+                    if (len < 1) {
+                        $("#form_tbody").html("<tr align='center'><td colspan='6'>暂无数据</td></tr>");
+                    } else {
+                        for (var i = 0; i < len; i++) {
+                            str += "<tr>";
+                            str += "<td>" + (i+1) + "</td>";
+                            str += "<td><a href='/fill_form?formId=" + data[i].formId +"' target='view_window'>" + data[i].formName + "</a></td>";
+                            str += "<td>" + data[i].formDesc + "</td>";
+                            str += "<td>" + data[i].rowNumber + "</td>";
+                            str += "<td style='text-align: right;'>" +
+                                "<button onclick=\"update(" + data[i].formId + ")\" class='btn btn-info ' >编辑</button>";
+                            if (data[i].rowNumber > 0) { //如果数据库中有数据，则删除按钮不能用
+                                str += "&nbsp;<button onclick=\"del(" + data[i].formId + ")\" class='btn btn-danger' disabled='disabled'>删除</button>";
+                                str += "&nbsp;<button onclick='modifyField(" + data[i].formId + ")' class='btn btn-default' disabled='disabled'>修改字段</button>";
+                            } else {
+                                str += "&nbsp;<button onclick=\"del(" + data[i].formId + ")\" class='btn btn-danger'>删除</button>";
+                                str += "&nbsp;<button onclick='modifyField(" + data[i].formId + ")' class='btn btn-default'>修改字段</button>";
+                            }
+                            if (data[i].ifCreateTable == 1) { //说明已有表，可以填写数据
+                                str += "&nbsp;<button onclick='fill_form(" + data[i].formId + ")' class='btn btn-warning' >填写数据</button>";
+                            } else {
+                                str += "&nbsp;<button onclick='fill_form(" + data[i].formId + ")' class='btn btn-warning' disabled='disabled'>填写数据</button>";
+                            }
+
+                            str += "</td></tr>";
+                        }
+                        $("#form_tbody").html(str);
+                    }
+
+                    //有数据时，才显示页码
+                    if (len > 0) {
+                        var liStr = "<li><a href=\"#\" onclick=\"getFormList(" + json.data.prePage + ","+ size +")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
+                        for (var i = 0; i < json.data.navigateLastPage - json.data.navigateFirstPage + 1; i++) {
+                            if (json.data.navigatepageNums[i] == page) {
+                                liStr += "<li class='active'><a href=\"#\" onclick=\"getFormList(" + json.data.navigatepageNums[i] + ","+ size +")\">" + json.data.navigatepageNums[i]+ "</a></li>";
+                            } else {
+                                liStr += "<li><a href=\"#\" onclick=\"getFormList(" + json.data.navigatepageNums[i] + ","+ size +")\">" + json.data.navigatepageNums[i]+ "</a></li>";
+                            }
+                        }
+                        liStr += "<li><a href=\"#\" onclick=\"getFormList(" + json.data.nextPage + ","+ size +")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>";
+                        $("#pageUl").html();
+                        $("#pageUl").html(liStr);
+                    }
+
+                }
+            },
+            error: function(){
+
+            }
+        });
+
+        page_now = page;
+        size_now = size;
+    }
+
+    function update(formId) {
+        $.ajax({
+            type : "get",
+            url : "./form/"+formId,
+            dataType : "json",
+            data : {},
+            success : function(json) {
+                $("#formName2").val(json.data.formName);
+                $("#formDesc2").val(json.data.formDesc);
+                $("#formId2").val(json.data.formId);
+                $('#myModa2').modal('show');
+            },
+            error: function(){
+
+            }
+        });
+    }
+
+    function modifyField(formId) {
+        // window.location.href = "/customize_field?formId=" + formId;
+        window.open("/customize_field?formId=" + formId, '_blank','');
+    }
+
+    function fill_form(formId) {
+        window.open("/fill_form?formId=" + formId, '_blank','');
+    }
+
+    function update_tijiao() {
+        var formId = $("#formId2").val();
+        var formName = $("#formName2").val();
+        var formDesc = $("#formDesc2").val();
+
+        $.ajax({
+            type : "put",
+            url : "./form",
+            dataType : "json",
+            data : {
+                "formId": formId,
+                "formName" : formName,
+                "formDesc" : formDesc
+            },
+            success : function(json) {
+                console.log(json);
+                $('#myModa2').modal('hide');
+                if (json.status == true) {
+                    alert(json.message);
+                }
+                getFormList(page_now, size_now);
+            },
+            error: function(){
+
+            }
+        });
+    }
+
+    function del(formId) {
+
+        if(window.confirm('你确定要删除这条表单吗？')){
+            $.ajax({
+                type : "delete",
+                url : "./form/"+formId,
+                dataType : "json",
+                data : {},
+                success : function(json) {
+                    console.log(json);
+                    if (json.status == true) {
+                        alert(json.message);
+                    } else {
+                        alert(json.message);
+                    }
+                    getFormList(page_now, size_now);
+                },
+                error: function(){
+
+                }
+            });
+        }else{
+            return false;
+        }
+
+
+    }
+
+</script>
+</body>
+</html>

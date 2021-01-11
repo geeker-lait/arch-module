@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="icon" href="favicon.ico" mce_href="favicon.ico" type="image/x-icon">
+    <title>修改字段</title>
+    <script src="./static/bootstrap/js/jquery-1.10.2.min.js"></script>
+    <script src="./static/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container" style="margin-top: 5px;">
+    <ul class="nav nav-pills">
+        <li role="presentation"><a href="./customize_form">首页</a></li>
+        <li role="presentation" class=""><a href="./customize_form">自定义表单</a></li>
+        <li role="presentation" class="active"><a href="./customize_field" id="now_a">修改字段</a></li>
+        <li role="presentation" class="pull-right"><a href="./logout" >退出</a></li>
+    </ul>
+    <hr>
+    <div>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">新增字段</button>
+        <button type="button" class="btn btn-danger" data-container="body" data-toggle="popover" data-placement="right" title="注意事项" data-content="完成字段修改后，点击保存按钮才能生效！单选框和多选框类型字段请不忘记添加选项！">
+            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+        </button>
+    </div>
+    <table class="table table-striped" id="table1">
+        <thead>
+        <tr>
+            <td>序号</td>
+            <td>排序</td>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody id="field_tbody">
+
+        </tbody>
+        <colgroup>
+            <col style="width:10%;">
+       <col style="width:15%;">
+       <col style="width:15%;">
+       <col style="width:15%;">
+       <col style="width:15%;">
+       <col style="width:30%;">        
+     </colgroup>
+    </table>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-xs-6">
+            <button type="button" class="btn btn-primary pull-right" onclick="field_save()">保存</button>
+        </div>
+        <div class="col-sm-6 col-md-6 col-xs-6">
+            <button type="button" class="btn btn-default pull-left" onclick="custom_close()">取消</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">新增字段</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="fieldName" class="control-label" style="font-size: 20px;">字段名称:</label>
+                        <input type="text" class="form-control" id="fieldName" placeholder="字段名称">
+                    </div>
+                </form>
+                <form>
+                    <div class="form-group">
+                        <label for="fieldType" class="control-label" style="font-size: 20px;">字段类型:</label>
+                        <select id="fieldType" class="form-control"></select>
+                    </div>
+                </form>
+                <form>
+                    <div class="form-group">
+                        <label for="fieldDesc" class="control-label" style="font-size: 20px;">字段描述:</label>
+                        <input type="text" class="form-control" id="fieldDesc" placeholder="字段描述">
+                    </div>
+                </form>
+                <form>
+                    <div class="form-group">
+                        <label for="fieldOrder" class="control-label" style="font-size: 20px;">字段排序:</label>
+                        <input type="text" class="form-control" id="fieldOrder" placeholder="字段排序">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="tijiao()">提交</button>
+<!--                <button type="button" class="btn btn-primary"></button>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabe2">字段修改</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="fieldId2" style="display:none">
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="fieldName2" class="control-label" style="font-size: 20px;">字段名称:</label>
+                            <input type="text" class="form-control" id="fieldName2" placeholder="字段名称">
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group">
+                            <label for="fieldType2" class="control-label" style="font-size: 20px;">字段类型:</label>
+                            <select id="fieldType2" class="form-control"></select>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group">
+                            <label for="fieldDesc2" class="control-label" style="font-size: 20px;">字段描述:</label>
+                            <input type="text" class="form-control" id="fieldDesc2" placeholder="字段描述">
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group">
+                            <label for="fieldOrder2" class="control-label" style="font-size: 20px;">字段排序:</label>
+                            <input type="text" class="form-control" id="fieldOrder2" placeholder="字段排序">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="update_tijiao()">提交</button>
+                <!--                <button type="button" class="btn btn-primary"></button>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModa3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabe3">选项修改</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="fieldId3" style="display:none">
+                <div class="modal-body">
+                    <div class="form-inline">
+                            <label for="optionName" >新增选项：</label>&nbsp;&nbsp;
+                            <input type="text" class="form-control" id="optionName" placeholder="新增选项">&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-success" onclick="addOption()">确定</button>
+                    </div>
+                    <hr>
+                    <table class="table table-striped table-hover" id="optionTable">
+                        <thead>
+                            <tr align="center">
+                                <th>选项</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="optionTbody"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var formId;
+    var page_now = 1;
+    var size_now = 10;
+    var fieldTypeList;
+    $(function(){
+        formId = GetQueryString("formId");
+        $('[data-toggle="popover"]').popover();
+
+        getFieldTypeList();
+        $("#now_a").attr("href", "/customize_field?formId="+formId);
+    });
+
+    function getFieldTypeList() {
+        $.ajax({
+            type : "get",
+            url : "./fieldType",
+            dataType : "json",
+            data : {},
+            success : function(json) {
+                console.log(json)
+                fieldTypeList = json.data;
+                var optionStr = "";
+                if (fieldTypeList == null) {
+                    optionStr += "<option value='input'>单行文本框</option>";
+                } else  {
+                    for (var i = 0; i <fieldTypeList.length; i++) {
+                        optionStr += "<option value='" + fieldTypeList[i].typeCode +"'>" + fieldTypeList[i].typeName +"</option>";
+                    }
+                }
+                $("#fieldType").html();
+                $("#fieldType").html(optionStr);
+                getFieldList();//获取字段详情列表
+            },
+            error: function(){}
+        });
+    }
+
+    function tijiao() {
+        var fieldName = $("#fieldName").val();
+        var fieldType = $("#fieldType").val();
+        var fieldDesc = $("#fieldDesc").val();
+        var fieldOrder = $("#fieldOrder").val();
+        $.ajax({
+            type : "post",
+            url : "./field",
+            dataType : "json",
+            data : {
+                "formId":formId,
+                "fieldName" : fieldName,
+                "fieldType" : fieldType,
+                "fieldDesc" : fieldDesc,
+                "fieldOrder" : fieldOrder
+            },
+            success : function(json) {
+                console.log(json);
+                $('#myModal').modal('hide');
+                alert(json.message);
+                getFieldList();
+                $("#fieldName").val("");
+                $("#fieldType").val("");
+                $("#fieldDesc").val("");
+                $("#fieldOrder").val("");
+            },
+            error: function(){}
+        });
+
+    }
+
+    function getFieldList() {
+        $.ajax({
+            type : "get",
+            url : "./field",
+            dataType : "json",
+            data : {
+                "formId":formId
+            },
+            success : function(json) {
+                console.log(json)
+                var data = json.data;
+                $("#field_tbody").html();
+                if ( data == null) {
+                    $("#field_tbody").html("<tr align='center'><td colspan='6'>暂无数据</td></tr>");
+                } else {
+                    var len = data.length;
+                    var str = "";
+
+                    if (len < 1) {
+                        $("#field_tbody").html("<tr><td colspan='6'>暂无数据</td></tr>");
+                    } else {
+                        for (var i = 0; i < len; i++) {
+                            var selectStr ="";
+                            if (data[i].fieldType == "radio" || data[i].fieldType == "checkbox") {
+                                selectStr = "<button onclick='optionModel(" + data[i].fieldId + ")' class='btn btn-default'>选项</button>";
+                            }
+                            str += "<tr>";
+                            str += "<td>" + (i+1) + "</td>";
+                            str += "<td>" + data[i].fieldOrder + "</td>";
+                            str += "<td>" + data[i].fieldName + "</td>";
+                            for (var k = 0; k < fieldTypeList.length; k++) {
+                                if (data[i].fieldType == fieldTypeList[k].typeCode) {
+                                    str += "<td>" + fieldTypeList[k].typeName +"(" + data[i].fieldType + ")" + "</td>";
+                                }
+                            }
+                            // str += "<td>" + data[i].fieldType + "</td>";
+                            str += "<td>" + data[i].fieldDesc + "</td>";
+                            str += "<td style='text-align: right;'>" +
+                                selectStr +
+                                "&nbsp;<button onclick=\"update(" + data[i].fieldId + ")\" class='btn btn-info ' >编辑</button>" +
+                                "&nbsp;<button onclick=\"del(" + data[i].fieldId + ")\" class='btn btn-danger'>删除</button>" +
+                                "</td>";
+                            str += "</tr>";
+                        }
+                        $("#field_tbody").html(str);
+                    }
+                }
+            },
+            error: function(){}
+        });
+    }
+
+    function update(fieldId) {
+        $.ajax({
+            type : "get",
+            url : "./field/"+fieldId,
+            dataType : "json",
+            data : {},
+            success : function(json) {
+                $("#fieldId2").val(json.data.fieldId);
+                $("#fieldName2").val(json.data.fieldName);
+                $("#fieldDesc2").val(json.data.fieldDesc);
+                $("#fieldOrder2").val(json.data.fieldOrder);
+                $("#formDesc2").val(json.data.formDesc);
+                var optionStr = "";
+                for (var i = 0; i <fieldTypeList.length; i++) {
+                    if (json.data.fieldType == fieldTypeList[i].typeCode) {
+                        optionStr += "<option value='" + fieldTypeList[i].typeCode +"' selected='selected'>" + fieldTypeList[i].typeName +"</option>";
+                    } else {
+                        optionStr += "<option value='" + fieldTypeList[i].typeCode +"'>" + fieldTypeList[i].typeName +"</option>";
+                    }
+                }
+                $('#fieldType2').html();
+                $('#fieldType2').html(optionStr);
+                $('#myModa2').modal('show');
+            },
+            error: function(){}
+        });
+    }
+
+    function update_tijiao() {
+        var fieldId = $("#fieldId2").val();
+        var fieldName = $("#fieldName2").val();
+        var fieldType = $("#fieldType2").val();
+        var fieldDesc = $("#fieldDesc2").val();
+        var fieldOrder = $("#fieldOrder2").val();
+
+        $.ajax({
+            type : "put",
+            url : "./field",
+            dataType : "json",
+            data : {
+                "formId": formId,
+                "fieldId": fieldId,
+                "fieldName" : fieldName,
+                "fieldType" : fieldType,
+                "fieldDesc" : fieldDesc,
+                "fieldOrder" : fieldOrder
+            },
+            success : function(json) {
+                console.log(json);
+                $('#myModa2').modal('hide');
+                if (json.status == true) {
+                    alert(json.message);
+                } else {
+                    alert(json.message);
+                }
+                getFieldList();
+            },
+            error: function(){}
+        });
+    }
+
+    function del(fieldId) {
+        if(window.confirm('你确定要删除这条表单吗？')){
+            $.ajax({
+                type : "delete",
+                url : "./field/"+fieldId,
+                dataType : "json",
+                data : {},
+                success : function(json) {
+                    console.log(json);
+                    alert(json.message);
+                    getFieldList();
+                },
+                error: function(){}
+            });
+        }else{
+            return false;
+        }
+    }
+
+    function optionModel(fieldId) {
+        $("#fieldId3").val(fieldId);
+        var optionStr = "";
+        $.ajax({
+            type : "get",
+            url : "./option/" + fieldId,
+            dataType : "json",
+            data : {},
+            success : function(json) {
+                console.log(json);
+                var optionList = json.data;
+                if (fieldTypeList == null) {
+                    $("#optionTbody").html("<tr><td colspan='2'>暂无数据</td></tr>");
+                } else  {
+                    for (var i = 0; i <optionList.length; i++) {
+                        //20170715  生成选项表单
+                        optionStr += "<tr align=\"center\">";
+                        optionStr += "<td>"+optionList[i].optionName+"</td>";
+                        optionStr += "<td><button class='btn btn-danger' onclick='delOption("+optionList[i].optionId+")'>删除</button></td>";
+                        optionStr += "</tr>";
+                    }
+                }
+                $("#optionTbody").html();
+                $("#optionTbody").html(optionStr);
+            },
+            error: function(){}
+        });
+        $('#myModa3').modal('show');
+    }
+
+    function addOption() {
+        var optionName = $("#optionName").val();
+        var fieldId = $("#fieldId3").val();
+        $.ajax({
+            type : "post",
+            url : "./option",
+            dataType : "json",
+            data : {
+                "fieldId" : fieldId,
+                "optionName" : optionName
+            },
+            success : function(json) {
+                console.log(json);
+                // $('#myModa3').modal('hide');
+                alert(json.message);
+                refreshOption();
+            },
+            error: function(){}
+        });
+    }
+
+    function delOption(optionId) {
+        var fieldId = $("#fieldId3").val();
+        if(window.confirm('你确定要删除吗？')){
+            $.ajax({
+                type : "delete",
+                url : "./option/" + optionId,
+                dataType : "json",
+                data : {},
+                success : function(json) {
+                    console.log(json);
+                    if (json.status == true) {
+                        alert(json.message);
+                    }
+                    refreshOption();
+                },
+                error: function(){}
+            });
+        }else{
+            return false;
+        }
+    }
+
+    function refreshOption() {
+        var fieldId = $("#fieldId3").val();
+        var optionStr = "";
+        $.ajax({
+            type : "get",
+            url : "./option/" + fieldId,
+            dataType : "json",
+            data : {},
+            success : function(json) {
+                console.log(json)
+                var optionList = json.data;
+                if (fieldTypeList == null) {
+                    $("#optionTbody").html("<tr><td colspan='2'>暂无数据</td></tr>");
+                } else  {
+                    for (var i = 0; i <optionList.length; i++) {
+                        //20170715  生成选项表单
+                        optionStr += "<tr align=\"center\">";
+                        optionStr += "<td>"+optionList[i].optionName+"</td>";
+                        optionStr += "<td><button class='btn btn-danger' onclick='delOption("+optionList[i].optionId+")'>删除</button></td>";
+                        optionStr += "</tr>";
+                    }
+                }
+                $("#optionTbody").html();
+                $("#optionTbody").html(optionStr);
+            },
+            error: function(){}
+        });
+    }
+
+    /**
+     * 保存字段
+     */
+    function field_save() {
+        $.ajax({
+            type : "get",
+            url : "./createFormTable/" + formId,
+            dataType : "json",
+            data : {},
+            success : function(json) {
+                console.log(json)
+                alert(json.message);
+            },
+            error: function(){}
+        });
+    }
+    function custom_close(){
+        if
+        (confirm("您确定要关闭本页吗？")){
+            window.opener=null;
+            window.open('','_self');
+            window.close();
+        }
+        else{}
+    }
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+        if(r!=null)return  unescape(r[2]); return null;
+    }
+</script>
+</body>
+</html>

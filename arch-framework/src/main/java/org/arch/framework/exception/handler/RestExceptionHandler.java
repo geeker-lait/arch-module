@@ -33,15 +33,18 @@ import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
+import java.util.zip.DataFormatException;
 
 /***
  * 统一封装异常、统一处理出参
@@ -258,5 +261,83 @@ public class RestExceptionHandler implements ResponseBodyAdvice<Object> {
         }
 
         return Response.error(ArgumentStatuesCode.VALID_ERROR.getCode(), msg.substring(2));
+    }
+
+
+    /**
+     * http请求的方法不正确
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseBody
+    public Response httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException e) {
+        log.error("http请求的方法不正确:【"+e.getMessage()+"】");
+        return Response.failed("http请求的方法不正确");
+    }
+
+    /**
+     * 请求参数不全
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseBody
+    public Response missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException e) {
+        log.error("请求参数不全:【"+e.getMessage()+"】");
+        return Response.failed("请求参数不全");
+    }
+
+    /**
+     * 请求参数类型不正确
+     */
+    @ExceptionHandler(TypeMismatchException.class)
+    @ResponseBody
+    public Response typeMismatchExceptionHandler(TypeMismatchException e) {
+        log.error("请求参数类型不正确:【"+e.getMessage()+"】");
+        return Response.failed("请求参数类型不正确");
+    }
+
+    /**
+     * 数据格式不正确
+     */
+    @ExceptionHandler(DataFormatException.class)
+    @ResponseBody
+    public Response dataFormatExceptionHandler(DataFormatException e) {
+        log.error("数据格式不正确:【"+e.getMessage()+"】");
+        return Response.failed("数据格式不正确");
+    }
+
+    /**
+     * 非法输入
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseBody
+    public Response illegalArgumentExceptionHandler(IllegalArgumentException e) {
+        log.error("非法输入:【"+e.getMessage()+"】");
+        return Response.failed("非法输入");
+    }
+
+    @ExceptionHandler  //处理其他异常
+    @ResponseBody
+    public Object allExceptionHandler(Exception e, HttpServletRequest request, HttpServletResponse response){
+        System.out.println(e.getStackTrace());
+        log.error("具体错误信息:【"+e.getMessage()+"】"); //会记录出错的代码行等具体信息
+        e.printStackTrace();
+        if(isAjax(request)) {
+            return Response.failed(e.getMessage());
+        } else {
+            ModelAndView mav = new ModelAndView();
+            mav.addObject("exception",e);
+            mav.addObject("url", request.getRequestURL());
+            mav.setViewName("error");
+            return mav;
+        }
+    }
+
+    /**
+     * 判断是否ajax请求
+     * @param httpRequest
+     * @return
+     */
+    public static boolean isAjax(HttpServletRequest httpRequest){
+        return (httpRequest.getHeader("X-Requested-With") != null
+                && "XMLHttpRequest".equals( httpRequest.getHeader("X-Requested-With").toString()) );
     }
 }

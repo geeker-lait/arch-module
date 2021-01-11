@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.arch.demo.crud.entity.RbacGroup;
 import org.arch.demo.crud.mapper.RbacGroupMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.crud.BaseRepository;
+import org.arch.framework.crud.CrudDao;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -16,6 +16,6 @@ import org.springframework.stereotype.Repository;
  */
 @Slf4j
 @Repository
-public class RbacGroupDao extends ServiceImpl<RbacGroupMapper, RbacGroup> implements BaseRepository<RbacGroup, Long> {
+public class RbacGroupDao extends ServiceImpl<RbacGroupMapper, RbacGroup> implements CrudDao<RbacGroup, Long> {
 
 }

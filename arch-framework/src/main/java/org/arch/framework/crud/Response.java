@@ -1,8 +1,8 @@
 package org.arch.framework.crud;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.arch.framework.exception.constant.ResponseStatusCode;
 import org.arch.framework.exception.StatusCode;
+import org.arch.framework.exception.constant.ResponseStatusCode;
 
 /**
  * 封装统一返回的Json数据结构
@@ -41,11 +41,15 @@ public class Response<T> {
     }
 
 
+    public static <T> Response<T> success() {
+        return new Response<T>(ResponseStatusCode.SUCCESS.getCode(), ResponseStatusCode.SUCCESS.getMessage());
+    }
+
     /**
      * 成功返回结果
      *
-     * @param data 获取的数据
-     * @param  message 提示信息
+     * @param data    获取的数据
+     * @param message 提示信息
      */
     public static <T> Response<T> success(T data, String message) {
         return new Response<T>(ResponseStatusCode.SUCCESS.getCode(), message, data);
@@ -64,6 +68,7 @@ public class Response<T> {
 
     /**
      * 失败返回结果
+     *
      * @param statusCode 错误码
      */
     public static <T> Response<T> failed(StatusCode statusCode) {
@@ -73,8 +78,9 @@ public class Response<T> {
 
     /**
      * 失败返回结果
+     *
      * @param errorCode 错误码
-     * @param message 错误信息
+     * @param message   错误信息
      */
     public static <T> Response<T> failed(StatusCode errorCode, String message) {
         return new Response<T>(errorCode.getCode(), message, null);
@@ -82,6 +88,7 @@ public class Response<T> {
 
     /**
      * 失败返回结果
+     *
      * @param message 提示信息
      */
     public static <T> Response<T> failed(String message) {
@@ -104,6 +111,7 @@ public class Response<T> {
 
     /**
      * 参数验证失败返回结果
+     *
      * @param message 提示信息
      */
     public static <T> Response<T> validateFailed(String message) {
