@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="icon" href="favicon.ico" mce_href="favicon.ico" type="image/x-icon">
+    <title>表单填报</title>
+    <script src="../static/bootstrap/js/jquery-1.10.2.min.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container" style="margin-top: 5px;">
+    <ul class="nav nav-pills">
+        <li role="presentation"><a href="./customize_form">首页</a></li>
+        <li role="presentation"><a href="./customize_form">自定义表单</a></li>
+        <li role="presentation" class="active"><a href="" id="now_a">表单填报</a></li>
+        <li role="presentation" class="pull-right"><a href="./logout" >退出</a></li>
+    </ul>
+    <hr>
+    <div class="page-header">
+        <h1 id="header_h1">表单名称 <small>表单描述</small></h1>
+    </div>
+
+    <div id="div_table">
+
+        <div><button class="btn btn-primary"  onclick="open_modal()">填写数据</button></div>
+        <br>
+        <table class="table table-bordered table-striped table-hover" id="table1">
+            <thead id="table_thead"></thead>
+            <tbody id="table_tbody"></tbody>
+        </table>
+        <center>
+            <nav aria-label="Page navigation" id="pageNav">
+                <ul class="pagination" id="pageUl">
+
+                </ul>
+            </nav>
+        </center>
+    </div>
+</div>
+
+<!-- 填写数据 Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">填写数据</h4>
+            </div>
+            <div class="modal-body">
+                <div id="div_form"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-warning" onclick="reset_form()">重置</button>
+                <button type="button" class="btn btn-primary" onclick="tijiao()">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 修改数据 Modal -->
+<div class="modal fade" id="myModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel2">填写数据</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="content_id" style="display:none">
+                <div id="div_form2"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="update_tijiao()">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    //全局变量
+    var formId; //formID
+    var form_bean; //表单详情对象
+    var fieldList; //表单字段列表
+    var fieldCodeArr = []; //表单字段编码数据
+    var fieldAndOptionDetailList; //表单字段详情列表(带选项)
+    var page_now = 1;
+    var size_now = 10;
+    var form_str_reset = "";
+
+    $(function(){
+        formId = GetQueryString("formId");
+        if (formId == null || formId == "" || formId == "null") {
+            window.close();
+        } else {
+            set_header_h1();
+            getFieldList();
+            //此处，应该同时生成新增数据的动态表单
+            getFieldAndOptionDetailList();
+            $("#now_a").attr("href", "/fill_form?formId="+formId);
+        }
+    });
+
+    /**
+     * 新增数据开启Modal
+     */
+    function open_modal() {
+        $("#myModal").modal('show');
+    }
+
+    /**
+     *  重置按钮
+     */
+    function reset_form() {
+        $("#div_form").html(form_str_reset);
+    }
+
+    /**
+     * 获取字段列表，并赋值到全局变量
+     */
+    function getFieldList() {
+        $.ajax({
+            type : "get",
+            url : "./fieldList",
+            dataType : "json",
+            data : {
+                "formId":formId
+            },
+            success : function(json) {
+                console.log(json);
+                fieldList = json.data;
+                if (fieldList == null || fieldList.length <= 0) {
+                    $("#div_table").html();
+                    $("#div_table").html("<div class=\"alert alert-danger\" role=\"alert\">该表单还未添加或保存字段，请先添加字段并保存后，再填报数据！</div>");
+                } else {
+                    var thead_str = "<tr>";
+                    for (var i = 0; i < fieldList.length; i++) {
+                        thead_str += "<th>" + fieldList[i].fieldName + "</th>";
+                        fieldCodeArr[i] = fieldList[i].fieldCode;
+                    }
+                    thead_str += "<th></th>";
+                    thead_str += "</tr>";
+                    $("#table_thead").html(thead_str);
+                }
+
+            },
+            error: function(){}
+        });
+    }
+
+    /**
+     * 根据表单的字段详情，动态生成新增数据Model的表单
+     */
+    function create_form() {
+        var data = fieldAndOptionDetailList;
+        var form_str = "";
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].fieldType == "input") {
+                form_str += "<div class=\"form-group\">";
+                form_str += "<label class='control-label' style='font-size: 20px;'>" + data[i].fieldName + "：</label>";
+                form_str += "<input type='text' class='form-control' id='" + data[i].fieldCode + "'>";
+                form_str += "</div>";
+            } else if (data[i].fieldType == "radio") {
+                form_str += "<div class=\"form-group\">";
+                form_str += "<label class='control-label' style='font-size: 20px;'>" + data[i].fieldName + "：</label>";
+                if (data[i].optionList != null && data[i].optionList != "") {
+                    var option_list = data[i].optionList;
+                    for (var k = 0; k < option_list.length; k++) {
+                        form_str += "<div class=\"radio\"><label>";
+                        form_str += "<input type=\"radio\" name='" + data[i].fieldCode + "' id='" + data[i].fieldCode + (k+1) + "' value='" + option_list[k].optionName +"'>";
+                        form_str += option_list[k].optionName ;
+                        form_str += "</label></div>";
+                    }
+                }
+                form_str += "</div>";
+            } else if (data[i].fieldType == "checkbox") {
+                form_str += "<div class=\"form-group\">";
+                form_str += "<label class='control-label' style='font-size: 20px;'>" + data[i].fieldName + "：</label>";
+                if (data[i].optionList != null && data[i].optionList != "") {
+                    var option_list = data[i].optionList;
+                    for (var k = 0; k < option_list.length; k++) {
+                        form_str += "<div class=\"checkbox\"><label>";
+                        form_str += "<input type=\"checkbox\" name='" + data[i].fieldCode + "' id='" + data[i].fieldCode + (k+1) + "' value='" + option_list[k].optionName +"'>";
+                        form_str += option_list[k].optionName ;
+                        form_str += "</label></div>";
+                    }
+                }
+                form_str += "</div>";
+            } else if (data[i].fieldType == "textarea") {
+                form_str += "<div class=\"form-group\">";
+                form_str += "<label class='control-label' style='font-size: 20px;'>" + data[i].fieldName + "：</label>";
+                form_str += "<textarea class='form-control' rows='3' id='" + data[i].fieldCode + "'></textarea>";
+                form_str += "</div>";
+            }
+        }
+        form_str_reset = form_str;
+        $("#div_form").html(form_str);
+    }
+
+    /**
+     * 设置<page-header>的表单的名称和描述
+     */
+    function set_header_h1() {
+        $.ajax({
+            type : "get",
+            url : "./form/" + formId,
+            dataType : "json",
+            data : {},
+            success : function(json) {
+                console.log(json);
+                form_bean = json.data;
+                $("#header_h1").html();
+                $("#header_h1").html( "名称："+form_bean.formName + " &nbsp;&nbsp;&nbsp;" +
+                    "<small>描述：" + form_bean.formDesc + "&nbsp;&nbsp;&nbsp;创建时间：" + form_bean.createTime +"</small>");
+                getTableContent(page_now,size_now);
+            },
+            error: function(){}
+        });
+    }
+
+    /**
+     * 获取表单已保存的数据
+     */
+    function getTableContent(page, size) {
+        $.ajax({
+            type : "get",
+            url : "./queryAll/" + form_bean.formTableName,
+            dataType : "json",
+            data : {
+                "page" : page,
+                "size" : size
+            },
+            success : function(json) {
+                console.log(json);
+                if (json.data.list == null || json.data.list.length <= 0) {
+                    $("#table_tbody").html("<tr><td colspan='" + (fieldList.length+1) + "'>暂无数据</td></tr>");
+                } else {
+                    var data = json.data.list;
+                    var tableBodyStr = "";
+                    for (var i = 0; i < data.length; i++) {
+                        tableBodyStr += "<tr>";
+                        for(var k = 0; k < fieldCodeArr.length; k++){
+                            var key = fieldCodeArr[k] + "";
+                            key =  key.toLocaleUpperCase();
+                            // console.log(key);
+                            tableBodyStr += "<td>" + data[i][key] + "</td>"
+                        }
+                        tableBodyStr += "<td><button class='btn btn-info' onclick='modifyContent( " + data[i].ID + ")'>修改</button> &nbsp;&nbsp;&nbsp;";
+                        tableBodyStr += "<button class='btn btn-danger' onclick='delContent( " + data[i].ID + ")'>删除</button></td>";
+                        tableBodyStr += "</tr>";
+                    }
+                    // console.log(tableBodyStr);
+                    $("#table_tbody").html(tableBodyStr);
+
+                    var liStr = "<li><a href=\"#\" onclick=\"getTableContent(" + json.data.prePage + ","+ size +")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
+                    for (var i = 0; i < json.data.navigateLastPage - json.data.navigateFirstPage + 1; i++) {
+                        if (json.data.navigatepageNums[i] == page) {
+                            liStr += "<li class='active'><a href=\"#\" onclick=\"getTableContent(" + json.data.navigatepageNums[i] + ","+ size +")\">" + json.data.navigatepageNums[i]+ "</a></li>";
+                        } else {
+                            liStr += "<li><a href=\"#\" onclick=\"getTableContent(" + json.data.navigatepageNums[i] + ","+ size +")\">" + json.data.navigatepageNums[i]+ "</a></li>";
+                        }
+                    }
+                    liStr += "<li><a href=\"#\" onclick=\"getTableContent(" + json.data.nextPage + ","+ size +")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>";
+                    $("#pageUl").html();
+                    $("#pageUl").html(liStr);
+                }
+            },
+            error: function(){}
+        });
+    }
+
+    /**
+     * 对表单单行数据进行编辑
+     */
+    function modifyContent(id) {
+        $("#content_id").val(id);
+        $.ajax({
+            type : "get",
+            url : "./operateTable/" + id,
+            dataType : "json",
+            data : {
+                "tableName" : form_bean.formTableName
+            },
+            success : function(json) {
+                console.log("单挑数据修改---");
+                console.log(json);
+
+                var data = fieldAndOptionDetailList;
+                var form_str = "";
+                for (var i = 0; i < data.length; i++) {
+                    var key = data[i].fieldCode + "";
+                    key = key.toLocaleUpperCase();
+                    var value = json.data[0][key];
+                    if (data[i].fieldType == "input") {
+                        form_str += "<div class=\"form-group\">";
+                        form_str += "<label class='control-label' style='font-size: 20px;'>" + data[i].fieldName + "：</label>";
+                        form_str += "<input type='text' class='form-control' id='modify_" + data[i].fieldCode + "' value='"+value+"'>";
+                        form_str += "</div>";
+                    } else if (data[i].fieldType == "radio") {
+                        form_str += "<div class=\"form-group\">";
+                        form_str += "<label class='control-label' style='font-size: 20px;'>" + data[i].fieldName + "：</label>";
+                        if (data[i].optionList != null && data[i].optionList != "") {
+                            var option_list = data[i].optionList;
+                            for (var k = 0; k < option_list.length; k++) {
+                                form_str += "<div class=\"radio\"><label>";
+                                if (option_list[k].optionName == value) {
+                                    form_str += "<input type=\"radio\" name='modify_" + data[i].fieldCode + "' id='" + data[i].fieldCode + (k+1) + "' value='" + option_list[k].optionName +"' checked>";
+                                } else {
+                                    form_str += "<input type=\"radio\" name='modify_" + data[i].fieldCode + "' id='" + data[i].fieldCode + (k+1) + "' value='" + option_list[k].optionName +"'>";
+                                }
+                                form_str += option_list[k].optionName ;
+                                form_str += "</label></div>";
+                            }
+                        }
+                        form_str += "</div>";
+                    } else if (data[i].fieldType == "checkbox") {
+                        var valueArr = value.split(",");
+                        form_str += "<div class=\"form-group\">";
+                        form_str += "<label class='control-label' style='font-size: 20px;'>" + data[i].fieldName + "：</label>";
+                        if (data[i].optionList != null && data[i].optionList != "") {
+                            var option_list = data[i].optionList;
+                            for (var k = 0; k < option_list.length; k++) {
+                                form_str += "<div class=\"checkbox\"><label>";
+                                if (checkValueInArr(valueArr, option_list[k].optionName)) {
+                                    form_str += "<input type=\"checkbox\" name='modify_" + data[i].fieldCode + "' id='" + data[i].fieldCode + (k+1) + "' value='" + option_list[k].optionName +"' checked>";
+                                } else {
+                                    form_str += "<input type=\"checkbox\" name='modify_" + data[i].fieldCode + "' id='" + data[i].fieldCode + (k+1) + "' value='" + option_list[k].optionName +"'>";
+                                }
+                                form_str += option_list[k].optionName ;
+                                form_str += "</label></div>";
+                            }
+                        }
+                        form_str += "</div>";
+                    } else if (data[i].fieldType == "textarea") {
+                        form_str += "<div class=\"form-group\">";
+                        form_str += "<label class='control-label' style='font-size: 20px;'>" + data[i].fieldName + "：</label>";
+                        form_str += "<textarea class='form-control' rows='3' id='modify_" + data[i].fieldCode + "'>"+value+"</textarea>";
+                        form_str += "</div>";
+                    }
+                }
+
+                $("#div_form2").html(form_str);
+                $("#myModa2").modal('show');
+            },
+            error: function(){}
+        });
+    }
+
+    function checkValueInArr(arr, value) {
+        var result = false;
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] == value) {
+                result = true;
+            }
+        }
+        return result;
+    }
+    /**
+     * 根据参数id删除表中的数据
+     * 隐藏的参数是formTableName，需要从全局变量中获取
+     * @param id
+     */
+    function delContent(id) {
+
+        if(window.confirm('你确定要删除这条数据吗？')){
+            $.ajax({
+                type : "delete",
+                url : "./deleteTableContent/" + id,
+                dataType : "json",
+                data : {
+                    "tableName" : form_bean.formTableName
+                },
+                success : function(json) {
+                    console.log(json);
+                    alert(json.message);
+                    set_header_h1();
+                },
+                error: function(){}
+            });
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * 获取字段详情列表（带选项详情）赋值到全局变量
+     */
+    function getFieldAndOptionDetailList() {
+        $.ajax({
+            type : "get",
+            url : "./getFieldAndOption/" + formId,
+            dataType : "json",
+            data : {},
+            success : function(json) {
+                console.log(json);
+                fieldAndOptionDetailList = json.data;
+                create_form();
+            },
+            error: function(){}
+        });
+    }
+
+    /**
+     * 数据提交
+     */
+    function tijiao() {
+        var data_str = "{";
+        for (var i = 0; i < fieldList.length; i++) {
+            var field_code = fieldList[i].fieldCode;
+            if (fieldList[i].fieldType == "input" || fieldList[i].fieldType == "textarea") {
+                console.log($("#" + fieldList[i].fieldCode).val());
+                data_str += "\"" + fieldList[i].fieldCode + "\":\"" +  $("#" + fieldList[i].fieldCode).val() + "\",";
+            } else if (fieldList[i].fieldType == "radio") {
+                console.log($("[name= "+field_code+"]:checked").val());
+                data_str += "\"" + fieldList[i].fieldCode + "\":\"" + $("[name= "+field_code+"]:checked").val() + "\",";
+            } else if (fieldList[i].fieldType == "checkbox") {
+                var chk_value =[];//定义一个数组
+                $("[name= "+field_code+"]:checked").each(function(){//遍历每一个名字为interest的复选框，其中选中的执行函数
+                    chk_value.push($(this).val());//将选中的值添加到数组chk_value中
+                });
+                console.log(chk_value);
+                var arr_str = "";
+                for (var k = 0; k < chk_value.length; k++) {
+                    if ( k < chk_value.length -1) {
+                        arr_str += chk_value[k] + ","
+                    } else {
+                        arr_str += chk_value[k]
+                    }
+                }
+                data_str += "\"" + fieldList[i].fieldCode + "\":\"" + arr_str + "\",";
+            }
+        }
+        data_str = data_str.substring(0,data_str.length-1);
+        data_str += "}";
+        console.log(data_str);
+
+        $.ajax({
+            type : "post",
+            url : "./insertTableContent",
+            dataType : "json",
+            data : {
+                "tableName" : form_bean.formTableName,
+                "data" : data_str
+            },
+            success : function(json) {
+                console.log(json);
+                alert(json.message);
+                if (json.status == true) {
+                    $("#myModal").modal('hide');
+                    set_header_h1();
+                }
+            },
+            error: function(){}
+        });
+    }
+
+    /**
+     * 单条数据更新
+     */
+    function update_tijiao() {
+        var data_str = "{";
+        data_str += "\"id\":" + $("#content_id").val() + ",";
+        for (var i = 0; i < fieldList.length; i++) {
+            var field_code = fieldList[i].fieldCode;
+            if (fieldList[i].fieldType == "input" || fieldList[i].fieldType == "textarea") {
+                console.log($("#modify_" + fieldList[i].fieldCode).val());
+                data_str += "\"" + fieldList[i].fieldCode + "\":\"" +  $("#modify_" + fieldList[i].fieldCode).val() + "\",";
+            } else if (fieldList[i].fieldType == "radio") {
+                console.log($("[name=modify_"+field_code+"]:checked").val());
+                data_str += "\"" + fieldList[i].fieldCode + "\":\"" + $("[name=modify_"+field_code+"]:checked").val() + "\",";
+            } else if (fieldList[i].fieldType == "checkbox") {
+                var chk_value =[];//定义一个数组
+                $("[name=modify_"+field_code+"]:checked").each(function(){//遍历每一个名字为interest的复选框，其中选中的执行函数
+                    chk_value.push($(this).val());//将选中的值添加到数组chk_value中
+                });
+                console.log(chk_value);
+                var arr_str = "";
+                for (var k = 0; k < chk_value.length; k++) {
+                    if ( k < chk_value.length -1) {
+                        arr_str += chk_value[k] + ","
+                    } else {
+                        arr_str += chk_value[k]
+                    }
+                }
+                data_str += "\"" + fieldList[i].fieldCode + "\":\"" + arr_str + "\",";
+            }
+        }
+        data_str = data_str.substring(0,data_str.length-1);
+        data_str += "}";
+        console.log(data_str);
+
+        $.ajax({
+            type : "put",
+            url : "./updateTableContent",
+            dataType : "json",
+            data : {
+                "tableName" : form_bean.formTableName,
+                "data" : data_str
+            },
+            success : function(json) {
+                console.log(json);
+                alert(json.message);
+                if (json.status == true) {
+                    $("#myModa2").modal('hide');
+                    set_header_h1();
+                }
+            },
+            error: function(){}
+        });
+    }
+
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+        if(r!=null)return  unescape(r[2]); return null;
+    }
+
+</script>
+</body>
+</html>

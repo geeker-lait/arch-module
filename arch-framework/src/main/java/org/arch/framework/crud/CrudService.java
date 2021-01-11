@@ -29,7 +29,7 @@ import java.util.Map;
 public abstract class CrudService<T, ID extends Serializable> {
 
     @Autowired
-    protected BaseRepository<T, ID> baseRepository;
+    protected CrudDao<T, ID> crudDao;
 
     /**
      * 如果是采用spring boot的话，会自动注入，其他情况需要手动创建
@@ -50,7 +50,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      */
     @Transactional(readOnly = false)
     public boolean save(T t) {
-        return baseRepository.save(t);
+        return crudDao.save(t);
     }
 
     /**
@@ -61,7 +61,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      */
     @Transactional(readOnly = false)
     public boolean saveList(List<T> tlist) {
-        return baseRepository.saveBatch(tlist);
+        return crudDao.saveBatch(tlist);
     }
 
     /***
@@ -71,7 +71,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      */
     @Transactional(readOnly = false)
     public boolean deleteById(ID id) {
-        return baseRepository.removeById(id);
+        return crudDao.removeById(id);
     }
 
     /***
@@ -81,7 +81,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      */
     @Transactional(readOnly = false)
     public boolean deleteById(T t) {
-        return baseRepository.remove(new QueryWrapper<>(t));
+        return crudDao.remove(new QueryWrapper<>(t));
     }
 
     /***
@@ -91,7 +91,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      */
     @Transactional(readOnly = false)
     public boolean deleteAllById(List<ID> ids) {
-        return baseRepository.removeByIds(ids);
+        return crudDao.removeByIds(ids);
     }
 
 
@@ -147,7 +147,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      */
     @Transactional(readOnly = true)
     public long countBySpec(Wrapper<T> spec) {
-        return baseRepository.count(spec);
+        return crudDao.count(spec);
     }
 
     /**
@@ -158,7 +158,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      */
     @Transactional(readOnly = true)
     public T findById(ID id) {
-        return baseRepository.getById(id);
+        return crudDao.getById(id);
     }
 
     /**
@@ -196,7 +196,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      */
     @Transactional(readOnly = true)
     public T findOneBySpec(Wrapper<T> spec) {
-        return baseRepository.getOne(spec);
+        return crudDao.getOne(spec);
     }
 
     /**
@@ -206,7 +206,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      */
     @Transactional(readOnly = true)
     public List<T> findAll() {
-        return baseRepository.list();
+        return crudDao.list();
     }
 
     /**
@@ -256,7 +256,7 @@ public abstract class CrudService<T, ID extends Serializable> {
         if (direction.isDescending()) {
             queryWrapper.orderByDesc(sortField);
         }
-        return baseRepository.list(RequestSearchUtils.buildWrapper(searchParams));
+        return crudDao.list(RequestSearchUtils.buildWrapper(searchParams));
     }
 
     /**
@@ -267,7 +267,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      */
     @Transactional(readOnly = true)
     public List<T> findAllBySpec(Wrapper<T> spec) {
-        return baseRepository.list(spec);
+        return crudDao.list(spec);
     }
 
     /**
@@ -283,7 +283,7 @@ public abstract class CrudService<T, ID extends Serializable> {
     public IPage<T> findPage(Map<String, Object> searchParams, int pageNumber, int pageSize/*,String key*/) {
         pageNumber = pageNumber > 0 ? pageNumber - 1 : pageNumber;
         IPage<T> page = new Page<>(pageNumber, pageSize);
-        return baseRepository.page(page, RequestSearchUtils.buildWrapper(searchParams));
+        return crudDao.page(page, RequestSearchUtils.buildWrapper(searchParams));
     }
 
     /**
@@ -309,7 +309,7 @@ public abstract class CrudService<T, ID extends Serializable> {
 
         pageNumber = pageNumber > 0 ? pageNumber - 1 : pageNumber;
         IPage<T> page = new Page<>(pageNumber, pageSize);
-        return baseRepository.page(page, RequestSearchUtils.buildWrapper(searchParams));
+        return crudDao.page(page, RequestSearchUtils.buildWrapper(searchParams));
     }
 
     /**
