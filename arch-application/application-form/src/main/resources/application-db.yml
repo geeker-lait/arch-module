@@ -2,12 +2,12 @@ spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
+    schema: classpath:form-schema.sql
+    data: classpath:form-data.sql
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
-    url: jdbc:mysql://localhost:3306/arch?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
-    username: root
-    password: root
+
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*Mapper.xml
@@ -29,15 +29,16 @@ mybatis-plus:
 
 ---
 #生产环境
-spring.profiles: db-pro
+spring:
+  profiles: pro
 
 
 ---
 #开发环境
-spring.profiles: db-dev
 spring:
+  profiles: dev
   datasource:
-    url: jdbc:mysql://localhost:3306/arch?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
+    url: jdbc:mysql://localhost:3306/serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
     username: root
     password: root
 
