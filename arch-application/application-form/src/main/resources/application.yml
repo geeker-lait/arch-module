@@ -1,22 +1,20 @@
 server:
   port: 8080
+
 spring:
   freemarker:
     check-template-location: false
     settings:
       classic_compatible: true
-  profiles:
-    active: db,redis-dev
+
   jackson:
     time-zone: GMT+8
-  redis:
-    #数据库索引
-    database: 0
-    host: 192.168.71.15
-    port: 6379
-    password:
-    #连接超时时间
-    timeout: 5000
+
+  profiles:
+    include: db,redis
+    active: @profileActive@
+
+
 
 #密码加密传输，前端公钥加密，后端私钥解密
 rsa:

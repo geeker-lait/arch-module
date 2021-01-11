@@ -1,11 +1,11 @@
 ---
 #生产环境
-spring.profiles: redis-pro
+spring.profiles: pro
 
 
 ---
 #开发环境
-spring.profiles: redis-dev
+spring.profiles: dev
 spring:
   redis:
     #数据库索引
