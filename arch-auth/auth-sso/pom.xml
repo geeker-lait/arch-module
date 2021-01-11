@@ -43,18 +43,7 @@
             <artifactId>auth-rbac</artifactId>
             <version>${parent.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>ums-account</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>ums-user</artifactId>
-            <version>${parent.version}</version>
-        </dependency>-->
+        -->
 
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

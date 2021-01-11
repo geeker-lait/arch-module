@@ -1,5 +1,7 @@
 server:
   port: 9401
+
+spring:
   thymeleaf:
     enabled: true
     cache: false

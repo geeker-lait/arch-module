@@ -6,7 +6,7 @@
     <property resource="application.yml" />
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
 
-    <property name="LOG_NAME" value="spring"/>
+    <property name="LOG_NAME" value="spring-jwt"/>
     <property name="LOG_HOME" value="logs"/>
 
     <property name="LOG_FILE" value="${LOG_HOME}/${LOG_NAME}-%d{yyyy-MM-dd}.%i.log"/>
