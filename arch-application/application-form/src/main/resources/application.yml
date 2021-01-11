@@ -6,7 +6,7 @@ spring:
     settings:
       classic_compatible: true
   profiles:
-    active: db-dev,redis-dev
+    active: db,redis-dev
   jackson:
     time-zone: GMT+8
   redis:

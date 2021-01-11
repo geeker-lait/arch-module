@@ -1,10 +1,10 @@
 package org.arch.application.form.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.arch.application.form.domain.Field;
 import org.arch.application.form.domain.FieldType;
 import org.arch.application.form.domain.Option;
 import org.arch.framework.crud.CrudMapper;
-import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
