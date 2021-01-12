@@ -14,12 +14,12 @@ mybatis-plus:
   typeAliasesPackage: org.arch.application.form.domain
   global-config:
     db-config:
-      id-type: id_worker
+      id-type: ASSIGN_ID
       insert-strategy: not_empty
       update-strategy: not_empty
       select-strategy: not_empty
-    datacenter-id: ${nodeId:${spring.nodeId:1}}
-    worker-id: ${nodeId:${spring.nodeId:1}}
+      # db前缀 如：arch.upload_form
+#      table-prefix: arch
     banner: false
   configuration:
     map-underscore-to-camel-case: true
@@ -38,7 +38,7 @@ spring:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:mysql://localhost:3306/serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
+    url: jdbc:mysql://localhost:3306?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
     username: root
     password: root
 

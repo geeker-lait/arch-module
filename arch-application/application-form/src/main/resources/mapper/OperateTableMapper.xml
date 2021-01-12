@@ -2,25 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.arch.application.form.mapper.OperateTableMapper">
     <!--select count(*) from user_tables where table_name = #{tableName}-->
+    <sql id="db">
+        arch
+    </sql>
+
+
+
+
     <select id="existTable" resultType="Integer">
 
-        SELECT count(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='test2' and table_name=#{tableName}
+        SELECT count(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='<include refid="db"/>' and table_name=#{tableName}
     </select>
 
     <select id="countTableRow" resultType="Integer" >
-        select count(*) from ${tableName}
+        select count(*) from <include refid="db"/>.${tableName}
     </select>
 
     <update id="dropTable">
-        DROP TABLE ${tableName}
+        DROP TABLE <include refid="db"/>.${tableName}
     </update>
 
     <select id="getFieldList" resultType="String">
-        select field_code from upload_field where form_id = #{formId} order by field_order
+        select field_code from <include refid="db"/>.upload_field where form_id = #{formId} order by field_order
     </select>
 
     <update id="createNewTable" parameterType="java.util.Map">
-        CREATE TABLE ${tableName} (
+        CREATE TABLE <include refid="db"/>.${tableName} (
             id int primary key auto_increment
             <!--<trim suffixOverrides=",">-->
                 <!--<foreach collection="fieldCodeList" item="item" index="index" separator="," >-->
@@ -31,19 +38,19 @@
     </update>
 
     <select id="queryAll" resultType="java.util.Map">
-        select * from ${tableName} order by id desc
+        select * from <include refid="db"/>.${tableName} order by id desc
     </select>
 
     <select id="queryOne" resultType="java.util.Map">
-        select * from ${tableName} where id = #{id}
+        select * from <include refid="db"/>.${tableName} where id = #{id}
     </select>
 
     <select id="getFieldAndOptionDetailList" resultType="FieldAndOptionDetail">
-        select * from upload_field where form_id = #{formId} order by field_order
+        select * from <include refid="db"/>.upload_field where form_id = #{formId} order by field_order
     </select>
 
     <insert id="insertTable" parameterType="java.util.Map">
-        insert into ${tableName}
+        insert into <include refid="db"/>.${tableName}
         ( id,
         <trim suffixOverrides=",">
             <foreach collection="keyList" item="item" index="index" separator=",">
@@ -62,7 +69,7 @@
     </insert>
 
     <insert id="updateTable" parameterType="java.util.Map">
-        update ${tableName}
+        update <include refid="db"/>.{tableName}
         set (
         <trim suffixOverrides=",">
             <foreach collection="keyList" item="item" index="index" separator=",">
@@ -82,7 +89,7 @@
     </insert>
 
     <delete id="deleteTable" parameterType="java.util.Map">
-        delete from ${tableName} where id = #{id}
+        delete from <include refid="db"/>.${tableName} where id = #{id}
     </delete>
 
 
