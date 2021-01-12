@@ -1,0 +1,45 @@
+version: '3.3'
+
+services:
+  mysql:
+    build: ./docker/mysql
+    restart: always
+    volumes:
+      - "./data/mysql:/var/lib/mysql"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root@root
+    
+
+  application-form:
+    image: hub.c.163.com/library/java:8u111
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+    expose:
+      - 8080
+    depends_on:
+      - mysql
+    links:
+      - mysql:mysql
+    command: "java -Xmx256m -Xms256m -jar  arch-application/application-form-0.0.1.jar \
+      --spring.datasource.password=root@root \
+      --spring.profiles.active=pro"
+    
+
+  
+  nginx:
+    image: hub.c.163.com/library/nginx:1.13
+    volumes:
+      - ./html:/usr/share/nginx/html:ro
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+    ports:
+      - 80:80
+#    depends_on:
+#      -
+    links:
+      - application-form:application-form
+   
+   
