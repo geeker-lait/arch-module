@@ -21,9 +21,13 @@ public class CrudEntity<T extends Model<?>> extends Model<T> implements Serializ
     protected Integer tenantId;
     //应用ID
     protected Integer appId;
+    //店铺ID
+    protected Integer storeId;
     // 乐观锁
     protected Integer rev;
-    // 时间戳
+    // 时间戳/创建时间
     protected Timestamp st;
+    // 是否逻辑删除，默认不删除
+    protected boolean deleted = false;
 
 }
