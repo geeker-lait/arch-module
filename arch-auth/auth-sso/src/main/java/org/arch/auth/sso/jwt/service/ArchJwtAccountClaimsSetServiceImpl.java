@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
 import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.jwt.api.claims.service.CustomClaimsSetService;
+import top.dcenter.ums.security.jwt.properties.JwtProperties;
 
 import java.time.Instant;
 
@@ -21,6 +22,12 @@ import java.time.Instant;
  */
 @Service
 public class ArchJwtAccountClaimsSetServiceImpl implements CustomClaimsSetService {
+
+    private final String principalClaimName;
+
+    public ArchJwtAccountClaimsSetServiceImpl(JwtProperties jwtProperties) {
+        this.principalClaimName = jwtProperties.getPrincipalClaimName();
+    }
 
     @NonNull
     @Override
@@ -54,9 +61,10 @@ public class ArchJwtAccountClaimsSetServiceImpl implements CustomClaimsSetServic
         if (userDetails instanceof ArchUser) {
             ArchUser user = ((ArchUser) userDetails);
             builder.claim(JwtArchClaimNames.ACCOUNT_ID.getClaimName(), user.getAccountId());
-            // 这里的 ClaimName 必须与属性 ums.jwt.principalClaimName 值相同.
-            builder.claim(JwtClaimNames.SUB, user.getUsername());
             builder.claim(JwtArchClaimNames.CHANNEL_TYPE.getClaimName(), user.getChannelType());
+            builder.claim(JwtArchClaimNames.NICK_NAME.getClaimName(), user.getNickName());
+            builder.claim(JwtArchClaimNames.AVATAR.getClaimName(), user.getAvatar());
+            builder.claim(principalClaimName, user.getUsername());
         }
         builder.claim(JwtClaimNames.IAT, Instant.now().getEpochSecond());
     }

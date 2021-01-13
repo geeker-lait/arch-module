@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
-import org.arch.auth.sso.properties.ArchSsoProperties;
+import org.arch.auth.sso.properties.SsoProperties;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.lang.NonNull;
@@ -35,12 +35,12 @@ import static org.springframework.util.StringUtils.hasText;
 public class LoginController {
 
     private final RedisConnectionFactory redisConnectionFactory;
-    private final ArchSsoProperties archSsoProperties;
+    private final SsoProperties ssoProperties;
 
     public LoginController(RedisConnectionFactory redisConnectionFactory,
-                           ArchSsoProperties archSsoProperties) {
+                           SsoProperties ssoProperties) {
         this.redisConnectionFactory = redisConnectionFactory;
-        this.archSsoProperties = archSsoProperties;
+        this.ssoProperties = ssoProperties;
     }
 
     @ApiOperation(value = "跳转登录页", httpMethod = "GET")
@@ -52,8 +52,8 @@ public class LoginController {
     @ApiOperation(value = "第三方登录成功后自动转发到此 API, 以便自动获取 token")
     @RequestMapping(value = "/oauth2Token", method = {RequestMethod.GET})
     public String auth2Token(Model model, HttpServletRequest request) {
-        String oauth2Token = (String) request.getSession().getAttribute(archSsoProperties.getOauth2TokenParamName());
-        model.addAttribute(archSsoProperties.getOauth2TokenParamName(), oauth2Token);
+        String oauth2Token = (String) request.getSession().getAttribute(ssoProperties.getOauth2TokenParamName());
+        model.addAttribute(ssoProperties.getOauth2TokenParamName(), oauth2Token);
         return "oauth2Token";
     }
 
@@ -64,7 +64,7 @@ public class LoginController {
     public ResponseResult oAuth2LoginSuccessCallback(@ApiParam(name = "tk", value = "接收的参数名称", required = true)
                                                      @RequestParam("tk") String tk) {
         if (hasText(tk)) {
-            byte[] bytes = getConnection().get((archSsoProperties.getTempOauth2TokenPrefix() + tk).getBytes(StandardCharsets.UTF_8));
+            byte[] bytes = getConnection().get((ssoProperties.getTempOauth2TokenPrefix() + tk).getBytes(StandardCharsets.UTF_8));
             if (nonNull(bytes)) {
                 return ResponseResult.success(null, new String(bytes, StandardCharsets.UTF_8));
             }

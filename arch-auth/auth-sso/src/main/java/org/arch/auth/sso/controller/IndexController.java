@@ -27,9 +27,15 @@ public class IndexController {
     @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
     @ApiOperation(value = "首页")
     public String index(Model model) {
-        TokenInfo currentUser = SecurityUtils.getCurrentUser();
-        model.addAttribute("username", currentUser.getAccountName());
-        model.addAttribute("roles", StringUtils.join(currentUser.getAuthorities(),","));
+        // todo
+        try {
+            TokenInfo currentUser = SecurityUtils.getCurrentUser();
+            model.addAttribute("username", currentUser.getAccountName());
+            model.addAttribute("roles", StringUtils.join(currentUser.getAuthorities(),","));
+        }
+        catch (Exception e) {
+            return "index";
+        }
         return "index";
     }
 

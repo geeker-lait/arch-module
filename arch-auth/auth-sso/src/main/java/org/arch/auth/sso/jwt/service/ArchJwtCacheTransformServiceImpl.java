@@ -81,6 +81,8 @@ public class ArchJwtCacheTransformServiceImpl implements JwtCacheTransformServic
                             .accountName(jwt.getClaimAsString(principalClaimName))
                             .channelType(ChannelType.valueOf(jwt.getClaimAsString(JwtArchClaimNames.CHANNEL_TYPE
                                                                                           .getClaimName())))
+                            .nickName(jwt.getClaimAsString(JwtArchClaimNames.NICK_NAME.getClaimName()))
+                            .avatar(jwt.getClaimAsString(JwtArchClaimNames.AVATAR.getClaimName()))
                             .authorities(authorities)
                             .build();
         }

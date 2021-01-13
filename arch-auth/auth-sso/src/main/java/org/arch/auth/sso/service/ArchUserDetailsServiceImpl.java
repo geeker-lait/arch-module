@@ -3,6 +3,7 @@ package org.arch.auth.sso.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthUser;
+import org.arch.auth.sso.properties.SsoProperties;
 import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.id.IdKey;
 import org.arch.framework.id.IdService;
@@ -42,6 +43,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final ClientProperties clientProperties;
     private final IdService idService;
+    private final SsoProperties ssoProperties;
 
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
@@ -65,6 +67,8 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                                 passwordEncoder.encode("admin"),
                                 1L,
                                 ChannelType.ACCOUNT,
+                                "admin",
+                                ssoProperties.getDefaultAvatar(),
                                 true,
                                 true,
                                 true,
@@ -89,6 +93,8 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                             passwordEncoder.encode("admin"),
                             Long.valueOf(idService.generateId(IdKey.UMS_ACCOUNT_ID)),
                             ChannelType.PHONE,
+                            "admin",
+                            ssoProperties.getDefaultAvatar(),
                             true,
                             true,
                             true,
@@ -106,6 +112,8 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                             passwordEncoder.encode("admin"),
                             Long.valueOf(idService.generateId(IdKey.UMS_ACCOUNT_ID)),
                             ChannelType.ACCOUNT,
+                            "admin",
+                            ssoProperties.getDefaultAvatar(),
                             true,
                             true,
                             true,
@@ -126,6 +134,8 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                             passwordEncoder.encode(authUser.getToken().getAccessToken()),
                             Long.valueOf(idService.generateId(IdKey.UMS_ACCOUNT_ID)),
                             ChannelType.OAUTH2,
+                            "admin",
+                            ssoProperties.getDefaultAvatar(),
                             true,
                             true,
                             true,
@@ -141,7 +151,6 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         // 用户名: authUser.getUsername()
         return new String[]{
                 authUser.getSource() + "_" + authUser.getUuid(),
-                authUser.getSource() + "_" + authUser.getUuid() + "_" + authUser.getUsername()
         };
     }
 

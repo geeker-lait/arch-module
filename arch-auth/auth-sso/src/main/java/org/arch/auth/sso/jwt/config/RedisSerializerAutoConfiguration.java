@@ -1,4 +1,4 @@
-package org.arch.auth.sso.config;
+package org.arch.auth.sso.jwt.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

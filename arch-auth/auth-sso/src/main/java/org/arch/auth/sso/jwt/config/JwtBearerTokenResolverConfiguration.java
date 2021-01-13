@@ -15,16 +15,13 @@
  */
 package org.arch.auth.sso.jwt.config;
 
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationListener;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.lang.NonNull;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import top.dcenter.ums.security.core.auth.properties.ClientProperties;
 import top.dcenter.ums.security.core.auth.properties.SmsCodeLoginAuthenticationProperties;
 import top.dcenter.ums.security.core.oauth.properties.Auth2Properties;
+import top.dcenter.ums.security.jwt.config.JwtServiceAutoConfiguration;
 import top.dcenter.ums.security.jwt.resolver.UmsBearerTokenResolver;
 
 import java.util.HashSet;
@@ -37,14 +34,14 @@ import java.util.Set;
  * @since 2021.1.8 12:56
  */
 @Configuration
-public class JwtBearerTokenResolverConfiguration implements ApplicationContextAware, ApplicationListener<ContextRefreshedEvent> {
-
-    private ApplicationContext applicationContext;
-    private final Set<String> ignoreUrls = new HashSet<>();
+@AutoConfigureAfter({JwtServiceAutoConfiguration.class})
+public class JwtBearerTokenResolverConfiguration {
 
     public JwtBearerTokenResolverConfiguration(ClientProperties clientProperties,
                                                Auth2Properties auth2Properties,
+                                               BearerTokenResolver bearerTokenResolver,
                                                SmsCodeLoginAuthenticationProperties smsCodeLoginAuthenticationProperties) {
+        Set<String> ignoreUrls = new HashSet<>();
         ignoreUrls.add(clientProperties.getLoginPage());
         ignoreUrls.add(clientProperties.getLoginProcessingUrl());
         if (clientProperties.getOpenAuthenticationRedirect()) {
@@ -57,16 +54,11 @@ public class JwtBearerTokenResolverConfiguration implements ApplicationContextAw
             ignoreUrls.add(auth2Properties.getAuthLoginUrlPrefix() + "/*");
             ignoreUrls.add(auth2Properties.getRedirectUrlPrefix() + "/*");
         }
+        if (bearerTokenResolver instanceof UmsBearerTokenResolver)
+        {
+            UmsBearerTokenResolver tokenResolver = ((UmsBearerTokenResolver) bearerTokenResolver);
+            tokenResolver.addIgnoreUrls(ignoreUrls);
+        }
     }
 
-    @Override
-    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
-    @Override
-    public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
-        UmsBearerTokenResolver umsBearerTokenResolver = this.applicationContext.getBean(UmsBearerTokenResolver.class);
-        umsBearerTokenResolver.addIgnoreUrls(this.ignoreUrls);
-    }
 }

@@ -11,7 +11,7 @@
   <artifactId>auth-rbac</artifactId>
 
     <properties>
-        <ums.version>2.2.10</ums.version>
+        <ums.version>2.2.11</ums.version>
     </properties>
 
     <dependencies>
@@ -29,21 +29,16 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>arch-framework</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${parent.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>ums-account</artifactId>
+            <artifactId>ums-commons</artifactId>
             <version>${parent.version}</version>
-            <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.3.2</version>
-        </dependency>
     </dependencies>
 
 </project>

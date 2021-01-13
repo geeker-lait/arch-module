@@ -14,11 +14,16 @@ import java.time.Duration;
  * @weixin z56133
  * @since 2021.1.6 23:15
  */
-@ConfigurationProperties(prefix = "arch")
+@ConfigurationProperties(prefix = "arch.sso")
 @Getter
 @Setter
 @Validated
-public class ArchSsoProperties {
+public class SsoProperties {
+
+    /**
+     * 手机用户默认密码
+     */
+    private String defaultPassword = "VR&vU'a#.mt^&%'";
 
     /**
      * 默认用户头像

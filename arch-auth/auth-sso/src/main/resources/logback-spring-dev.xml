@@ -84,8 +84,6 @@
     <!-- 日志输出级别 -->
     <springProfile name="dev">
         <root level="INFO">
-            <appender-ref ref="FILE" />
-            <appender-ref ref="ERROR_FILE" />
             <appender-ref ref="CONSOLE" />
         </root>
     </springProfile>

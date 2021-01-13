@@ -6,7 +6,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.exception.TenantIdNotFoundException;
@@ -22,7 +21,7 @@ import static top.dcenter.ums.security.core.mdc.utils.MdcUtil.getMdcTraceId;
  * @weixin z56133
  * @since 2021.1.11 21:13
  */
-@Component
+//@Component
 @Slf4j
 public class ArchTenantContextHandler implements TenantContextHolder {
 

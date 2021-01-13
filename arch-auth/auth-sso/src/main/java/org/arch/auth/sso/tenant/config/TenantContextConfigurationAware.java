@@ -1,17 +1,16 @@
-package org.arch.auth.sso.config;
+package org.arch.auth.sso.tenant.config;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.auth.sso.tenant.context.filter.TenantContextFilter;
 import org.arch.auth.sso.tenant.context.handler.ArchTenantContextHandler;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 import top.dcenter.ums.security.common.api.config.HttpSecurityAware;
 import top.dcenter.ums.security.common.bean.UriHttpMethodTuple;
 import top.dcenter.ums.security.core.mdc.config.MdcLogAutoConfigurerAware;
-import top.dcenter.ums.security.core.mdc.filter.MdcLogFilter;
 
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +21,7 @@ import java.util.Set;
  * @weixin z56133
  * @since 2021.1.11 21:59
  */
-@Configuration
+//@Configuration
 @AutoConfigureAfter({MdcLogAutoConfigurerAware.class})
 @RequiredArgsConstructor
 public class TenantContextConfigurationAware implements HttpSecurityAware {
@@ -46,7 +45,7 @@ public class TenantContextConfigurationAware implements HttpSecurityAware {
 
     @Override
     public void postConfigure(HttpSecurity http) {
-        http.addFilterAfter(new TenantContextFilter(archTenantContextHandler), MdcLogFilter.class);
+        http.addFilterAfter(new TenantContextFilter(archTenantContextHandler), WebAsyncManagerIntegrationFilter.class);
     }
 
     @Override

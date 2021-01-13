@@ -48,9 +48,16 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>arch-framework</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${parent.version}</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>ums-commons</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-rbac</artifactId>
@@ -63,18 +70,6 @@
             <artifactId>auth-sso</artifactId>
             <version>${parent.version}</version>
             <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>ums-account</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>ums-user</artifactId>
-            <version>${parent.version}</version>
         </dependency>
 
     </dependencies>

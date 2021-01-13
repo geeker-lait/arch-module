@@ -15,4 +15,19 @@
                  帮助客户一次性解决身份认证、用户管理、单点登录、多因素认证等各类系统身份安全治理.
     </description>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>arch-framework</artifactId>
+            <version>${parent.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>ums-commons</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>

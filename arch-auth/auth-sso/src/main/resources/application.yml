@@ -30,5 +30,15 @@ spring:
   profiles:
     active: auth,db,mdc,oauth2,redis,vc,jwt,dev
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+
 logging:
   config: classpath:logback-spring.xml

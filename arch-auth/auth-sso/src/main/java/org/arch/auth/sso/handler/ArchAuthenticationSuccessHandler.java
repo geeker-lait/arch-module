@@ -2,7 +2,7 @@ package org.arch.auth.sso.handler;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.auth.sso.properties.ArchSsoProperties;
+import org.arch.auth.sso.properties.SsoProperties;
 import org.springframework.core.log.LogMessage;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.core.AbstractOAuth2Token;
 import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
@@ -60,13 +60,13 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
 
     private final RedisConnectionFactory redisConnectionFactory;
 
-    private final ArchSsoProperties archSsoProperties;
+    private final SsoProperties ssoProperties;
 
     public ArchAuthenticationSuccessHandler(@NonNull ClientProperties clientProperties,
                                             @NonNull Auth2Properties auth2Properties,
-                                            RedisConnectionFactory redisConnectionFactory, ArchSsoProperties archSsoProperties) {
+                                            RedisConnectionFactory redisConnectionFactory, SsoProperties ssoProperties) {
         this.redisConnectionFactory = redisConnectionFactory;
-        this.archSsoProperties = archSsoProperties;
+        this.ssoProperties = ssoProperties;
         this.auth2RedirectUrl = auth2Properties.getRedirectUrlPrefix();
         this.requestCache = new HttpSessionRequestCache();
         this.loginProcessType = clientProperties.getLoginProcessType();
@@ -107,26 +107,26 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
                     && request.getServletPath().startsWith(auth2RedirectUrl)
                     && authentication instanceof AbstractOAuth2TokenAuthenticationToken) {
                 //noinspection unchecked
-                AbstractOAuth2TokenAuthenticationToken<Jwt> jwtAuthentication =
-                        (AbstractOAuth2TokenAuthenticationToken<Jwt>) authentication;
+                AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token> jwtAuthentication =
+                        (AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token>) authentication;
                 String uuid = UuidUtils.getUUID();
-                request.getSession().setAttribute(archSsoProperties.getOauth2TokenParamName(), uuid);
+                request.getSession().setAttribute(ssoProperties.getOauth2TokenParamName(), uuid);
                 String tkValue = jwtAuthentication.getToken().getTokenValue();
                 if (JwtContext.isRefreshJwtByRefreshToken()) {
                     String jwtRefreshTokenFromSession = JwtContext.getJwtRefreshTokenFromSession();
                     if (hasText(jwtRefreshTokenFromSession)) {
-                        tkValue = tkValue.concat(archSsoProperties.getDelimiterOfTokenAndRefreshToken())
+                        tkValue = tkValue.concat(ssoProperties.getDelimiterOfTokenAndRefreshToken())
                                          .concat(jwtRefreshTokenFromSession);
                     }
-                    tkValue = tkValue.concat(archSsoProperties.getDelimiterOfTokenAndRefreshToken())
+                    tkValue = tkValue.concat(ssoProperties.getDelimiterOfTokenAndRefreshToken())
                                      .concat(targetUrl);
-                    getConnection().setEx((archSsoProperties.getTempOauth2TokenPrefix() + uuid).getBytes(StandardCharsets.UTF_8),
-                                          archSsoProperties.getTempOauth2TokenTimeout().getSeconds(),
+                    getConnection().setEx((ssoProperties.getTempOauth2TokenPrefix() + uuid).getBytes(StandardCharsets.UTF_8),
+                                          ssoProperties.getTempOauth2TokenTimeout().getSeconds(),
                                           tkValue.getBytes(StandardCharsets.UTF_8));
                 }
 
                 clearAuthenticationAttributes(request);
-                request.getRequestDispatcher(archSsoProperties.getAutoGetTokenUri()).forward(request, response);
+                request.getRequestDispatcher(ssoProperties.getAutoGetTokenUri()).forward(request, response);
                 return ;
             }
 
