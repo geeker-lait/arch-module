@@ -8,7 +8,6 @@ temp/
 
 # default output directories
 classes/
-deploy/
 javadoc/
 
 # lock file, a part of Oracle Credential Store Framework

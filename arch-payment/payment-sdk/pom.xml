@@ -32,9 +32,8 @@
         </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>arch-framework</artifactId>
+            <artifactId>framework-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
