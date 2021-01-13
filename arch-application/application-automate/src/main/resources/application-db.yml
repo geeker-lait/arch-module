@@ -11,7 +11,7 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*Mapper.xml
-  typeAliasesPackage: org.arch.application.form.domain
+  typeAliasesPackage: org.arch.framework.automate.from.domain
   global-config:
     db-config:
       id-type: ASSIGN_ID

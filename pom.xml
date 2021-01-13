@@ -21,6 +21,7 @@
         <module>arch-auth</module>
         <module>arch-framework</module>
         <module>arch-gateway</module>
+        <module>arch-marketing</module>
         <module>arch-oms</module>
         <module>arch-payment</module>
         <module>arch-pms</module>
@@ -69,21 +70,7 @@
     <dependencyManagement>
         <dependencies>
 
-            <!-- <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-framework-bom</artifactId>
-                 <version>5.2.11.RELEASE</version>
-                 <type>pom</type>
-                 <scope>import</scope>
-             </dependency>-->
 
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-bom</artifactId>
-                <version>5.4.1</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -96,6 +83,14 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>Hoxton.SR8</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-bom</artifactId>
+                <version>5.4.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

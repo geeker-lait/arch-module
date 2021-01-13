@@ -13,11 +13,11 @@ public class Response<T> {
     /**
      * 操作码，成功默认为200，其他为失败
      */
-    private int code = CrudConstants.SUCCESS;
+    private int code;
     /**
      * 操作信息
      */
-    private String msg = CrudConstants.MSG_SUCCESS;
+    private String msg;
 
     /**
      * 响应数据，为空时json序列化时会忽略

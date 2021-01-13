@@ -12,53 +12,22 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.10</version>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.3.2</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>arch-framework</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-sdk</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>framework-automate</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
     </dependencies>
@@ -70,7 +39,7 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.9.1</version>
+                <version>1.11.0</version>
                 <configuration>
                     <!--JONE的node和yarn的下载地址 不可变动-->
                     <!--<installDirectory>/usr/local/lib/node_modules</installDirectory>-->
@@ -79,8 +48,11 @@
                     <nodeVersion>v14.15.4</nodeVersion>
                     <npmVersion>6.14.10</npmVersion>
                     <yarnVersion>v1.22.4</yarnVersion>
-                    <!-- 下载地址欺骗 实际执行构建服务器 -->
-                    <nodeDownloadRoot>http://nodejs.org/dist/</nodeDownloadRoot>
+
+                    <!-- 若不方便访问官网，可使用国内淘宝镜像-->
+                    <!--<nodeDownloadRoot>http://nodejs.org/dist/</nodeDownloadRoot>-->
+                    <nodeDownloadRoot>https://npm.taobao.org/mirrors/node/</nodeDownloadRoot>
+                    <npmDownloadRoot>https://registry.npm.taobao.org/npm/-/</npmDownloadRoot>
                     <yarnDownloadRoot>http://github.com/yarnpkg/yarn/releases/download/</yarnDownloadRoot>
                     <workingDirectory>src/main/resouces/vue</workingDirectory>
                 </configuration>

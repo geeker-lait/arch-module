@@ -23,3 +23,9 @@ rsa:
 smsCode:
   expiration: 5
   maxCount: 10
+
+
+serverUrl:
+  -
+  service-a: http://
+  service-b: http://

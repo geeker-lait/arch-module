@@ -1,7 +1,5 @@
 package org.arch.framework.crud.utils;
 
-import org.arch.framework.crud.CrudConstants;
-
 /**
  * 分页参数类型
  */
@@ -20,7 +18,7 @@ public class PageInfo {
     /**
      * 排序类型,默认按照主键id排序
      */
-    private String sortType = CrudConstants.DEFAULT_SORT_TYPE_VAL;
+    private String sortType = "sortTypes";
 
     public int getNumber() {
         return number;

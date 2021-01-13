@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.arch.framework.automate.from.mapper.FieldMapper">
+    <sql id="db">
+        arch.
+    </sql>
+
+    <sql id="upload_field">
+        arch.upload_field
+    </sql>
+    <sql id="upload_option">
+        arch.upload_option
+    </sql>
+
+    <sql id="upload_field_type">
+        arch.upload_field_type
+    </sql>
+
+
+    <insert id="insert" parameterType="Field" useGeneratedKeys="true" keyProperty="fieldId" keyColumn="field_id">
+        <!--<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="fieldId">-->
+            <!--SELECT upload_form_seq.nextval as fieldId from dual-->
+        <!--</selectKey>-->
+        insert into <include refid="upload_field"/> (field_id, form_id, field_type, field_name, field_desc, field_order, create_time)
+        values (0, #{formId}, #{fieldType}, #{fieldName}, #{fieldDesc}, #{fieldOrder}, now())
+    </insert>
+
+    <select id="queryAll" resultType="Field">
+        select * from <include refid="upload_field"/> where form_id = #{formId} order by field_order
+    </select>
+
+    <select id="queryOne" resultType="Field">
+        select * from <include refid="upload_field"/> where field_id = #{fieldId}
+    </select>
+
+    <select id="countFieldByFieldNameAndFormId" resultType="Integer">
+        select count(*) from <include refid="upload_field"/> where form_id = #{formId} and field_name = #{fieldName}
+    </select>
+
+<!--  删除表单的时候，要同步删除表单相关的字段  -->
+    <delete id="deleteByFormId">
+        delete from <include refid="upload_field"/> where form_id = #{formId}
+    </delete>
+
+    <delete id="deleteById">
+        delete from <include refid="upload_field"/> where field_id = #{fieldId}
+    </delete>
+
+    <update id="update" parameterType="Field">
+        update <include refid="upload_field"/> a
+        set a.field_name = #{fieldName},
+            a.field_desc = #{fieldDesc},
+            a.field_type = #{fieldType},
+            a.field_order = #{fieldOrder}
+        where a.field_id = #{fieldId}
+    </update>
+
+    <update id="updateFieldCode" parameterType="Field">
+        update <include refid="upload_field"/> a
+        set a.field_code = #{fieldCode}
+        where a.field_id = #{fieldId}
+    </update>
+
+    <select id="getFieldTypes" resultType="FieldType">
+        select * from <include refid="upload_field_type"/> order by type_order
+    </select>
+
+    <!-- 选项表 相关sql-->
+
+    <insert id="insertOption" parameterType="Option">
+        insert into <include refid="upload_option"/> (option_id, field_id, option_name)
+        values ( 0, #{fieldId}, #{optionName})
+    </insert>
+
+    <delete id="deleteOption">
+        delete from <include refid="upload_option"/> where option_id = #{optionId}
+    </delete>
+
+    <select id="getOptionList" resultType="Option">
+        select * from <include refid="upload_option"/> where field_id = #{fieldId}
+    </select>
+
+    <select id="countOptionByOptionName" resultType="Integer">
+        select count(1) from <include refid="upload_option"/> where option_name = #{optionName} and field_id = #{fieldId}
+    </select>
+
+    <!--返回表单字段个数-->
+    <select id="countFields" resultType="Integer">
+        select count(1) from <include refid="upload_field"/> where form_id = #{formId}
+    </select>
+
+    <delete id="deleteOptionByFormId" >
+        delete from <include refid="upload_option"/> where field_id in (
+            select field_id from <include refid="upload_field"/> where form_id = #{formId} and field_type in ('radio','checkbox')
+        )
+    </delete>
+
+    <delete id="deleteOptionByFieldId" >
+        delete from <include refid="upload_option"/> where field_id = #{fieldId}
+    </delete>
+</mapper>

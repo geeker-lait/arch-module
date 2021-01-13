@@ -1,5 +1,6 @@
 package org.arch.framework.exception.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.Response;
 import org.arch.framework.exception.BaseException;
 import org.arch.framework.exception.BusinessException;
@@ -14,6 +15,7 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
@@ -50,9 +53,8 @@ import java.util.zip.DataFormatException;
  * 统一封装异常、统一处理出参
  */
 @RestControllerAdvice
+@Slf4j
 public class RestExceptionHandler implements ResponseBodyAdvice<Object> {
-
-    private static final Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
 
     /**
      * 生产环境
@@ -111,6 +113,7 @@ public class RestExceptionHandler implements ResponseBodyAdvice<Object> {
      * @param e        异常
      * @return 异常结果
      */
+    //@ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({NoHandlerFoundException.class, HttpRequestMethodNotSupportedException.class,
             HttpMediaTypeNotSupportedException.class, HttpMediaTypeNotAcceptableException.class,
             MissingPathVariableException.class, MissingServletRequestParameterException.class,

@@ -1,5 +1,5 @@
-create database if not exists `arch`;
-use `arch`;
+create database if not exists arch;
+use arch;
 -- 表单表
 create table upload_form
 (

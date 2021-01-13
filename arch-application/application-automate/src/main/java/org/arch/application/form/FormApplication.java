@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan(basePackages = {"org.arch.application.form.mapper"})
+@MapperScan(basePackages = {"org.arch.framework.automate.from.mapper"})
 public class FormApplication {
 
 	public static void main(String[] args) {
