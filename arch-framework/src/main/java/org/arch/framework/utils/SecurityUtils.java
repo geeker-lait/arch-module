@@ -1,8 +1,8 @@
 package org.arch.framework.utils;
 
+import org.arch.framework.exception.UnAuthenticationException;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.ChannelType;
-import org.arch.framework.exception.UnAuthenticationException;
 import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.lang.NonNull;
@@ -79,5 +79,4 @@ public class SecurityUtils {
                         .authorities(authentication.getAuthorities())
                         .build();
     }
-
 }

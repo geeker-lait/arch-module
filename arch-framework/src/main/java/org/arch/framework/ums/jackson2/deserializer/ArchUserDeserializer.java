@@ -44,6 +44,8 @@ public class ArchUserDeserializer extends StdDeserializer<ArchUser> {
                 mapper.convertValue(jsonNode.get("authorities"), new TypeReference<Set<SimpleGrantedAuthority>>() {});
         JsonNode password = this.readJsonNode(jsonNode, "password");
         String channelTypeString = this.readJsonNode(jsonNode, "channelType").asText("");
+        JsonNode nickName = this.readJsonNode(jsonNode, "nickName");
+        JsonNode avatar = this.readJsonNode(jsonNode, "avatar");
         ChannelType channelType;
         try {
             channelType = ChannelType.valueOf(channelTypeString.trim().toUpperCase());
@@ -58,6 +60,8 @@ public class ArchUserDeserializer extends StdDeserializer<ArchUser> {
                                        password.asText(""),
                                        this.readJsonNode(jsonNode, "accountId").asLong(),
                                        channelType,
+                                       nickName.asText(""),
+                                       avatar.asText(""),
                                        this.readJsonNode(jsonNode, "enabled").asBoolean(),
                                        this.readJsonNode(jsonNode, "accountNonExpired").asBoolean(),
                                        this.readJsonNode(jsonNode, "credentialsNonExpired").asBoolean(),

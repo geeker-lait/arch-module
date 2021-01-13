@@ -27,6 +27,14 @@ public class TokenInfo implements Serializable {
      */
     private String accountName;
     /**
+     * 昵称
+     */
+    private String nickName;
+    /**
+     * 头像
+     */
+    private String avatar;
+    /**
      * 登录类型
      */
     private ChannelType channelType;

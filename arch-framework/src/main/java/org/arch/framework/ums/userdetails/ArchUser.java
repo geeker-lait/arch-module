@@ -62,7 +62,14 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      * 登录类型【IDENTITY TYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
      */
     private final ChannelType channelType;
-
+    /**
+     * 昵称
+     */
+    private final String nickName;
+    /**
+     * 头像
+     */
+    private final String avatar;
     /**
      * 对应与 AccountIdentifier 的 credential 字段,
      * 授权凭证【CREDENTIAL】：站内账号是密码、第三方登录是Token
@@ -87,8 +94,9 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      */
     public ArchUser(String username, String password,
                     Long accountId, ChannelType channelType,
+                    String nickName, String avatar,
                     Collection<? extends GrantedAuthority> authorities) {
-        this(username, password, accountId, channelType, true, true, true, true, authorities);
+        this(username, password, accountId, channelType, nickName, avatar, true, true, true, true, authorities);
     }
 
     /**
@@ -102,6 +110,8 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      * <code>DaoAuthenticationProvider</code>
      * @param accountId     用户名 ID
      * @param channelType   登录类型【IDENTITY TYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博
+     * @param nickName      昵称
+     * @param avatar        头像
      * @param enabled set to <code>true</code> if the user is enabled
      * @param accountNonExpired set to <code>true</code> if the account has not expired
      * @param credentialsNonExpired set to <code>true</code> if the credentials have not
@@ -115,12 +125,16 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      */
     public ArchUser(String username, String password,
                     Long accountId, ChannelType channelType,
+                    String nickName, String avatar,
                     boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired,
                     boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
 
         requireNonNull(accountId, "accountId cannot be null");
+        requireNonNull(channelType, "channelType cannot be null");
         this.accountId = accountId;
         this.channelType = channelType;
+        this.nickName = nickName;
+        this.avatar = avatar;
 
         //noinspection AlibabaAvoidComplexCondition
         if (((username == null) || "".equals(username)) || (password == null)) {
@@ -147,6 +161,14 @@ public class ArchUser implements UserDetails, CredentialsContainer {
 
     public ChannelType getChannelType() {
         return channelType;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 
     @Override
@@ -389,6 +411,8 @@ public class ArchUser implements UserDetails, CredentialsContainer {
     public static class UserBuilder {
         private Long accountId;
         private ChannelType channelType;
+        private String nickName;
+        private String avatar;
         private String username;
         private String password;
         private List<GrantedAuthority> authorities;
@@ -426,6 +450,30 @@ public class ArchUser implements UserDetails, CredentialsContainer {
         public ArchUser.UserBuilder channelType(ChannelType channelType) {
             Assert.notNull(channelType, "channelType cannot be null");
             this.channelType = channelType;
+            return this;
+        }
+        /**
+         * Populates the nickName. This attribute is required.
+         *
+         * @param nickName the nickName. Cannot be null.
+         * @return the {@link ArchUser.UserBuilder} for method chaining (i.e. to populate
+         * additional attributes for this user)
+         */
+        public ArchUser.UserBuilder nickName(String nickName) {
+            Assert.notNull(nickName, "nickName cannot be null");
+            this.nickName = nickName;
+            return this;
+        }
+        /**
+         * Populates the avatar. This attribute is required.
+         *
+         * @param avatar the avatar. Cannot be null.
+         * @return the {@link ArchUser.UserBuilder} for method chaining (i.e. to populate
+         * additional attributes for this user)
+         */
+        public ArchUser.UserBuilder avatar(String avatar) {
+            Assert.notNull(avatar, "avatar cannot be null");
+            this.avatar = avatar;
             return this;
         }
         /**
@@ -594,8 +642,10 @@ public class ArchUser implements UserDetails, CredentialsContainer {
 
         public UserDetails build() {
             String encodedPassword = this.passwordEncoder.apply(password);
-            return new ArchUser(username, encodedPassword, accountId, channelType, !disabled, !accountExpired,
-                            !credentialsExpired, !accountLocked, authorities);
+            return new ArchUser(username, encodedPassword, accountId, channelType,
+                                nickName, avatar,
+                                !disabled, !accountExpired,
+                                !credentialsExpired, !accountLocked, authorities);
         }
     }
 
