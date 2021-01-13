@@ -15,7 +15,6 @@
         <module>payment-channel</module>
         <module>payment-core</module>
         <module>payment-sdk</module>
-        <module>payment-application</module>
     </modules>
 
     <dependencyManagement>
