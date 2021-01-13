@@ -25,7 +25,9 @@ smsCode:
   maxCount: 10
 
 
-serverUrl:
-  -
-  service-a: http://
-  service-b: http://
+serviceUrl:
+  clients:
+    -
+      service-a: http://
+    -
+      service-b: http://

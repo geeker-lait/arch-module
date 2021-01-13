@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.arch.framework.client.jdbc.JdbcClient;
 import org.arch.framework.client.rest.RestClient;
 import org.arch.framework.client.rest.ServiceUrl;
-import org.arch.framework.exception.ExceptionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,15 +20,14 @@ import java.util.Locale;
  */
 @Configuration
 public class ApplicationConfig {
-    private final JdbcTemplate jdbcTemplate;
-    private final RestTemplate restTemplate;
-
     @Autowired
-    public ApplicationConfig(JdbcTemplate jdbcTemplate, RestTemplate restTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.restTemplate = restTemplate;
-    }
+    private JdbcTemplate jdbcTemplate;
 
+
+    @Bean
+    public RestTemplate createRestTemplate() {
+        return new RestTemplate();
+    }
 
     @Bean
     @ConfigurationProperties(prefix = "serviceUrl")
@@ -58,7 +55,7 @@ public class ApplicationConfig {
 
     @Bean
     public RestClient restClient() {
-        return new RestClient(restTemplate, serviceUrl());
+        return new RestClient(createRestTemplate(), serviceUrl());
     }
 
 }

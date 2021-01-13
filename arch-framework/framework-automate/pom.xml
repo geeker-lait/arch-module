@@ -46,10 +46,7 @@
             <version>4.4</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-        </dependency>
+
 
 
         <dependency>

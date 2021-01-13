@@ -1,5 +1,6 @@
 package org.arch.framework.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -24,8 +25,8 @@ import java.security.cert.X509Certificate;
  *
  * @date 2019/12/31
  */
+@Slf4j
 public class HttpUtils {
-    private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
 
     private final static int CONNECT_TIME_OUT = 5 * 1000;
     private final static int CONNECT_REQUEST_TIME_OUT = 5 * 1000;
