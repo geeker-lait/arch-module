@@ -17,7 +17,7 @@
     </sql>
 
 
-    <insert id="insert" parameterType="org.Field" useGeneratedKeys="true" keyProperty="fieldId" keyColumn="field_id">
+    <insert id="insert" parameterType="Field" useGeneratedKeys="true" keyProperty="fieldId" keyColumn="field_id">
         <!--<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="fieldId">-->
             <!--SELECT upload_form_seq.nextval as fieldId from dual-->
         <!--</selectKey>-->
