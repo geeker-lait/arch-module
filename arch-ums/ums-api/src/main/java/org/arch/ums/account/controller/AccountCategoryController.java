@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/accountCategory")
+@RequestMapping("/account/category")
 public class AccountCategoryController implements IController {
     private final AccountCategoryService accountCategoryService;
 

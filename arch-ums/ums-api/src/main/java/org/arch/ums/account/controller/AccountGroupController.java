@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/accountGroup")
+@RequestMapping("/account/group")
 public class AccountGroupController implements IController {
     private final AccountGroupService accountGroupService;
 

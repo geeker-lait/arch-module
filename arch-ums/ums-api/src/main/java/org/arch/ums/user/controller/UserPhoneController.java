@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/userPhone")
+@RequestMapping("/user/phone")
 public class UserPhoneController implements IController {
     private final UserPhoneService userPhoneService;
 

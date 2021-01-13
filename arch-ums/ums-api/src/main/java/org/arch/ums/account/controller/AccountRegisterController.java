@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/account")
+@RequestMapping("/account/reg")
 public class AccountRegisterController {
 
 //    private final IAccountRegisterService accountRegisterService;

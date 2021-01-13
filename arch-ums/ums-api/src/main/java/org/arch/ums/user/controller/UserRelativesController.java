@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/userRelatives")
+@RequestMapping("/user/relatives")
 public class UserRelativesController implements IController {
     private final UserRelativesService userRelativesService;
 

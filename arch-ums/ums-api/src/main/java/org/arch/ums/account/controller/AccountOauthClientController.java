@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/accountOauthClient")
+@RequestMapping("/account/oauthClient")
 public class AccountOauthClientController implements IController {
     private final AccountOauthClientService accountOauthClientService;
 

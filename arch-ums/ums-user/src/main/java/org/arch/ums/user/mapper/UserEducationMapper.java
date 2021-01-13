@@ -1,6 +1,6 @@
 package org.arch.ums.mapper;
 
-import org.arch.ums.entity.UserEducation;
+import org.arch.ums.user.entity.UserEducation;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

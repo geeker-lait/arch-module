@@ -58,3 +58,10 @@ file:
   # 文件大小 /M
   maxSize: 100
   avatarMaxSize: 5
+
+
+logging:
+  config: classpath:logback-spring.xml
+  # feign 日志配置
+  level:
+    org.arch.ums.account.client.ArchUmsAccountClient: error

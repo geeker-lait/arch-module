@@ -1,4 +1,15 @@
 spring:
+  datasource:
+    hikari:
+      connection-test-query: SELECT 1
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3306/ums?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
+      username: "root"
+      password: "123456"
+      maximum-pool-size: 10
+      minimum-idle: 5
+    url: jdbc:mysql://localhost:3306/ums?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
+
 #  datasource:
 #    dynamic:
 #      hikari:
@@ -14,9 +25,13 @@ spring:
 #            max-pool-size: 10
 #            min-idle: 5
 
+
+
+
+
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*Mapper.xml
-  typeAliasesPackage: org.arch.ums.entity
+  typeAliasesPackage: org.arch.ums.account.entity,org.arch.ums.user.entity
   global-config:
     db-config:
       id-type: id_worker
@@ -30,3 +45,4 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     cache-enabled: false
     jdbc-type-for-null: null
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

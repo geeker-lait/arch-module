@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/userJob")
+@RequestMapping("/user/job")
 public class UserJobController implements IController {
     private final UserJobService userJobService;
 

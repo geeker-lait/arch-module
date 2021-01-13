@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/accountRoleGroup")
+@RequestMapping("/account/roleGroup")
 public class AccountRoleGroupController implements IController {
     private final AccountRoleGroupService accountRoleGroupService;
 

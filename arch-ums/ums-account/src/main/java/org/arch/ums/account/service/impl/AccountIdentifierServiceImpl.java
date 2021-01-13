@@ -52,8 +52,7 @@ public class AccountIdentifierServiceImpl implements AccountIdentifierService {
 
     @Override
     public AccountIdentifier getOne(Wrapper<AccountIdentifier> queryWrapper, boolean throwEx) {
-        // TODO
-        return null;
+        return accountIdentifierDao.getOne(queryWrapper, true);
     }
 
     @Override
@@ -70,7 +69,6 @@ public class AccountIdentifierServiceImpl implements AccountIdentifierService {
 
     @Override
     public BaseMapper<AccountIdentifier> getBaseMapper() {
-        // TODO
-        return null;
+        return accountIdentifierDao.getBaseMapper();
     }
 }

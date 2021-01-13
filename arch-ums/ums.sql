@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `account_category`;
 CREATE TABLE `account_category` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '资源类目ID',
   `pid` bigint(19) NOT NULL COMMENT '父节点ID',
-  `categroy_name` varchar(64) NOT NULL COMMENT '资源类目名',
+  `category_name` varchar(64) NOT NULL COMMENT '资源类目名',
   `sorted` int(4) NOT NULL COMMENT '顺序',
   PRIMARY KEY (`id`),
   KEY `IDX_PID_SORTED` (`pid`,`sorted`)
@@ -151,11 +151,11 @@ CREATE TABLE `account_oauth_token` (
   KEY `IDX_ACCOUNT_IDENTIFIER_ID` (`account_identifier_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='第三方账号授权';
 
-/*Table structure for table `account_operat_log` */
+/*Table structure for table `account_operate_log` */
 
-DROP TABLE IF EXISTS `account_operat_log`;
+DROP TABLE IF EXISTS `account_operate_log`;
 
-CREATE TABLE `account_operat_log` (
+CREATE TABLE `account_operate_log` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `account_id` bigint(19) NOT NULL COMMENT '用户id',
   `operator_typ` int(4) NOT NULL COMMENT '操作类型()',
@@ -251,9 +251,11 @@ CREATE TABLE `account_role` (
 DROP TABLE IF EXISTS `account_role_group`;
 
 CREATE TABLE `account_role_group` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `role_id` bigint(19) NOT NULL COMMENT '角色ID',
   `group_id` bigint(19) NOT NULL COMMENT '组织ID',
-  PRIMARY KEY (`role_id`,`group_id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_roleId_groupId` (`role_id`,`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色组织或机构';
 
 /*Table structure for table `account_role_menu` */
@@ -261,9 +263,11 @@ CREATE TABLE `account_role_group` (
 DROP TABLE IF EXISTS `account_role_menu`;
 
 CREATE TABLE `account_role_menu` (
-  `role_id` bigint(19) NOT NULL COMMENT '角色ID',
-  `menu_id` bigint(19) NOT NULL COMMENT '菜单ID',
-  PRIMARY KEY (`role_id`,`menu_id`)
+ `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+ `role_id` bigint(19) NOT NULL COMMENT '角色ID',
+ `menu_id` bigint(19) NOT NULL COMMENT '菜单ID',
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `IDX_roleId_menuId` (`role_id`,`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色菜单';
 
 /*Table structure for table `account_role_permission` */
@@ -271,9 +275,11 @@ CREATE TABLE `account_role_menu` (
 DROP TABLE IF EXISTS `account_role_permission`;
 
 CREATE TABLE `account_role_permission` (
-  `role_id` bigint(19) NOT NULL COMMENT '角色ID',
-  `permission_id` bigint(19) NOT NULL COMMENT '权限ID',
-  PRIMARY KEY (`role_id`,`permission_id`)
+   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+   `role_id` bigint(19) NOT NULL COMMENT '角色ID',
+   `permission_id` bigint(19) NOT NULL COMMENT '权限ID',
+   PRIMARY KEY (`id`,`role_id`,`permission_id`),
+   UNIQUE KEY `IDX_roleId_permissionId` (`role_id`,`permission_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色权限表';
 
 /*Table structure for table `account_role_resource` */
@@ -281,10 +287,13 @@ CREATE TABLE `account_role_permission` (
 DROP TABLE IF EXISTS `account_role_resource`;
 
 CREATE TABLE `account_role_resource` (
-  `role_id` bigint(19) NOT NULL COMMENT '角色ID',
-  `resource_id` bigint(19) NOT NULL COMMENT '资源ID',
-  PRIMARY KEY (`role_id`,`resource_id`)
+ `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+ `role_id` bigint(19) NOT NULL COMMENT '角色ID',
+ `resource_id` bigint(19) NOT NULL COMMENT '资源ID',
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `IDX_roleId_resourceId` (`role_id`,`resource_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色资源表';
+
 
 /*Table structure for table `account_tag` */
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/userAddress")
+@RequestMapping("/user/address")
 public class UserAddressController implements IController {
     private final UserAddressService userAddressService;
 

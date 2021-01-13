@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/userBankCard")
+@RequestMapping("/user/bankCard")
 public class UserBankCardController implements IController {
     private final UserBankCardService userBankCardService;
 

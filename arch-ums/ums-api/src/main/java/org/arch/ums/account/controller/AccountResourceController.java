@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/accountResource")
+@RequestMapping("/account/resource")
 public class AccountResourceController implements IController {
     private final AccountResourceService accountResourceService;
 

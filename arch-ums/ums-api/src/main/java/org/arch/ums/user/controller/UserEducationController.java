@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/userEducation")
+@RequestMapping("/user/education")
 public class UserEducationController implements IController {
     private final UserEducationService userEducationService;
 

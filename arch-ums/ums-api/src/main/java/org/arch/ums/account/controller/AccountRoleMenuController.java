@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/accountRoleMenu")
+@RequestMapping("/account/roleMenu")
 public class AccountRoleMenuController implements IController {
     private final AccountRoleMenuService accountRoleMenuService;
 

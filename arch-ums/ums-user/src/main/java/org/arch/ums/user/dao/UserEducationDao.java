@@ -1,7 +1,7 @@
 package org.arch.ums.dao;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.ums.entity.UserEducation;
+import org.arch.ums.user.entity.UserEducation;
 import org.arch.ums.mapper.UserEducationMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;

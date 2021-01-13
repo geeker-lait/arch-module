@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/accountPermission")
+@RequestMapping("/account/permission")
 public class AccountPermissionController implements IController {
     private final AccountPermissionService accountPermissionService;
 

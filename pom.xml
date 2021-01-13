@@ -29,6 +29,9 @@
         <module>arch-rule</module>
         <module>arch-ums</module>
         <module>arch-auth/auth-jwt</module>
+        <module>arch-ums/ums-commons</module>
+        <module>arch-commons</module>
+        <module>arch-ums/ums-feign-api</module>
     </modules>
 
 
@@ -105,7 +108,7 @@
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>2.2.1.RELEASE</version>
+                <version>2.2.3.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -114,6 +117,12 @@
                 <groupId>org.apache.rocketmq</groupId>
                 <artifactId>rocketmq-spring-boot-starter</artifactId>
                 <version>2.0.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>3.3.2</version>
             </dependency>
 
             <dependency>
@@ -143,6 +152,12 @@
                 <artifactId>javax.servlet-api</artifactId>
                 <version>4.0.1</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.30</version>
             </dependency>
 
             <dependency>
