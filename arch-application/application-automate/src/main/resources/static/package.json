@@ -11,7 +11,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "lib": "vue-cli-service build --target lib --name AvueFormDesign --dest lib --filename index --formats umd-min ./packages/index.js",
+    "lib": "vue-cli-service build --target lib --name AvueFormDesign --dest lib --filename index --formats umd-min packages/index.js",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "dependencies": {
