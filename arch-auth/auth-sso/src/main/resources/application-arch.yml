@@ -1,7 +1,15 @@
 arch:
   sso:
+    # 手机用户默认密码
+    default-password: "VR&vU'a#.mt^&%'"
     # 默认用户头像
     default-avatar: http://static.dcenter.top/static/img/random/user/14.jpg
+    # 用户注册成功后的默认权限, 多个权限用逗号分开, 默认为: "ROLE_USER"
+    default-authorities: ROLE_USER
+    # 系统的租户 id, 默认: 00
+    system-tenant-id: 00
+    # tenantId 的请求头名称; 租户登录时通过请求头传递租户 ID, 本系统用户不需要传递租户 ID, 已设置默认租户 ID.
+    tenant-header-name: tenantId
     # 第三方登录成功后, 返回获取 token 自动脚本页面. 默认: /oauth2Token
     auto-get-token-uri: /oauth2Token
     # 第三方登录成功后, autoGetTokenUrl 获取 token 处理接口 url, 默认: /oauth2Callback

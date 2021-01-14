@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * 处理租户 id 过滤器
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.11 21:48
