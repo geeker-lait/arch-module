@@ -1,4 +1,4 @@
-package org.arch.auth.sso.properties;
+package org.arch.framework.ums.properties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,13 +16,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AppProperties {
 
     /**
-     * appId 的请求头名称
+     * appId 的值
      */
-    private String appIdHeaderName = "appId";
+    private String appId;
 
     /**
-     * appCode 的请求头名称
+     * appCode 的值
      */
-    private String appCodeHeaderName = "appCode";
+    private String appCode;
 
 }

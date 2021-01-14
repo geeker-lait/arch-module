@@ -18,7 +18,7 @@ import static java.util.Objects.isNull;
  */
 public class TokenRequestInterceptor implements RequestInterceptor {
 
-    private final String TOKEN_HEADER_NAME = "Authorization";
+    private static final String TOKEN_HEADER_NAME = "Authorization";
 
     @Override
     public void apply(RequestTemplate template) {
