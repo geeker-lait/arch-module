@@ -13,10 +13,12 @@
     <description>ums-commons: 用户管理模块通用的 entity, dto, vo 实体.</description>
 
     <dependencies>
+
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>arch-framework</artifactId>
+            <artifactId>framework-core</artifactId>
             <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -29,14 +31,12 @@
             <artifactId>jackson-annotations</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-extension</artifactId>
             <version>3.3.2</version>
             <scope>compile</scope>
         </dependency>
-
 
     </dependencies>
 

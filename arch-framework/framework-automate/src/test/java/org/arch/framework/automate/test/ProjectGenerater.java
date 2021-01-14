@@ -1,6 +1,7 @@
 package org.arch.framework.automate.test;
 
-import com.google.gson.Gson;
+import cn.hutool.json.JSON;
+import com.alibaba.fastjson.JSONArray;
 import org.arch.framework.automate.generater.core.DaoProcessor;
 import org.arch.framework.automate.generater.core.DdlProcessor;
 import org.arch.framework.automate.generater.core.ModuleInfos;
@@ -37,10 +38,10 @@ public class ProjectGenerater {
         }
 
         FileInputStream fileInputStream = new FileInputStream(savePath + file);
-        Gson gson = new Gson();
+        JSONArray gson = new JSONArray();
         ModuleInfos<TableSchema> excelUtils = new ModuleInfos(file, fileInputStream, TableSchema.class);
         List<ModuleInfo> moduleInfosList =  excelUtils.getModuleInfos();
-        System.out.println(gson.toJson(moduleInfosList));
+        System.out.println(gson.toJSONString(moduleInfosList));
 
         List<RenderingRequest> renderingRequests=new ArrayList<>();
         // 后面读取yml,实现定义生成
