@@ -11,9 +11,7 @@
 
     <artifactId>auth-sdk</artifactId>
     <name>auth-sdk</name>
-    <description>java 版本的 SDK. 用于给第三方使用的企业级的身份云产品，
-                 帮助客户一次性解决身份认证、用户管理、单点登录、多因素认证等各类系统身份安全治理.
-    </description>
+    <description>java 版本的 SDK. 用于给第三方使用的企业级的身份云产品， 帮助客户一次性解决身份认证、用户管理、单点登录、多因素认证等各类系统身份安全治理.</description>
 
     <dependencies>
         <dependency>

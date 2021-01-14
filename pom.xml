@@ -13,6 +13,7 @@
         <java.version>1.8</java.version>
         <spring-security.version>5.4.1</spring-security.version>
         <spring.version>5.2.9.RELEASE</spring.version>
+        <ums.version>2.2.10</ums.version>
     </properties>
 
 
@@ -27,10 +28,6 @@
         <module>arch-pms</module>
         <module>arch-rule</module>
         <module>arch-ums</module>
-        <module>arch-auth/auth-jwt</module>
-        <module>arch-ums/ums-commons</module>
-        <module>arch-commons</module>
-        <module>arch-ums/ums-feign-api</module>
     </modules>
 
 
@@ -75,17 +72,17 @@
 
 
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.3.5.RELEASE</version>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Hoxton.SR8</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Hoxton.SR8</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>2.4.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

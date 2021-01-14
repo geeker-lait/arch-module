@@ -1,4 +1,4 @@
-package org.arch.framework.feign.config;
+package org.arch.framework.automate.feign.config;
 
 import feign.Logger;
 import feign.Retryer;
@@ -11,6 +11,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * feign 客户端全局配置
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.12 13:46

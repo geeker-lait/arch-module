@@ -12,10 +12,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>auth-oauth2</module>
+        <module>auth-jwt</module>
+        <module>auth-oauth</module>
         <module>auth-rbac</module>
-        <module>auth-sso</module>
         <module>auth-sdk</module>
+        <module>auth-sso</module>
     </modules>
 
 </project>

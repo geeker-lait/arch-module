@@ -13,21 +13,17 @@
 
     <modules>
         <module>ums-account</module>
+        <module>ums-api</module>
+        <module>ums-commons</module>
+        <module>ums-feign-api</module>
         <module>ums-member</module>
         <module>ums-merchant</module>
         <module>ums-user</module>
-        <module>ums-api</module>
-
     </modules>
 
-    <dependencies>
-
-
-    </dependencies>
 
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
-
         <resources>
             <resource>
                 <directory>src/main/java</directory>
