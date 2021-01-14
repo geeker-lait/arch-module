@@ -1,12 +1,8 @@
 package org.arch.framework.utils;
 
-import org.arch.framework.exception.UnAuthenticationException;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.ChannelType;
-<<<<<<< HEAD:arch-framework/src/main/java/org/arch/framework/utils/SecurityUtils.java
-=======
 import org.arch.framework.exception.AuthenticationException;
->>>>>>> 2c7984453b474ab88e48da6f7fcede621762284b:arch-framework/framework-core/src/main/java/org/arch/framework/utils/SecurityUtils.java
 import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.lang.NonNull;
