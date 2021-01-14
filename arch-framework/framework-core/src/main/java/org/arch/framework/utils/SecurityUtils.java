@@ -1,8 +1,8 @@
 package org.arch.framework.utils;
 
-import org.arch.framework.exception.AuthenticationException;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.exception.AuthenticationException;
 import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.lang.NonNull;
@@ -16,7 +16,6 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 /**
  * 获取当前登录的用户
- *
  * @author YongWu zheng
  * @since 2021-01-03 17:36
  */
@@ -25,7 +24,7 @@ public class SecurityUtils {
     /**
      * 获取当前登录的账户信息
      *
-     * @return {@link TokenInfo}
+     * @return  {@link TokenInfo}
      * @throws AuthenticationException 未登录异常
      */
     @NonNull
@@ -42,7 +41,6 @@ public class SecurityUtils {
 
     /**
      * 获取系统用户名称
-     *
      * @return 系统用户名称
      */
     public static String getAccountName() {
@@ -66,7 +64,7 @@ public class SecurityUtils {
      * 值必须与 ums.jwt.principalClaimName 值相同.
      *
      * @param authentication {@link JwtAuthenticationToken}
-     * @return 返回 {@link TokenInfo} 对象
+     * @return  返回 {@link TokenInfo} 对象
      */
     @NonNull
     private static TokenInfo toTokenInfoFromUserDetails(@NonNull JwtAuthenticationToken authentication) {
@@ -74,11 +72,11 @@ public class SecurityUtils {
         Long accountId = Long.valueOf(jwt.getClaimAsString(JwtArchClaimNames.ACCOUNT_ID.getClaimName()));
         ChannelType channelType = ChannelType.valueOf(jwt.getClaimAsString(JwtArchClaimNames.CHANNEL_TYPE.getClaimName()));
         return TokenInfo.builder()
-                .accountId(accountId)
-                // 这里的 ClaimName 必须与属性 ums.jwt.principalClaimName 值相同.
-                .accountName(jwt.getClaimAsString(JwtClaimNames.SUB))
-                .channelType(channelType)
-                .authorities(authentication.getAuthorities())
-                .build();
+                        .accountId(accountId)
+                        // 这里的 ClaimName 必须与属性 ums.jwt.principalClaimName 值相同.
+                        .accountName(jwt.getClaimAsString(JwtClaimNames.SUB))
+                        .channelType(channelType)
+                        .authorities(authentication.getAuthorities())
+                        .build();
     }
 }

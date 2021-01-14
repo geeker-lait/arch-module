@@ -1,4 +1,4 @@
-package org.arch.framework.automate.feign.interceptor;
+package org.arch.framework.feign.interceptor;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

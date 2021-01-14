@@ -15,12 +15,12 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-commons</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>arch-framework</artifactId>
-            <version>${parent.version}</version>
+            <artifactId>framework-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

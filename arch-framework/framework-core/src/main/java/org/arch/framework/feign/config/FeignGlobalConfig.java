@@ -1,8 +1,8 @@
-package org.arch.framework.automate.feign.config;
+package org.arch.framework.feign.config;
 
 import feign.Logger;
 import feign.Retryer;
-import org.arch.framework.automate.feign.interceptor.TokenRequestInterceptor;
+import org.arch.framework.feign.interceptor.TokenRequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import top.dcenter.ums.security.jwt.properties.JwtProperties;
