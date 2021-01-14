@@ -6,8 +6,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.AbstractOAuth2Token;
 import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
-import top.dcenter.ums.security.jwt.properties.BearerTokenProperties;
-import top.dcenter.ums.security.jwt.properties.JwtProperties;
 
 import static java.util.Objects.isNull;
 
@@ -20,11 +18,7 @@ import static java.util.Objects.isNull;
  */
 public class TokenRequestInterceptor implements RequestInterceptor {
 
-    private final BearerTokenProperties bearerToken;
-
-    public TokenRequestInterceptor(JwtProperties jwtProperties) {
-        this.bearerToken = jwtProperties.getBearer();
-    }
+    private final String TOKEN_HEADER_NAME = "Authorization";
 
     @Override
     public void apply(RequestTemplate template) {
@@ -43,8 +37,7 @@ public class TokenRequestInterceptor implements RequestInterceptor {
             //noinspection unchecked
             AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token> token =
                     ((AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token>) authentication);
-            String tokenHeaderName = bearerToken.getBearerTokenHeaderName();
-            template.header(tokenHeaderName, token.getToken().getTokenValue());
+            template.header(TOKEN_HEADER_NAME, token.getToken().getTokenValue());
         }
 
     }

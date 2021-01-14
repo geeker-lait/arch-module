@@ -56,6 +56,10 @@ public enum ScopesType {
      */
     WATCHDOG,
     /**
+     * 访问看营销管理系统的 服务权限
+     */
+    MARKETING,
+    /**
      * 访问支付系统的 支付 服务权限
      */
     PAY

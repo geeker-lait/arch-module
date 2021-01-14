@@ -5,7 +5,6 @@ import feign.Retryer;
 import org.arch.framework.feign.interceptor.TokenRequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
-import top.dcenter.ums.security.jwt.properties.JwtProperties;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -38,7 +37,7 @@ public class FeignGlobalConfig {
     }
 
     @Bean
-    public TokenRequestInterceptor tokenRequestInterceptor(JwtProperties jwtProperties) {
-        return new TokenRequestInterceptor(jwtProperties);
+    public TokenRequestInterceptor tokenRequestInterceptor() {
+        return new TokenRequestInterceptor();
     }
 }
