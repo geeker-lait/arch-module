@@ -16,6 +16,7 @@
         <module>auth-rbac</module>
         <module>auth-sso</module>
         <module>auth-sdk</module>
+        <module>auth-jwt</module>
     </modules>
 
 </project>

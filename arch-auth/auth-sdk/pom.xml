@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>arch-framework</artifactId>
+            <artifactId>framework-core</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
