@@ -62,17 +62,16 @@ public class ArchTenantContextHandler implements TenantContextHolder {
     @NonNull
     public String getTenantId() throws TenantIdNotFoundException {
 
+        // 已登录用户获取租户 id
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+            return getTenantId(authentication);
+        }
         // 未登录用户获取租户 id
         String tenantId = context.get();
         if (!hasText(tenantId)) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-                // 已登录用户获取租户 id
-                return getTenantId(authentication);
-            }
             throw new TenantIdNotFoundException(ErrorCodeEnum.TENANT_ID_NOT_FOUND, getMdcTraceId(), getMdcTraceId());
         }
-
         return tenantId;
     }
 
