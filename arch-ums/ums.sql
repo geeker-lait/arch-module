@@ -23,11 +23,13 @@ DROP TABLE IF EXISTS `account_category`;
 
 CREATE TABLE `account_category` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '资源类目ID',
+  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `pid` bigint(19) NOT NULL COMMENT '父节点ID',
   `category_name` varchar(64) NOT NULL COMMENT '资源类目名',
   `sorted` int(4) NOT NULL COMMENT '顺序',
   PRIMARY KEY (`id`),
-  KEY `IDX_PID_SORTED` (`pid`,`sorted`)
+  KEY `IDX_PID_SORTED` (`pid`,`sorted`),
+  KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-资源类目';
 
 /*Table structure for table `account_group` */
@@ -37,12 +39,14 @@ DROP TABLE IF EXISTS `account_group`;
 CREATE TABLE `account_group` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号-权限ID',
   `group_pid` bigint(19) NOT NULL COMMENT '父ID',
+  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `group_code` varchar(32) NOT NULL COMMENT '组code',
   `group_name` varchar(32) NOT NULL COMMENT '组织架构名',
   `group_icon` varchar(32) DEFAULT NULL COMMENT '组织架构ICON',
   `sorted` int(2) NOT NULL COMMENT '排序',
   PRIMARY KEY (`id`),
-  KEY `IDX_GROUP_PID_SORTED` (`group_pid`,`sorted`)
+  KEY `IDX_GROUP_PID_SORTED` (`group_pid`,`sorted`),
+  KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-组织机构';
 
 /*Table structure for table `account_identifier` */
@@ -54,10 +58,13 @@ CREATE TABLE `account_identifier` (
   `aid` bigint(19) NOT NULL COMMENT '账号名ID',
   `identifier` varchar(32) NOT NULL COMMENT '识别标识:身份唯一标识，如：登录账号、邮箱地址、手机号码、QQ号码、微信号、微博号；',
   `credential` varchar(32) NOT NULL COMMENT '授权凭证【CREDENTIAL】：站内账号是密码、第三方登录是Token；',
-  `channelType` varchar(32) NOT NULL COMMENT '登录类型【IDENTITYTYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；',
+  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
+  `authorities` varchar(255) DEFAULT NULL COMMENT '用户角色:ROLE_xxx 与 租户id: TENANT_XXX',
+  `channel_type` varchar(32) NOT NULL COMMENT '登录类型【IDENTITYTYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；',
   PRIMARY KEY (`aid`),
-  UNIQUE KEY `IDX_IDENTIFIER` (`identifier`),
-  KEY `IDX_AID` (`aid`)
+  UNIQUE KEY `IDX_IDENTIFIER_TENANT_ID` (`identifier`, `tenant_id`),
+  KEY `IDX_AID` (`aid`),
+  KEY `IDX_INTENT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-标识';
 
 /*Table structure for table `account_member` */
@@ -81,6 +88,7 @@ DROP TABLE IF EXISTS `account_menu`;
 CREATE TABLE `account_menu` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号-菜单ID',
   `pid` bigint(19) NOT NULL COMMENT '父节点ID',
+  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `menu_code` varchar(64) NOT NULL COMMENT '英文码',
   `menu_name` varchar(64) NOT NULL COMMENT '菜单名称',
   `menu_val` varchar(64) DEFAULT NULL COMMENT '菜单值',
@@ -89,7 +97,8 @@ CREATE TABLE `account_menu` (
   `frame` int(1) NOT NULL DEFAULT '1' COMMENT '是否iframe: 1是, 0不是, 默认: 1',
   `icon` varchar(64) DEFAULT NULL COMMENT '图标',
   PRIMARY KEY (`id`),
-  KEY `IDX_PID_SORTED` (`pid`,`sorted`)
+  KEY `IDX_PID_SORTED` (`pid`,`sorted`),
+  KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-菜单';
 
 /*Table structure for table `account_name` */
@@ -98,7 +107,7 @@ DROP TABLE IF EXISTS `account_name`;
 
 CREATE TABLE `account_name` (
   `account_id` bigint(19) NOT NULL COMMENT '账号ID/用户ID/会员ID/商户ID',
-  `nickName` varchar(64) DEFAULT NULL COMMENT '用户昵称可随机生成',
+  `nick_name` varchar(64) DEFAULT NULL COMMENT '用户昵称可随机生成',
   `avatar` varchar(64) DEFAULT NULL COMMENT '头像',
   `source` varchar(64) DEFAULT NULL COMMENT '来源, 推广统计用',
   PRIMARY KEY (`account_id`)
@@ -128,7 +137,7 @@ CREATE TABLE `account_oauth_token` (
   `provider_id` varchar(20) DEFAULT NULL COMMENT '第三方服务商,如: qq,github',
   `access_token` varchar(64) DEFAULT NULL COMMENT 'accessToken',
   `expire_in` bigint(20) DEFAULT '-1' COMMENT 'accessToken过期时间 无过期时间默认为 -1',
-  `refreshTokenExpireIn` bigint(20) DEFAULT '-1' COMMENT 'refreshToken过期时间 无过期时间默认为 -1',
+  `refresh_token_expire_in` bigint(20) DEFAULT '-1' COMMENT 'refreshToken过期时间 无过期时间默认为 -1',
   `refresh_token` varchar(64) DEFAULT NULL COMMENT 'refreshToken',
   `uid` varchar(20) DEFAULT NULL COMMENT 'alipay userId',
   `open_id` varchar(64) DEFAULT NULL COMMENT 'qq/mi/toutiao/wechatMp/wechatOpen/weibo/jd/kujiale/dingTalk/douyin/feishu',
@@ -171,13 +180,15 @@ DROP TABLE IF EXISTS `account_permission`;
 
 CREATE TABLE `account_permission` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号-菜单ID',
+  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `permission_code` varchar(64) NOT NULL COMMENT '权限码(与RequestMethod对应)list(GET)/add(POST)/edit(PUT)/delete(DELETE)/..',
   `permission_name` varchar(64) DEFAULT NULL COMMENT '权限名称',
   `permission_val` varchar(64) DEFAULT NULL COMMENT '权限值',
   `permission_uri` varchar(64) NOT NULL COMMENT 'uri',
   `permission_typ` int(2) NOT NULL COMMENT '权限类型：0->目录；1->菜单；2->按钮（接口绑定权限）',
   `sorted` int(3) NOT NULL COMMENT '排序',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-权限';
 
 /*Table structure for table `account_post` */
@@ -187,11 +198,13 @@ DROP TABLE IF EXISTS `account_post`;
 CREATE TABLE `account_post` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `post_pid` bigint(19) NOT NULL COMMENT '父id',
+  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `post_name` varchar(32) NOT NULL COMMENT '岗位名',
   `post_code` varchar(32) NOT NULL COMMENT '岗位code',
   `post_icon` varchar(32) DEFAULT NULL COMMENT 'icon',
   `salary` decimal(19,4) NOT NULL COMMENT '薪资',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-岗位';
 
 /*Table structure for table `account_relationship` */
@@ -221,6 +234,7 @@ DROP TABLE IF EXISTS `account_resource`;
 CREATE TABLE `account_resource` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号-资源表ID',
   `category_id` bigint(19) NOT NULL COMMENT '账号-资源类目ID',
+  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `resource_name` varchar(64) NOT NULL COMMENT '资源名',
   `resource_code` varchar(64) NOT NULL COMMENT '资源码',
   `resource_Typ` int(4) NOT NULL COMMENT '类型: 1目录, 2菜单, 3按钮, 4链接',
@@ -230,7 +244,8 @@ CREATE TABLE `account_resource` (
   `resource_desc` varchar(64) DEFAULT NULL COMMENT '资源描述',
   `visible` int(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏: 0不隐藏, 1隐藏. 默认: 0',
   `level` int(2) DEFAULT NULL COMMENT '层级',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-资源';
 
 /*Table structure for table `account_role` */
@@ -239,11 +254,13 @@ DROP TABLE IF EXISTS `account_role`;
 
 CREATE TABLE `account_role` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号角色ID',
+  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `role_name` varchar(32) NOT NULL COMMENT '角色名',
   `icon` varchar(32) DEFAULT NULL COMMENT '角色icon',
   `sorted` int(3) NOT NULL COMMENT '顺序',
   PRIMARY KEY (`id`),
-  KEY `IDX_SORTED` (`sorted`)
+  KEY `IDX_SORTED` (`sorted`),
+  KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色';
 
 /*Table structure for table `account_role_group` */
@@ -252,10 +269,12 @@ DROP TABLE IF EXISTS `account_role_group`;
 
 CREATE TABLE `account_role_group` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `role_id` bigint(19) NOT NULL COMMENT '角色ID',
   `group_id` bigint(19) NOT NULL COMMENT '组织ID',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_roleId_groupId` (`role_id`,`group_id`)
+  UNIQUE KEY `IDX_roleId_groupId_tenantId` (`role_id`,`group_id`, `tenant_id`),
+  KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色组织或机构';
 
 /*Table structure for table `account_role_menu` */
@@ -264,10 +283,12 @@ DROP TABLE IF EXISTS `account_role_menu`;
 
 CREATE TABLE `account_role_menu` (
  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+ `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
  `role_id` bigint(19) NOT NULL COMMENT '角色ID',
  `menu_id` bigint(19) NOT NULL COMMENT '菜单ID',
  PRIMARY KEY (`id`),
- UNIQUE KEY `IDX_roleId_menuId` (`role_id`,`menu_id`)
+ UNIQUE KEY `IDX_roleId_menuId_tenantId` (`role_id`,`menu_id`, `tenant_id`),
+ KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色菜单';
 
 /*Table structure for table `account_role_permission` */
@@ -276,10 +297,12 @@ DROP TABLE IF EXISTS `account_role_permission`;
 
 CREATE TABLE `account_role_permission` (
    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+   `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
    `role_id` bigint(19) NOT NULL COMMENT '角色ID',
    `permission_id` bigint(19) NOT NULL COMMENT '权限ID',
    PRIMARY KEY (`id`,`role_id`,`permission_id`),
-   UNIQUE KEY `IDX_roleId_permissionId` (`role_id`,`permission_id`)
+   UNIQUE KEY `IDX_roleId_permissionId_tenantId` (`role_id`,`permission_id`, `tenant_id`),
+   KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色权限表';
 
 /*Table structure for table `account_role_resource` */
@@ -288,10 +311,12 @@ DROP TABLE IF EXISTS `account_role_resource`;
 
 CREATE TABLE `account_role_resource` (
  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+ `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
  `role_id` bigint(19) NOT NULL COMMENT '角色ID',
  `resource_id` bigint(19) NOT NULL COMMENT '资源ID',
  PRIMARY KEY (`id`),
- UNIQUE KEY `IDX_roleId_resourceId` (`role_id`,`resource_id`)
+ UNIQUE KEY `IDX_roleId_resourceId_tenantId` (`role_id`,`resource_id`, `tenant_id`),
+ KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色资源表';
 
 

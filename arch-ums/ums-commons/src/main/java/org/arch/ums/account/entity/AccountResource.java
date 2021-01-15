@@ -1,12 +1,13 @@
 package org.arch.ums.account.entity;
 
-import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * 账号-资源(account_resource)实体类
@@ -31,6 +32,10 @@ public class AccountResource extends Model<AccountResource> implements Serializa
      * 账号-资源类目ID
      */
     private Long categoryId;
+    /**
+     * 租户 ID
+     */
+    private String tenantId;
     /**
      * 资源名
      */

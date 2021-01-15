@@ -6,7 +6,7 @@
     </sql>
 
     <sql id="baseColumn">
-        id,post_pid,post_name,post_code,post_icon,salary
+        id,post_pid,tenant_id,post_name,post_code,post_icon,salary
     </sql>
 
 </mapper>

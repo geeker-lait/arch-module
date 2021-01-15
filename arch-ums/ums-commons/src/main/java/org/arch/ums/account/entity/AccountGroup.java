@@ -33,6 +33,10 @@ public class AccountGroup extends Model<AccountGroup> implements Serializable {
      */
     private Long groupPid;
     /**
+     * 租户 ID
+     */
+    private String tenantId;
+    /**
      * 组code
      */
     private String groupCode;

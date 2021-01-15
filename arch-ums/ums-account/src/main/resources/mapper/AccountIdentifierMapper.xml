@@ -6,7 +6,7 @@
     </sql>
 
     <sql id="baseColumn">
-        id,aid,identifier,credential,channelType
+        id,aid,identifier,credential,tenant_id, authorities, channel_type
     </sql>
 
 </mapper>

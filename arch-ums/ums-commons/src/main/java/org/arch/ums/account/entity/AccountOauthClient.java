@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.arch.framework.ums.enums.ScopesType;
 
 import java.io.Serializable;
 
@@ -38,7 +39,7 @@ public class AccountOauthClient extends Model<AccountOauthClient> implements Ser
      */
     private String appCode;
     /**
-     * openid/userinfo/token/code/资源服务器标识等
+     * openid/userinfo/token/code/资源服务器标识等, 具体查看 {@link ScopesType}
      */
     private String scopes;
     /**

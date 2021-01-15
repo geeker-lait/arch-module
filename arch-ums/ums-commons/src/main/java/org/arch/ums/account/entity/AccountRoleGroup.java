@@ -29,6 +29,10 @@ public class AccountRoleGroup extends Model<AccountRoleGroup> implements Seriali
     @TableId
     private Long id;
     /**
+     * 租户 ID
+     */
+    private String tenantId;
+    /**
      * 角色ID
      */
 	private Long roleId;

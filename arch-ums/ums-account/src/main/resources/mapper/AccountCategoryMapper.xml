@@ -7,6 +7,6 @@
 
     <sql id="baseColumn">
         id,pid,category_name,sorted
-    </sql>
+    </sql>tenant_id,
 
 </mapper>

@@ -6,7 +6,7 @@
     </sql>
 
     <sql id="baseColumn">
-        account_identifier_id,enable_refresh,provider_id,access_token,expire_in,refresh_token,uid,open_id,access_code,union_id,scope,token_type,id_token,mac_algorithm,mac_key,code,oauth_token,oauth_token_secret,user_id,screen_name,oauth_callback_confirmed,expire_time,st
+        account_identifier_id,enable_refresh,provider_id,access_token,expire_in,refresh_token_expire_in,refresh_token,uid,open_id,access_code,union_id,scope,token_type,id_token,mac_algorithm,mac_key,`code`,oauth_token,oauth_token_secret,user_id,screen_name,oauth_callback_confirmed,expire_time,st
     </sql>
 
 </mapper>

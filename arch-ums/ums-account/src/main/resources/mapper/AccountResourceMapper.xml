@@ -6,7 +6,7 @@
     </sql>
 
     <sql id="baseColumn">
-        id,category_id,resource_name,resource_code,resource_Typ,resource_val,resource_path,resource_icon,resource_desc,visible,level
+        id,category_id,tenant_id,resource_name,resource_code,resource_Typ,resource_val,resource_path,resource_icon,resource_desc,visible,level
     </sql>
 
 </mapper>

@@ -1,12 +1,13 @@
 package org.arch.ums.account.entity;
 
-import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * 账号-角色(account_role)实体类
@@ -27,6 +28,10 @@ public class AccountRole extends Model<AccountRole> implements Serializable {
      */
     @TableId
 	private Long id;
+    /**
+     * 租户 id
+     */
+    private String tenantId;
     /**
      * 角色名
      */

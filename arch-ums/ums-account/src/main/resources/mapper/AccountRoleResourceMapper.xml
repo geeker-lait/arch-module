@@ -6,7 +6,7 @@
     </sql>
 
     <sql id="baseColumn">
-        id,role_id,resource_id
+        id,tenant_id,role_id,resource_id
     </sql>
 
 </mapper>

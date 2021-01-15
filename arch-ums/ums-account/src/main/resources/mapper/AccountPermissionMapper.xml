@@ -6,7 +6,7 @@
     </sql>
 
     <sql id="baseColumn">
-        id,permission_code,permission_name,permission_val,permission_uri,permission_typ,sorted
+        id,tenant_id,permission_code,permission_name,permission_val,permission_uri,permission_typ,sorted
     </sql>
 
 </mapper>

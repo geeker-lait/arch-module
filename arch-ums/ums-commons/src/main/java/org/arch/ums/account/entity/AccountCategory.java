@@ -33,6 +33,10 @@ public class AccountCategory extends Model<AccountCategory> implements Serializa
      */
     private Long pid;
     /**
+     * 租户 ID
+     */
+    private String tenantId;
+    /**
      * 资源类目名
      */
     private String categoryName;

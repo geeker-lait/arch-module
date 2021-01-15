@@ -41,8 +41,16 @@ public class AccountIdentifier extends Model<AccountIdentifier> implements Seria
      */
     private String credential;
     /**
-     * 登录类型【IDENTITYTYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
+     * 租户 id
      */
-    private String channeltype;
+    private String tenantId;
+    /**
+     * 用户权限
+     */
+    private String authorities;
+    /**
+     * 登录类型【IDENTITY_TYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
+     */
+    private String channelType;
 
 }

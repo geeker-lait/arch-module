@@ -6,7 +6,7 @@
     </sql>
 
     <sql id="baseColumn">
-        id,account_id,nickName,avatar,source
+        id,account_id,nick_name,avatar,`source`
     </sql>
 
 </mapper>

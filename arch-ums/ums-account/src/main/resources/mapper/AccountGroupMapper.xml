@@ -6,7 +6,7 @@
     </sql>
 
     <sql id="baseColumn">
-        id,group_pid,group_code,group_name,group_icon,sorted
+        id,group_pid,tenant_id,group_code,group_name,group_icon,sorted
     </sql>
 
 </mapper>

@@ -1,12 +1,13 @@
 package org.arch.ums.account.entity;
 
-import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * 账号名(account_name)实体类
@@ -34,7 +35,7 @@ public class AccountName extends Model<AccountName> implements Serializable {
     /**
      * 用户昵称可随机生成
      */
-    private String nickname;
+    private String nickName;
     /**
      * 头像
      */

@@ -1,13 +1,14 @@
 package org.arch.ums.account.entity;
 
-import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import java.math.BigDecimal;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 账号-岗位(account_post)实体类
@@ -32,6 +33,10 @@ public class AccountPost extends Model<AccountPost> implements Serializable {
      * 父id
      */
     private Long postPid;
+    /**
+     * 租户 ID
+     */
+    private String tenantId;
     /**
      * 岗位名
      */
