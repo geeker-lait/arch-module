@@ -10,57 +10,20 @@
     <artifactId>auth-jwt</artifactId>
 
     <dependencies>
-        <!--<dependency>
+        <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-jwt</artifactId>
-            <version>2.2.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>ums-commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>-->
-
-       <!-- <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-oauth2</artifactId>
-        </dependency>
-
-        &lt;!&ndash; redis &ndash;&gt;
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${ums.version}</version>
         </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>auth-rbac</artifactId>
-            <version>${parent.version}</version>
-            <scope>compile</scope>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-resource-server</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>arch-framework</artifactId>
-            <version>${parent.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-
--->
     </dependencies>
 
 </project>

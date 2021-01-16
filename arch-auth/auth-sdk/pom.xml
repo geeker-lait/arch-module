@@ -14,6 +14,23 @@
     <description>java 版本的 SDK. 用于给第三方使用的企业级的身份云产品， 帮助客户一次性解决身份认证、用户管理、单点登录、多因素认证等各类系统身份安全治理.</description>
 
     <dependencies>
+
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-jwt</artifactId>
+            <version>${ums.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-rbac</artifactId>
+            <version>${ums.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-resource-server</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-core</artifactId>
