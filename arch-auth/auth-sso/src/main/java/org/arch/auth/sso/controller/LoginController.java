@@ -1,9 +1,5 @@
 package org.arch.auth.sso.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
 import org.arch.auth.sso.properties.SsoProperties;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -31,40 +27,51 @@ import static org.springframework.util.StringUtils.hasText;
  * @since 2021.1.5 11:54
  */
 @Controller
-@Api(value = "登录相关")
 public class LoginController {
 
     private final RedisConnectionFactory redisConnectionFactory;
-    private final SsoProperties ssoProperties;
+    private final String tempOauth2TokenPrefix;
+    private final String oauth2TokenParamName;
 
     public LoginController(RedisConnectionFactory redisConnectionFactory,
                            SsoProperties ssoProperties) {
         this.redisConnectionFactory = redisConnectionFactory;
-        this.ssoProperties = ssoProperties;
+        this.tempOauth2TokenPrefix = ssoProperties.getTempOauth2TokenPrefix();
+        this.oauth2TokenParamName = ssoProperties.getOauth2TokenParamName();
     }
 
-    @ApiOperation(value = "跳转登录页", httpMethod = "GET")
+    /**
+     * 登录页面
+     * @return  跳转到登录页面
+     */
     @RequestMapping(value = "/login", method = {RequestMethod.GET})
     public String login() {
         return "login";
     }
 
-    @ApiOperation(value = "第三方登录成功后自动转发到此 API, 以便自动获取 token")
+    /**
+     * 第三方登录成功后 转发 到此接口来获取 token 与 refreshToken
+     * @param model     {@link Model}
+     * @param request   request
+     * @return  转发到自动获取 token 与 refreshToken 的页面.
+     */
     @RequestMapping(value = "/oauth2Token", method = {RequestMethod.GET})
     public String auth2Token(Model model, HttpServletRequest request) {
-        String oauth2Token = (String) request.getSession().getAttribute(ssoProperties.getOauth2TokenParamName());
-        model.addAttribute(ssoProperties.getOauth2TokenParamName(), oauth2Token);
+        String oauth2Token = (String) request.getSession().getAttribute(oauth2TokenParamName);
+        model.addAttribute(oauth2TokenParamName, oauth2Token);
         return "oauth2Token";
     }
 
-    @ApiOperation(value = "第三方登录成功后, 获取 token 的 API")
-    @ApiResponse(code = 200, response = ResponseResult.class, message = "响应的详细数据放在 data 中, code==0, 表示访问成功")
+    /**
+     * 根据 tokenKey 获取 token 与 refreshToken 的接口, 第三方登录专用.
+     * @param tk    获取  token 与 refreshToken 的 tokenKey.
+     * @return  返回  token 与 refreshToken.
+     */
     @RequestMapping(value = "/oauth2Callback", method = {RequestMethod.POST})
     @ResponseBody
-    public ResponseResult oAuth2LoginSuccessCallback(@ApiParam(name = "tk", value = "接收的参数名称", required = true)
-                                                     @RequestParam("tk") String tk) {
+    public ResponseResult oAuth2LoginSuccessCallback(@RequestParam("tk") String tk) {
         if (hasText(tk)) {
-            byte[] bytes = getConnection().get((ssoProperties.getTempOauth2TokenPrefix() + tk).getBytes(StandardCharsets.UTF_8));
+            byte[] bytes = getConnection().get((tempOauth2TokenPrefix + tk).getBytes(StandardCharsets.UTF_8));
             if (nonNull(bytes)) {
                 return ResponseResult.success(null, new String(bytes, StandardCharsets.UTF_8));
             }

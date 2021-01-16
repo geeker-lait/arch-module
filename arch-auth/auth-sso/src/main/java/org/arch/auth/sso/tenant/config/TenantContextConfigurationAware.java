@@ -1,8 +1,8 @@
 package org.arch.auth.sso.tenant.config;
 
 import lombok.RequiredArgsConstructor;
-import org.arch.auth.sso.tenant.context.filter.TenantContextFilter;
-import org.arch.auth.sso.tenant.context.handler.ArchTenantContextHandler;
+import org.arch.framework.ums.tenant.context.filter.TenantContextFilter;
+import org.arch.framework.ums.tenant.context.handler.ArchTenantContextHolder;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,7 +24,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TenantContextConfigurationAware implements HttpSecurityAware {
 
-    private final ArchTenantContextHandler archTenantContextHandler;
+    private final ArchTenantContextHolder tenantContextHolder;
 
     @Override
     public void configure(WebSecurity web) {
@@ -43,7 +43,7 @@ public class TenantContextConfigurationAware implements HttpSecurityAware {
 
     @Override
     public void postConfigure(HttpSecurity http) {
-        http.addFilterAfter(new TenantContextFilter(archTenantContextHandler), WebAsyncManagerIntegrationFilter.class);
+        http.addFilterAfter(new TenantContextFilter(tenantContextHolder), WebAsyncManagerIntegrationFilter.class);
     }
 
     @Override

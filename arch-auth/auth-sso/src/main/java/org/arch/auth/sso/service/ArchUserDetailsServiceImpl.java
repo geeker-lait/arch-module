@@ -63,8 +63,9 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
             // 示例：只是从用户登录日志表中提取的信息，
             log.info("Demo ======>: 登录用户名：{}, 登录成功", userId);
+            String admin = passwordEncoder.encode("admin");
             return new ArchUser(userId,
-                                passwordEncoder.encode("admin"),
+                                admin,
                                 1L,
                                 ChannelType.ACCOUNT,
                                 "admin",

@@ -26,19 +26,9 @@ public class SsoProperties {
     private String defaultPassword = "VR&vU'a#.mt^&%'";
 
     /**
-     * 系统租户 id, 默认: 00
-     */
-    private String systemTenantId = "00";
-
-    /**
-     * tenantId 的请求头名称; 租户登录时通过请求头传递租户 ID, 本系统用户不需要传递租户 ID, 已设置默认租户 ID.
-     */
-    private String tenantHeaderName = "tenantId";
-
-    /**
      * 默认用户头像
      */
-    @NotNull(message = "arch.defaultAvatar 属性必须数字默认用户头像")
+    @NotNull(message = "arch.defaultAvatar 属性必须设置默认用户头像")
     private String defaultAvatar;
 
     /**

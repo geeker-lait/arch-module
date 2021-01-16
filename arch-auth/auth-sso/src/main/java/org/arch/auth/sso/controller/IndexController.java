@@ -1,7 +1,5 @@
 package org.arch.auth.sso.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.ums.bean.TokenInfo;
@@ -21,11 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@Api("首页")
 public class IndexController {
 
     @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
-    @ApiOperation(value = "首页")
     public String index(Model model) {
         // todo
         try {

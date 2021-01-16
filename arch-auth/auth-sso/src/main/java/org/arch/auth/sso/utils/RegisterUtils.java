@@ -1,7 +1,11 @@
 package org.arch.auth.sso.utils;
 
 import org.arch.framework.ums.enums.AccountType;
+import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.lang.Nullable;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -27,7 +31,12 @@ public class RegisterUtils {
     /**
      * 注册推广来源类型 request 参数名
      */
-    public static final String REGISTER_SOURCE_REQUEST_NAME = "source";
+    public static final String REGISTER_SOURCE_REQUEST_NAME = "_from";
+    /**
+     * 注册推广来源类型中用户推荐类型的前缀, 默认: user_ .
+     * 如果用户 ID 为 001, 则-用户的推荐类型为: user_001
+     */
+    public static final String USER_RECOMMEND_SOURCE_PREFIX = "user_";
 
     /**
      * 从 request 中 获取账号类型.
@@ -52,6 +61,24 @@ public class RegisterUtils {
     @Nullable
     public static String getSource() {
         return getValueFromRequest(REGISTER_SOURCE_REQUEST_NAME, FALSE);
+    }
+
+    /**
+     * 生成推广来源类型中用户推荐类型, 只有在用户登录情况下才会生成, 未登录情况下生成返回 null.
+     * @return  返回用户推荐类型字符串, 未登录情况下生成返回 null.
+     */
+    @Nullable
+    public static String generateUserSource() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof ArchUser)
+            {
+                ArchUser archUser = ((ArchUser) principal);
+                return USER_RECOMMEND_SOURCE_PREFIX.concat(archUser.getAccountId().toString());
+            }
+        }
+        return null;
     }
 
     /**

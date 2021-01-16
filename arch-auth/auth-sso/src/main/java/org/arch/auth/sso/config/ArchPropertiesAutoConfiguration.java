@@ -1,6 +1,5 @@
 package org.arch.auth.sso.config;
 
-import org.arch.auth.sso.properties.AppProperties;
 import org.arch.auth.sso.properties.SsoProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +13,6 @@ import org.springframework.core.annotation.Order;
  */
 @Configuration
 @Order(98)
-@EnableConfigurationProperties({SsoProperties.class, AppProperties.class})
+@EnableConfigurationProperties({SsoProperties.class})
 public class ArchPropertiesAutoConfiguration {
 }

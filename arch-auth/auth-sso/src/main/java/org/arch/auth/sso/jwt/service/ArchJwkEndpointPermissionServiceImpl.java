@@ -2,7 +2,6 @@ package org.arch.auth.sso.jwt.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.auth.sso.properties.AppProperties;
 import org.arch.framework.ums.enums.ScopesType;
 import org.arch.ums.feign.account.client.UmsAccountOauthClient;
 import org.springframework.lang.NonNull;
@@ -11,6 +10,9 @@ import top.dcenter.ums.security.jwt.api.endpoind.service.JwkEndpointPermissionSe
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
+
+import static org.arch.framework.ums.consts.AppConstants.APP_CODE_HEADER_NAME;
+import static org.arch.framework.ums.consts.AppConstants.APP_ID_HEADER_NAME;
 
 /**
  * jws set uri 访问权限访问服务接口
@@ -24,7 +26,6 @@ import java.util.Set;
 public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissionService {
 
     private final UmsAccountOauthClient umsAccountOauthClient;
-    private final AppProperties appProperties;
 
     @NonNull
     @Override
@@ -47,8 +48,9 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
 
     @NonNull
     private Set<String> getScopes(@NonNull HttpServletRequest request) {
-        String appId = request.getHeader(appProperties.getAppIdHeaderName());
-        String appCode = request.getHeader(appProperties.getAppCodeHeaderName());
+        String appId = request.getHeader(APP_ID_HEADER_NAME);
+        String appCode = request.getHeader(APP_CODE_HEADER_NAME);
+        // TODO 对 scopes 进行本地缓存.
         return umsAccountOauthClient.getScopesByAppIdAndAppCode(appId, appCode);
     }
 }
