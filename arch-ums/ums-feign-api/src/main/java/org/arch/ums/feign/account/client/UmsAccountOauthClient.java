@@ -15,7 +15,8 @@ import java.util.Set;
  * @since 2021.1.12 13:44
  */
 @Component
-@FeignClient(value = "arch-ums-api", path = "/ums/account/oauthClient", configuration = UmsAccountDeFaultFeignConfig.class)
+@FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-oauthClient", path = "/ums/account/oauthClient",
+        configuration = UmsAccountDeFaultFeignConfig.class)
 public interface UmsAccountOauthClient {
 
     /**

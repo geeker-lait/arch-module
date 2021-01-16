@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @since 2021.1.12 13:44
  */
 @Component
-@FeignClient(value = "arch-ums-api", path = "/ums/account/identifier", configuration = UmsAccountDeFaultFeignConfig.class)
+@FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-identifier", path = "/ums/account/identifier",
+        configuration = UmsAccountDeFaultFeignConfig.class)
 public interface UmsAccountClient {
 
     /**
@@ -23,7 +24,7 @@ public interface UmsAccountClient {
      * @param identifier    用户唯一标识
      * @return  返回 {@link AuthAccountDto}
      */
-    @GetMapping("/login/{identifier}")
+    @GetMapping("/loadAccount/{identifier}")
     AuthAccountDto loadAccountByIdentifier(@PathVariable("identifier") String identifier);
 
 }
