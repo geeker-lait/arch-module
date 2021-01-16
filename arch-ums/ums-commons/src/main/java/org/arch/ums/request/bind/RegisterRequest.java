@@ -1,4 +1,4 @@
-package org.arch.auth.sso.request.bind;
+package org.arch.ums.request.bind;
 
 import lombok.Data;
 import org.arch.framework.ums.enums.AccountType;
@@ -25,6 +25,11 @@ public class RegisterRequest {
      */
     @Length(min = 8, message = "密码长度至少八位")
     private String password;
+
+    /**
+     * 租户 ID
+     */
+    private String tenantId;
 
     /**
      * 账号登录类型
