@@ -122,7 +122,7 @@ CREATE TABLE `account_oauth_client` (
   `app_id` varchar(32) NOT NULL COMMENT 'appId 或 客户端ID',
   `app_code` varchar(32) NOT NULL COMMENT 'appSecret 或 客户端secret',
   `scopes` varchar(255) NOT NULL COMMENT 'openid/userinfo/token/code/资源服务器标识等',
-  `app_type` int(2) NOT NULL COMMENT '客户端类型: web, 安卓, ios, 小程序…',
+  `app_type` varchar(32) NOT NULL COMMENT '客户端类型: web, 安卓, ios, 小程序…',
   PRIMARY KEY (`id`),
   UNIQUE KEY `IDX_CLIENT_ID_SECRET_TYP` (`app_id`,`app_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='授权客户端';
