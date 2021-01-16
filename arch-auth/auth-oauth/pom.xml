@@ -57,12 +57,6 @@
         </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>auth-rbac</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.arch.projects</groupId>
             <artifactId>auth-sso</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
