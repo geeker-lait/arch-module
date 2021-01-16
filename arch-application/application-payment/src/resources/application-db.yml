@@ -17,7 +17,7 @@ mybatis-plus:
       update-strategy: not_empty
       select-strategy: not_empty
       # db前缀 如：arch.upload_form
-#      table-prefix: arch
+    #      table-prefix: arch
     banner: false
   configuration:
     map-underscore-to-camel-case: true

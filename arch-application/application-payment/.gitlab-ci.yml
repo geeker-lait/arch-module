@@ -6,8 +6,8 @@ stages:
 develop:
   stage: build
   script:
-  - pwd
+    - pwd
   tags:
-  - $finalName
+    - $finalName
   only:
-  - develop
+    - develop

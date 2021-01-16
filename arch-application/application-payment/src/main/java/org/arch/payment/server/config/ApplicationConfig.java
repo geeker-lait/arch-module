@@ -3,12 +3,9 @@ package org.arch.payment.server.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.arch.framework.client.jdbc.JdbcClient;
-import org.arch.framework.client.rest.RestClient;
-import org.arch.framework.client.rest.ServiceUrl;
 import org.arch.framework.id.IdService;
 import org.arch.framework.id.impl.RedisIdService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -32,8 +29,8 @@ public class ApplicationConfig {
     private RedisConnectionFactory redisConnectionFactory;
 
     @Bean
-    public IdService idService(){
-        return new RedisIdService(redisConnectionFactory,redisTemplate);
+    public IdService idService() {
+        return new RedisIdService(redisConnectionFactory, redisTemplate);
     }
 
 
