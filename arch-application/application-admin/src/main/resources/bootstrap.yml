@@ -1,0 +1,7 @@
+#spring:
+#  application:
+#    name: application-automate
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: localhost:8848
