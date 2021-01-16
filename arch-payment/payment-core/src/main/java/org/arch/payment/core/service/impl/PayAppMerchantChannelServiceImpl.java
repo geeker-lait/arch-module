@@ -18,19 +18,23 @@ import java.util.List;
  */
 @Service
 public class PayAppMerchantChannelServiceImpl extends ServiceImpl<PayAppMerchantChannelMapper, PayAppMerchantChannel> implements IPayAppMerchantChannelService {
-
-    /**
-     * 根据appId 获取商户应用通道集合，并按权重从高到低排序
-     * @param appId
-     * @return
-     */
-    @Cacheable(value = "uni-payment", key = "'AppMerchantChannelService#getSortedAppMerchantChannelsByAppId#'+#appId")
+    @Override
     public List<PayAppMerchantChannel> getSortedAppMerchantChannelsByAppId(String appId) {
-        PayAppMerchantChannel appMerchantChannel = new PayAppMerchantChannel();
-        appMerchantChannel.setAppId(appId);
-        QueryWrapper<PayAppMerchantChannel> queryWrapper = new QueryWrapper();
-        queryWrapper.lambda().eq(PayAppMerchantChannel::getAppId, appId).orderByDesc(PayAppMerchantChannel::getWeight);
-        List<PayAppMerchantChannel> merchantAppChannelList = list(queryWrapper);
-        return merchantAppChannelList;
+        return null;
     }
+//
+//    /**
+//     * 根据appId 获取商户应用通道集合，并按权重从高到低排序
+//     * @param appId
+//     * @return
+//     */
+//    @Cacheable(value = "uni-payment", key = "'AppMerchantChannelService#getSortedAppMerchantChannelsByAppId#'+#appId")
+//    public List<PayAppMerchantChannel> getSortedAppMerchantChannelsByAppId(String appId) {
+//        PayAppMerchantChannel appMerchantChannel = new PayAppMerchantChannel();
+//        appMerchantChannel.setAppId(appId);
+//        QueryWrapper<PayAppMerchantChannel> queryWrapper = new QueryWrapper();
+//        queryWrapper.lambda().eq(PayAppMerchantChannel::getAppId, appId).orderByDesc(PayAppMerchantChannel::getWeight);
+//        List<PayAppMerchantChannel> merchantAppChannelList = list(queryWrapper);
+//        return merchantAppChannelList;
+//    }
 }

@@ -8,13 +8,12 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @since 2020-04-08
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("pay_binded_record")
 public class PayBindedRecord  {

@@ -3,9 +3,8 @@ package com.unichain.pay.channel.mfe88.directive;
 import com.unichain.pay.channel.mfe88.Mfe88ChannelDirecvite;
 import com.unichain.pay.channel.mfe88.Mfe88PayRequestHandler;
 import com.unichain.pay.channel.mfe88.dto.request.PrePayingRequest;
-import com.unichain.pay.core.PayDirective;
-import com.unichain.pay.core.PayRequest;
-import com.unichain.pay.core.PayResponse;
+import org.arch.payment.sdk.PayRequest;
+import org.arch.payment.sdk.PayResponse;
 import org.springframework.stereotype.Service;
 
 @Service("Mfe88BankcardPrePayCreditcardDirective")

@@ -1,7 +1,6 @@
 package org.arch.payment.sdk;
 
 import lombok.Data;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -43,7 +42,7 @@ public class PayResponse implements Serializable {
         return payResponse;
     }
 
-    public PayResponse data(T t) {
+    public PayResponse data(Object t) {
         this.data = t;
         return this;
     }

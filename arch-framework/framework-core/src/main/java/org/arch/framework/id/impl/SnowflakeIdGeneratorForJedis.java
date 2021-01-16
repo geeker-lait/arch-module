@@ -7,6 +7,7 @@ import org.arch.framework.id.IdKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import redis.clients.jedis.commands.JedisCommands;
 import redis.clients.jedis.params.SetParams;
 
@@ -28,10 +29,13 @@ public abstract class SnowflakeIdGeneratorForJedis {
     private long sequence = 0L;
     private long lastTimestamp = -1L;
 
-    @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
+    protected RedisConnectionFactory redisConnectionFactory;
+    protected RedisTemplate redisTemplate;
 
-
+    public SnowflakeIdGeneratorForJedis(RedisConnectionFactory redisConnectionFactory, RedisTemplate redisTemplate) {
+        this.redisConnectionFactory = redisConnectionFactory;
+        this.redisTemplate = redisTemplate;
+    }
 
     private void init(IdKey idType) {
 //        RedisConnection connection = this.jedisConnectionFactory.getConnection();

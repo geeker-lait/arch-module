@@ -1,0 +1,51 @@
+################# 199
+# 数据库备份:admin@192.168.1.199
+10 1,12,19 * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/mysql_backup.sh devmysql root zfc1cfkyaghhvzrlcg 192.168.1.199 3306 >> /deploy/logs/crontab.log  2>&1
+10 1,12,19 * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/mysql_backup.sh jira84 root root 192.168.1.199 6306 >> /deploy/logs/crontab.log  2>&1
+
+# 设计demo:admin@192.168.1.199
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8101 /deploy/packages/product_demo/unichain_webbackend >> /deploy/logs/pyton_server.log  2>&1
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8102 /deploy/packages/product_demo/unichain_app >> /deploy/logs/pyton_server.log  2>&1
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8103 /deploy/packages/product_demo/unichain_h5 >> /deploy/logs/pyton_server.log  2>&1
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8104 /deploy/packages/product_demo/mj >> /deploy/logs/pyton_server.log  2>&1
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8105 /deploy/packages/product_demo/mj_backend >> /deploy/logs/pyton_server.log  2>&1
+
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8106 /deploy/packages/product_demo/hdh_app >> /deploy/logs/pyton_server.log  2>&1
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8107 /deploy/packages/product_demo/hdh_backend >> /deploy/logs/pyton_server.log  2>&1
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8108 /deploy/packages/product_demo/hdh_project >> /deploy/logs/pyton_server.log  2>&1
+
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8109 /deploy/packages/product_demo/zhudai_app >> /deploy/logs/pyton_server.log  2>&1
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8110 /deploy/packages/product_demo/zhudai_app_backend >> /deploy/logs/pyton_server.log  2>&1
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8111 /deploy/packages/product_demo/zhudai_app_others >> /deploy/logs/pyton_server.log  2>&1
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8112 /deploy/packages/product_demo/hdh_app_1.1.0 >> /deploy/logs/pyton_server.log  2>&1
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8113 /deploy/packages/product_demo/hdh_app_backend_1.1.0 >> /deploy/logs/pyton_server.log  2>&1
+
+# 部署目录浏览器
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 8201 /deploy_browser >> /deploy/logs/pyton_server.log  2>&1
+
+# 运维环境发布:admin@192.168.1.199
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/demo_start.sh 9999 /deploy/packages/devops_admin >> /deploy/logs/pyton_server.log  2>&1
+
+# 服务自检自启动:admin
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/apps_daemon.sh r>> /deploy/logs/crontab_apps_daemon.log  2>&1
+10 0,12,18 * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/apps_daemon.sh rr >> /deploy/logs/crontab_apps_daemon.log  2>&1
+
+# frp 服务
+10 0,12,18 * * *  source /etc/profile;source ~/.bashrc;nohup /deploy/packages/frp/frpc -c /deploy/packages/frp/frpc.ini >> /deploy/logs/frpc.log 2>&1
+
+################# 199
+# auto backup gitlab:root@192.168.1.199
+10 0,12,18 * * * /opt/gitlab/bin/gitlab-rake gitlab:backup:create CRON=1 > /dev/null 2>&1
+
+# gitlab 备份转移:root@192.168.1.199
+10 22 * * *  source /etc/profile;source ~/.bashrc;rm -rf /deploy/data/backups/gitlab/15* && mv -f /var/opt/gitlab/backups/15* /deploy/data/backups/gitlab/  >> /deploy/logs/gitlab_backup.log  2>&1
+
+# deploy 每日备份:root@192.168.1.199
+10 23 * * *  source /etc/profile;source ~/.bashrc;cp -r -p /home/unichain-deploy /home/backups/deploy_$(date +\%Y\%m\%d) >> /deploy/logs/deploy_backup.log  2>&1
+
+# 定时清除页缓存
+10 23 * * *  source /etc/profile;source ~/.bashrc;sync && echo 1 > /proc/sys/vm/drop_caches >> /deploy/logs/page_cache_clear.log  2>&1
+
+################# 188
+# deploy 每日备份:root@192.168.1.188
+10 23 * * *  source /etc/profile;source ~/.bashrc;cp -r /deploy /data/backups/deploy_$(date +\%Y\%m\%d) >> /deploy/logs/deploy_backup.log  2>&1

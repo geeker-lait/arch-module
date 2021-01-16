@@ -1,6 +1,7 @@
 package org.arch.payment.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import org.arch.payment.core.entity.PayChannelBank;
 
 /**
@@ -10,6 +11,7 @@ import org.arch.payment.core.entity.PayChannelBank;
  *
  * @since 2020-04-08
  */
+@Mapper
 public interface PayChannelBankMapper extends BaseMapper<PayChannelBank> {
 
 }

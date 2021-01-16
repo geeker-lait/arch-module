@@ -1,0 +1,15 @@
+# 数据库备份  106.12.71.3  root
+10 2,13 * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/mysql_backup.sh root zfc1cfkyaghhvzrlcg* 106.12.71.3 >> /deploy/logs/crontab_mysql_backup.log  2>&1
+
+# 服务自检自启动  106.12.71.2  root
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/apps_daemon.sh r>> /deploy/logs/crontab_apps_daemon.log  2>&1
+
+# 服务自检自启动  106.12.68.246  root
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/apps_daemon.sh r>> /deploy/logs/crontab_apps_daemon.log  2>&1
+10 0 * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/apps_daemon.sh rr server >> /deploy/logs/crontab_apps_daemon.log  2>&1
+
+# 服务自检自启动  106.13.172.44  root
+*/1 * * * *  source /etc/profile;source ~/.bashrc;sh /deploy/script/apps_daemon.sh r>> /deploy/logs/crontab_apps_daemon.log  2>&1
+
+# 定时清除页缓存
+10 23 * * *  source /etc/profile;source ~/.bashrc;sync && echo 1 > /proc/sys/vm/drop_caches >> /deploy/logs/page_cache_clear.log  2>&1

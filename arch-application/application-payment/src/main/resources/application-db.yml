@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  typeAliasesPackage: org.arch.payment.core.entity
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID
+      insert-strategy: not_empty
+      update-strategy: not_empty
+      select-strategy: not_empty
+      # db前缀 如：arch.upload_form
+#      table-prefix: arch
+    banner: false
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    jdbc-type-for-null: null
+
+
+---
+#生产环境
+spring:
+  profiles: pro
+
+
+---
+#开发环境
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/arch_payment?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
+    username: root
+    password: root
+
+
+
