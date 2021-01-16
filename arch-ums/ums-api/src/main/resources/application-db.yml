@@ -9,7 +9,8 @@ spring:
       maximum-pool-size: 10
       minimum-idle: 5
     url: jdbc:mysql://localhost:3306/ums?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
-
+    username: "root"
+    password: "123456"
 #  datasource:
 #    dynamic:
 #      hikari:
@@ -38,11 +39,12 @@ mybatis-plus:
       insert-strategy: not_empty
       update-strategy: not_empty
       select-strategy: not_empty
-    datacenter-id: ${nodeId:${spring.nodeId:1}}
-    worker-id: ${nodeId:${spring.nodeId:1}}
+#    datacenter-id: ${nodeId:${spring.nodeId:1}}
+#    worker-id: ${nodeId:${spring.nodeId:1}}
     banner: false
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
     jdbc-type-for-null: null
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-enums-package: org.arch.framework.ums.enums
