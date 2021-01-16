@@ -24,7 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 支付相关接口
+ * @author lait.zhang@gmail.com
+ * @description: 支付相关接口
+ * @weixin PN15855012581
+ * @date 1/14/2021 2:01 PM
  */
 @RequiredArgsConstructor
 @RestController

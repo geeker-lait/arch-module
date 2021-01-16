@@ -22,6 +22,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -52,6 +53,7 @@ import java.util.zip.DataFormatException;
 /***
  * 统一封装异常、统一处理出参
  */
+@Component
 @RestControllerAdvice
 @Slf4j
 public class RestExceptionHandler implements ResponseBodyAdvice<Object> {

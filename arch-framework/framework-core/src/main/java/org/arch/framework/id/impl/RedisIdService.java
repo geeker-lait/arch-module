@@ -1,10 +1,12 @@
 package org.arch.framework.id.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.id.IdKey;
 import org.arch.framework.id.IdService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +24,12 @@ import java.util.concurrent.TimeUnit;
  * @create 2017-11-24 16:06
  */
 @Service
+@Slf4j
 public class RedisIdService extends  SnowflakeIdGeneratorForJedis implements IdService {
 
-    private final Logger logger = LoggerFactory.getLogger(RedisIdService.class);
-
-    @Autowired
-    private RedisTemplate redisTemplate;
+    public RedisIdService(RedisConnectionFactory redisConnectionFactory, RedisTemplate redisTemplate) {
+        super(redisConnectionFactory, redisTemplate);
+    }
 
     /**
      * @see IdService#generateId(IdKey)
@@ -47,7 +49,7 @@ public class RedisIdService extends  SnowflakeIdGeneratorForJedis implements IdS
             String id = idBizCode.getBizPrefix().concat(prefix.concat(String.format(idBizCode.getFmtSuffix(), index)));
             return id;
         } catch (Exception ex) {
-            logger.error("分布式用户ID生成失败异常: " + ex.getMessage());
+            log.error("分布式用户ID生成失败异常: " + ex.getMessage());
             //throw new UnichainException(ExceptionType.BusinessException, "分布式用户ID生成异常");
         }
         return prefix;
@@ -72,7 +74,7 @@ public class RedisIdService extends  SnowflakeIdGeneratorForJedis implements IdS
             String id = prefix.concat(idBizCode.getBizPrefix().concat(timePrefix.concat(String.format(idBizCode.getFmtSuffix(), index))));
             return id;
         } catch (Exception ex) {
-            logger.error("分布式用户ID生成失败异常: " + ex.getMessage());
+            log.error("分布式用户ID生成失败异常: " + ex.getMessage());
             //throw new UnichainException(ExceptionType.BusinessException, "分布式用户ID生成异常");
         }
         return timePrefix;
@@ -193,9 +195,9 @@ public class RedisIdService extends  SnowflakeIdGeneratorForJedis implements IdS
     }*/
     public static void main(String[] args) {
 
-        System.out.println(new RedisIdService().randomId(10));
-        String appid = String.format("%1$08d", 100);
-        System.out.println(appid);
+//        System.out.println(new RedisIdService().randomId(10));
+//        String appid = String.format("%1$08d", 100);
+//        System.out.println(appid);
 //
 //        StringBuffer stringBuffer = new StringBuffer();
 //        for(int i=0;i<9;i++){

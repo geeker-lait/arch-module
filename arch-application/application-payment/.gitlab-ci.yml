@@ -1,0 +1,13 @@
+image: java:8
+stages:
+  - build
+
+# ci/cd 可以在gitlab/github中设置钩子 并指定参数，参数可以参考：https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+develop:
+  stage: build
+  script:
+  - pwd
+  tags:
+  - $finalName
+  only:
+  - develop

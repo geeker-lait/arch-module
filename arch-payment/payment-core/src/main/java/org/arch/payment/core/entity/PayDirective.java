@@ -1,20 +1,13 @@
 package org.arch.payment.core.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * <p>
- * 
- * </p>
- *
  * @since 2020-04-07
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("pay_directive")
 public class PayDirective {
@@ -32,7 +25,7 @@ public class PayDirective {
     private String channelCode;
 
     /**
-     *  通道ID
+     * 通道ID
      */
     private String channelId;
 

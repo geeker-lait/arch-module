@@ -13,23 +13,21 @@ import org.springframework.context.ApplicationContext;
  */
 public abstract class AbstractDirectiveRouter {
 
-    @Autowired
-    protected IPayBindedRecordService bindedRecordervice;
-    @Autowired
-    protected IPayAppMerchantChannelService appMerchantChannelService;
-    @Autowired
-    protected IPayMerchantChannelService merchantChannelService;
-    @Autowired
-    protected IPayChannelBankService channelBankService;
-    @Autowired
-    protected IPayDirectiveService directiveService;
-    @Autowired
-    protected IPayChannelDirectiveRecordService channelDirectiveRecordService;
-    @Autowired
-    protected ApplicationContext applicationContext;
-
-
-
+//    @Autowired
+//    protected IPayBindedRecordService bindedRecordervice;
+//    @Autowired
+//    protected IPayAppMerchantChannelService appMerchantChannelService;
+//    @Autowired
+//    protected IPayMerchantChannelService merchantChannelService;
+//    @Autowired
+//    protected IPayChannelBankService channelBankService;
+//    @Autowired
+//    protected IPayDirectiveService directiveService;
+//    @Autowired
+//    protected IPayChannelDirectiveRecordService channelDirectiveRecordService;
+//    @Autowired
+//    protected ApplicationContext applicationContext;
+//
     @Autowired
     protected IdService idService;
 

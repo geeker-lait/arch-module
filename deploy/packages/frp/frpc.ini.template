@@ -1,0 +1,8 @@
+[common]
+server_addr = 39.100.152.67
+server_port = 7000
+
+[pay]
+type = http
+local_port = 60001
+custom_domains = pay.lab.tastelifer.com

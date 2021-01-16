@@ -2,6 +2,7 @@ package org.arch.payment.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.arch.payment.core.entity.PayBindedRecord;
+import org.arch.payment.sdk.PayRequest;
 
 import java.util.List;
 

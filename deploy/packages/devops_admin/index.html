@@ -1,0 +1,254 @@
+<html>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<head>
+    <title>Devops admin(运维管理)</title>
+</head>
+<body>
+
+<style>
+    table.dataintable {
+        border: 1px solid #888888;
+        border-collapse: collapse;
+        font-family: Arial, Helvetica, sans-serif;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    table.dataintable th {
+        background-color: #CCCCCC;
+        border: 1px solid #888888;
+        padding: 5px 15px 5px 5px;
+        text-align: left;
+        vertical-align: baseline;
+    }
+
+    table.dataintable td {
+        background-color: #EFEFEF;
+        border: 1px solid #AAAAAA;
+        padding: 5px 15px 5px 5px;
+        vertical-align: text-top;
+    }
+</style>
+
+<div>
+    <h2>服务列表</h2>
+    <table class="dataintable">
+        <thead>
+        <tr>
+            <th>服务/组件名称</th>
+            <th>版本</th>
+            <th>访问账户</th>
+            <th>外网访问地址</th>
+            <th>描述</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>公司WIFI: unichain-5g</td>
+            <td></td>
+            <td>unichain/unichain88</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><a href="ftp://192.168.1.199/" target='_blank'>公司共享FTP</a> </td>
+            <td></td>
+            <td>unichain/unichain</td>
+            <td></td>
+            <td>请浏览器或windows目录访问: ftp://192.168.1.199/, 如果报错200 或 227,参考此链接: <a href="https://blog.csdn.net/qq_21480979/article/details/83114346" target='_blank'>windows 访问FTP时200及227解决</a> </td>
+        </tr>
+        <tr>
+            <td><a href="http://192.168.1.199:8201" target='_blank'>环境部署浏览</a> </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="http://192.168.1.199:8201/conf/hosts.txt" target='_blank'>内网hosts文件配置</a> <a href="http://192.168.1.199:8201" target='_blank'> 测试环境日志及配置</a> <a href="http://192.168.1.199:8201/logs/applications/" target='_blank'> Java应用日志</a> <a href="http://192.168.1.199:8201/logs/pidinfo.log" target='_blank'> Java进程及端口查看</a></td>
+        </tr>
+        <tr>
+            <td><a href="http://192.168.1.199:8761" target='_blank'>Eureka</a></td>
+            <td></td>
+            <td></td>
+            <td><a href="http://eureka.lab.tastelifer.com:7080" target='_blank'>Eureka</a></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td><a href="http://192.168.1.199:80" target='_blank'>Gitlab</a></td>
+            <td>13.6.4</td>
+            <td></td>
+            <td><a href="http://gitlab.lab.tastelifer.com:7080" target='_blank'>Gitlab</a></td>
+            <td>@沙正辉 申请权限,用户名同Jira,默认密码: AAbbCC123, 添加用户及权限联系@沙正辉,外网拉去代码时使用 gitlab.lab.tastelifer.com:7080 替换 gitlab.unichain.tech,如http://gitlab.unichain.tech/xxx/aaaa.git 替换为 http://gitlab.lab.tastelifer.com:7080/xxx/aaaa.git</td>
+        </tr>
+
+        <tr>
+            <td><a href="http://192.168.1.199:8081" target='_blank'>Nexus</a></td>
+            <td>3.17.0</td>
+            <td>admin/admin*88,developer/developer123</td>
+            <td><a href="http://nexus.lab.tastelifer.com:7080" target='_blank'>Nexus</a></td>
+            <td>Maven 配置文件(仓库地址均为本地): <a href="http://192.168.1.199:8201/conf/maven/settings.xml" target='_blank'>settings.xml</a> </td>
+        </tr>
+
+        <tr>
+            <td><a href="http://192.168.1.199:9077" target='_blank'>Jira</a></td>
+            <td>8.4.1</td>
+            <td></td>
+            <td><a href="http://jira.lab.tastelifer.com:7080" target='_blank'>Jira</a></td>
+            <td>@林高臻 申请账号及权限联系,开源版本,根据姓名,如张三,用户名为 zhangs,默认密码:123456,因为外部可访问请设置强密码</td>
+        </tr>
+
+        <tr>
+            <td><a href="http://192.168.1.199:9098" target='_blank'>Confluence</a></td>
+            <td>7.0.2</td>
+            <td></td>
+            <td><a href="http://confluence.lab.tastelifer.com:7080" target='_blank'>Confluence</a></td>
+            <td> @林高臻 申请账号及权限联系,用户及权限同Jira</td>
+        </tr>
+
+        <tr>
+            <td><a href="https://lanhuapp.com/url/x3XSr-Cq5fH" target='_blank'>蓝湖</a></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>@许倩 申请权限,产品UI设计图,联系</td>
+        </tr>
+
+        <tr>
+            <td><a href="http://192.168.1.199:15672" target='_blank'>RabbitMQ</a></td>
+            <td></td>
+            <td>guest/guest</td>
+            <td><a href="http://rabbitmq.lab.tastelifer.com:7080" target='_blank'>RabbitMQ-UI</a></td>
+            <td>4369-erlang发现口;5672-client端通信口;15672-管理界面ui端口;25672-server间内部通信口</td>
+        </tr>
+
+        <tr>
+            <td>Mysql</td>
+            <td></td>
+            <td>root/zfc1cfkyaghhvzrlcg</td>
+            <td>本地地址:192.168.1.199,外网地址: lab.tastelifer.com, 端口: 3306(杭州), 33061(南京)</td>
+            <td>@沙正辉 申请创建mysql实例</td>
+        </tr>
+
+        <tr>
+            <td><a href="http://192.168.1.199:3001" target='_blank'>Yapi</a></td>
+            <td></td>
+            <td></td>
+            <td><a href="http://yapi.lab.tastelifer.com:7080" target='_blank'>Yapi</a></td>
+            <td>@沙正辉 申请权限,可自己注册并管理接口,开发接口统一管理工具,提供接口版本历史管理及分组权限等功能</td>
+        </tr>
+
+        <tr>
+            <td>Redis</td>
+            <td></td>
+            <td></td>
+            <td>本地地址:192.168.1.199, 外网地址: lab.tastelifer.com, 端口: 6379</td>
+            <td>杭州 使用库:1-8, 南京 使用库: 9-16</td>
+        </tr>
+
+        <tr>
+            <td><a href="http://192.168.1.199:9083" target='_blank'>Jenkins</a></td>
+            <td>2.191</td>
+            <td></td>
+            <td><a href="http://jenkins.lab.tastelifer.com:7080" target='_blank'>jenkins</a></td>
+            <td>@沙正辉 权限分配及自动化发布配置, 自动化发布需要提供: 项目地址,jar包名称及服务端口(目前仅支持java应用自动发布)</td>
+        </tr>
+
+        <tr>
+            <td>Mongo</td>
+            <td>4.0.12</td>
+            <td>mgadmin/Mongo123</td>
+            <td>本地地址:192.168.1.199, 地址: lab.tastelifer.com, 端口: 27017</td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td>产品原型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>由 @乐乎 维护:<a href="http://192.168.1.199:8101" target='_blank'>贷超后台原型</a> <a href="http://192.168.1.199:8102" target='_blank'>APP 设计原型</a> <a href="http://192.168.1.199:8103" target='_blank'>H5 设计原型</a>  <a href="http://192.168.1.199:8104" target='_blank'>MJ 原型</a> <a href="http://192.168.1.199:8105" target='_blank'>MJ 后台原型</a>  <a href="http://192.168.1.199:8106" target='_blank'>好贷还 APP</a>  <a href="http://192.168.1.199:8107" target='_blank'>好贷还 后台原型</a>  <a href="http://192.168.1.199:8108" target='_blank'>好贷还(其他)</a>  <a href="http://192.168.1.199:8109" target='_blank'>助贷APP原型</a>  <a href="http://192.168.1.199:8110" target='_blank'>助贷后台原型</a>  <a href="http://192.168.1.199:8111" target='_blank'>助贷其他</a>  <a href="http://192.168.1.199:8112" target='_blank'>好贷还1.1.0APP</a>  <a href="http://192.168.1.199:8113" target='_blank'>好贷还1.1.0后台原型</a></td>
+        </tr>
+
+        <tr>
+            <td><a href="http://192.168.1.199:9200" target='_blank'>Elasticsearch</a></td>
+            <td>6.8.1</td>
+            <td></td>
+            <td></td>
+            <td>RESTful端口 9200,API端口9300,cluster_name: docker-cluster</td>
+        </tr>
+        <tr>
+            <td><a href="http://192.168.1.199:5601" target='_blank'>kibana</a></td>
+            <td>6.8.2</td>
+            <td></td>
+            <td></td>
+            <td>默认连接9200端口的ES</td>
+        </tr>
+        <tr>
+            <td><a href="http://192.168.1.199:5000" target='_blank'>Elasticsearch-HQ</a></td>
+            <td>V3.5.0</td>
+            <td></td>
+            <td></td>
+            <td>ES 管理查询工具 </td>
+        </tr>
+        <tr>
+            <td><a href="http://192.168.1.199:9080" target='_blank'>Nginx</a></td>
+            <td>1.17</td>
+            <td></td>
+            <td><a href="http://nginx.lab.tastelifer.com:7080" target='_blank'>Nginx</a> </td>
+            <td>Nginx 默认端口9080</td>
+        </tr>
+        <tr>
+            <td><a href="http://192.168.1.199:9889" target='_blank'>Elasticsearch-HD</a></td>
+            <td>1.4.1</td>
+            <td></td>
+            <td></td>
+            <td>用来连接ES进行监控查询支持ES6及ES7</td>
+        </tr>
+        <tr>
+            <td><a href="http://192.168.1.199:8091" target='_blank'>Config-Center (配置中心)</a></td>
+            <td></td>
+            <td>admin/123456</td>
+            <td><a href="http://configc.lab.tastelifer.com:7080" target='_blank'>Configc</a></td>
+            <td>测试环境配置中心</td>
+        </tr>
+        <tr>
+            <td><a href="https://console.bce.baidu.com/bos/?locale=zh-cn#/bos/new/object~bucketName=pkgs&path=haodaipay%2F&location=su" target='_blank'>百度云存储(安装包)</a></td>
+            <td></td>
+            <td>shazhenghui123/SHAzhenghui123</td>
+            <td></td>
+            <td>上传并修改线上数据表记录(106.12.71.3 unichain/unichain*0731):unichain-app.app_update</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div>
+    <h2>线上产品列表</h2>
+    <table class="dataintable">
+        <thead>
+        <tr>
+            <th>产品名称</th>
+            <th>版本</th>
+            <th>平台链接</th>
+            <th>描述</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>好贷钱包</td>
+            <td>1.0.0</td>
+            <td><a  href="https://haodai.tastelifer.com/common-question/index.html#/regist-1" target="_blank">引流页1</a>,<a  href="https://haodai.tastelifer.com/common-question/index.html#/regist-2" target="_blank">引流页2</a>,<a  href="https://haodai.tastelifer.com/common-question/index.html#/regist-3" target="_blank">引流页3</a>,<a  href="https://haodai.tastelifer.com/common-question/index.html#/regist-4" target="_blank">引流页4</a>,<a  href="https://haodai.tastelifer.com/common-question/index.html#/regist-5" target="_blank">引流页5</a></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>MJ-向钱冲</td>
+            <td>0.0.1</td>
+            <td><a href="https://www.pgyer.com/dqKh" target="_blank">App</a>    <a href="https://haodai.tastelifer.com/waistcoat/xqc/index.html" target="_blank">H5</a></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

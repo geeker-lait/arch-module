@@ -27,7 +27,6 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-core</artifactId>
-            <scope>compile</scope>
             <version>${project.version}</version>
         </dependency>
 
@@ -42,13 +41,6 @@
             <artifactId>ums-feign-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!--        <dependency>
-                    <groupId>org.arch.projects</groupId>
-                    <artifactId>auth-rbac</artifactId>
-                    <version>${parent.version}</version>
-                </dependency>
-                -->
 
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -79,17 +71,18 @@
             <artifactId>spring-security-oauth2-resource-server</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+        </dependency>
+
         <!-- redis -->
         <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
-        </dependency>-->
+        -->
 
     </dependencies>
 

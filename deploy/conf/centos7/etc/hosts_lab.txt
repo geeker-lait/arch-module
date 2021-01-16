@@ -1,0 +1,26 @@
+192.168.1.199 gitlab.unichain.tech
+192.168.1.199 nexus.unichain.tech
+192.168.1.199 lab.unichain.tech
+192.168.1.199 unichain.tech
+
+192.168.1.199   nginx.tastelifer.com
+192.168.1.199   eshd.tastelifer.com
+192.168.1.199   eureka.tastelifer.com
+192.168.1.199   mysql.tastelifer.com
+192.168.1.199   es.tastelifer.com
+192.168.1.199   rabbitmq.tastelifer.com
+192.168.1.199   redis.tastelifer.com
+192.168.1.199   config.tastelifer.com
+192.168.1.199   app1.tastelifer.com
+
+39.100.152.67   s01.tastelifer.com
+106.12.68.246   s12.tastelifer.com
+106.12.68.237   s22.tastelifer.com
+106.12.71.2     s11.tastelifer.com
+106.12.71.3     s21.tastelifer.com
+106.13.172.44   s31.tastelifer.com
+106.13.172.62   s32.tastelifer.com
+106.13.170.140  s33.tastelifer.com
+
+
+106.12.71.2     upload.internal.tastelifer.com
