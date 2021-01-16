@@ -1,13 +1,12 @@
-package org.arch.auth.sso.tenant.context.handler;
+package org.arch.framework.ums.tenant.context.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.auth.sso.properties.SsoProperties;
+import org.arch.framework.ums.properties.AppProperties;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.exception.TenantIdNotFoundException;
@@ -15,7 +14,6 @@ import top.dcenter.ums.security.core.exception.TenantIdNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.util.StringUtils.hasText;
-import static top.dcenter.ums.security.core.mdc.utils.MdcUtil.getMdcTraceId;
 
 /**
  * 多租户上下文处理器
@@ -23,17 +21,16 @@ import static top.dcenter.ums.security.core.mdc.utils.MdcUtil.getMdcTraceId;
  * @weixin z56133
  * @since 2021.1.11 21:13
  */
-@Component
 @Slf4j
-public class ArchTenantContextHandler implements TenantContextHolder {
+public class ArchTenantContextHolder implements TenantContextHolder {
 
     private final ThreadLocal<String> context = new ThreadLocal<>();
     private final String tenantIdHeaderName;
     private final String systemTenantId;
 
-    public ArchTenantContextHandler(SsoProperties ssoProperties) {
-        this.tenantIdHeaderName = ssoProperties.getTenantHeaderName();
-        this.systemTenantId = ssoProperties.getSystemTenantId();
+    public ArchTenantContextHolder(AppProperties appProperties) {
+        this.tenantIdHeaderName = appProperties.getTenantHeaderName();
+        this.systemTenantId = appProperties.getSystemTenantId();
     }
 
     @Override
@@ -70,7 +67,7 @@ public class ArchTenantContextHandler implements TenantContextHolder {
         // 未登录用户获取租户 id
         String tenantId = context.get();
         if (!hasText(tenantId)) {
-            throw new TenantIdNotFoundException(ErrorCodeEnum.TENANT_ID_NOT_FOUND, getMdcTraceId(), getMdcTraceId());
+            throw new TenantIdNotFoundException(ErrorCodeEnum.TENANT_ID_NOT_FOUND, null, null);
         }
         return tenantId;
     }

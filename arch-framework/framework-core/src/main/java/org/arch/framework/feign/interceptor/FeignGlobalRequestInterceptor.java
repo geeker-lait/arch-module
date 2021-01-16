@@ -6,19 +6,31 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.AbstractOAuth2Token;
 import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.isNull;
 
 /**
- * 添加 token 到 Feign {@link RequestTemplate} 的请求头上的拦截器.
+ * Feign 全局请求拦截器.<br>
+ * 1. 添加 token 到 Feign {@link RequestTemplate} 的请求头,<br>
+ * 2. 添加 tenantId 到 Feign {@link RequestTemplate} 的请求头.
  *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.13 15:05
  */
-public class TokenRequestInterceptor implements RequestInterceptor {
+public class FeignGlobalRequestInterceptor implements RequestInterceptor {
 
     private static final String TOKEN_HEADER_NAME = "Authorization";
+    private final TenantContextHolder tenantContextHolder;
+    private final String tenantHeaderName;
+
+    public FeignGlobalRequestInterceptor(TenantContextHolder tenantContextHolder,
+                                         String tenantHeaderName) {
+        this.tenantContextHolder = tenantContextHolder;
+        this.tenantHeaderName = tenantHeaderName;
+    }
+
 
     @Override
     public void apply(RequestTemplate template) {
@@ -27,8 +39,11 @@ public class TokenRequestInterceptor implements RequestInterceptor {
 
     private void setBearerToken2Header(RequestTemplate template) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 设置 tenantId
+        template.header(tenantHeaderName, tenantContextHolder.getTenantId());
 
+        // 设置 token
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (isNull(authentication)) {
             return;
         }

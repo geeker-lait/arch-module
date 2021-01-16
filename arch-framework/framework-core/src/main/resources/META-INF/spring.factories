@@ -1,3 +1,4 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.arch.framework.ums.config.AppPropertiesAutoConfiguration
+  org.arch.framework.ums.config.AppPropertiesAutoConfiguration,\
+  org.arch.framework.ums.config.ArchBaseAutoConfiguration

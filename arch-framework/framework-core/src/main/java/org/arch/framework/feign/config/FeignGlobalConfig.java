@@ -1,12 +1,10 @@
 package org.arch.framework.feign.config;
 
 import feign.Logger;
-import feign.Retryer;
-import org.arch.framework.feign.interceptor.TokenRequestInterceptor;
+import org.arch.framework.feign.interceptor.FeignGlobalRequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 /**
  * feign 客户端全局配置
@@ -16,6 +14,15 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  * @since 2021.1.12 13:46
  */
 public class FeignGlobalConfig {
+
+    private final TenantContextHolder tenantContextHolder;
+    private final String tenantHeaderName;
+
+    public FeignGlobalConfig(TenantContextHolder tenantContextHolder,
+                             String tenantHeaderName) {
+        this.tenantContextHolder = tenantContextHolder;
+        this.tenantHeaderName = tenantHeaderName;
+    }
 
     @Profile("dev")
     @Bean
@@ -30,14 +37,7 @@ public class FeignGlobalConfig {
     }
 
     @Bean
-    public Retryer retry() {
-        // default Retryer will retry 5 times waiting waiting
-        // 100 ms per retry with a 1.5* back off multiplier
-        return new Retryer.Default(100, SECONDS.toMillis(1), 3);
-    }
-
-    @Bean
-    public TokenRequestInterceptor tokenRequestInterceptor() {
-        return new TokenRequestInterceptor();
+    public FeignGlobalRequestInterceptor tokenRequestInterceptor() {
+        return new FeignGlobalRequestInterceptor(tenantContextHolder, tenantHeaderName);
     }
 }

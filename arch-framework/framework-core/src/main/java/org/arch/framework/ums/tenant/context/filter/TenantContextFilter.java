@@ -1,8 +1,8 @@
-package org.arch.auth.sso.tenant.context.filter;
+package org.arch.framework.ums.tenant.context.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.auth.sso.tenant.context.handler.ArchTenantContextHandler;
+import org.arch.framework.ums.tenant.context.handler.ArchTenantContextHolder;
 import org.springframework.lang.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,7 +22,7 @@ import java.io.IOException;
 @Slf4j
 public class TenantContextFilter extends OncePerRequestFilter {
 
-    private final ArchTenantContextHandler archTenantContextHolder;
+    private final ArchTenantContextHolder archTenantContextHolder;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
