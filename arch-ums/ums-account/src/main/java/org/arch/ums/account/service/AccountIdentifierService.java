@@ -1,8 +1,9 @@
 package org.arch.ums.account.service;
 
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import org.arch.ums.account.entity.AccountIdentifier;
+import org.arch.ums.account.dto.AuthAccountDto;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 /**
  * 用户-标识服务接口
@@ -11,6 +12,13 @@ import org.arch.ums.account.entity.AccountIdentifier;
  * @since 2020-12-26 21:57:25
  * @description 
  */
-public interface AccountIdentifierService extends IService<AccountIdentifier> {
+public interface AccountIdentifierService {
 
+    /**
+     * 根据 identifier 获取用户信息 {@link AuthAccountDto}.
+     * @param identifier    用户唯一标识
+     * @return  返回用户信息 {@link AuthAccountDto}. 不存在返回 null.
+     */
+    @Nullable
+    AuthAccountDto getAccountByIdentifier(@NonNull String identifier);
 }
