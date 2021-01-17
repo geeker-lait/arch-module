@@ -11,9 +11,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <spring-security.version>5.4.1</spring-security.version>
+        <spring-security.version>5.4.2</spring-security.version>
         <spring.version>5.2.9.RELEASE</spring.version>
-        <ums.version>2.2.11</ums.version>
+        <ums.version>2.2.13</ums.version>
     </properties>
 
 
@@ -117,7 +117,7 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-bom</artifactId>
-                <version>5.4.1</version>
+                <version>5.4.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -236,7 +236,7 @@
             <dependency>
                 <groupId>io.github.openfeign</groupId>
                 <artifactId>feign-core</artifactId>
-                <version>10.4.0</version>
+                <version>10.10.1</version>
             </dependency>
             <dependency>
                 <groupId>io.springfox</groupId>
@@ -254,12 +254,17 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>3.3.2</version>
+                <version>3.4.1</version>
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-extension</artifactId>
-                <version>3.3.2</version>
+                <version>3.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-annotation</artifactId>
+                <version>3.4.1</version>
             </dependency>
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
