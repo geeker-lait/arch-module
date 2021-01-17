@@ -28,7 +28,7 @@ import java.util.Map;
  * @since 2021.1.6 16:27
  */
 @Service
-public class ArchUmsJwtClaimTypeConverterSupplier implements JwtClaimTypeConverterSupplier {
+public class ArchJwtClaimTypeConverterSupplier implements JwtClaimTypeConverterSupplier {
 
     private static final ConversionService CONVERSION_SERVICE = ClaimConversionService.getSharedInstance();
 
@@ -45,6 +45,7 @@ public class ArchUmsJwtClaimTypeConverterSupplier implements JwtClaimTypeConvert
         return (source) -> CONVERSION_SERVICE.convert(source, OBJECT_TYPE_DESCRIPTOR, targetDescriptor);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static Converter<Object, Collection<String>> getCollectionConverter(String delimiter) {
         return (source) -> Arrays.asList(((String) source).split(delimiter));
     }
