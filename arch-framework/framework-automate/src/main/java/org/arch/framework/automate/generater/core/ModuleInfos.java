@@ -84,13 +84,17 @@ public class ModuleInfos<T extends NameToField> {
                     } else {
                         Cell cell = row.getCell(k);
                         name = TranslationField.getfieldMap().get(firstRow.getCell(k).getStringCellValue());
-                        if (name != null) map.put(name, ExcelUtils.getCellValue(cell));
+                        if (name != null && null != ExcelUtils.getCellValue(cell)) {
+                            map.put(name, ExcelUtils.getCellValue(cell));
+                        }
                     }
                 }
-                //用来存储行列信息
-                T ta = BeanUtil.toBean(map, t);
-                ta.setRow(j + 1);
-                addFields(ta, fields);
+                if(map.size()>0) {
+                    //用来存储行列信息
+                    T ta = BeanUtil.toBean(map, t);
+                    ta.setRow(j + 1);
+                    addFields(ta, fields);
+                }
             }
         }
 

@@ -2,8 +2,8 @@ spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
-    schema: classpath:form-schema.sql
-    data: classpath:form-data.sql
+    schema: classpath:application-schema.sql
+    data: classpath:application-data.sql
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
