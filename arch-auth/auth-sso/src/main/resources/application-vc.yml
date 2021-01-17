@@ -82,3 +82,10 @@ ums:
       expire: 120
       request-param-mobile-name: mobile
       request-param-sms-code-name: smsCode
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev

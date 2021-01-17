@@ -180,3 +180,10 @@ ums:
     # 其他的有: 数据库表名称, 字段名称, curd sql 语句 等设置, 一般不需要更改,
     # 如果要添加字段: 具体查看 RepositoryProperties 与 Auth2JdbcUsersConnectionRepository
   # =============== end: user_connection repository 配置 ===============
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev

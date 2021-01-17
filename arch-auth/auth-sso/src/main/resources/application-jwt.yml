@@ -102,3 +102,10 @@ ums:
       refresh-token-prefix: 'JWT:refreshToken:'
       # JWT refresh token ttl(有效期), 默认: 30 天
       refresh-token-ttl: PT720H
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev

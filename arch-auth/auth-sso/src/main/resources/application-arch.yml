@@ -26,3 +26,13 @@ arch:
     # 行级多租户字段名称, 默认: tenant_id
     tenant-id-column: tenant_id
 
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+arch:
+  sso:
+    default-avatar: http://static.dcenter.top/static/img/random/user/14.jpg

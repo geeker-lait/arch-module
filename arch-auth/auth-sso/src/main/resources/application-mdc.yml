@@ -15,3 +15,10 @@ ums:
       - /**/*.html
       - /**/*.css
       - /public/**
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev

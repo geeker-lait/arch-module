@@ -5,11 +5,12 @@ server:
 spring:
   application:
     name: auth-sso
-  resources:
-    static-locations: classpath:/public
+  web:
+    resources:
+      static-locations: classpath:/public
   thymeleaf:
     enabled: true
-    cache: false
+    cache: true
     mode: html
     encoding: utf-8
     prefix: classpath:/templates/
@@ -18,7 +19,10 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.50.2:8848
+        server-addr: localhost:8848
+    loadbalancer:
+      ribbon:
+        enable: true
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
@@ -30,6 +34,7 @@ spring:
 
   profiles:
     include: auth,arch,db,mdc,oauth2,redis,vc,jwt
+    active: ${profile:dev}
 
 
 
@@ -45,3 +50,35 @@ management:
 
 logging:
   config: classpath:logback-spring.xml
+
+
+
+---
+server:
+  port: 9401
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.50.2:8848
+
+  thymeleaf:
+    cache: false
+
+
+  mvc:
+    throw-exception-if-no-handler-found: true
+
+
+logging:
+  config: classpath:logback-spring-dev.xml
+  level:
+    # feign 日志配置
+    org.arch.auth.ums.feign.client.ArchUmsAccountClient: debug
+
+debug: true

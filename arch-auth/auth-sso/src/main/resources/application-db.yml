@@ -23,3 +23,20 @@ spring:
 #          hikari:
 #            max-pool-size: 10
 #            min-idle: 5
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/ums?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
+    username: root
+    password: 123456
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
