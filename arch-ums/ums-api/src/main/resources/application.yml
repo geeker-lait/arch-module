@@ -9,8 +9,6 @@ spring:
     check-template-location: false
     settings:
       classic_compatible: true
-  profiles:
-    active: db,dev
   jackson:
     time-zone: GMT+
 
@@ -19,5 +17,30 @@ spring:
       discovery:
         server-addr: localhost:8848
 
+  profiles:
+    include: db,redis
+    active: ${profile:dev}
+
 logging:
   config: classpath:logback-spring.xml
+  # feign 日志配置
+  level:
+    org.arch.ums.account.client.ArchUmsAccountClient: error
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.50.2:8848
+
+
+logging:
+  config: classpath:logback-spring-dev.xml
+  # feign 日志配置
+  level:
+    org.arch.ums.account.client.ArchUmsAccountClient: info

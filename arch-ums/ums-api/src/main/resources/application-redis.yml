@@ -1,0 +1,21 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+---
+#配置数据源
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+
+  redis:
+    #数据库索引
+    database: 0
+    host: 192.168.50.2
+    port: 6379
+    password:
+    #连接超时时间
+    timeout: 5000
