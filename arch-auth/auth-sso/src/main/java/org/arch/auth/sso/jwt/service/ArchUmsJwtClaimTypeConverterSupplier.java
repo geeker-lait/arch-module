@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.jwt.MappedJwtClaimSetConverter;
 import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.jwt.api.supplier.JwtClaimTypeConverterSupplier;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import java.util.Map;
  */
 @Service
 public class ArchUmsJwtClaimTypeConverterSupplier implements JwtClaimTypeConverterSupplier {
+
     private static final ConversionService CONVERSION_SERVICE = ClaimConversionService.getSharedInstance();
 
     private static final TypeDescriptor OBJECT_TYPE_DESCRIPTOR = TypeDescriptor.valueOf(Object.class);
@@ -43,6 +45,10 @@ public class ArchUmsJwtClaimTypeConverterSupplier implements JwtClaimTypeConvert
         return (source) -> CONVERSION_SERVICE.convert(source, OBJECT_TYPE_DESCRIPTOR, targetDescriptor);
     }
 
+    private static Converter<Object, Collection<String>> getCollectionConverter(String delimiter) {
+        return (source) -> Arrays.asList(((String) source).split(delimiter));
+    }
+
     @Override
     @NonNull
     public Map<String, Converter<Object, ?>> getConverter() {
@@ -56,10 +62,10 @@ public class ArchUmsJwtClaimTypeConverterSupplier implements JwtClaimTypeConvert
         map.put(JwtArchClaimNames.TENANT_ID.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
         map.put(JwtArchClaimNames.APP_ID.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
         map.put(JwtArchClaimNames.USER_DETAILS.getClaimName(), getConverter(MAP_STRING_OBJECT_DESCRIPTOR));
-        map.put(JwtArchClaimNames.AUTHORITIES.getClaimName(), getConverter(COLLECTION_STRING_DESCRIPTOR));
+        map.put(JwtArchClaimNames.AUTHORITIES.getClaimName(), getCollectionConverter(" "));
         map.put(JwtArchClaimNames.REFRESH_TOKEN_JTI.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
-        map.put(JwtArchClaimNames.SCOPE.getClaimName(), getConverter(COLLECTION_STRING_DESCRIPTOR));
-        map.put(JwtArchClaimNames.SCP.getClaimName(), getConverter(COLLECTION_STRING_DESCRIPTOR));
+        map.put(JwtArchClaimNames.SCOPE.getClaimName(), getCollectionConverter(" "));
+        map.put(JwtArchClaimNames.SCP.getClaimName(), getCollectionConverter(" "));
         return Collections.unmodifiableMap(map);
     }
 }
