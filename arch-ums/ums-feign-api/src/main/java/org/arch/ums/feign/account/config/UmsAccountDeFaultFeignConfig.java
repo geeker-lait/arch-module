@@ -18,4 +18,5 @@ public class UmsAccountDeFaultFeignConfig extends FeignGlobalConfig {
                                         AppProperties appProperties) {
         super(tenantContextHolder, appProperties.getTenantHeaderName());
     }
+
 }

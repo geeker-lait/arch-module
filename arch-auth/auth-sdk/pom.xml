@@ -15,7 +15,7 @@
 
     <dependencies>
 
-        <dependency>
+        <!--<dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-jwt</artifactId>
             <version>${ums.version}</version>
@@ -42,7 +42,7 @@
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-commons</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
 </project>

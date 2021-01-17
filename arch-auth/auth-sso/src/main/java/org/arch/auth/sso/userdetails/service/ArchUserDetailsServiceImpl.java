@@ -1,4 +1,4 @@
-package org.arch.auth.sso.service;
+package org.arch.auth.sso.userdetails.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,7 +74,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                                 true,
                                 true,
                                 true,
-                                AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
+                                AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_00"));
 
         }
         catch (Exception e)
@@ -100,7 +100,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                             true,
                             true,
                             true,
-                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
+                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_00"));
     }
 
     @Override
@@ -119,7 +119,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                             true,
                             true,
                             true,
-                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
+                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_00"));
     }
 
     @Override
@@ -141,7 +141,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                             true,
                             true,
                             true,
-                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
+                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_00"));
     }
 
     @Override
