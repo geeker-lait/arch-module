@@ -14,8 +14,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * arch jwt claim set converter supplier.<br>
@@ -36,18 +37,14 @@ public class ArchJwtClaimTypeConverterSupplier implements JwtClaimTypeConverterS
 
     private static final TypeDescriptor STRING_TYPE_DESCRIPTOR = TypeDescriptor.valueOf(String.class);
 
-    private static final TypeDescriptor COLLECTION_STRING_DESCRIPTOR = TypeDescriptor.collection(Collection.class, STRING_TYPE_DESCRIPTOR);
-
-    private static final TypeDescriptor MAP_STRING_OBJECT_DESCRIPTOR = TypeDescriptor.map(LinkedHashMap.class,
-                                                                                          STRING_TYPE_DESCRIPTOR, OBJECT_TYPE_DESCRIPTOR);
-
+    @SuppressWarnings("SameParameterValue")
     private static Converter<Object, ?> getConverter(TypeDescriptor targetDescriptor) {
         return (source) -> CONVERSION_SERVICE.convert(source, OBJECT_TYPE_DESCRIPTOR, targetDescriptor);
     }
 
-    @SuppressWarnings("SameParameterValue")
+    @SuppressWarnings({"SameParameterValue", "ConstantConditions"})
     private static Converter<Object, Collection<String>> getCollectionConverter(String delimiter) {
-        return (source) -> Arrays.asList(((String) source).split(delimiter));
+        return (source) -> Arrays.asList(ofNullable((String) source).orElse("").split(delimiter));
     }
 
     @Override
@@ -58,15 +55,9 @@ public class ArchJwtClaimTypeConverterSupplier implements JwtClaimTypeConverterS
         map.put(JwtArchClaimNames.NICK_NAME.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
         map.put(JwtArchClaimNames.AVATAR.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
         map.put(JwtArchClaimNames.CHANNEL_TYPE.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
-        map.put(JwtArchClaimNames.USER_ID.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
-        map.put(JwtArchClaimNames.USERNAME.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
         map.put(JwtArchClaimNames.TENANT_ID.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
-        map.put(JwtArchClaimNames.APP_ID.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
-        map.put(JwtArchClaimNames.USER_DETAILS.getClaimName(), getConverter(MAP_STRING_OBJECT_DESCRIPTOR));
         map.put(JwtArchClaimNames.AUTHORITIES.getClaimName(), getCollectionConverter(" "));
         map.put(JwtArchClaimNames.REFRESH_TOKEN_JTI.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
-        map.put(JwtArchClaimNames.SCOPE.getClaimName(), getCollectionConverter(" "));
-        map.put(JwtArchClaimNames.SCP.getClaimName(), getCollectionConverter(" "));
         return Collections.unmodifiableMap(map);
     }
 }
