@@ -2,6 +2,8 @@ spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
+    schema: classpath:application-schema.sql
+    data: classpath:application-data.sql
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
@@ -9,7 +11,7 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*Mapper.xml
-  typeAliasesPackage: org.arch.payment.core.entity
+  typeAliasesPackage: org.arch.framework.automate.from.entity
   global-config:
     db-config:
       id-type: ASSIGN_ID
@@ -17,7 +19,7 @@ mybatis-plus:
       update-strategy: not_empty
       select-strategy: not_empty
       # db前缀 如：arch.upload_form
-    #      table-prefix: arch
+#      table-prefix: arch
     banner: false
   configuration:
     map-underscore-to-camel-case: true
@@ -36,7 +38,7 @@ spring:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:mysql://localhost:3306/arch_payment?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
+    url: jdbc:mysql://localhost:3306?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
     username: root
     password: root
 

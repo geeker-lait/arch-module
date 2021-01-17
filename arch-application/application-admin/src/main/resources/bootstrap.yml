@@ -1,6 +1,6 @@
 #spring:
 #  application:
-#    name: application-payment
+#    name: application-automate
 #  cloud:
 #    nacos:
 #      discovery:

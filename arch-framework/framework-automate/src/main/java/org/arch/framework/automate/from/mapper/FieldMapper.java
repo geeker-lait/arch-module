@@ -11,7 +11,6 @@ import java.util.List;
 
 
 @Mapper
-@Component
 public interface FieldMapper extends CrudMapper<Field> {
 
     @Override
