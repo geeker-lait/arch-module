@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.pms.sku.mapper.ProductCategoryMapper">
+    <sql id="tableName">
+        product_category
+    </sql>
+
+    <sql id="baseColumn">
+        id,pid,icon,category_name,category_code,category_typ,product_count,nav_status,keywords,level,descr,attrs_count,params_count,product_unit
+    </sql>
+
+</mapper>

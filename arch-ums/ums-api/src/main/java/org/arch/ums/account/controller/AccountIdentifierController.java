@@ -3,7 +3,7 @@ package org.arch.ums.account.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dreamlu.mica.common.support.IController;
+
 import org.arch.ums.account.entity.AccountIdentifier;
 import org.arch.ums.account.service.AccountIdentifierService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +24,7 @@ import static org.springframework.util.StringUtils.hasText;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/identifier")
-public class AccountIdentifierController implements IController {
+public class AccountIdentifierController{
     private final AccountIdentifierService accountIdentifierService;
 
     @GetMapping("/findByName/{identifier}")

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="code.mapper.MarketAttrvalMapper">
+    <sql id="tableName">
+        market_attrval
+    </sql>
+
+    <sql id="baseColumn">
+        id,attr_name_id,attr_val,defined_val,st
+    </sql>
+
+</mapper>

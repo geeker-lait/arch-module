@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="code.mapper.StaticticsPromotionConfigMapper">
+    <sql id="tableName">
+        statictics_promotion_config
+    </sql>
+
+    <sql id="baseColumn">
+        id,source,resource_id,resource_name,promotion_price,promotion_count,deduct_percent,promotion_name,promotion_typ,promotion_url,user_name,pwd,st
+    </sql>
+
+</mapper>

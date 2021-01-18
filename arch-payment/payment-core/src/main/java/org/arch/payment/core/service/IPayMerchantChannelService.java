@@ -5,7 +5,7 @@ import org.arch.payment.core.entity.PayMerchantChannel;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  */
 public interface IPayMerchantChannelService extends IService<PayMerchantChannel> {

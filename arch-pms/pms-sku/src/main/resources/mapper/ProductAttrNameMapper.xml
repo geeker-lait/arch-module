@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.pms.sku.mapper.ProductAttrNameMapper">
+    <sql id="tableName">
+        product_attr_name
+    </sql>
+
+    <sql id="baseColumn">
+        id,category_id,spec_group_id,group_name,attr_name,attr_typ,select_typ,input_typ,filter_typ,search_typ,unit,segments,vals,numeric,related,handed,generic,searching,sorted,st
+    </sql>
+
+</mapper>

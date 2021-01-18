@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.pms.sku.mapper.ProductRelishMapper">
+    <sql id="tableName">
+        product_relish
+    </sql>
+
+    <sql id="baseColumn">
+        id,spu_id,gift_growth,gift_point,point_limit,st
+    </sql>
+
+</mapper>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.pms.sku.mapper.ProductFreightMapper">
+    <sql id="tableName">
+        product_freight
+    </sql>
+
+    <sql id="baseColumn">
+        id,store_id,category_id,freight_id,freight_name,fee,logistics_id,logistics_name,logistics_code,sorted,deleted,st
+    </sql>
+
+</mapper>

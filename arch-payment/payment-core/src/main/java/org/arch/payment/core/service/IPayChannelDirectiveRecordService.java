@@ -5,7 +5,7 @@ import org.arch.payment.core.entity.PayChannelDirectiveRecord;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @since 2020-04-07

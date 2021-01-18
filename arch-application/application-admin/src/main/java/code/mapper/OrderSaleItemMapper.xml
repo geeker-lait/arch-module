@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="code.mapper.OrderSaleItemMapper">
+    <sql id="tableName">
+        order_sale_item
+    </sql>
+
+    <sql id="baseColumn">
+        id,order_no,product_id,product_pic,product_name,product_brand,product_price,product_quantity,product_sku_no,product_sku_code,product_category_id,product_attr,app_id,store_id,st
+    </sql>
+
+</mapper>

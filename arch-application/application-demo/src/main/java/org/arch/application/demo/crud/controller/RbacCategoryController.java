@@ -4,7 +4,7 @@ import org.arch.application.demo.crud.entity.RbacCategory;
 import org.arch.application.demo.crud.service.RbacCategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dreamlu.mica.common.support.IController;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/rbacCategory")
-public class RbacCategoryController implements IController {
+public class RbacCategoryController{
     private final RbacCategoryService rbacCategoryService;
 
 

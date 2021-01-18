@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.pms.sku.mapper.ProductSkuMapper">
+    <sql id="tableName">
+        product_sku
+    </sql>
+
+    <sql id="baseColumn">
+        id,spu_id,sku_code,price,dispose_price,pic_json,sale,stock,low_stock,lock_stock,spec_json,st
+    </sql>
+
+</mapper>

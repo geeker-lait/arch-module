@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.payment.core.mapper.PayMerchantAppMapper">
+    <sql id="tableName">
+        pay_merchant_app
+    </sql>
+
+    <sql id="baseColumn">
+        id,account_id,merchant_no,app_id,app_code,app_name,app_typ,app_url,st
+    </sql>
+
+</mapper>

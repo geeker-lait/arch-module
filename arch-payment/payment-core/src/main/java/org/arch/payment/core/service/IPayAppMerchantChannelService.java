@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @since 2020-04-08
@@ -16,6 +16,7 @@ public interface IPayAppMerchantChannelService extends IService<PayAppMerchantCh
 
     /**
      * 根据appId 获取商户应用通道集合，并按权重从高到低排序
+     *
      * @param appId
      * @return
      */

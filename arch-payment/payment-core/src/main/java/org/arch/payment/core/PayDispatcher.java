@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
 @Service
 public class PayDispatcher {
 
-    @Autowired
-    private ApplicationContext applicationContext;
     private static final Map<DirectiveCode, List<Directive>> directiveListMap = new HashMap<>();
     private static final Map<DirectiveCode, DirectiveRouter> directiveRouterMap = new HashMap<>();
+    @Autowired
+    private ApplicationContext applicationContext;
 
     /**
      * 初始化指令码对应的指令集合
@@ -71,6 +71,6 @@ public class PayDispatcher {
         // 获取当前指令码对应的指令集
         List<Directive> directives = this.getPayDirectives(directiveCode);
         // 路由指令
-        directiveRouter.routing(directives,payRequest);
+        directiveRouter.routing(directives, payRequest);
     }
 }

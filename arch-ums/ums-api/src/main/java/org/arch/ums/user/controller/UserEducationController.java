@@ -2,7 +2,7 @@ package org.arch.ums.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dreamlu.mica.common.support.IController;
+
 import org.arch.ums.service.UserEducationService;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user/education")
-public class UserEducationController implements IController {
+public class UserEducationController{
     private final UserEducationService userEducationService;
 
 }

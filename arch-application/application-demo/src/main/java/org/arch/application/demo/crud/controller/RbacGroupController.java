@@ -4,7 +4,7 @@ import org.arch.application.demo.crud.entity.RbacGroup;
 import org.arch.application.demo.crud.service.RbacGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dreamlu.mica.common.support.IController;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/rbacGroup")
-public class RbacGroupController implements IController {
+public class RbacGroupController{
     private final RbacGroupService rbacGroupService;
     @GetMapping
     public void testGet(){

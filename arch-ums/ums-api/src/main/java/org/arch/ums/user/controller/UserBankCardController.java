@@ -2,7 +2,7 @@ package org.arch.ums.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dreamlu.mica.common.support.IController;
+
 import org.arch.ums.service.UserBankCardService;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
  *
  * @author lait
  * @since 2020-12-26 21:57:25
- * @description 
+ * @description
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user/bankCard")
-public class UserBankCardController implements IController {
+public class UserBankCardController{
     private final UserBankCardService userBankCardService;
 
 }

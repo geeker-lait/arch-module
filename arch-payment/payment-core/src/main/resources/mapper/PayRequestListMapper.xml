@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.payment.core.mapper.PayRequestListMapper">
+    <sql id="tableName">
+        pay_request_list
+    </sql>
+
+    <sql id="baseColumn">
+        id,app_id,user_id,amount,bankcard,bank_code,biz_code,biz_id,channel_code,channel_id,merchant_id,device_id,directive_code,payment_id,phone_num,protocol_id,return_code,return_msg,st
+    </sql>
+
+</mapper>
