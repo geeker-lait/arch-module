@@ -1,10 +1,8 @@
 package org.arch.auth.sso;
 
-import org.arch.framework.id.IdService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.annotation.ComponentScan;
 
 /**
  * 单独登录 APP
@@ -14,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @EnableFeignClients(basePackages = {"org.arch.ums.feign"})
-@ComponentScan(basePackages = {"org.arch.auth.sso"}, basePackageClasses = {IdService.class})
 public class SsoApplication {
     public static void main(String[] args) {
         SpringApplication.run(SsoApplication.class, args);

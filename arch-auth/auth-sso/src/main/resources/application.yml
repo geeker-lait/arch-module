@@ -22,20 +22,14 @@ spring:
         server-addr: localhost:8848
     loadbalancer:
       ribbon:
-        enable: true
+        enabled: false
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-  redis:
-    database: 0
-    port: 6379
-    host: localhost
-#    password: 123456
 
   profiles:
-    include: auth,arch,db,mdc,oauth2,redis,vc,jwt
+    include: auth,arch,db,mdc,oauth2,feign,redis,vc,jwt
     active: ${profile:dev}
-
 
 
 management:

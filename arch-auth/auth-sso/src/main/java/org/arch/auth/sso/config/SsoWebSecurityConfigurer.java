@@ -11,7 +11,7 @@ import top.dcenter.ums.security.common.config.SecurityCoreAutoConfigurer;
  * @since 2021.1.16 23:54
  */
 @Configuration
-public class SsoWebSecurityAutoConfigurer  {
+public class SsoWebSecurityConfigurer {
     @Bean
     public SecurityCoreAutoConfigurer securityCoreAutoConfigurer() {
         return new SecurityCoreAutoConfigurer();

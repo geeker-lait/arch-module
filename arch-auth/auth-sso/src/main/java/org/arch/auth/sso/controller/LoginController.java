@@ -1,14 +1,11 @@
 package org.arch.auth.sso.controller;
 
 import org.arch.auth.sso.properties.SsoProperties;
-import org.arch.ums.feign.account.client.UmsAccountOauthClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,8 +32,6 @@ public class LoginController {
     private final RedisConnectionFactory redisConnectionFactory;
     private final String tempOauth2TokenPrefix;
     private final String oauth2TokenParamName;
-    @Autowired
-    private UmsAccountOauthClient umsAccountOauthClient;
 
     public LoginController(RedisConnectionFactory redisConnectionFactory,
                            SsoProperties ssoProperties) {
@@ -52,13 +47,6 @@ public class LoginController {
     @RequestMapping(value = "/login", method = {RequestMethod.GET})
     public String login() {
         return "login";
-    }
-
-    @RequestMapping(value = "/scopes/{appId}/{appCode}")
-    public ResponseResult getScopes(@PathVariable("appId") String appId,
-                                    @PathVariable("appCode") String appCode) {
-        // TODO 测试
-        return ResponseResult.success("", umsAccountOauthClient.getScopesByAppIdAndAppCode(appId, appCode));
     }
 
     /**

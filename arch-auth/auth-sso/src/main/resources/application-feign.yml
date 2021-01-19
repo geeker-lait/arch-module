@@ -1,0 +1,11 @@
+
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+feign:
+  httpclient:
+    connection-timeout: 200000

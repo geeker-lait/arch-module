@@ -481,7 +481,7 @@
                         url: '/sso/',
                         type: "GET",
                         //data: ajaxData,
-                        dataType: "json",
+                        // dataType: "json",
                         contentType: 'application/json; charset=UTF-8',
                         headers: {
                             // 'Authorization': window.localStorage.getItem('jwt')
@@ -522,6 +522,7 @@
                                 window.localStorage.setItem('jwt', Authorization);
                                 console.log("")
                             }
+
                         }
                     });
                 }

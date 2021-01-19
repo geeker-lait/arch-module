@@ -19,6 +19,28 @@
             <version>${ums.version}</version>
             <exclusions>
                 <exclusion>
+                    <groupId>top.dcenter</groupId>
+                    <artifactId>ums-jwt</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-oauth</artifactId>
+            <version>${ums.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>top.dcenter</groupId>
+                    <artifactId>ums-jwt</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>auth-jwt</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
                     <artifactId>nimbus-jose-jwt</artifactId>
                     <groupId>com.nimbusds</groupId>
                 </exclusion>
@@ -29,17 +51,7 @@
             <artifactId>nimbus-jose-jwt</artifactId>
             <groupId>com.nimbusds</groupId>
             <version>8.19</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>json-smart</artifactId>
-                    <groupId>net.minidev</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>top.dcenter</groupId>
-            <artifactId>ums-oauth</artifactId>
-            <version>${ums.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -94,7 +106,6 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-resource-server</artifactId>
-            <version>5.4.1</version>
         </dependency>
 
         <dependency>

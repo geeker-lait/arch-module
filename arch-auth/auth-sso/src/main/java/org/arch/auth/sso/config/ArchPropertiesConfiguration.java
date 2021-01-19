@@ -14,5 +14,5 @@ import org.springframework.core.annotation.Order;
 @Configuration
 @Order(98)
 @EnableConfigurationProperties({SsoProperties.class})
-public class ArchPropertiesAutoConfiguration {
+public class ArchPropertiesConfiguration {
 }
