@@ -5,11 +5,11 @@ import org.apache.ibatis.annotations.Mapper;
 import org.arch.payment.core.entity.PayMerchantChannel;
 
 /**
- * <p>
- *  Mapper 接口
- * </p>
+ * 支付-商户通道(pay_merchant_channel)数据Mapper
  *
- * @since 2020-04-08
+ * @author lait
+ * @description PN15855012581
+ * @since 2021-01-18 20:28:43
  */
 @Mapper
 public interface PayMerchantChannelMapper extends BaseMapper<PayMerchantChannel> {

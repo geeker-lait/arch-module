@@ -22,7 +22,7 @@ public class PreBindCardRouter extends AbstractDirectiveRouter implements Direct
     public void routing(List<Directive> directives, PayRequest payRequest) {
         // 流水号
         String paySn = idService.generateId(payRequest.getDirectiveCode().getIdKey());
-        
+
 
     }
 

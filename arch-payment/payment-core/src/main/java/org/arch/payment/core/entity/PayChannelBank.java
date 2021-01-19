@@ -1,54 +1,57 @@
 package org.arch.payment.core.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
- * <p>
- * 
- * </p>
+ * 支付-应用通道支持银行表(pay_channel_bank)实体类
  *
- * @since 2020-04-08
+ * @author lait
+ * @description PN15855012581
+ * @since 2021-01-18 20:28:43
  */
 @Data
+@NoArgsConstructor
 @Accessors(chain = true)
 @TableName("pay_channel_bank")
-public class PayChannelBank  {
-
+public class PayChannelBank extends Model<PayChannelBank> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 支持银行码
+     * 主键
      */
-    @TableField("bank_code")
+    @TableId
+    private Long id;
+    /**
+     * 银行码
+     */
     private String bankCode;
-
     /**
-     * 支持银行名称
+     * 银行名称
      */
-    @TableField("bank_name")
     private String bankName;
-
     /**
-     * 支付通道码
+     * 通道码
      */
-    @TableField("channel_code")
     private String channelCode;
-
     /**
-     * 支付通道ID
+     * 通道ID
      */
-    @TableField("channel_id")
-    private String channelId;
-
+    private Long channelId;
     /**
      * 权重
      */
-    @TableField("weight")
     private Integer weight;
-
+    /**
+     * 时间戳
+     */
+    private Date st;
 
 }

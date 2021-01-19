@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="code.mapper.OrderRelishMapper">
+    <sql id="tableName">
+        order_relish
+    </sql>
+
+    <sql id="baseColumn">
+        id,order_no,order_item_id,integration,growth,use_integration,promotion_amount,integration_amount,coupon_amount,discount_amount,product_sku_no,promotion_name,real_amount,gift_integration,gift_growth,app_id,store_id,st
+    </sql>
+
+</mapper>

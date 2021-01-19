@@ -1,18 +1,22 @@
 package org.arch.payment.core.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.arch.payment.core.entity.PayDirective;
-import org.arch.payment.core.mapper.PayDirectiveMapper;
-import org.arch.payment.core.service.IPayDirectiveService;
+import code.dao.PayDirectiveDao;
+import code.service.PayDirectiveService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- *  服务实现类
- * </p>
+ * 支付-指令集服务接口实现
  *
+ * @author lait
+ * @description PN15855012581
+ * @since 2021-01-18 20:28:43
  */
+@Slf4j
+@RequiredArgsConstructor
 @Service
-public class PayDirectiveServiceImpl extends ServiceImpl<PayDirectiveMapper, PayDirective> implements IPayDirectiveService {
+public class PayDirectiveServiceImpl implements PayDirectiveService {
+    private final PayDirectiveDao payDirectiveDao;
 
 }

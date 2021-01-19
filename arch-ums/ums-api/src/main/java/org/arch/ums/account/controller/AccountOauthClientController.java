@@ -2,7 +2,7 @@ package org.arch.ums.account.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dreamlu.mica.common.support.IController;
+
 import org.arch.ums.account.service.AccountOauthClientService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/oauthClient")
-public class AccountOauthClientController implements IController {
+public class AccountOauthClientController {
     private final AccountOauthClientService accountOauthClientService;
 
     @GetMapping("/scopes")

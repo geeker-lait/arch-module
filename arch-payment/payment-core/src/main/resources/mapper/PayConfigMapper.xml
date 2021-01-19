@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.payment.core.mapper.PayConfigMapper">
+    <sql id="tableName">
+        pay_config
+    </sql>
+
+    <sql id="baseColumn">
+        id,app_id,config_key,config_json,descr,st
+    </sql>
+
+</mapper>

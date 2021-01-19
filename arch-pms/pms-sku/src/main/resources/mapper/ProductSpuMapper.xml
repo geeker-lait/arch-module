@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.pms.sku.mapper.ProductSpuMapper">
+    <sql id="tableName">
+        product_spu
+    </sql>
+
+    <sql id="baseColumn">
+        id,store_id,spu_id,spu_code,spu_name,spu_album_json,spu_attr_json,category_id,category_name,brand_id,brand_name,sale,price,stock,low_stock,unit,title,sub_title,keywords,detail_title,detail_html,detail_mobile_html,usable,published,new,recommand,verify,presell,service_ids,freight_id,sorted,st
+    </sql>
+
+</mapper>

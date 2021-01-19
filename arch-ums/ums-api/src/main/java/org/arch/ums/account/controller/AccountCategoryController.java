@@ -2,7 +2,7 @@ package org.arch.ums.account.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dreamlu.mica.common.support.IController;
+
 import org.arch.ums.account.service.AccountCategoryService;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/category")
-public class AccountCategoryController implements IController {
+public class AccountCategoryController{
     private final AccountCategoryService accountCategoryService;
 
 }

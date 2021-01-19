@@ -67,7 +67,7 @@ public class ExcelUtils {
                     return decimalFormat.format(cell.getNumericCellValue());
                 }
             case STRING:
-                return cell.getStringCellValue();
+                return cell.getStringCellValue().trim();
             default:
                 return null;
         }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.payment.core.mapper.PayChannelBankMapper">
+    <sql id="tableName">
+        pay_channel_bank
+    </sql>
+
+    <sql id="baseColumn">
+        id,bank_code,bank_name,channel_code,channel_id,weight,st
+    </sql>
+
+</mapper>

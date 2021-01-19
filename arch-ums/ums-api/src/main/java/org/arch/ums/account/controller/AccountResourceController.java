@@ -2,7 +2,7 @@ package org.arch.ums.account.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dreamlu.mica.common.support.IController;
+
 import org.arch.ums.account.service.AccountResourceService;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/resource")
-public class AccountResourceController implements IController {
+public class AccountResourceController{
     private final AccountResourceService accountResourceService;
 
 }

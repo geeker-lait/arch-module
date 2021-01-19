@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="code.mapper.OrderMasterMapper">
+    <sql id="tableName">
+        order_master
+    </sql>
+
+    <sql id="baseColumn">
+        id,seller_account_id,seller_account_name,buyer_account_id,buyer_account_name,order_no,order_code,order_typ,order_source,order_amount,order_status,order_time,pay_time,delivery_time,receive_time,confirm_time,pay_amount,pay_typ,app_id,store_id,st
+    </sql>
+
+</mapper>

@@ -21,8 +21,6 @@ public class BindCardRouter extends AbstractDirectiveRouter implements Directive
     public void routing(List<Directive> directives, PayRequest payRequest) {
 
 
-
-
     }
 
     @Override

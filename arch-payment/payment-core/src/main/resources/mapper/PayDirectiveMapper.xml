@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.payment.core.mapper.PayDirectiveMapper">
+    <sql id="tableName">
+        pay_directive
+    </sql>
+
+    <sql id="baseColumn">
+        id,channel_id,channel_code,directive_name,directive_code,directive_uri,redirect_url,callback_url,weight,descr,st
+    </sql>
+
+</mapper>

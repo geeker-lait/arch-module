@@ -1,9 +1,7 @@
 package org.arch.payment.core.router;
 
 import org.arch.framework.id.IdService;
-import org.arch.payment.core.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 /**
  * @author lait.zhang@gmail.com
@@ -13,7 +11,7 @@ import org.springframework.context.ApplicationContext;
  */
 public abstract class AbstractDirectiveRouter {
 
-//    @Autowired
+    //    @Autowired
 //    protected IPayBindedRecordService bindedRecordervice;
 //    @Autowired
 //    protected IPayAppMerchantChannelService appMerchantChannelService;

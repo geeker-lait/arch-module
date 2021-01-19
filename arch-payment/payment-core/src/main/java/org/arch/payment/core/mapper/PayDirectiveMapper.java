@@ -5,11 +5,11 @@ import org.apache.ibatis.annotations.Mapper;
 import org.arch.payment.core.entity.PayDirective;
 
 /**
- * <p>
- *  Mapper 接口
- * </p>
+ * 支付-指令集(pay_directive)数据Mapper
  *
- * @since 2020-04-07
+ * @author lait
+ * @description PN15855012581
+ * @since 2021-01-18 20:28:43
  */
 @Mapper
 public interface PayDirectiveMapper extends BaseMapper<PayDirective> {

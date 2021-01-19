@@ -2,7 +2,6 @@ package org.arch.ums.account.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dreamlu.mica.common.support.IController;
 import org.arch.ums.account.dto.AuthAccountDto;
 import org.arch.ums.account.service.AccountIdentifierService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/identifier")
-public class AccountIdentifierController implements IController {
+public class AccountIdentifierController{
     private final AccountIdentifierService accountIdentifierService;
 
     /**
