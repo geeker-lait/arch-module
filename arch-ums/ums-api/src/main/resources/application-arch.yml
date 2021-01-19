@@ -1,0 +1,21 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+arch:
+  app:
+    app-id: "003"
+    app-code: "003"
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+arch:
+  app:
+    app-id: "003"
+    app-code: "003"

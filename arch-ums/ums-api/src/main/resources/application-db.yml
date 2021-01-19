@@ -1,9 +1,9 @@
-#配置数据源
 spring:
   config:
     activate:
       on-profile: prod
 
+  #配置数据源
   datasource:
     druid:
       db-type: com.alibaba.druid.pool.DruidDataSource
@@ -82,9 +82,23 @@ spring:
     password: "123456"
 
 
-
 mybatis-plus:
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  typeAliasesPackage: org.arch.ums.account.entity,org.arch.ums.user.entity
+  global-config:
+    db-config:
+      id-type: id_worker
+      insert-strategy: not_empty
+      update-strategy: not_empty
+      select-strategy: not_empty
+    #    datacenter-id: ${nodeId:${spring.nodeId:1}}
+    #    worker-id: ${nodeId:${spring.nodeId:1}}
+    banner: false
   configuration:
+    map-underscore-to-camel-case: true
     cache-enabled: false
+    jdbc-type-for-null: null
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-enums-package: org.arch.framework.ums.enums
+
 

@@ -33,6 +33,19 @@
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-sdk</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>nimbus-jose-jwt</artifactId>
+                    <groupId>com.nimbusds</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- 解决兼容性问题 -->
+        <dependency>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <groupId>com.nimbusds</groupId>
+            <version>8.19</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- swagger3 -->
@@ -56,7 +69,45 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
         </dependency>
-
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.4.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>
