@@ -6,15 +6,13 @@ ums:
     # String accessExp = "isAuthenticated()";
     # // 配置等效与
     # httpSecurity.authorizeRequests().anyRequest().access(isAuthenticated());
-#    access-exp: isAuthenticated()
-    access-exp: permitAll()
+    access-exp: isAuthenticated()
     # 权限表达式, 当 enableRestfulApi=true 且没有 @EnableGlobalMethodSecurity 注释时生效, 默认为 hasPermission(request, authentication).
     # hasPermission 表达式默认实现为 UriAuthoritiesPermissionEvaluator, 想自定义逻辑, 实现 PermissionEvaluator 即可替换.
     # String accessExp = "hasPermission(request, authentication)";
     # // 配置等效与
     # httpSecurity.authorizeRequests().anyRequest().access(hasPermission(request, authentication));
-#    restful-access-exp: hasPermission(request, authentication)
-    restful-access-exp: permitAll()
+    restful-access-exp: hasPermission(request, authentication)
     # 是否支持 restful Api (前后端交互接口的风格; 如: 查询(GET),添加(POST),修改(PUT),删除(DELETE)), 默认: true.
     # 当 {@code enableRestfulApi=false} 时 {@code accessExp} 权限表达式生效,
     # 当 {@code enableRestfulApi=true} 时 {@code restfulAccessExp} 权限表达式生效.
@@ -26,3 +24,18 @@ ums:
       - ROLE_ADMIN > ROLE_USER
       - ROLE_USER > ROLE_VOTE
 
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+ums:
+  # RBAC 权限访问控制
+  rbac:
+    access-exp: permitAll()
+    restful-access-exp: permitAll()
+    enable-restful-api: true
+    role-hierarchy:
+      - ROLE_ADMIN > ROLE_USER
+      - ROLE_USER > ROLE_VOTE

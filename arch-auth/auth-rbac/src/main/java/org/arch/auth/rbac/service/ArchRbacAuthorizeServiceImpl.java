@@ -1,25 +1,3 @@
-/*
- * MIT License
- * Copyright (c) 2020-2029 YongWu zheng (dcenter.top and gitee.com/pcore and github.com/ZeroOrInfinity)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 package org.arch.auth.rbac.service;
 
 import lombok.RequiredArgsConstructor;
@@ -33,12 +11,13 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * RBAC 权限服务
+ * @see AbstractUriAuthorizeService
  * @author YongWu zheng
  * @since 2020.12.29 20:21
  */
 @RequiredArgsConstructor
-public class ArchAuthorizeServiceImpl extends AbstractUriAuthorizeService implements UpdateAndCacheRolesResourcesService, InitializingBean {
-
+public class ArchRbacAuthorizeServiceImpl extends AbstractUriAuthorizeService implements UpdateAndCacheRolesResourcesService, InitializingBean {
 
     /**
      * 所有角色 uri(资源) 权限 Map(role, map(uri, Set(permission)))
@@ -91,7 +70,7 @@ public class ArchAuthorizeServiceImpl extends AbstractUriAuthorizeService implem
     private Map<String, Map<String, Set<String>>> updateRolesAuthorities() {
 
         // 从数据源获取所有角色的权限
-        final Map<String, Map<String, Set<String>>> rolesAuthoritiesMap = new HashMap<>();
+        final Map<String, Map<String, Set<String>>> rolesAuthoritiesMap = new HashMap<>(3);
 
         // 修改 ums-core 实现
 //        rolesAuthoritiesMap.putAll(rbacMenuService.getRolesAuthorities());
