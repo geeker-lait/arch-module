@@ -1,10 +1,9 @@
-package org.arch.auth.sso.jwt.service;
+package org.arch.auth.jwt.service;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.id.IdKey;
 import org.arch.framework.id.IdService;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.jwt.api.id.service.JwtIdService;
 
 /**
@@ -14,7 +13,6 @@ import top.dcenter.ums.security.jwt.api.id.service.JwtIdService;
  * @since 2021.1.5 17:24
  */
 @RequiredArgsConstructor
-@Service
 public class ArchJwtIdServiceImpl implements JwtIdService {
 
     private final IdService idService;

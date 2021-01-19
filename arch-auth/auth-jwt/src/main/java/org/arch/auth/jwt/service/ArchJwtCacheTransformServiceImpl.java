@@ -1,4 +1,4 @@
-package org.arch.auth.sso.jwt.service;
+package org.arch.auth.jwt.service;
 
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.ChannelType;
@@ -13,7 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.jwt.api.cache.service.JwtCacheTransformService;
 import top.dcenter.ums.security.jwt.properties.JwtProperties;
 
@@ -27,14 +26,14 @@ import static java.util.Objects.nonNull;
  * @weixin z56133
  * @since 2021.1.7 20:18
  */
-@Service
 public class ArchJwtCacheTransformServiceImpl implements JwtCacheTransformService<TokenInfo> {
 
     private final String principalClaimName;
-    @Qualifier("jwtTokenRedisSerializer")
     private final RedisSerializer<TokenInfo> redisSerializer;
 
-    public ArchJwtCacheTransformServiceImpl(JwtProperties jwtProperties, RedisSerializer<TokenInfo> redisSerializer) {
+    public ArchJwtCacheTransformServiceImpl(JwtProperties jwtProperties,
+                                            @Qualifier("jwtTokenRedisSerializer")
+                                            RedisSerializer<TokenInfo> redisSerializer) {
         this.principalClaimName = jwtProperties.getPrincipalClaimName();
         this.redisSerializer = redisSerializer;
     }

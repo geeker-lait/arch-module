@@ -1,4 +1,4 @@
-package org.arch.auth.sso.jwt.service;
+package org.arch.auth.jwt.service;
 
 import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
 import org.springframework.core.convert.ConversionService;
@@ -7,7 +7,6 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.security.oauth2.core.converter.ClaimConversionService;
 import org.springframework.security.oauth2.jwt.MappedJwtClaimSetConverter;
-import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.jwt.api.supplier.JwtClaimTypeConverterSupplier;
 
 import java.util.Arrays;
@@ -28,7 +27,6 @@ import static java.util.Optional.ofNullable;
  * @weixin z56133
  * @since 2021.1.6 16:27
  */
-@Service
 public class ArchJwtClaimTypeConverterSupplier implements JwtClaimTypeConverterSupplier {
 
     private static final ConversionService CONVERSION_SERVICE = ClaimConversionService.getSharedInstance();

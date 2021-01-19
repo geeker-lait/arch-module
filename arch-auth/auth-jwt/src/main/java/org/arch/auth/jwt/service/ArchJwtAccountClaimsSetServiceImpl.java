@@ -1,4 +1,5 @@
-package org.arch.auth.sso.jwt.service;
+package org.arch.auth.jwt.service;
+
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
@@ -8,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
-import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.jwt.api.claims.service.CustomClaimsSetService;
 import top.dcenter.ums.security.jwt.properties.JwtProperties;
 
@@ -20,7 +20,6 @@ import java.time.Instant;
  * @weixin z56133
  * @since 2021.1.6 16:26
  */
-@Service
 public class ArchJwtAccountClaimsSetServiceImpl implements CustomClaimsSetService {
 
     private final String principalClaimName;

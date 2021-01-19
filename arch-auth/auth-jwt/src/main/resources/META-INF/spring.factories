@@ -1,0 +1,4 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.arch.auth.jwt.config.JwtRedisSerializerAutoConfiguration,\
+  org.arch.auth.jwt.config.ArchJwtServiceAutoConfiguration
