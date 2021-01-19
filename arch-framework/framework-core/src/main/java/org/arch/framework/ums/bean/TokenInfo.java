@@ -2,6 +2,7 @@ package org.arch.framework.ums.bean;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.arch.framework.ums.enums.ChannelType;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -14,9 +15,20 @@ import java.util.Collection;
  * @since 2021.1.3 17:08
  */
 @Data
-@Builder
+@NoArgsConstructor
 public class TokenInfo implements Serializable {
     private static final long serialVersionUID = -1904982933624705568L;
+
+    @Builder
+    public TokenInfo(Long accountId, String accountName, String nickName, String avatar,
+                     ChannelType channelType, Collection<GrantedAuthority> authorities) {
+        this.accountId = accountId;
+        this.accountName = accountName;
+        this.nickName = nickName;
+        this.avatar = avatar;
+        this.channelType = channelType;
+        this.authorities = authorities;
+    }
 
     /**
      * 账号ID/用户ID/会员ID/商户ID
@@ -50,3 +62,4 @@ public class TokenInfo implements Serializable {
     }
 
 }
+
