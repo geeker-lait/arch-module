@@ -28,16 +28,16 @@ public class AppProperties {
     /**
      * 系统租户 id, 默认: 00
      */
-    private String systemTenantId = "00";
+    private final String systemTenantId = "00";
 
     /**
      * 行级多租户字段名称, 默认: tenant_id
      */
-    private String tenantIdColumn = "tenant_id";
+    private final String tenantIdColumn = "tenant_id";
 
     /**
      * tenantId 的请求头名称; 租户登录时通过请求头传递租户 ID, 本系统用户不需要传递租户 ID, 已设置默认租户 ID.
      */
-    private String tenantHeaderName = "tenantId";
+    private final String tenantHeaderName = "tenantId";
 
 }
