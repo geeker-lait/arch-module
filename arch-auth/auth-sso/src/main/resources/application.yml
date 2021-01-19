@@ -28,7 +28,7 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
 
   profiles:
-    include: auth,arch,db,mdc,oauth2,feign,redis,vc,jwt
+    include: auth,arch,db,mdc,oauth2,feign,redis,vc,jwt,rbac
     active: ${profile:dev}
 
 
