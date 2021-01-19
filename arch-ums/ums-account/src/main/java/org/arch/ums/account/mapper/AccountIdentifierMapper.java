@@ -1,5 +1,6 @@
 package org.arch.ums.account.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.arch.ums.account.dto.AuthAccountDto;
 import org.arch.ums.account.entity.AccountIdentifier;
@@ -29,5 +30,5 @@ public interface AccountIdentifierMapper extends BaseMapper<AccountIdentifier> {
             " a.channel_type AS channel_type, a.authorities AS authorities, an.nick_name AS nick_name, an.avatar AS avatar " +
             " FROM (SELECT ai.* FROM account_identifier AS ai WHERE identifier = #{identifier}) a" +
             " INNER JOIN account_name AS an ON a.aid = an.account_id")
-    AuthAccountDto getAccountByIdentifier(@NonNull String identifier);
+    AuthAccountDto getAccountByIdentifier(@NonNull @Param("identifier") String identifier);
 }

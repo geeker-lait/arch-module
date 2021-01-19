@@ -1,5 +1,6 @@
 package org.arch.ums.account.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.arch.ums.account.entity.AccountOauthClient;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -26,5 +27,5 @@ public interface AccountOauthClientMapper extends BaseMapper<AccountOauthClient>
      */
     @Nullable
     @Select(value = "SELECT scopes FROM account_oauth_client WHERE app_id = #{appId} AND app_code = #{appCode}")
-    String getScopes(@NonNull String appId, @NonNull String appCode);
+    String getScopes(@NonNull @Param("appId") String appId, @NonNull @Param("appCode") String appCode);
 }
