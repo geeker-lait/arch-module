@@ -76,6 +76,8 @@ public class SecurityUtils {
                         // 这里的 ClaimName 必须与属性 ums.jwt.principalClaimName 值相同.
                         .accountName(jwt.getClaimAsString(JwtClaimNames.SUB))
                         .channelType(channelType)
+                        .nickName(jwt.getClaimAsString(JwtArchClaimNames.NICK_NAME.getClaimName()))
+                        .avatar(jwt.getClaimAsString(JwtArchClaimNames.AVATAR.getClaimName()))
                         .authorities(authentication.getAuthorities())
                         .build();
     }
