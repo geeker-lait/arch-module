@@ -4,11 +4,11 @@
 > 2. 添加 token 到 Authorization 请求头.
 
 ### 后端必须添加 org.arch.framework.ums.tenant.context.filter.TenantContextFilter 到过滤器链上.
-- 推荐:
-
 ```java
 protected void configure(HttpSecurity http) throws Exception {
-    http.addFilterAfter(new TenantContextFilter(archTenantContextHandler), WebAsyncManagerIntegrationFilter.class);
+    http.addFilterAfter(new TenantContextFilter(archTenantContextHolder), WebAsyncManagerIntegrationFilter.class);
 }
 ```
+- 推荐:
+> 引入 auth-sdk 模块: auth-sdk 已经通过 spring-boot-starter 模式自动配置 TenantContextFilter.
     
