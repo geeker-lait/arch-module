@@ -22,6 +22,7 @@ import static java.util.Objects.isNull;
 public class FeignGlobalRequestInterceptor implements RequestInterceptor {
 
     private static final String TOKEN_HEADER_NAME = "Authorization";
+    private static final String BEARER = "bearer ";
     private final TenantContextHolder tenantContextHolder;
     private final String tenantHeaderName;
 
@@ -38,7 +39,6 @@ public class FeignGlobalRequestInterceptor implements RequestInterceptor {
     }
 
     private void setBearerToken2Header(RequestTemplate template) {
-
         // 设置 tenantId
         template.header(tenantHeaderName, tenantContextHolder.getTenantId());
 
@@ -52,7 +52,7 @@ public class FeignGlobalRequestInterceptor implements RequestInterceptor {
             //noinspection unchecked
             AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token> token =
                     ((AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token>) authentication);
-            template.header(TOKEN_HEADER_NAME, token.getToken().getTokenValue());
+            template.header(TOKEN_HEADER_NAME, BEARER.concat(token.getToken().getTokenValue()));
         }
 
     }
