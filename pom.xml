@@ -13,7 +13,7 @@
         <java.version>1.8</java.version>
         <spring-security.version>5.4.2</spring-security.version>
         <spring.version>5.2.9.RELEASE</spring.version>
-        <ums.version>2.2.13</ums.version>
+        <ums.version>2.2.15</ums.version>
     </properties>
 
 
