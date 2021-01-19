@@ -15,20 +15,27 @@
 
     <dependencies>
 
-        <!--<dependency>
-            <groupId>top.dcenter</groupId>
-            <artifactId>ums-jwt</artifactId>
-            <version>${ums.version}</version>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>auth-jwt</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>nimbus-jose-jwt</artifactId>
+                    <groupId>com.nimbusds</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>top.dcenter</groupId>
-            <artifactId>ums-rbac</artifactId>
-            <version>${ums.version}</version>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <groupId>com.nimbusds</groupId>
+            <version>8.19</version>
+            <scope>compile</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-resource-server</artifactId>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>auth-rbac</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -42,7 +49,31 @@
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-commons</artifactId>
             <version>${project.version}</version>
-        </dependency>-->
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

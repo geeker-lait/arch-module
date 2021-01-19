@@ -1,0 +1,44 @@
+auth:
+  sdk:
+    redis:
+      host: 192.168.50.2
+      port: 6379
+      #password:
+      database: 0
+      # 连接超时的时间
+      timeout: PT10S
+      # redis-lettuce-pool
+      lettuce:
+        # 会影响应用关闭是时间, dev 模式设置为 0
+        shutdown-timeout: PT500S
+        pool:
+          max-active: 8
+          max-wait: PT10S
+          max-idle: 8
+          min-idle: 1
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+auth:
+  sdk:
+    redis:
+      host: 192.168.50.2
+      port: 6379
+      #password:
+      database: 0
+      # 连接超时的时间
+      timeout: PT10S
+      # redis-lettuce-pool
+      lettuce:
+        # 会影响应用关闭是时间, dev 模式设置为 0
+        shutdown-timeout: PT0S
+        pool:
+          max-active: 8
+          max-wait: PT10S
+          max-idle: 8
+          min-idle: 1
