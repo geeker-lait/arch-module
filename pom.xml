@@ -13,7 +13,7 @@
         <java.version>1.8</java.version>
         <spring-security.version>5.4.2</spring-security.version>
         <spring.version>5.2.9.RELEASE</spring.version>
-        <ums.version>2.2.15</ums.version>
+        <dcenter-ums.version>2.2.15</dcenter-ums.version>
     </properties>
 
 
@@ -65,6 +65,7 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -97,6 +98,40 @@
                 <version>${project.version}</version>
             </dependency>
 
+
+            <!-- auth -->
+            <dependency>
+                <groupId>top.dcenter</groupId>
+                <artifactId>ums-jwt</artifactId>
+                <version>${dcenter-ums.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.dcenter</groupId>
+                <artifactId>ums-commons</artifactId>
+                <version>${dcenter-ums.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.dcenter</groupId>
+                <artifactId>ums-oauth</artifactId>
+                <version>${dcenter-ums.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.dcenter</groupId>
+                <artifactId>ums-rbac</artifactId>
+                <version>${dcenter-ums.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.dcenter</groupId>
+                <artifactId>ums-core-spring-boot-starter</artifactId>
+                <version>${dcenter-ums.version}</version>
+            </dependency>
+
+            <!--jwt-->
+            <dependency>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <groupId>com.nimbusds</groupId>
+                <version>8.19</version>
+            </dependency>
 
 
             <!-- spring -->
@@ -217,15 +252,6 @@
             </dependency>
 
 
-
-            <!-- auth -->
-            <dependency>
-                <groupId>top.dcenter</groupId>
-                <artifactId>ums-jwt</artifactId>
-                <version>${ums.version}</version>
-            </dependency>
-
-
             <!-- other -->
             <dependency>
                 <groupId>org.yaml</groupId>
@@ -288,7 +314,6 @@
 
 
 
-
         </dependencies>
     </dependencyManagement>
 
@@ -338,6 +363,12 @@
             <id>spring-milestones</id>
             <name>Spring Milestones</name>
             <url>https://repo.spring.io/milestone</url>
+        </repository>
+
+        <repository>
+            <id>snoatype-snapshots</id>
+            <name>sonatype snapshots</name>
+            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
 

@@ -13,27 +13,11 @@
         <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-jwt</artifactId>
-            <version>${ums.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>nimbus-jose-jwt</artifactId>
-                    <groupId>com.nimbusds</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <groupId>com.nimbusds</groupId>
-            <version>8.19</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-core</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>

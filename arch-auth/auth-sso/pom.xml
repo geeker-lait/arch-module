@@ -16,7 +16,7 @@
         <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-core-spring-boot-starter</artifactId>
-            <version>${ums.version}</version>
+
             <exclusions>
                 <exclusion>
                     <groupId>top.dcenter</groupId>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-oauth</artifactId>
-            <version>${ums.version}</version>
+
             <exclusions>
                 <exclusion>
                     <groupId>top.dcenter</groupId>
