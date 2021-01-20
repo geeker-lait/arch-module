@@ -27,16 +27,24 @@ mybatis-plus:
     jdbc-type-for-null: null
 
 
+#虽然两种都可以运行成功，但下面这种写法才是2.4版本的最好的写法，原因是2.4版本中官方将配置文件的加载进行了更新，
+#所以如果使用的是2.4版本推荐用下面的这种写法，至于原因就是为了提升对 Kubernetes 的原生支持而作的修改
+#spring:
+#  profiles: pro
 ---
 #生产环境
 spring:
-  profiles: pro
+  config:
+    activate:
+      on-profile: pro
 
 
 ---
 #开发环境
 spring:
-  profiles: dev
+  config:
+    activate:
+      on-profile: dev
   datasource:
     url: jdbc:mysql://localhost:3306?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
     username: root
