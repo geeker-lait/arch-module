@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.arch.framework.automate.from.mapper.bak.OperateTableMapper">
+    <!--select count(*) from user_tables where table_name = #{tableName}-->
+    <sql id="db">
+        arch
+    </sql>
+
+
+
+
+    <select id="existTable" resultType="Integer">
+
+        SELECT count(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='<include refid="db"/>' and table_name=#{tableName}
+    </select>
+
+    <select id="countTableRow" resultType="Integer" >
+        select count(*) from <include refid="db"/>.${tableName}
+    </select>
+
+    <update id="dropTable">
+        DROP TABLE <include refid="db"/>.${tableName}
+    </update>
+
+    <select id="getFieldList" resultType="String">
+        select field_code from <include refid="db"/>.upload_field where form_id = #{formId} order by field_order
+    </select>
+
+    <update id="createNewTable" parameterType="java.util.Map">
+        CREATE TABLE <include refid="db"/>.${tableName} (
+            id int primary key auto_increment
+            <!--<trim suffixOverrides=",">-->
+                <!--<foreach collection="fieldCodeList" item="item" index="index" separator="," >-->
+                    <!--${item} varchar(200)-->
+                <!--</foreach>-->
+            <!--</trim>-->
+        ) comment #{comment};
+    </update>
+
+    <select id="queryAll" resultType="java.util.Map">
+        select * from <include refid="db"/>.${tableName} order by id desc
+    </select>
+
+    <select id="queryOne" resultType="java.util.Map">
+        select * from <include refid="db"/>.${tableName} where id = #{id}
+    </select>
+
+    <select id="getFieldAndOptionDetailList" resultType="FieldAndOptionDetail">
+        select * from <include refid="db"/>.upload_field where form_id = #{formId} order by field_order
+    </select>
+
+    <insert id="insertTable" parameterType="java.util.Map">
+        insert into <include refid="db"/>.${tableName}
+        ( id,
+        <trim suffixOverrides=",">
+            <foreach collection="keyList" item="item" index="index" separator=",">
+                ${item}
+            </foreach>
+        </trim>
+        )
+        values
+        ( 0,
+        <trim suffixOverrides=",">
+            <foreach collection="valueList" item="item" index="index" separator=",">
+                #{item}
+            </foreach>
+        </trim>
+        )
+    </insert>
+
+    <insert id="updateTable" parameterType="java.util.Map">
+        update <include refid="db"/>.{tableName}
+        set (
+        <trim suffixOverrides=",">
+            <foreach collection="keyList" item="item" index="index" separator=",">
+                ${item}
+            </foreach>
+        </trim>
+        )
+        =
+        ( select
+        <trim suffixOverrides=",">
+            <foreach collection="valueList" item="item" index="index" separator=",">
+                #{item}
+            </foreach>
+        </trim>
+          from dual)
+        where id = #{id}
+    </insert>
+
+    <delete id="deleteTable" parameterType="java.util.Map">
+        delete from <include refid="db"/>.${tableName} where id = #{id}
+    </delete>
+
+
+</mapper>

@@ -15,6 +15,6 @@ import java.io.Serializable;
  * @param <ID> 数据库实体的主键
  */
 //@NoRepositoryBean
-public interface CrudDao<T, ID extends Serializable> extends IService<T>/*,JpaRepositoryImplementation<T, ID>*/ {
+public interface CrudDao<T> extends IService<T>/*,JpaRepositoryImplementation<T, ID>*/ {
 
 }

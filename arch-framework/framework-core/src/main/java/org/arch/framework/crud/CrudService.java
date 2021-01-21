@@ -29,7 +29,7 @@ import java.util.Map;
 public abstract class CrudService<T, ID extends Serializable> {
 
     @Autowired
-    protected CrudDao<T, ID> crudDao;
+    protected CrudDao<T> crudDao;
 
     /**
      * 如果是采用spring boot的话，会自动注入，其他情况需要手动创建

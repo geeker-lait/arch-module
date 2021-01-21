@@ -16,6 +16,6 @@ import org.springframework.stereotype.Repository;
  */
 @Slf4j
 @Repository
-public class RbacGroupDao extends ServiceImpl<RbacGroupMapper, RbacGroup> implements CrudDao<RbacGroup, Long> {
+public class RbacGroupDao extends ServiceImpl<RbacGroupMapper, RbacGroup> implements CrudDao<RbacGroup> {
 
 }

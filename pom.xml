@@ -100,13 +100,40 @@
 
 
             <!-- auth -->
+
             <dependency>
+                <groupId>top.dcenter</groupId>
+                <artifactId>ums-jwt</artifactId>
+                <version>${dcenter-ums.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.dcenter</groupId>
+                <artifactId>ums-commons</artifactId>
+                <version>${dcenter-ums.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.dcenter</groupId>
+                <artifactId>ums-oauth</artifactId>
+                <version>${dcenter-ums.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.dcenter</groupId>
+                <artifactId>ums-rbac</artifactId>
+                <version>${dcenter-ums.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.dcenter</groupId>
+                <artifactId>ums-core-spring-boot-starter</artifactId>
+                <version>${dcenter-ums.version}</version>
+            </dependency>
+
+            <!--<dependency>
                 <groupId>top.dcenter</groupId>
                 <artifactId>ums-dependencies</artifactId>
                 <version>${dcenter-ums.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
+            </dependency>-->
 
             <!-- spring -->
             <dependency>
@@ -343,6 +370,17 @@
             <id>snoatype-snapshots</id>
             <name>sonatype snapshots</name>
             <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+
+        <repository>
+            <id>central</id>
+            <name>central maven</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <name>central maven</name>
+            <url>http://central.maven.org/maven2/</url>
         </repository>
     </repositories>
 

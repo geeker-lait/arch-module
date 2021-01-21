@@ -16,6 +16,6 @@ import org.springframework.stereotype.Repository;
  */
 @Slf4j
 @Repository
-public class RbacCategoryDao extends ServiceImpl<RbacCategoryMapper, RbacCategory> implements CrudDao<RbacCategory, Long> {
+public class RbacCategoryDao extends ServiceImpl<RbacCategoryMapper, RbacCategory> implements CrudDao<RbacCategory> {
 
 }

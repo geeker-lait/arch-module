@@ -12,10 +12,10 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth
  *
  * @author lait
  * @since 2020-11-13 10:30:40
- * @description 
+ * @description
  **/
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"org.arch.application.demo"})
 @MapperScan(basePackages = {"org.arch.application.demo.crud.mapper"})
 @EnableOAuth2Sso
 public class DemoApplication {
