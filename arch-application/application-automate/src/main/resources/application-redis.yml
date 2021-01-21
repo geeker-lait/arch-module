@@ -1,12 +1,18 @@
 ---
 #生产环境
-spring.profiles: pro
+spring:
+  config:
+    activate:
+      on-profile: pro
 
 
 ---
 #开发环境
-spring.profiles: dev
+#开发环境
 spring:
+  config:
+    activate:
+      on-profile: dev
   redis:
     #数据库索引
     database: 0

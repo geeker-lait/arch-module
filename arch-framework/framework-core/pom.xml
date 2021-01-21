@@ -92,7 +92,7 @@
         <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-commons</artifactId>
-            <version>${ums.version}</version>
+
             <scope>compile</scope>
         </dependency>
 

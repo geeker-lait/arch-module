@@ -1,9 +1,9 @@
 package org.arch.payment.core.service.impl;
 
-import code.dao.PayConfigDao;
-import code.service.PayConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.payment.core.dao.PayConfigDao;
+import org.arch.payment.core.service.PayConfigService;
 import org.springframework.stereotype.Service;
 
 /**

@@ -1,6 +1,6 @@
 package org.arch.payment.server.config;
 
-import org.arch.auth.sdk.Token;
+import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -15,7 +15,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  */
 public class TokenResolver extends HandlerMethodArgumentResolverComposite implements HandlerMethodArgumentResolver {
     final static String TOKEN = "Authorization";
-    private RedisTemplate<String, Token> redisTemplate;
+    private RedisTemplate<String, TokenInfo> redisTemplate;
 
     public TokenResolver(RedisTemplate tokenClient) {
         this.redisTemplate = tokenClient;
@@ -24,14 +24,14 @@ public class TokenResolver extends HandlerMethodArgumentResolverComposite implem
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
         //return true;
-        return methodParameter.getParameterType().equals(Token.class);
+        return methodParameter.getParameterType().equals(TokenInfo.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer,
                                   NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
         String stoken = nativeWebRequest.getHeader(TOKEN);
-        Token token = redisTemplate.opsForValue().get(stoken);
+        TokenInfo token = redisTemplate.opsForValue().get(stoken);
         if (token == null) {
             throw new Exception();
         }
