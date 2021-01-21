@@ -15,7 +15,6 @@
         <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-rbac</artifactId>
-
         </dependency>
 
         <dependency>
