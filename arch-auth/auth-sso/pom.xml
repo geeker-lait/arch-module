@@ -16,7 +16,6 @@
         <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-core-spring-boot-starter</artifactId>
-
             <exclusions>
                 <exclusion>
                     <groupId>top.dcenter</groupId>
@@ -27,7 +26,6 @@
         <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-oauth</artifactId>
-
             <exclusions>
                 <exclusion>
                     <groupId>top.dcenter</groupId>
@@ -50,7 +48,6 @@
         <dependency>
             <artifactId>nimbus-jose-jwt</artifactId>
             <groupId>com.nimbusds</groupId>
-            <version>8.19</version>
             <scope>compile</scope>
         </dependency>
 

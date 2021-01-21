@@ -3,7 +3,7 @@ package org.arch.ums.feign.account.client;
 import org.arch.ums.feign.account.config.UmsAccountDeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Set;
@@ -25,7 +25,7 @@ public interface UmsAccountOauthClient {
      * @param appCode  app secret
      * @return  返回 scopes 集合, 如果不存在, 返回空集合.
      */
-    @GetMapping("/scopes")
+    @PostMapping("/scopes")
     Set<String> getScopesByAppIdAndAppCode(@RequestParam("appId") String appId,
                                            @RequestParam("appCode") String appCode);
 

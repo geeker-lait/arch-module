@@ -9,7 +9,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
 /**
- * 框架必要的自动配置
+ * 分布式 IdService 的自动配置
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.15 16:40

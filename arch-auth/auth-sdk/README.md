@@ -17,12 +17,11 @@
         </exclusion>
     </exclusions>
 </dependency>
-<!-- 解决兼容性问题 -->
+        <!-- 解决兼容性问题 -->
 <dependency>
-    <artifactId>nimbus-jose-jwt</artifactId>
-    <groupId>com.nimbusds</groupId>
-    <version>8.19</version>
-    <scope>compile</scope>
+<artifactId>nimbus-jose-jwt</artifactId>
+<groupId>com.nimbusds</groupId>
+<scope>compile</scope>
 </dependency>
 ```
 
@@ -44,6 +43,16 @@ arch:
   app:
     app-id: 001
     app-code: 001
+  csrf:
+    # 是否支持 csrf, 默认: true
+    enable: true
+    # 需要忽略 csrf 校验的 POST 请求.
+    ignoring-ant-matcher-urls:
+      - '/account/oauthClient/scopes'
+logging:
+  level:
+    org.arch.auth: warn
+    top.dcenter: warn
 ```
 
 4. 引用 auth-sdk 上的配置文件
@@ -71,4 +80,10 @@ arch:
         </includes>
     </resource>
 </resources>
+```
+
+
+5. 开发时: account_oauth_client 添加记录
+```sql
+insert into `account_oauth_client` (`app_id`, `app_code`, `scopes`, `app_type`) values('006', '006', 'AUTH,OAUTH2,OSS,UMS,ACCOUNT,USER,MEMBER,MERCHANT,PMS,OMS,JWK,PAY,MARKETING,WATCHDOG', 'ums-api');
 ```
