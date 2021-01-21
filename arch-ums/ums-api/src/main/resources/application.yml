@@ -23,10 +23,10 @@ spring:
 
 logging:
   config: classpath:logback-spring.xml
-  # feign 日志配置
   level:
-    org.arch.ums.account.client.ArchUmsAccountClient: error
-
+    org.arch.ums: warn
+    org.arch.auth: warn
+    top.dcenter: warn
 ---
 spring:
   config:
@@ -43,4 +43,6 @@ logging:
   config: classpath:logback-spring-dev.xml
   # feign 日志配置
   level:
-    org.arch.ums.account.client.ArchUmsAccountClient: info
+    org.arch.ums: info
+    org.arch.auth: info
+    top.dcenter: info

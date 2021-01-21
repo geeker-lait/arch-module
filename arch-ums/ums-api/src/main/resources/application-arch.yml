@@ -8,6 +8,10 @@ arch:
     app-id: "003"
     app-code: "003"
 
+  csrf:
+    # 是否支持 csrf, 默认: true
+    enable: false
+
 
 ---
 spring:
@@ -19,3 +23,10 @@ arch:
   app:
     app-id: "003"
     app-code: "003"
+
+  csrf:
+    # 是否支持 csrf, 默认: true
+    enable: false
+    # 需要忽略 csrf 校验的 POST 请求.
+    ignoring-ant-matcher-urls:
+      - '/account/oauthClient/scopes'
