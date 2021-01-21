@@ -49,6 +49,10 @@ arch:
     # 需要忽略 csrf 校验的 POST 请求.
     ignoring-ant-matcher-urls:
       - '/account/oauthClient/scopes'
+logging:
+  level:
+    org.arch.auth: warn
+    top.dcenter: warn
 ```
 
 4. 引用 auth-sdk 上的配置文件
