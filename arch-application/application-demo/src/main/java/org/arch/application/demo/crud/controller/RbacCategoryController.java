@@ -26,12 +26,12 @@ public class RbacCategoryController implements CrudController {
 
 
     @GetMapping(path = "/{id:.+}")
-    public void testGet(@PathVariable Long id) {
+    public void testGet(@PathVariable("id") Long id) {
         log.info("结果：{}",rbacCategoryService.findById(id));
     }
 
     @DeleteMapping(path = "/{id:.+}")
-    public void testDelete(@PathVariable Long id) {
+    public void testDelete(@PathVariable("id") Long id) {
         log.info("结果：{}",rbacCategoryService.deleteById(id));
     }
 

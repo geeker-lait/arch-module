@@ -3,7 +3,7 @@ package org.arch.application.demo;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+//import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 
 /**
  * <p>
@@ -17,7 +17,7 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth
 
 @SpringBootApplication(scanBasePackages = {"org.arch.application.demo"})
 @MapperScan(basePackages = {"org.arch.application.demo.crud.mapper"})
-@EnableOAuth2Sso
+//@EnableOAuth2Sso
 public class DemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);

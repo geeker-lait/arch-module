@@ -20,25 +20,16 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-account</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-user</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-sdk</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>nimbus-jose-jwt</artifactId>
-                    <groupId>com.nimbusds</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <!-- 解决兼容性问题 -->
         <dependency>
@@ -51,7 +42,6 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
         </dependency>
 
         <dependency>

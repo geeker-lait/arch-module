@@ -1,0 +1,15 @@
+oauth2:
+  server:
+    url: http://localhost:8080
+
+security:
+  oauth2:
+    client:
+      client-id: admin
+      client-secret: 123456
+      user-authorization-uri: ${outh2.server.url}/oauth/authorize
+      access-token-uri: ${outh2.server.url}/oauth/token
+    resource:
+      jwk:
+        key-set-uri: ${oauth2.server.url}/oauth/token_key
+

@@ -1,0 +1,25 @@
+# 文件存储路径
+file:
+  path: /Volumes/perye/file/dokit/
+  avatar: /Volumes/perye/file/dokit/avatar/
+  # 文件大小 /M
+  maxSize: 100
+  avatarMaxSize: 5
+dingding:
+  error-url: https://oapi.dingtalk.com/robot/send?access_token=8d0bea7fe8a5c31d60a22223e5012ef64db4bd51b7e0b24d60b3decb72399c47
+  error-key: 栎尚网络skit
+baidubos:
+  access_key_id: b0a31c04625d470187a7e0a0719d8689
+  secret_access_key: bfe5b63631fd4248bbcbe97ba7203ddf
+  endpoint: http://gz.bcebos.com
+  bucketName:
+    public: yueshang-skit-public
+    private: yueshang-skit
+# 创蓝短信
+chuanglan:
+  smsvariablerequesturl: http://smssh1.253.com/msg/variable/json
+  msg: 【锦超网络】尊敬的{$var},您好,您的验证码是{$var},{$var}分钟内有效
+  account: YZM5253741
+  pswd: lSFYvjCHyJ53b4
+  sign: 栎尚
+  time: 3
