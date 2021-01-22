@@ -1,4 +1,4 @@
-package org.arch.application.form.config;
+package org.arch.application.portal.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

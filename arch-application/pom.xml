@@ -12,10 +12,10 @@
 
     <modules>
         <module>application-admin</module>
-        <module>application-automate</module>
         <module>application-demo</module>
         <module>application-merchant</module>
         <module>application-payment</module>
+        <module>application-portal</module>
         <module>application-user</module>
     </modules>
 

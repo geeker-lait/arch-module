@@ -1,4 +1,4 @@
-package org.arch.application.form.controller;
+package org.arch.application.portal.controller.form;
 
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiImplicitParam;

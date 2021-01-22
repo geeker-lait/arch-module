@@ -1,4 +1,4 @@
-package org.arch.application.form.config;
+package org.arch.application.portal.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

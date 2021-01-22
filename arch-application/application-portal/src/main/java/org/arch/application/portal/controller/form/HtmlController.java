@@ -1,4 +1,4 @@
-package org.arch.application.form.controller;
+package org.arch.application.portal.controller.form;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
