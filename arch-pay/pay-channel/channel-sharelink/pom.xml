@@ -4,22 +4,31 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.arch.projects</groupId>
-        <artifactId>payment-channel</artifactId>
+        <artifactId>pay-channel</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>channel-yeepay</artifactId>
+    <artifactId>channel-sharelink</artifactId>
+
 
     <dependencies>
 
+
         <dependency>
-            <groupId>com.yeepay.g3.yop</groupId>
-            <artifactId>yop-java-sdk</artifactId>
-            <version>3.1.1</version>
+            <groupId>sadk</groupId>
+            <artifactId>sadk</artifactId>
+            <version>3.2.1.3</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/libs/yeepay/yop-java-sdk-3.1.1-jdk18.jar</systemPath>
+            <systemPath>${project.basedir}/src/main/resources/libs/sharelink/sadk-3.2.1.3.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>httpclient</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>3.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/libs/sharelink/commons-httpclient-3.0.1.jar</systemPath>
+        </dependency>
 
     </dependencies>
     <build>
@@ -40,4 +49,5 @@
             </resource>
         </resources>
     </build>
+
 </project>

@@ -22,9 +22,9 @@
         <module>arch-auth</module>
         <module>arch-framework</module>
         <module>arch-gateway</module>
-        <module>arch-marketing</module>
+        <module>arch-mms</module>
         <module>arch-oms</module>
-        <module>arch-payment</module>
+        <module>arch-pay</module>
         <module>arch-pms</module>
         <module>arch-rule</module>
         <module>arch-ums</module>
@@ -71,12 +71,12 @@
             <!-- arch projects -->
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>payment-sdk</artifactId>
+                <artifactId>pay-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>payment-core</artifactId>
+                <artifactId>pay-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

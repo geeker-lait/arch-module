@@ -8,13 +8,14 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>arch-payment</artifactId>
+    <artifactId>arch-pay</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>payment-channel</module>
-        <module>payment-core</module>
-        <module>payment-sdk</module>
+        <module>pay-api</module>
+        <module>pay-core</module>
+        <module>pay-channel</module>
+
     </modules>
 
     <dependencyManagement>

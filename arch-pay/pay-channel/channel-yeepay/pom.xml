@@ -4,51 +4,24 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.arch.projects</groupId>
-        <artifactId>payment-channel</artifactId>
+        <artifactId>pay-channel</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>channel-mfe88</artifactId>
+    <artifactId>channel-yeepay</artifactId>
 
     <dependencies>
 
-
-
-
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-autoconfigure</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework</groupId>-->
-<!--            <artifactId>spring-web</artifactId>-->
-<!--        </dependency>-->
-
-
-
         <dependency>
-            <groupId>com.pisgah</groupId>
-            <artifactId>gatewayeg</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <groupId>com.yeepay.g3.yop</groupId>
+            <artifactId>yop-java-sdk</artifactId>
+            <version>3.1.1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/libs/mfe88/cncxApi.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>payment-sdk</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <systemPath>${project.basedir}/src/main/resources/libs/yeepay/yop-java-sdk-3.1.1-jdk18.jar</systemPath>
         </dependency>
 
 
     </dependencies>
-
-
     <build>
         <resources>
             <resource>
@@ -67,5 +40,4 @@
             </resource>
         </resources>
     </build>
-
 </project>

@@ -13,7 +13,7 @@
 
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>payment-core</artifactId>
+            <artifactId>pay-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>
