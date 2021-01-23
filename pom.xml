@@ -13,7 +13,7 @@
         <java.version>1.8</java.version>
         <spring-security.version>5.4.2</spring-security.version>
         <spring.version>5.2.9.RELEASE</spring.version>
-        <dcenter-ums.version>2.2.15</dcenter-ums.version>
+        <dcenter-ums.version>2.2.17</dcenter-ums.version>
     </properties>
 
 
@@ -134,40 +134,13 @@
 
 
             <!-- auth -->
-
             <dependency>
-                <groupId>top.dcenter</groupId>
-                <artifactId>ums-jwt</artifactId>
-                <version>${dcenter-ums.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.dcenter</groupId>
-                <artifactId>ums-commons</artifactId>
-                <version>${dcenter-ums.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.dcenter</groupId>
-                <artifactId>ums-oauth</artifactId>
-                <version>${dcenter-ums.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.dcenter</groupId>
-                <artifactId>ums-rbac</artifactId>
-                <version>${dcenter-ums.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.dcenter</groupId>
-                <artifactId>ums-core-spring-boot-starter</artifactId>
-                <version>${dcenter-ums.version}</version>
-            </dependency>
-
-            <!--<dependency>
                 <groupId>top.dcenter</groupId>
                 <artifactId>ums-dependencies</artifactId>
-                <version>${dcenter-ums.version}</version>
+                <version>2.2.17-release</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>-->
+            </dependency>
 
             <!-- spring -->
             <dependency>
