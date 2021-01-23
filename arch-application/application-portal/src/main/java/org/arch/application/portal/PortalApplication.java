@@ -4,7 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = {"org.arch.framework.automate.from"})
+@SpringBootApplication(scanBasePackages = {"org.arch.application.portal","org.arch.framework.automate.from"})
 @MapperScan(basePackages = {"org.arch.framework.automate.from.mapper"})
 public class PortalApplication {
 

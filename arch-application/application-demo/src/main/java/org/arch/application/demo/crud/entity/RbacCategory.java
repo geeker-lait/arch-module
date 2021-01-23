@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.arch.framework.crud.CrudEntity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,7 +22,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Accessors(chain = true)
 @TableName("rbac_category")
-public class RbacCategory extends Model<RbacCategory> implements Serializable {
+public class RbacCategory extends CrudEntity<RbacCategory> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
