@@ -1,5 +1,5 @@
 server:
-  port: 9401
+  port: 9090
   servlet:
     context-path: /sso
 spring:
@@ -49,7 +49,7 @@ logging:
 
 ---
 server:
-  port: 9401
+  port: 9090
 
 spring:
   config:
