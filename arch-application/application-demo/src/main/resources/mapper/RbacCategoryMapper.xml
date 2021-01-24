@@ -9,7 +9,4 @@
         id,pid,category_name,sorted,app_id,tenant_id,is_active,created_by,created_date
     </sql>
 
-
-
-
 </mapper>

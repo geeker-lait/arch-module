@@ -2,7 +2,6 @@ package org.arch.application.demo.crud.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -28,7 +27,7 @@ public class RbacCategory extends CrudEntity<RbacCategory> implements Serializab
     /**
      * ID
      */
-    @TableId("")
+    @TableId()
     private Long id;
     /**
      * 父节点_i_d

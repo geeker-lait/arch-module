@@ -1,6 +1,7 @@
 package org.arch.application.demo.crud.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.arch.framework.crud.dto.BaseSearchDto;
 
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Map;
  * @date 12/8/2020 9:10 PM
  */
 @Data
+@NoArgsConstructor
 public class RbacCategorySearchDto extends BaseSearchDto {
 
     private Long id;

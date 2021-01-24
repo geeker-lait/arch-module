@@ -15,8 +15,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @description
  **/
 
-@SpringBootApplication(scanBasePackages = {"org.arch.application.demo"})
-@MapperScan(basePackages = {"org.arch.application.demo.crud.mapper"})
+@SpringBootApplication(scanBasePackages = {"org.arch.application.demo", "test.auth.ums"})
+@MapperScan(basePackages = {"org.arch.application.demo.crud.mapper", "test.auth.ums.mapper"})
 //@EnableOAuth2Sso
 public class DemoApplication {
     public static void main(String[] args) {

@@ -1,6 +1,7 @@
 package org.arch.application.demo.crud.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import java.util.Date;
  * @date 1/21/2021 5:58 PM
  */
 @Data
+@NoArgsConstructor
 public class RbacCategoryRequest {
 
     private Long id;

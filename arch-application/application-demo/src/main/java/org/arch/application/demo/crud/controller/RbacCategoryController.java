@@ -2,13 +2,12 @@ package org.arch.application.demo.crud.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.application.demo.crud.dto.RbacCategoryRequest;
 import org.arch.application.demo.crud.dto.RbacCategorySearchDto;
 import org.arch.application.demo.crud.entity.RbacCategory;
 import org.arch.application.demo.crud.service.RbacCategoryService;
 import org.arch.framework.crud.CrudController;
-import org.arch.framework.crud.Response;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 资源类目表服务控制器
@@ -21,11 +20,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/rbacCategory")
-public class RbacCategoryController implements CrudController {
+public class RbacCategoryController implements CrudController<RbacCategory, Long, RbacCategorySearchDto, RbacCategoryService> {
     private final RbacCategoryService rbacCategoryService;
 
 
-    @GetMapping(path = "/{id:.+}")
+/*    @GetMapping(path = "/{id:.+}")
     public void testGet(@PathVariable("id") Long id) {
         log.info("结果：{}",rbacCategoryService.findById(id));
     }
@@ -58,5 +57,15 @@ public class RbacCategoryController implements CrudController {
     @GetMapping("page")
     public Response testPage(RbacCategorySearchDto rbacCategorySearchDto, int pageSize, int pageNo) {
         return Response.success(rbacCategoryService.findPage(rbacCategorySearchDto.getSearchParams(), pageNo, pageSize));
+    }*/
+
+    @Override
+    public RbacCategoryService getCrudService() {
+        return rbacCategoryService;
+    }
+
+    @Override
+    public RbacCategorySearchDto getSearchDto() {
+        return new RbacCategorySearchDto();
     }
 }
