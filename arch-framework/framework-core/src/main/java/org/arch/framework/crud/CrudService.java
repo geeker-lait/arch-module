@@ -12,6 +12,7 @@ import org.arch.framework.crud.utils.RequestSearchUtils;
 import org.arch.framework.crud.utils.SearchFilter;
 import org.arch.framework.crud.utils.SearchFilter.Operator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -48,7 +49,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      * @param t 实体
      * @return 返回保存的实体
      */
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean save(T t) {
         return crudDao.save(t);
     }
@@ -59,7 +60,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      * @param tlist 实体
      * @return 返回保存的实体
      */
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean saveList(List<T> tlist) {
         return crudDao.saveBatch(tlist);
     }
@@ -69,7 +70,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      *
      * @param id 主键id
      */
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean deleteById(ID id) {
         return crudDao.removeById(id);
     }
@@ -79,7 +80,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      *
      * @param t 需要删除的实体
      */
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean deleteById(T t) {
         return crudDao.remove(new QueryWrapper<>(t));
     }
@@ -89,7 +90,7 @@ public abstract class CrudService<T, ID extends Serializable> {
      *
      * @param ids 主键集合
      */
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean deleteAllById(List<ID> ids) {
         return crudDao.removeByIds(ids);
     }
@@ -98,7 +99,7 @@ public abstract class CrudService<T, ID extends Serializable> {
     /**
      * 删除所有实体
      */
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void deleteAll() {
 
     }
