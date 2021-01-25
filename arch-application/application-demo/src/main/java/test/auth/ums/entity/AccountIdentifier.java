@@ -2,10 +2,10 @@ package test.auth.ums.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.arch.framework.crud.CrudEntity;
 import org.arch.framework.ums.enums.ChannelType;
 
 import java.io.Serializable;
@@ -21,7 +21,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Accessors(chain = true)
 @TableName("account_identifier")
-public class AccountIdentifier extends Model<AccountIdentifier> {
+public class AccountIdentifier extends CrudEntity<AccountIdentifier> {
     private static final long serialVersionUID = 1L;
 
     /**

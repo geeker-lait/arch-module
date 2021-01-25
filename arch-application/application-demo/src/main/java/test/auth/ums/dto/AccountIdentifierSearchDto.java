@@ -12,7 +12,7 @@ import java.util.Map;
  * 用户-标识(AccountIdentifier) search dto
  *
  * @author YongWu zheng
- * @date 2021-01-24 23:17:45
+ * @date 2021-01-25 14:38:57
  * @since 1.0.0
  */
 @Data
@@ -57,11 +57,12 @@ public class AccountIdentifierSearchDto extends BaseSearchDto {
 
     @Override
     protected void buildSearchParams(Map<String, Object> map) {
+        // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
         putNoNull("EQ_aid", this.getAid(), map);
         putNoNull("EQ_identifier", this.getIdentifier(), map);
         putNoNull("EQ_credential", this.getCredential(), map);
-        putNoNull("EQ_tenantId", this.getTenantId(), map);
+        putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_authorities", this.getAuthorities(), map);
-        putNoNull("EQ_channelType", this.getChannelType(), map);
+        putNoNull("EQ_channel_type", this.getChannelType(), map);
     }
 }

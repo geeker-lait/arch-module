@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  * @weixin PN15855012581
  * @date 12/11/2020 4:19 PM
  */
-public class CrudEntity<T extends Model<?>> extends Model<T> implements Serializable {
+public abstract class CrudEntity<T extends Model<?>> extends Model<T> implements Serializable {
 
     // 主键
     @TableId

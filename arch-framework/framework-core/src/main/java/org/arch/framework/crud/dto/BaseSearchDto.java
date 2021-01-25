@@ -5,7 +5,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -20,9 +20,9 @@ public abstract class BaseSearchDto {
      * 获取查询条件与值
      */
     public Map<String, Object> getSearchParams() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("EQ_deleted", deleted);
+        Map<String, Object> map = new LinkedHashMap<>();
         buildSearchParams(map);
+        map.put("EQ_deleted", deleted);
         return map;
     }
 
@@ -32,7 +32,7 @@ public abstract class BaseSearchDto {
      * value为查询条件对应的值，如：123<br>
      * 则封装后的SQL语句为：where name like '%123%'
      *
-     * @param map 保持查询条件和值的集合
+     * @param map 保持查询条件和值的集合, 为 {@link LinkedHashMap} 类型, 根据添加的条件顺序转换为 SQL 语句
      */
     protected abstract void buildSearchParams(Map<String, Object> map);
 
