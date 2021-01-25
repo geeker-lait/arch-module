@@ -79,7 +79,7 @@ public class SearchFilter {
                     throw new IllegalArgumentException(key + " is not a valid search filter name");
                 }
                 // 获取搜索的字段名
-                String filedName = key.substring(names[0].length() + 1).replaceAll("_", ".");
+                String filedName = key.substring(names[0].length() + 1);
                 boolean isCanSearch;
                 if (value instanceof String) {
                     isCanSearch = StringUtils.hasText(value.toString());
