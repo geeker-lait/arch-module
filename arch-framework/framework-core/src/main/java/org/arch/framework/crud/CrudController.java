@@ -24,6 +24,10 @@ import static org.arch.framework.exception.constant.ResponseStatusCode.FAILED;
  * @tel 15801818092
  * @date 11/21/2019
  * @description ${Description}
+ * @param <T>   实体类
+ * @param <ID>  实体类的 id 类型
+ * @param <S>   实体类对应的 {@link BaseSearchDto}
+ * @param <CS>  实体类对应的 {@link CrudService}
  */
 public interface CrudController<T extends Model<T>, ID extends Serializable,
         S extends BaseSearchDto, CS extends CrudService<T, ID>> {
