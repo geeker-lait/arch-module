@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import org.arch.framework.crud.dto.BaseSearchDto;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +52,7 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
      */
     default S convertSearchDto(T entity) {
         S searchDto = getSearchDto();
-        getCrudService().mapper(entity, searchDto);
+        BeanUtils.copyProperties(entity, searchDto);
         return searchDto;
     }
 
