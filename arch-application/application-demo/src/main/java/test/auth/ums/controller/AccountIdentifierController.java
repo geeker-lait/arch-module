@@ -14,16 +14,21 @@ import test.auth.ums.service.AccountIdentifierService;
  * 用户-标识(AccountIdentifier) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-01-24 23:17:42
+ * @date 2021-01-26 22:59:13
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/accountIdentifier")
+@RequestMapping("/account/identifier")
 public class AccountIdentifierController implements CrudController<AccountIdentifier, java.lang.Long, AccountIdentifierSearchDto, AccountIdentifierService> {
 
     private final AccountIdentifierService accountIdentifierService;
+
+    @Override
+    public AccountIdentifier resolver(TokenInfo token, AccountIdentifier accountIdentifier) {
+        return accountIdentifier;
+    }
 
     @Override
     public AccountIdentifierService getCrudService() {
@@ -33,12 +38,6 @@ public class AccountIdentifierController implements CrudController<AccountIdenti
     @Override
     public AccountIdentifierSearchDto getSearchDto() {
         return new AccountIdentifierSearchDto();
-    }
-
-    @Override
-    public AccountIdentifier resolver(TokenInfo token, AccountIdentifier accountIdentifier) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 实体类 后返回 实体类对象, 如: tenantId 的处理等.
-        return accountIdentifier;
     }
 
 }

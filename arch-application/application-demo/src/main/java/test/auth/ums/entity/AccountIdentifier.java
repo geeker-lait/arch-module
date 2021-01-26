@@ -1,8 +1,8 @@
 package test.auth.ums.entity;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
@@ -14,21 +14,16 @@ import java.io.Serializable;
  * 用户-标识(AccountIdentifier) 实体类
  *
  * @author YongWu zheng
- * @date 2021-01-24 23:17:38
+ * @date 2021-01-26 22:59:08
  * @since 1.0.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
 @TableName("account_identifier")
 public class AccountIdentifier extends CrudEntity<AccountIdentifier> {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * AccountIdentifier ID
-     */
-    @TableId("id")
-    private Long id;
 
     /**
      * 账号名ID
@@ -59,7 +54,6 @@ public class AccountIdentifier extends CrudEntity<AccountIdentifier> {
      * 登录类型【IDENTITYTYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
      */
     private ChannelType channelType;
-
 
     /**
      * 获取主键值
