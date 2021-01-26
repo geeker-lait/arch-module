@@ -13,7 +13,9 @@ import java.util.Map;
  */
 @Data
 public abstract class BaseSearchDto {
-    // 默认
+    /**
+     * 是否逻辑删除: 0 未删除, 1 已删除; 默认: 0
+     */
     protected Boolean deleted = false;
 
     /**
