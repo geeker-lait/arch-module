@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.util.Optional.ofNullable;
+import static java.util.Objects.isNull;
 
 /**
  * arch jwt claim set converter supplier.<br>
@@ -42,7 +42,13 @@ public class ArchJwtClaimTypeConverterSupplier implements JwtClaimTypeConverterS
 
     @SuppressWarnings({"SameParameterValue", "ConstantConditions"})
     private static Converter<Object, Collection<String>> getCollectionConverter(String delimiter) {
-        return (source) -> Arrays.asList(ofNullable((String) source).orElse("").split(delimiter));
+        return (source) -> {
+            if (isNull(source)) {
+                return null;
+            }
+            return Arrays.asList(((String) source).split(delimiter));
+        };
+
     }
 
     @Override
