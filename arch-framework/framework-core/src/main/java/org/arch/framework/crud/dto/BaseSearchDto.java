@@ -13,13 +13,10 @@ import java.util.Map;
  */
 @Data
 public abstract class BaseSearchDto {
-    // 默认
-    protected Boolean deleted = false;
-
     /**
-     * 是否支持逻辑删除, 默认: 支持
+     * 是否逻辑删除: 0 未删除, 1 已删除; 默认: 0
      */
-    protected Boolean enableLogicDeleted = Boolean.TRUE;
+    protected Boolean deleted = false;
 
     /**
      * 获取查询条件与值
@@ -27,9 +24,7 @@ public abstract class BaseSearchDto {
     public Map<String, Object> getSearchParams() {
         Map<String, Object> map = new LinkedHashMap<>();
         buildSearchParams(map);
-        if (enableLogicDeleted) {
-            map.put("EQ_deleted", deleted);
-        }
+        map.put("EQ_deleted", deleted);
         return map;
     }
 

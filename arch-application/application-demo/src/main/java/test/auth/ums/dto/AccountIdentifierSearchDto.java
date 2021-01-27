@@ -1,21 +1,24 @@
 package test.auth.ums.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.dto.BaseSearchDto;
 import org.arch.framework.ums.enums.ChannelType;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
  * 用户-标识(AccountIdentifier) search dto
  *
  * @author YongWu zheng
- * @date 2021-01-25 14:38:57
+ * @date 2021-01-26 22:59:17
  * @since 1.0.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
 public class AccountIdentifierSearchDto extends BaseSearchDto {
@@ -55,16 +58,37 @@ public class AccountIdentifierSearchDto extends BaseSearchDto {
      */
     private ChannelType channelType;
 
+    /**
+     * 应用 id
+     */
+    private Integer appId;
+
+    /**
+     * 店铺 id
+     */
+    private Integer storeId;
+
+    /**
+     * 乐观锁, 默认: 0
+     */
+    private Integer rev;
+
+    /**
+     * 时间戳/创建时间
+     */
+    private Date st;
+
     @Override
     protected void buildSearchParams(Map<String, Object> map) {
-        // TODO 如果表不支持逻辑, 则添加此语句:
-        this.enableLogicDeleted = Boolean.FALSE;
-        // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引, 使索引生效.
-        putNoNull("EQ_aid", this.getAid(), map);
         putNoNull("EQ_identifier", this.getIdentifier(), map);
-        putNoNull("EQ_credential", this.getCredential(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
-        putNoNull("EQ_authorities", this.getAuthorities(), map);
+        putNoNull("EQ_aid", this.getAid(), map);
+        putNoNull("EQ_app_id", this.getAppId(), map);
+        putNoNull("EQ_store_id", this.getStoreId(), map);
+        putNoNull("EQ_rev", this.getRev(), map);
         putNoNull("EQ_channel_type", this.getChannelType(), map);
+        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_credential", this.getCredential(), map);
+        putNoNull("EQ_authorities", this.getAuthorities(), map);
     }
 }

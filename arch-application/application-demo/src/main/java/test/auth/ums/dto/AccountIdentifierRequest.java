@@ -5,11 +5,13 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.ums.enums.ChannelType;
 
+import java.util.Date;
+
 /**
  * 用户-标识(AccountIdentifier) request
  *
  * @author YongWu zheng
- * @date 2021-01-24 23:17:45
+ * @date 2021-01-26 22:59:16
  * @since 1.0.0
  */
 @Data
@@ -51,5 +53,30 @@ public class AccountIdentifierRequest {
      * 登录类型【IDENTITYTYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
      */
     private ChannelType channelType;
+
+    /**
+     * 应用 id
+     */
+    private Integer appId;
+
+    /**
+     * 店铺 id
+     */
+    private Integer storeId;
+
+    /**
+     * 乐观锁, 默认: 0
+     */
+    private Integer rev;
+
+    /**
+     * 时间戳/创建时间
+     */
+    private Date st;
+
+    /**
+     * 是否逻辑删除: 0 未删除, 1 已删除; 默认: 0
+     */
+    private Boolean deleted;
 
 }

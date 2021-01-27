@@ -11,7 +11,7 @@ import test.auth.ums.mapper.AccountIdentifierMapper;
  * 用户-标识(AccountIdentifier) 表数据库访问层
  *
  * @author YongWu zheng
- * @date 2021-01-24 23:17:40
+ * @date 2021-01-26 22:59:11
  * @since 1.0.0
  */
 @Slf4j
