@@ -1,9 +1,9 @@
 package org.arch.auth.jwt.service;
 
+import org.arch.framework.beans.utils.StringUtils;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
-import org.arch.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;

@@ -2,6 +2,7 @@ package org.arch.framework.crud;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import org.arch.framework.beans.Response;
 import org.arch.framework.crud.dto.BaseSearchDto;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;
@@ -16,7 +17,7 @@ import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 
-import static org.arch.framework.exception.constant.ResponseStatusCode.FAILED;
+import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
 
 /**

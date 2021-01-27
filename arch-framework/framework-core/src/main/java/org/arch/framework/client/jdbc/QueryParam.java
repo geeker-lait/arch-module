@@ -1,6 +1,6 @@
 package org.arch.framework.client.jdbc;
 
-import org.arch.framework.utils.ObjectUtils;
+import org.arch.framework.beans.utils.ObjectUtils;
 
 import java.util.Collection;
 import java.util.List;

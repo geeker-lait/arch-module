@@ -1,6 +1,6 @@
 package org.arch.payment.sdk;
 
-import org.arch.framework.exception.StatusCode;
+import org.arch.framework.beans.enums.StatusCode;
 
 /**
  * @author lait.zhang@gmail.com
@@ -17,7 +17,7 @@ public enum PayStatusCode implements StatusCode {
     }
 
     @Override
-    public String getMessage() {
+    public String getDescr() {
         return null;
     }
 }

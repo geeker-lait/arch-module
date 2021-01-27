@@ -1,7 +1,7 @@
 package org.arch.auth.oauth2.controller;
 
 import org.arch.auth.oauth2.domain.Oauth2TokenDto;
-import org.arch.framework.crud.Response;
+import org.arch.framework.beans.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;

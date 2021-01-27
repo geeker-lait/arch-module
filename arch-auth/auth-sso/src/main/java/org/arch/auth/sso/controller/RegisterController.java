@@ -2,7 +2,7 @@ package org.arch.auth.sso.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.ums.request.bind.RegisterRequest;
-import org.arch.framework.crud.Response;
+import org.arch.framework.beans.Response;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;

@@ -13,7 +13,9 @@
 
     <modules>
         <module>framework-automate</module>
+        <module>framework-beans</module>
         <module>framework-core</module>
+        <module>framework-utils</module>
         <module>framework-watchdog</module>
     </modules>
 

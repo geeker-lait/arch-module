@@ -2,17 +2,16 @@ package org.arch.framework.utils;
 
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.ChannelType;
-import org.arch.framework.exception.AuthenticationException;
+import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
 import org.arch.framework.ums.userdetails.ArchUser;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 /**
  * 获取当前登录的用户
@@ -31,12 +30,12 @@ public class SecurityUtils {
     public static TokenInfo getCurrentUser() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new AuthenticationException(UNAUTHORIZED.value(), "当前登录状态过期");
+            throw new AuthenticationException(HttpStatus.UNAUTHORIZED.value(), "当前登录状态过期");
         }
         if (authentication instanceof JwtAuthenticationToken) {
             return toTokenInfoFromUserDetails((JwtAuthenticationToken) authentication);
         }
-        throw new AuthenticationException(UNAUTHORIZED.value(), "找不到当前登录的信息");
+        throw new AuthenticationException(HttpStatus.UNAUTHORIZED.value(), "找不到当前登录的信息");
     }
 
     /**

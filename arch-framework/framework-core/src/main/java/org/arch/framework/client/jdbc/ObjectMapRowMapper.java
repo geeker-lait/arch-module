@@ -1,6 +1,6 @@
 package org.arch.framework.client.jdbc;
 
-import org.arch.framework.core.ObjectMap;
+import org.arch.framework.beans.ObjectMap;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.JdbcUtils;
 

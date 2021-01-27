@@ -7,7 +7,7 @@ import org.arch.framework.automate.from.entity.bak.Field;
 import org.arch.framework.automate.from.entity.bak.FieldType;
 import org.arch.framework.automate.from.entity.bak.Option;
 import org.arch.framework.automate.from.service.bak.FieldService;
-import org.arch.framework.crud.Response;
+import org.arch.framework.beans.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

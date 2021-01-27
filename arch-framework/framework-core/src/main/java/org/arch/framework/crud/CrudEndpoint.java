@@ -3,7 +3,7 @@ package org.arch.framework.crud;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.StringEscapeUtils;
-import org.arch.framework.exception.ExceptionFactory;
+import org.arch.framework.beans.exception.ExceptionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
