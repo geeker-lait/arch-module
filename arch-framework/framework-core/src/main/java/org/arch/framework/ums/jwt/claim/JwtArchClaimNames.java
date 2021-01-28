@@ -35,9 +35,9 @@ public enum JwtArchClaimNames {
      */
     TENANT_ID("tenantId", "租户 ID"),
     /**
-     * client id
+     * 应用 id
      */
-    APP_ID("appId", "client id"),
+    APP_ID("appId", "应用 id"),
     /**
      * user details
      */

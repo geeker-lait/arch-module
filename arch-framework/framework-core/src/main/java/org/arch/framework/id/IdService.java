@@ -40,7 +40,7 @@ public interface IdService {
      * // prefix  idBizCode  年  日  时 分  秒 redis原子自增
      * // prefix    01       20 234 10 35 11 00000001
      * </pre>
-     * @param prefix    appId
+     * @param prefix    bizPrefix
      * @param idKey     {@link IdKey}
      * @return  返回 id.
      */
