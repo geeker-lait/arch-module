@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static org.arch.framework.ums.consts.AppConstants.APP_CODE_HEADER_NAME;
-import static org.arch.framework.ums.consts.AppConstants.APP_ID_HEADER_NAME;
+import static org.arch.framework.ums.consts.ClientConstants.CLIENT_CODE_HEADER_NAME;
+import static org.arch.framework.ums.consts.ClientConstants.CLIENT_ID_HEADER_NAME;
 
 /**
  * 用于从 jwk set uri 获取 JWk 时传递 header 的参数,
@@ -30,8 +30,8 @@ public class ArchJwkSetUriConfig implements JwkSetUriConfig {
     @Override
     public Map<String, Object> headers() {
         Map<String, Object> headers = new HashMap<>(2);
-        headers.put(APP_ID_HEADER_NAME, appProperties.getAppId());
-        headers.put(APP_CODE_HEADER_NAME, appProperties.getAppCode());
+        headers.put(CLIENT_ID_HEADER_NAME, appProperties.getClientId());
+        headers.put(CLIENT_CODE_HEADER_NAME, appProperties.getClientSecret());
         return headers;
     }
 

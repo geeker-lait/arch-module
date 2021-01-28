@@ -11,8 +11,8 @@ import top.dcenter.ums.security.jwt.api.endpoind.service.JwkEndpointPermissionSe
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
-import static org.arch.framework.ums.consts.AppConstants.APP_CODE_HEADER_NAME;
-import static org.arch.framework.ums.consts.AppConstants.APP_ID_HEADER_NAME;
+import static org.arch.framework.ums.consts.ClientConstants.CLIENT_CODE_HEADER_NAME;
+import static org.arch.framework.ums.consts.ClientConstants.CLIENT_ID_HEADER_NAME;
 
 /**
  * jws set uri 访问权限访问服务接口
@@ -35,7 +35,7 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
     }
 
     /**
-     * 检查是否有访问 jws set uri 的访问权限, 即 AccountOauthClient 的 appId 所对应的
+     * 检查是否有访问 jws set uri 的访问权限, 即 AccountOauthClient 的 clientId 所对应的
      * scopes 字段(JWK,USER,UMS,..)中是否有 {@link ScopesType#JWK}.
      * @param request     {@link HttpServletRequest}
      * @return  返回 true 表示有访问权限.
@@ -48,8 +48,8 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
 
     @NonNull
     private Set<String> getScopes(@NonNull HttpServletRequest request) {
-        String appId = request.getHeader(APP_ID_HEADER_NAME);
-        String appCode = request.getHeader(APP_CODE_HEADER_NAME);
+        String appId = request.getHeader(CLIENT_ID_HEADER_NAME);
+        String appCode = request.getHeader(CLIENT_CODE_HEADER_NAME);
         // TODO 对 scopes 进行本地缓存.
         return umsAccountOauthClient.getScopesByAppIdAndAppCode(appId, appCode);
     }

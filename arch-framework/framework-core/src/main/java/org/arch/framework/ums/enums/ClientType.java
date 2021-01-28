@@ -1,12 +1,12 @@
 package org.arch.framework.ums.enums;
 
 /**
- * app 类型
+ * client 类型
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.14 17:40
  */
-public enum AppType {
+public enum ClientType {
     /**
      * 安卓
      */
