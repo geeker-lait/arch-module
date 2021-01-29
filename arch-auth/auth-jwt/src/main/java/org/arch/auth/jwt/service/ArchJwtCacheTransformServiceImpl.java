@@ -77,6 +77,7 @@ public class ArchJwtCacheTransformServiceImpl implements JwtCacheTransformServic
             List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(StringUtils.split(authorityString));
             return TokenInfo.builder()
                             .accountId(Long.valueOf(jwt.getClaimAsString(JwtArchClaimNames.ACCOUNT_ID.getClaimName())))
+                            .tenantId(Integer.valueOf(jwt.getClaimAsString(JwtArchClaimNames.TENANT_ID.getClaimName())))
                             .accountName(jwt.getClaimAsString(principalClaimName))
                             .channelType(ChannelType.valueOf(jwt.getClaimAsString(JwtArchClaimNames.CHANNEL_TYPE
                                                                                           .getClaimName())))

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.ServletWebRequest;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
 import top.dcenter.ums.security.core.api.service.UmsUserDetailsService;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.auth.properties.ClientProperties;
 import top.dcenter.ums.security.core.exception.RegisterUserFailureException;
 import top.dcenter.ums.security.core.exception.UserNotExistException;
@@ -36,7 +37,7 @@ import java.util.List;
 @Service
 public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
-//    private final Biz
+    private final TenantContextHolder tenantContextHolder;
     /**
      * 用于密码加解密
      */
@@ -64,9 +65,11 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
             // 示例：只是从用户登录日志表中提取的信息，
             log.info("Demo ======>: 登录用户名：{}, 登录成功", userId);
             String admin = passwordEncoder.encode("admin");
+            String tenantId = tenantContextHolder.getTenantId();
             return new ArchUser(userId,
                                 admin,
                                 1L,
+                                Integer.valueOf(tenantId),
                                 ChannelType.ACCOUNT,
                                 "admin",
                                 ssoProperties.getDefaultAvatar(),
@@ -74,7 +77,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                                 true,
                                 true,
                                 true,
-                                AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_00"));
+                                AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_" + tenantId));
 
         }
         catch (Exception e)
@@ -90,9 +93,11 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         // todo
         // 示例：
         log.info("Demo ======>: 注册用户名：{}, 注册成功", mobile);
+        String tenantId = tenantContextHolder.getTenantId();
         return new ArchUser(mobile,
                             passwordEncoder.encode("admin"),
                             Long.valueOf(idService.generateId(IdKey.UMS_ACCOUNT_ID)),
+                            Integer.valueOf(tenantId),
                             ChannelType.PHONE,
                             "admin",
                             ssoProperties.getDefaultAvatar(),
@@ -100,7 +105,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                             true,
                             true,
                             true,
-                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_00"));
+                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_" + tenantId));
     }
 
     @Override
@@ -109,9 +114,11 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         String username = request.getParameter(clientProperties.getUsernameParameter());
         // 示例：
         log.info("Demo ======>: 注册用户名：{}, 注册成功", username);
+        String tenantId = tenantContextHolder.getTenantId();
         return new ArchUser(username,
                             passwordEncoder.encode("admin"),
                             Long.valueOf(idService.generateId(IdKey.UMS_ACCOUNT_ID)),
+                            Integer.valueOf(tenantId),
                             ChannelType.ACCOUNT,
                             "admin",
                             ssoProperties.getDefaultAvatar(),
@@ -119,7 +126,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                             true,
                             true,
                             true,
-                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_00"));
+                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_" + tenantId));
     }
 
     @Override
@@ -131,9 +138,11 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
         // 示例：
         log.info("Demo ======>: 注册用户名：{}, 第三方登录注册成功", username);
+        String tenantId = tenantContextHolder.getTenantId();
         return new ArchUser(username,
                             passwordEncoder.encode(authUser.getToken().getAccessToken()),
                             Long.valueOf(idService.generateId(IdKey.UMS_ACCOUNT_ID)),
+                            Integer.valueOf(tenantId),
                             ChannelType.OAUTH2,
                             "admin",
                             ssoProperties.getDefaultAvatar(),
@@ -141,7 +150,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                             true,
                             true,
                             true,
-                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_00"));
+                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_" + tenantId));
     }
 
     @Override
