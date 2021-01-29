@@ -15,18 +15,18 @@ import java.util.Set;
  * @since 2021.1.12 13:44
  */
 @Component
-@FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-oauthClient", path = "/ums/account/oauthClient",
+@FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-oauthClient", path = "/ums/account/auth/client",
         configuration = UmsAccountDeFaultFeignConfig.class)
 public interface UmsAccountOauthClient {
 
     /**
-     * 根据 appId 与 appCode 查询 scopes
-     * @param appId    app id
-     * @param appCode  app secret
+     * 根据 clientId 与 clientSecret 查询 scopes
+     * @param clientId      client id
+     * @param clientSecret  client secret
      * @return  返回 scopes 集合, 如果不存在, 返回空集合.
      */
     @PostMapping("/scopes")
-    Set<String> getScopesByAppIdAndAppCode(@RequestParam("appId") String appId,
-                                           @RequestParam("appCode") String appCode);
+    Set<String> getScopesByClientIdAndClientSecret(@RequestParam("clientId") String clientId,
+                                                   @RequestParam("clientSecret") String clientSecret);
 
 }

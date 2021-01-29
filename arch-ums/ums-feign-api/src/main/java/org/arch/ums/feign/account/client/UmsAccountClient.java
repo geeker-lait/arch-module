@@ -1,7 +1,7 @@
 package org.arch.ums.feign.account.client;
 
-import org.arch.ums.account.dto.AuthAccountDto;
-import org.arch.ums.account.entity.AccountIdentifier;
+import org.arch.ums.account.dto.AuthLoginDto;
+import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.feign.account.config.UmsAccountDeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface UmsAccountClient {
 
     /**
-     * 通过 {@link AccountIdentifier#getIdentifier()} 来获取 {@link AccountIdentifier}
+     * 通过 {@link Identifier#getIdentifier()} 来获取 {@link Identifier}
      * @param identifier    用户唯一标识
-     * @return  返回 {@link AuthAccountDto}
+     * @return  返回 {@link AuthLoginDto}
      */
     @GetMapping("/loadAccount/{identifier}")
-    AuthAccountDto loadAccountByIdentifier(@PathVariable("identifier") String identifier);
+    AuthLoginDto loadAccountByIdentifier(@PathVariable("identifier") String identifier);
 
 }
