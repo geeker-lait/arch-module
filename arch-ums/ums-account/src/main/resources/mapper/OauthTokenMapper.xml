@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.account.mapper.OauthTokenMapper">
+
+    <resultMap type="org.arch.ums.account.entity.OauthToken" id="OauthTokenMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="accountIdentifierId" column="account_identifier_id" jdbcType="INTEGER"/>
+        <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
+        <result property="enableRefresh" column="enable_refresh" jdbcType="BOOLEAN"/>
+        <result property="providerId" column="provider_id" jdbcType="VARCHAR"/>
+        <result property="accessToken" column="access_token" jdbcType="VARCHAR"/>
+        <result property="expireIn" column="expire_in" jdbcType="INTEGER"/>
+        <result property="refreshTokenExpireIn" column="refresh_token_expire_in" jdbcType="INTEGER"/>
+        <result property="refreshToken" column="refresh_token" jdbcType="VARCHAR"/>
+        <result property="uid" column="uid" jdbcType="VARCHAR"/>
+        <result property="openId" column="open_id" jdbcType="VARCHAR"/>
+        <result property="accessCode" column="access_code" jdbcType="VARCHAR"/>
+        <result property="unionId" column="union_id" jdbcType="VARCHAR"/>
+        <result property="scope" column="scope" jdbcType="VARCHAR"/>
+        <result property="tokenType" column="token_type" jdbcType="VARCHAR"/>
+        <result property="idToken" column="id_token" jdbcType="VARCHAR"/>
+        <result property="macAlgorithm" column="mac_algorithm" jdbcType="VARCHAR"/>
+        <result property="macKey" column="mac_key" jdbcType="VARCHAR"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="oauthToken" column="oauth_token" jdbcType="VARCHAR"/>
+        <result property="oauthTokenSecret" column="oauth_token_secret" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="screenName" column="screen_name" jdbcType="VARCHAR"/>
+        <result property="oauthCallbackConfirmed" column="oauth_callback_confirmed" jdbcType="VARCHAR"/>
+        <result property="expireTime" column="expire_time" jdbcType="INTEGER"/>
+        <result property="st" column="st" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="tableName">
+        `id`
+    </sql>
+
+    <sql id="baseColumn">
+        `id`, `account_identifier_id`, `tenant_id`, `enable_refresh`, `provider_id`, `access_token`, `expire_in`, `refresh_token_expire_in`, `refresh_token`, `uid`, `open_id`, `access_code`, `union_id`, `scope`, `token_type`, `id_token`, `mac_algorithm`, `mac_key`, `code`, `oauth_token`, `oauth_token_secret`, `user_id`, `screen_name`, `oauth_callback_confirmed`, `expire_time`, `st`
+    </sql>
+
+</mapper>

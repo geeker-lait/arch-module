@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.account.mapper.TagMapper">
+
+    <resultMap type="org.arch.ums.account.entity.Tag" id="TagMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="accountId" column="account_id" jdbcType="INTEGER"/>
+        <result property="tagCategory" column="tag_category" jdbcType="VARCHAR"/>
+        <result property="tagName" column="tag_name" jdbcType="VARCHAR"/>
+        <result property="tagColor" column="tag_color" jdbcType="VARCHAR"/>
+        <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
+        <result property="appId" column="app_id" jdbcType="INTEGER"/>
+        <result property="storeId" column="store_id" jdbcType="INTEGER"/>
+        <result property="rev" column="rev" jdbcType="INTEGER"/>
+        <result property="st" column="st" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <sql id="tableName">
+        `id`
+    </sql>
+
+    <sql id="baseColumn">
+        `id`, `account_id`, `tag_category`, `tag_name`, `tag_color`, `tenant_id`, `app_id`, `store_id`, `rev`, `st`, `deleted`
+    </sql>
+
+</mapper>

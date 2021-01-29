@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.user.mapper.JobMapper">
+
+    <resultMap type="org.arch.ums.user.entity.Job" id="JobMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="groupChannel" column="group_channel" jdbcType="VARCHAR"/>
+        <result property="groupName" column="group_name" jdbcType="VARCHAR"/>
+        <result property="postName" column="post_name" jdbcType="VARCHAR"/>
+        <result property="postLevel" column="post_level" jdbcType="VARCHAR"/>
+        <result property="sorted" column="sorted" jdbcType="INTEGER"/>
+        <result property="hiredateTime" column="hiredate_time" jdbcType="DATE"/>
+        <result property="dimissionTime" column="dimission_time" jdbcType="DATE"/>
+        <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
+        <result property="appId" column="app_id" jdbcType="INTEGER"/>
+        <result property="storeId" column="store_id" jdbcType="INTEGER"/>
+        <result property="rev" column="rev" jdbcType="INTEGER"/>
+        <result property="st" column="st" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <sql id="tableName">
+        `id`
+    </sql>
+
+    <sql id="baseColumn">
+        `id`, `user_id`, `group_channel`, `group_name`, `post_name`, `post_level`, `sorted`, `hiredate_time`, `dimission_time`, `tenant_id`, `app_id`, `store_id`, `rev`, `st`, `deleted`
+    </sql>
+
+</mapper>
