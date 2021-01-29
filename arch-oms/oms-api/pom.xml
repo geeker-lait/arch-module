@@ -12,6 +12,10 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>framework-beans</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

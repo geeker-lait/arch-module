@@ -1,11 +1,10 @@
 package org.arch.framework.client.rest;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.utils.DateUtils;
+import org.arch.framework.beans.utils.DateUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;

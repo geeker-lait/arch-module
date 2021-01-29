@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import org.arch.framework.automate.from.entity.bak.Form;
 import org.arch.framework.automate.from.entity.bak.FormAndRows;
 import org.arch.framework.automate.from.service.bak.FormService;
-import org.arch.framework.crud.Response;
+import org.arch.framework.beans.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

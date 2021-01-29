@@ -96,7 +96,8 @@ public enum IdKey {
     /**
      * JWT refresh Token
      */
-    JWT_REFRESH_TOKEN("id.jwt.refresh.token.", 60, TimeUnit.MILLISECONDS, "31", "%1$08d");
+    JWT_REFRESH_TOKEN("id.jwt.refresh.token.", 60, TimeUnit.MILLISECONDS, "31", "%1$08d"),
+    ;
 
     private String key;
     private String bizPrefix;

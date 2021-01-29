@@ -1,6 +1,6 @@
 package org.arch.auth.oauth2.exception;
 
-import org.arch.framework.crud.Response;
+import org.arch.framework.beans.Response;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

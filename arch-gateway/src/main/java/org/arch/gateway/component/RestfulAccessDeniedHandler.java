@@ -1,7 +1,7 @@
 package org.arch.gateway.component;
 
 import cn.hutool.json.JSONUtil;
-import org.arch.framework.crud.Response;
+import org.arch.framework.beans.Response;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

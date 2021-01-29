@@ -1,7 +1,7 @@
 package org.arch.framework.client.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.core.ObjectMap;
+import org.arch.framework.beans.ObjectMap;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;

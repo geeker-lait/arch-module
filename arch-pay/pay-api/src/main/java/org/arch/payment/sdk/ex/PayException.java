@@ -1,6 +1,6 @@
 package org.arch.payment.sdk.ex;
 
-import org.arch.framework.exception.BaseException;
+import org.arch.framework.beans.exception.BaseException;
 import org.arch.payment.sdk.PayStatusCode;
 
 public class PayException extends BaseException {
