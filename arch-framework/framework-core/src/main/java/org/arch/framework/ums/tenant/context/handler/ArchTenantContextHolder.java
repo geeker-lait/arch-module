@@ -26,7 +26,7 @@ public class ArchTenantContextHolder implements TenantContextHolder {
 
     private final ThreadLocal<String> context = new ThreadLocal<>();
     private final String tenantIdHeaderName;
-    private final String systemTenantId;
+    private final Integer systemTenantId;
 
     public ArchTenantContextHolder(AppProperties appProperties) {
         this.tenantIdHeaderName = appProperties.getTenantHeaderName();
@@ -47,7 +47,7 @@ public class ArchTenantContextHolder implements TenantContextHolder {
 
         if (!hasText(tenantId)) {
             // 请求中没有则设置默认的系统租户 id
-            tenantId = systemTenantId;
+            tenantId = systemTenantId.toString();
         }
 
         context.set(tenantId);

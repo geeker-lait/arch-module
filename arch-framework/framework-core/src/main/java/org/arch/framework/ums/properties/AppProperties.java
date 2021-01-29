@@ -26,9 +26,9 @@ public class AppProperties {
     private String clientSecret;
 
     /**
-     * 系统租户 id, 默认: 00
+     * 系统租户 id, 默认: 0
      */
-    private final String systemTenantId = "00";
+    private final Integer systemTenantId = 0;
 
     /**
      * 行级多租户字段名称, 默认: tenant_id
