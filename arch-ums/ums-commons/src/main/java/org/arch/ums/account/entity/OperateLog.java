@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
+import org.arch.framework.ums.enums.OperatorType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
  * 账号操作记录(OperateLog) 实体类
  *
  * @author YongWu zheng
- * @date 2021-01-29 20:58:08
+ * @date 2021-01-29 23:07:49
  * @since 1.0.0
  */
 @Data
@@ -38,9 +39,9 @@ public class OperateLog extends CrudEntity<OperateLog> {
     private Long accountId;
 
     /**
-     * 操作类型()
+     * 操作类型(crud)
      */
-    private Integer operatorTyp;
+    private OperatorType operatorType;
 
     /**
      * 操作时间

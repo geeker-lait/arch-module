@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  * 用户身份证表(IdCard) 表数据库访问层
  *
  * @author YongWu zheng
- * @date 2021-01-29 22:05:56
+ * @date 2021-01-29 23:06:37
  * @since 1.0.0
  */
 @Slf4j

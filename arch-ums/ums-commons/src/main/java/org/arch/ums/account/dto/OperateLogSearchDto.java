@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.dto.BaseSearchDto;
+import org.arch.framework.ums.enums.OperatorType;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
  * 账号操作记录(OperateLog) search dto
  *
  * @author YongWu zheng
- * @date 2021-01-29 20:59:08
+ * @date 2021-01-29 23:08:01
  * @since 1.0.0
  */
 @Data
@@ -33,9 +34,9 @@ public class OperateLogSearchDto extends BaseSearchDto {
     private Long accountId;
 
     /**
-     * 操作类型()
+     * 操作类型(crud)
      */
-    private Integer operatorTyp;
+    private OperatorType operatorType;
 
     /**
      * 操作时间
@@ -81,7 +82,7 @@ public class OperateLogSearchDto extends BaseSearchDto {
     protected void buildSearchParams(Map<String, Object> map) {
         // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
         putNoNull("EQ_account_id", this.getAccountId(), map);
-        putNoNull("EQ_operator_typ", this.getOperatorTyp(), map);
+        putNoNull("EQ_operator_type", this.getOperatorType(), map);
         putNoNull("EQ_operator_time", this.getOperatorTime(), map);
         putNoNull("EQ_record_val", this.getRecordVal(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);

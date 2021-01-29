@@ -3,6 +3,7 @@ package org.arch.ums.account.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.arch.framework.ums.enums.OperatorType;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
  * 账号操作记录(OperateLog) request
  *
  * @author YongWu zheng
- * @date 2021-01-29 20:59:08
+ * @date 2021-01-29 23:08:01
  * @since 1.0.0
  */
 @Data
@@ -29,9 +30,9 @@ public class OperateLogRequest {
     private Long accountId;
 
     /**
-     * 操作类型()
+     * 操作类型(crud)
      */
-    private Integer operatorTyp;
+    private OperatorType operatorType;
 
     /**
      * 操作时间

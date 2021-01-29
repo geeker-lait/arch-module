@@ -3,6 +3,7 @@ package org.arch.ums.user.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.arch.framework.ums.enums.RelativesType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
  * 用户亲朋信息(Relatives) request
  *
  * @author YongWu zheng
- * @date 2021-01-29 22:10:11
+ * @date 2021-01-29 23:02:26
  * @since 1.0.0
  */
 @Data
@@ -32,7 +33,7 @@ public class RelativesRequest {
     /**
      * 亲朋类型: 1. 家属, 2. 朋友
      */
-    private Integer relativesTyp;
+    private RelativesType relativesType;
 
     /**
      * 亲朋名称: 哥哥, 妹妹, 父亲, 母亲, 弟弟, 朋友, 同学

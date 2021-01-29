@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * 用户身份证表(IdCard) 实体类
  *
  * @author YongWu zheng
- * @date 2021-01-29 22:05:53
+ * @date 2021-01-29 23:06:32
  * @since 1.0.0
  */
 @Data

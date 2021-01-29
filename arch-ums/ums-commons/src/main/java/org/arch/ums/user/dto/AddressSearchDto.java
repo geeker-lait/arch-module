@@ -14,7 +14,7 @@ import java.util.Map;
  * 用户地址表(Address) search dto
  *
  * @author YongWu zheng
- * @date 2021-01-29 21:45:30
+ * @date 2021-01-29 23:07:25
  * @since 1.0.0
  */
 @Data
@@ -54,6 +54,11 @@ public class AddressSearchDto extends BaseSearchDto {
     private String street;
 
     /**
+     * 详细地址
+     */
+    private String address;
+
+    /**
      * 地址类型:工作地址/家庭地址/收获地址/..
      */
     private AddressType addressType;
@@ -72,6 +77,11 @@ public class AddressSearchDto extends BaseSearchDto {
      * 手机号
      */
     private String phoneNum;
+
+    /**
+     * 是否默认: 0 否, 1 是
+     */
+    private Boolean default
 
     /**
      * 租户 id
@@ -111,10 +121,12 @@ public class AddressSearchDto extends BaseSearchDto {
         putNoNull("EQ_city", this.getCity(), map);
         putNoNull("EQ_district", this.getDistrict(), map);
         putNoNull("EQ_street", this.getStreet(), map);
+        putNoNull("EQ_address", this.getAddress(), map);
         putNoNull("EQ_address_type", this.getAddressType(), map);
         putNoNull("EQ_sorted", this.getSorted(), map);
         putNoNull("EQ_contacts", this.getContacts(), map);
         putNoNull("EQ_phone_num", this.getPhoneNum(), map);
+        putNoNull("EQ_default", this.getDefault(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_app_id", this.getAppId(), map);
         putNoNull("EQ_store_id", this.getStoreId(), map);

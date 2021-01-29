@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.dto.BaseSearchDto;
+import org.arch.framework.ums.enums.RelativesType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ import java.util.Map;
  * 用户亲朋信息(Relatives) search dto
  *
  * @author YongWu zheng
- * @date 2021-01-29 22:10:12
+ * @date 2021-01-29 23:02:26
  * @since 1.0.0
  */
 @Data
@@ -36,7 +37,7 @@ public class RelativesSearchDto extends BaseSearchDto {
     /**
      * 亲朋类型: 1. 家属, 2. 朋友
      */
-    private Integer relativesTyp;
+    private RelativesType relativesType;
 
     /**
      * 亲朋名称: 哥哥, 妹妹, 父亲, 母亲, 弟弟, 朋友, 同学
@@ -92,7 +93,7 @@ public class RelativesSearchDto extends BaseSearchDto {
     protected void buildSearchParams(Map<String, Object> map) {
         // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
         putNoNull("EQ_user_id", this.getUserId(), map);
-        putNoNull("EQ_relatives_typ", this.getRelativesTyp(), map);
+        putNoNull("EQ_relatives_type", this.getRelativesType(), map);
         putNoNull("EQ_relatives_name", this.getRelativesName(), map);
         putNoNull("EQ_relatives_sex", this.getRelativesSex(), map);
         putNoNull("EQ_sorted", this.getSorted(), map);

@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
+import org.arch.framework.ums.enums.RelativesType;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
  * 用户亲朋信息(Relatives) 实体类
  *
  * @author YongWu zheng
- * @date 2021-01-29 22:10:00
+ * @date 2021-01-29 23:02:16
  * @since 1.0.0
  */
 @Data
@@ -41,7 +42,7 @@ public class Relatives extends CrudEntity<Relatives> {
     /**
      * 亲朋类型: 1. 家属, 2. 朋友
      */
-    private Integer relativesTyp;
+    private RelativesType relativesType;
 
     /**
      * 亲朋名称: 哥哥, 妹妹, 父亲, 母亲, 弟弟, 朋友, 同学

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * 用户地址表(Address) 实体类
  *
  * @author YongWu zheng
- * @date 2021-01-29 21:45:17
+ * @date 2021-01-29 23:07:14
  * @since 1.0.0
  */
 @Data
@@ -59,6 +59,11 @@ public class Address extends CrudEntity<Address> {
     private String street;
 
     /**
+     * 详细地址
+     */
+    private String address;
+
+    /**
      * 地址类型:工作地址/家庭地址/收获地址/..
      */
     private AddressType addressType;
@@ -77,6 +82,11 @@ public class Address extends CrudEntity<Address> {
      * 手机号
      */
     private String phoneNum;
+
+    /**
+     * 是否默认: 0 否, 1 是
+     */
+    private Boolean default
 
     /**
      * 租户 id
