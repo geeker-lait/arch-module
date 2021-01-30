@@ -16,6 +16,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class RolePermissionService extends CrudService<RolePermission, java.lang.Longjava.lang.Longjava.lang.Long> {
+public class RolePermissionService extends CrudService<RolePermission, java.lang.Long> {
 
 }

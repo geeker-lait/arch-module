@@ -35,13 +35,11 @@ public class RolePermission extends CrudEntity<RolePermission> {
     /**
      * 角色ID
      */
-    @TableId("role_id")
     private Long roleId;
 
     /**
      * 权限ID
      */
-    @TableId("permission_id")
     private Long permissionId;
 
     /**
