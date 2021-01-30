@@ -81,7 +81,7 @@ public class AddressSearchDto extends BaseSearchDto {
     /**
      * 是否默认: 0 否, 1 是
      */
-    private Boolean default
+    private Boolean def;
 
     /**
      * 租户 id
@@ -126,7 +126,7 @@ public class AddressSearchDto extends BaseSearchDto {
         putNoNull("EQ_sorted", this.getSorted(), map);
         putNoNull("EQ_contacts", this.getContacts(), map);
         putNoNull("EQ_phone_num", this.getPhoneNum(), map);
-        putNoNull("EQ_default", this.getDefault(), map);
+        putNoNull("EQ_default", this.getDef(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_app_id", this.getAppId(), map);
         putNoNull("EQ_store_id", this.getStoreId(), map);

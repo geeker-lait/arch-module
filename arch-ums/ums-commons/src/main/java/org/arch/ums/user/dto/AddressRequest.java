@@ -77,7 +77,7 @@ public class AddressRequest {
     /**
      * 是否默认: 0 否, 1 是
      */
-    private Boolean default
+    private Boolean def;
 
     /**
      * 租户 id

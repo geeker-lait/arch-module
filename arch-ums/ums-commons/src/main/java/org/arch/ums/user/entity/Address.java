@@ -1,5 +1,6 @@
 package org.arch.ums.user.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -86,7 +87,8 @@ public class Address extends CrudEntity<Address> {
     /**
      * 是否默认: 0 否, 1 是
      */
-    private Boolean default
+    @TableField(value = "default")
+    private Boolean def;
 
     /**
      * 租户 id
