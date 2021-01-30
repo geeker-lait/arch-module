@@ -18,26 +18,15 @@ import java.util.Set;
 public class ArchTenantLineHandler implements TenantLineHandler {
 
     private final TenantContextHolder tenantContextHolder;
-    private final Set<String> tenantTables;
+    private final Set<String> ignoreTenantTables;
     private final String tenantIdColumn;
 
     public ArchTenantLineHandler(TenantContextHolder tenantContextHolder,
                                  AppProperties appProperties) {
         this.tenantContextHolder = tenantContextHolder;
         this.tenantIdColumn = appProperties.getTenantIdColumn();
-        this.tenantTables = new HashSet<>();
-        tenantTables.add("account_identifier");
-        tenantTables.add("account_role");
-        tenantTables.add("account_category");
-        tenantTables.add("account_resource");
-        tenantTables.add("account_menu");
-        tenantTables.add("account_permission");
-        tenantTables.add("account_group");
-        tenantTables.add("account_post");
-        tenantTables.add("account_role_menu");
-        tenantTables.add("account_role_resource");
-        tenantTables.add("account_role_permission");
-        tenantTables.add("account_role_group");
+        this.ignoreTenantTables = new HashSet<>();
+
     }
 
     @Override
@@ -52,6 +41,6 @@ public class ArchTenantLineHandler implements TenantLineHandler {
 
     @Override
     public boolean ignoreTable(String tableName) {
-        return !this.tenantTables.contains(tableName);
+        return this.ignoreTenantTables.contains(tableName);
     }
 }
