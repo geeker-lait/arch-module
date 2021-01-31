@@ -133,8 +133,8 @@ DROP TABLE IF EXISTS `account_name`;
 CREATE TABLE `account_name` (
   `id` BIGINT(19) NOT NULL AUTO_INCREMENT COMMENT '账号-名称ID',
   `account_id` bigint(19) NOT NULL COMMENT '账号ID/用户ID/会员ID/商户ID',
-  `nick_name` varchar(64) DEFAULT NULL COMMENT '用户昵称可随机生成',
-  `avatar` varchar(64) DEFAULT NULL COMMENT '头像',
+  `nick_name` varchar(64) NOT NULL COMMENT '用户昵称可随机生成',
+  `avatar` varchar(255) NOT NULL COMMENT '头像',
   `source` varchar(64) DEFAULT NULL COMMENT '来源, 推广统计用',
   `tenant_id` int NOT NULL COMMENT '租户 id',
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
