@@ -386,7 +386,7 @@ CREATE TABLE `account_role_permission` (
    `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
    `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
    `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
-   PRIMARY KEY (`id`,`role_id`,`permission_id`),
+   PRIMARY KEY (`id`),
    UNIQUE KEY `IDX_tenantId_roleId_permissionId` (`tenant_id`, `role_id`,`permission_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色权限表';
 
