@@ -1,11 +1,15 @@
 package org.arch.ums.feign.account.client;
 
+import org.arch.framework.beans.Response;
+import org.arch.ums.account.vo.AuthClientVo;
 import org.arch.ums.feign.account.config.UmsAccountDeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -17,7 +21,7 @@ import java.util.Set;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-oauthClient", path = "/ums/account/auth/client",
         configuration = UmsAccountDeFaultFeignConfig.class)
-public interface UmsAccountOauthClient {
+public interface UmsAccountAuthClient {
 
     /**
      * 根据 clientId 与 clientSecret 查询 scopes
@@ -26,7 +30,14 @@ public interface UmsAccountOauthClient {
      * @return  返回 scopes 集合, 如果不存在, 返回空集合.
      */
     @PostMapping("/scopes")
-    Set<String> getScopesByClientIdAndClientSecret(@RequestParam("clientId") String clientId,
-                                                   @RequestParam("clientSecret") String clientSecret);
+    Response<Set<String>> getScopesByClientIdAndClientSecret(@RequestParam("clientId") String clientId,
+                                                             @RequestParam("clientSecret") String clientSecret);
 
+    /**
+     * 获取所有租户的 scopes
+     *
+     * @return scopes
+     */
+    @GetMapping("/scopes/list")
+    Response<Map<Integer, Map<String, AuthClientVo>>> getAllScopes();
 }
