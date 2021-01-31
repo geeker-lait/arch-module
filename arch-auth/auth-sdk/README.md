@@ -1,6 +1,7 @@
 ### auth-sdk 基本功能:
 > 1. JWT 功能
 > 2. RBAC 功能
+> 3. springMVC TokenInfo 参数解析功能, 通过 spring-boot-starter 自动配置.
 
 ### 资源服务器引用方式:
 
