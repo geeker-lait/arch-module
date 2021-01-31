@@ -1,6 +1,7 @@
 package org.arch.framework.crud.dto;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -12,6 +13,7 @@ import java.util.Map;
  * 搜索参数的基类
  */
 @Data
+@Accessors(chain = true)
 public abstract class BaseSearchDto {
     /**
      * 是否逻辑删除: 0 未删除, 1 已删除; 默认: 0
