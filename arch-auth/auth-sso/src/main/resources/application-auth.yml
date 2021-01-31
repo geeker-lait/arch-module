@@ -107,14 +107,23 @@ ums:
       enable: true
       # 允许跨域访问的域，可以是一个域的列表，也可以是通配符"*"。这里要注意 Origin 规则只对域名有效，并不会对子目录有效。
       access-control-allow-origin:
-        - http://sso.arch.org:9401
-        - http://oauth2.arhc.org:9402
-        - http://ums.arhc.org:9410
+        - http://sso.arch.org:9090
+        - http://oauth2.arhc.org:9090
+        - http://ums.arhc.org:9097
         - http://nacos.arch.org:8848
-        - http://localhost:9401
-        - http://localhost:9402
-        - http://localhost:9410
+        - http://localhost:9090
+        - http://localhost:9091
+        - http://localhost:9092
+        - http://localhost:9093
+        - http://localhost:9094
+        - http://localhost:9095
+        - http://localhost:9096
+        - http://localhost:9097
         - http://localhost:8848
+        - http://localhost:1369
+        - http://localhost:3369
+        - http://localhost:6369
+        - http://localhost:9369
       # 是否允许请求带有验证信息, 当为 true 时, accessControlAllowOrigin 不能为 "*", 默认为 true;
       access-control-allow-credentials: true
       # 进行跨区请求允许曝露的 headers，请求成功后，ajax 可以在 XMLHttpRequest 中访问这些头的信息;
@@ -185,3 +194,11 @@ spring:
   config:
     activate:
       on-profile: dev
+
+ums:
+  client:
+    # ============= 跨域请求配置 =============
+    cors:
+      # 允许跨域访问的域，可以是一个域的列表，也可以是通配符"*"。这里要注意 Origin 规则只对域名有效，并不会对子目录有效。
+      access-control-allow-origin:
+        - '*'
