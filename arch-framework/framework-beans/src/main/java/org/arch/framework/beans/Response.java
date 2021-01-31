@@ -3,12 +3,16 @@ package org.arch.framework.beans;
 import org.arch.framework.beans.enums.StatusCode;
 import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 
+import java.io.Serializable;
+
 /**
  * 封装统一返回的Json数据结构
  *
  * @param <T>
  */
-public class Response<T> {
+public class Response<T> implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     /**
      * 操作码，成功默认为200，其他为失败
      */
@@ -21,8 +25,10 @@ public class Response<T> {
     /**
      * 响应数据，为空时json序列化时会忽略
      */
-    //@JsonInclude(JsonInclude.Include.NON_NULL)
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
+
+    private Response() { }
 
     private Response(T data) {
         this.data = data;
