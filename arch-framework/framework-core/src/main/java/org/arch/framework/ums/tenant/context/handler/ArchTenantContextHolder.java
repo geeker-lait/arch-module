@@ -31,6 +31,7 @@ public class ArchTenantContextHolder implements TenantContextHolder {
     public ArchTenantContextHolder(AppProperties appProperties) {
         this.tenantIdHeaderName = appProperties.getTenantHeaderName();
         this.systemTenantId = appProperties.getSystemTenantId();
+        context.set(appProperties.getSystemTenantId().toString());
     }
 
     @Override
