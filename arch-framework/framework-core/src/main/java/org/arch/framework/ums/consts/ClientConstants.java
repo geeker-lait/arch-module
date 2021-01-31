@@ -17,6 +17,6 @@ public interface ClientConstants {
     /**
      * clientCode 的请求头名称
      */
-    String CLIENT_CODE_HEADER_NAME = "clientCode";
+    String CLIENT_SECRET_HEADER_NAME = "clientSecret";
 
 }

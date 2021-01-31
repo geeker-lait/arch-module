@@ -61,7 +61,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
     /**
      * 租户 ID
      */
-    private Integer tenantId;
+    private final Integer tenantId;
     /**
      * 登录类型【IDENTITY TYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
      */
