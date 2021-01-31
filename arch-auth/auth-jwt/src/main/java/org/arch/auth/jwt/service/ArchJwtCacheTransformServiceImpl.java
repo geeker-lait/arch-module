@@ -73,7 +73,7 @@ public class ArchJwtCacheTransformServiceImpl implements JwtCacheTransformServic
         {
             JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
             Jwt jwt = token.getToken();
-            Collection<String> authorityList = jwt.getClaim(JwtArchClaimNames.AUTHORITIES.getClaimName());
+            Collection<String> authorityList = jwt.getClaimAsStringList(JwtArchClaimNames.AUTHORITIES.getClaimName());
             List<GrantedAuthority> authorities =
                     AuthorityUtils.createAuthorityList(authorityList.toArray(authorityList.toArray(new String[0])));
             return TokenInfo.builder()

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static org.arch.framework.ums.consts.ClientConstants.CLIENT_CODE_HEADER_NAME;
+import static org.arch.framework.ums.consts.ClientConstants.CLIENT_SECRET_HEADER_NAME;
 import static org.arch.framework.ums.consts.ClientConstants.CLIENT_ID_HEADER_NAME;
 
 /**
@@ -31,7 +31,7 @@ public class ArchJwkSetUriConfig implements JwkSetUriConfig {
     public Map<String, Object> headers() {
         Map<String, Object> headers = new HashMap<>(2);
         headers.put(CLIENT_ID_HEADER_NAME, appProperties.getClientId());
-        headers.put(CLIENT_CODE_HEADER_NAME, appProperties.getClientSecret());
+        headers.put(CLIENT_SECRET_HEADER_NAME, appProperties.getClientSecret());
         return headers;
     }
 

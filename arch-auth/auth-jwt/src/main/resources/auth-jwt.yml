@@ -4,7 +4,7 @@ spring:
       resourceserver:
         jwt:
           jws-algorithm: RS256
-          jwk-set-uri: http://localhost:9401/sso/.well-known/jwks.json
+          jwk-set-uri: http://localhost:9090/sso/.well-known/jwks.json
 
 ums:
   # ========= JWT 功能 =========
@@ -122,4 +122,4 @@ spring:
       resourceserver:
         jwt:
           jws-algorithm: RS256
-          jwk-set-uri: http://localhost:9401/sso/.well-known/jwks.json
+          jwk-set-uri: http://localhost:9090/sso/.well-known/jwks.json
