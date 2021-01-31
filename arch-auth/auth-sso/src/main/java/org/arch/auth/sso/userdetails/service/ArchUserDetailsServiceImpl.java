@@ -10,6 +10,7 @@ import org.arch.framework.id.IdKey;
 import org.arch.framework.id.IdService;
 import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.ums.userdetails.ArchUser;
+import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.feign.account.client.UmsAccountClient;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -30,6 +31,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Objects.isNull;
 
 /**
  * 用户登录与注册服务实现
@@ -58,35 +61,37 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
     @Override
     public UserDetails loadUserByUserId(@NonNull String userId) throws UsernameNotFoundException {
-        // TODO
-        try
-        {
-            // 从缓存中查询用户信息:
+        try {
             // 根据用户名获取用户信息
+            AuthLoginDto authLoginDto = null;
+            final Response<AuthLoginDto> response = umsAccountClient.loadAccountByIdentifier(userId);
+            if (ResponseStatusCode.SUCCESS.getCode() == response.getCode()) {
+                authLoginDto = response.getData();
+            }
 
-            // 获取用户信息逻辑。。。
-            // ...
+            if (isNull(authLoginDto)) {
+                throw new UsernameNotFoundException(userId + " not found");
+            }
 
-            // 示例：只是从用户登录日志表中提取的信息，
             log.info("Demo ======>: 登录用户名：{}, 登录成功", userId);
-            String admin = passwordEncoder.encode("admin");
-            String tenantId = tenantContextHolder.getTenantId();
-            return new ArchUser(userId,
-                                admin,
-                                1L,
-                                Integer.valueOf(tenantId),
-                                ChannelType.ACCOUNT,
-                                "admin",
-                                ssoProperties.getDefaultAvatar(),
+            return new ArchUser(authLoginDto.getIdentifier(),
+                                authLoginDto.getCredential(),
+                                authLoginDto.getAid(),
+                                authLoginDto.getTenantId(),
+                                authLoginDto.getChannelType(),
+                                authLoginDto.getNickName(),
+                                authLoginDto.getAvatar(),
                                 true,
                                 true,
                                 true,
                                 true,
-                                AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_" + tenantId));
+                                AuthorityUtils.commaSeparatedStringToAuthorityList(authLoginDto.getAuthorities()));
 
         }
-        catch (Exception e)
-        {
+        catch (UsernameNotFoundException e) {
+            throw e;
+        }
+        catch (Exception e) {
             String msg = String.format("Demo ======>: 登录用户名：%s, 登录失败: %s", userId, e.getMessage());
             log.error(msg);
             throw new UserNotExistException(ErrorCodeEnum.QUERY_USER_INFO_ERROR, e, userId);

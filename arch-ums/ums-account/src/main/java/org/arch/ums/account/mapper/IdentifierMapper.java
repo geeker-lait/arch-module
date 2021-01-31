@@ -3,6 +3,8 @@ package org.arch.ums.account.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.entity.Identifier;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -29,17 +31,17 @@ public interface IdentifierMapper extends BaseMapper<Identifier> {
     List<Boolean> exists(@NonNull @Param("identifiers") List<String> identifiers,
                          @NonNull @Param("tenantId") Integer tenantId);
 
-
-
-    //    /**
-//     * 根据 identifier 获取用户信息 {@link AuthAccountDto}.
-//     * @param identifier    用户唯一标识
-//     * @return  返回用户信息 {@link AuthAccountDto}. 不存在返回 null.
-//     */
-//    @Nullable
-//    @Select(value = "SELECT a.id AS id, a.aid AS aid, a.identifier AS identifier, a.credential AS credential," +
-//            " a.channel_type AS channel_type, a.authorities AS authorities, an.nick_name AS nick_name, an.avatar AS avatar " +
-//            " FROM (SELECT ai.* FROM account_identifier AS ai WHERE identifier = #{identifier}) a" +
-//            " INNER JOIN account_name AS an ON a.aid = an.account_id")
-//    AuthAccountDto getAccountByIdentifier(@NonNull @Param("identifier") String identifier);
+    /**
+     * 根据 identifier 获取用户信息 {@link AuthLoginDto}.
+     * @param identifier    用户唯一标识
+     * @param tenantId      租户 ID
+     * @return  返回用户信息 {@link AuthLoginDto}. 不存在返回 null.
+     */
+    @Nullable
+    @Select(value = "SELECT a.id AS id, a.aid AS aid, a.identifier AS identifier, a.credential AS credential, a.tenant_id AS tenantId," +
+            " a.channel_type AS channelType, a.authorities AS authorities, an.nick_name AS nickName, an.avatar AS avatar " +
+            " FROM (SELECT ai.* FROM account_identifier AS ai WHERE tenant_id = #{tenantId} AND identifier = #{identifier}) a" +
+            " INNER JOIN account_name AS an ON a.aid = an.account_id")
+    AuthLoginDto findAuthLoginDtoByIdentifier(@NonNull @Param("identifier") String identifier,
+                                              @NonNull @Param("tenantId") Integer tenantId);
 }

@@ -6,9 +6,13 @@ import org.arch.framework.beans.Response;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.properties.AppProperties;
+import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.IdentifierSearchDto;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.service.IdentifierService;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -69,14 +73,16 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     }
 
 
-//    /**
-//     * 根据 identifier 获取用户信息 {@link AuthAccountDto}.
-//     * @param identifier    用户唯一标识
-//     * @return  返回用户信息 {@link AuthAccountDto}. 不存在返回 null.
-//     */
-//    @GetMapping("/loadAccount/{identifier}")
-//    public AuthAccountDto loadAccountByIdentifier(@PathVariable(value = "identifier") String identifier) {
-//        return accountIdentifierService.getAccountByIdentifier(identifier);
-//    }
+    /**
+     * 根据 identifier 获取用户信息 {@link AuthLoginDto}.
+     * @param identifier    用户唯一标识
+     * @return  返回用户信息 {@link AuthLoginDto}. 不存在返回 null.
+     */
+    @GetMapping("/load/{identifier}")
+    @Nullable
+    public Response<AuthLoginDto> loadAccountByIdentifier(@PathVariable(value = "identifier") String identifier) {
+        return Response.success(identifierService.loadAccountByIdentifier(identifier,
+                                                                          Integer.valueOf(tenantContextHolder.getTenantId())));
+    }
 
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudDao;
+import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.mapper.IdentifierMapper;
 import org.springframework.lang.NonNull;
@@ -56,13 +57,14 @@ public class IdentifierDao extends ServiceImpl<IdentifierMapper, Identifier> imp
     }
 
 
-//    /**
-//     * 根据 identifier 获取用户信息 {@link AuthAccountDto}.
-//     * @param identifier    用户唯一标识
-//     * @return  返回用户信息 {@link AuthAccountDto}. 不存在返回 null.
-//     */
-//    @Nullable
-//    public AuthAccountDto getAccountByIdentifier(@NonNull String identifier) {
-//        return accountIdentifierMapper.getAccountByIdentifier(identifier);
-//    }
+    /**
+     * 根据 identifier 获取用户信息 {@link AuthLoginDto}.
+     * @param identifier    用户唯一标识
+     * @param tenantId      租户 ID
+     * @return  返回用户信息 {@link AuthLoginDto}. 不存在返回 null.
+     */
+    @Nullable
+    public AuthLoginDto findAuthLoginDtoByIdentifier(@NonNull String identifier, @NonNull Integer tenantId) {
+        return identifierMapper.findAuthLoginDtoByIdentifier(identifier, tenantId);
+    }
 }

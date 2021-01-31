@@ -29,8 +29,8 @@ public interface UmsAccountClient {
      * @param identifier    用户唯一标识
      * @return  返回 {@link AuthLoginDto}
      */
-    @GetMapping("/loadAccount/{identifier}")
-    AuthLoginDto loadAccountByIdentifier(@PathVariable("identifier") String identifier);
+    @GetMapping("/load/{identifier}")
+    Response<AuthLoginDto> loadAccountByIdentifier(@PathVariable("identifier") String identifier);
 
     /**
      * 查询 identifiers 是否已经存在.
