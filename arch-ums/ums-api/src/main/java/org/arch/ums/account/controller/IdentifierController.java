@@ -2,13 +2,22 @@ package org.arch.ums.account.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.beans.Response;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.account.dto.IdentifierSearchDto;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.service.IdentifierService;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
+
+import java.util.List;
+
+import static java.util.Objects.nonNull;
 
 /**
  * 用户-标识(Identifier) 表服务控制器
@@ -24,10 +33,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class IdentifierController implements CrudController<Identifier, java.lang.Long, IdentifierSearchDto, IdentifierService> {
 
     private final IdentifierService identifierService;
+    private final TenantContextHolder tenantContextHolder;
+    private final AppProperties appProperties;
 
     @Override
     public Identifier resolver(TokenInfo token, Identifier identifier) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 identifier 后返回 identifier, 如: tenantId 的处理等.
+        if (nonNull(token) && nonNull(token.getTenantId())) {
+            identifier.setTenantId(token.getTenantId());
+        }
+        else {
+            identifier.setTenantId(appProperties.getSystemTenantId());
+        }
         return identifier;
     }
 
@@ -39,6 +55,17 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     @Override
     public IdentifierSearchDto getSearchDto() {
         return new IdentifierSearchDto();
+    }
+
+    /**
+     * 查询 identifiers 是否已经存在.
+     * @param identifiers    identifiers 列表
+     * @return  identifiers 对应的结果集.
+     */
+    @RequestMapping(value = "/exists", method = {RequestMethod.POST})
+    public Response<List<Boolean>> exists(@RequestParam("identifiers") List<String> identifiers, TokenInfo tokenInfo) {
+        String tenantId = tenantContextHolder.getTenantId();
+        return Response.success(identifierService.exists(identifiers, Integer.valueOf(tenantId)));
     }
 
 

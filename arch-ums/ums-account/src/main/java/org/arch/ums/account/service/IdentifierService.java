@@ -3,8 +3,15 @@ package org.arch.ums.account.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudService;
-import org.springframework.stereotype.Service;
+import org.arch.ums.account.dao.IdentifierDao;
 import org.arch.ums.account.entity.Identifier;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * 用户-标识(Identifier) 表服务层
@@ -18,4 +25,23 @@ import org.arch.ums.account.entity.Identifier;
 @Service
 public class IdentifierService extends CrudService<Identifier, java.lang.Long> {
 
+    private final IdentifierDao identifierDao;
+
+    /**
+     * 查询 identifiers 是否已经存在.
+     * @param identifiers    identifiers 列表
+     * @param tenantId      租户 ID
+     * @return  identifiers 对应的结果集.
+     */
+    @NonNull
+    @Transactional(readOnly = true)
+    public List<Boolean> exists(@NonNull List<String> identifiers, @NonNull Integer tenantId) {
+        int size = identifiers.size();
+
+        if (size == 0) {
+            return Collections.emptyList();
+        }
+        List<Boolean> exists = identifierDao.exists(identifiers, tenantId);
+        return Optional.ofNullable(exists).orElse(Collections.emptyList());
+    }
 }
