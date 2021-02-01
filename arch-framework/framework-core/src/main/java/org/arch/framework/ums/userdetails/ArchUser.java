@@ -59,6 +59,10 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      */
     private final Long accountId;
     /**
+     * 租户 ID
+     */
+    private final Integer tenantId;
+    /**
      * 登录类型【IDENTITY TYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
      */
     private final ChannelType channelType;
@@ -93,10 +97,11 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      * Calls the more complex constructor with all boolean arguments set to {@code true}.
      */
     public ArchUser(String username, String password,
-                    Long accountId, ChannelType channelType,
+                    Long accountId, Integer tenantId, ChannelType channelType,
                     String nickName, String avatar,
                     Collection<? extends GrantedAuthority> authorities) {
-        this(username, password, accountId, channelType, nickName, avatar, true, true, true, true, authorities);
+        this(username, password, accountId, tenantId, channelType, nickName, avatar,
+             true, true, true, true, authorities);
     }
 
     /**
@@ -109,6 +114,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      * @param password the password that should be presented to the
      * <code>DaoAuthenticationProvider</code>
      * @param accountId     用户名 ID
+     * @param tenantId      租户 ID
      * @param channelType   登录类型【IDENTITY TYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博
      * @param nickName      昵称
      * @param avatar        头像
@@ -124,14 +130,16 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      * a parameter or as an element in the <code>GrantedAuthority</code> collection
      */
     public ArchUser(String username, String password,
-                    Long accountId, ChannelType channelType,
+                    Long accountId, Integer tenantId, ChannelType channelType,
                     String nickName, String avatar,
                     boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired,
                     boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
 
         requireNonNull(accountId, "accountId cannot be null");
+        requireNonNull(tenantId, "tenantId cannot be null");
         requireNonNull(channelType, "channelType cannot be null");
         this.accountId = accountId;
+        this.tenantId = tenantId;
         this.channelType = channelType;
         this.nickName = nickName;
         this.avatar = avatar;
@@ -158,6 +166,8 @@ public class ArchUser implements UserDetails, CredentialsContainer {
     public Long getAccountId() {
         return accountId;
     }
+
+    public Integer getTenantId() { return tenantId; }
 
     public ChannelType getChannelType() {
         return channelType;
@@ -278,6 +288,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString()).append(": ");
         sb.append("AccountId: ").append(this.accountId.toString()).append("; ");
+        sb.append("TenantId: ").append(this.tenantId.toString()).append("; ");
         sb.append("ChannelType: ").append(this.channelType.name()).append("; ");
         sb.append("Username: ").append(this.username).append("; ");
         sb.append("Password: [PROTECTED]; ");
@@ -396,6 +407,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
         return withUsername(userDetails.getUsername())
                 .password(userDetails.getPassword())
                 .accountId(userDetails.getAccountId())
+                .tenantId(userDetails.getTenantId())
                 .channelType(userDetails.getChannelType())
                 .accountExpired(!userDetails.isAccountNonExpired())
                 .accountLocked(!userDetails.isAccountNonLocked())
@@ -410,6 +422,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      */
     public static class UserBuilder {
         private Long accountId;
+        private Integer tenantId;
         private ChannelType channelType;
         private String nickName;
         private String avatar;
@@ -438,6 +451,19 @@ public class ArchUser implements UserDetails, CredentialsContainer {
         public ArchUser.UserBuilder accountId(Long accountId) {
             Assert.notNull(accountId, "accountId cannot be null");
             this.accountId = accountId;
+            return this;
+        }
+
+        /**
+         * Populates the tenantId. This attribute is required.
+         *
+         * @param tenantId the tenantId. Cannot be null.
+         * @return the {@link ArchUser.UserBuilder} for method chaining (i.e. to populate
+         * additional attributes for this user)
+         */
+        public ArchUser.UserBuilder tenantId(Integer tenantId) {
+            Assert.notNull(tenantId, "tenantId cannot be null");
+            this.tenantId = tenantId;
             return this;
         }
         /**
@@ -642,7 +668,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
 
         public UserDetails build() {
             String encodedPassword = this.passwordEncoder.apply(password);
-            return new ArchUser(username, encodedPassword, accountId, channelType,
+            return new ArchUser(username, encodedPassword, accountId, tenantId, channelType,
                                 nickName, avatar,
                                 !disabled, !accountExpired,
                                 !credentialsExpired, !accountLocked, authorities);

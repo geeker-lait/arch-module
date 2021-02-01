@@ -23,12 +23,17 @@ DROP TABLE IF EXISTS `account_category`;
 
 CREATE TABLE `account_category` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '资源类目ID',
-  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `pid` bigint(19) NOT NULL COMMENT '父节点ID',
   `category_name` varchar(64) NOT NULL COMMENT '资源类目名',
   `sorted` int(4) NOT NULL COMMENT '顺序',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_PID_SORTED` (`pid`,`sorted`),
+  KEY `IDX_PID_AND_SORTED` (`pid`,`sorted`),
   KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-资源类目';
 
@@ -39,13 +44,18 @@ DROP TABLE IF EXISTS `account_group`;
 CREATE TABLE `account_group` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号-权限ID',
   `group_pid` bigint(19) NOT NULL COMMENT '父ID',
-  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `group_code` varchar(32) NOT NULL COMMENT '组code',
   `group_name` varchar(32) NOT NULL COMMENT '组织架构名',
   `group_icon` varchar(32) DEFAULT NULL COMMENT '组织架构ICON',
   `sorted` int(2) NOT NULL COMMENT '排序',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_GROUP_PID_SORTED` (`group_pid`,`sorted`),
+  KEY `IDX_GROUP_PID_AND_SORTED` (`group_pid`,`sorted`),
   KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-组织机构';
 
@@ -58,13 +68,17 @@ CREATE TABLE `account_identifier` (
   `aid` bigint(19) NOT NULL COMMENT '账号名ID',
   `identifier` varchar(32) NOT NULL COMMENT '识别标识:身份唯一标识，如：登录账号、邮箱地址、手机号码、QQ号码、微信号、微博号；',
   `credential` varchar(32) NOT NULL COMMENT '授权凭证【CREDENTIAL】：站内账号是密码、第三方登录是Token；',
-  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `authorities` varchar(255) DEFAULT NULL COMMENT '用户角色:ROLE_xxx 与 租户id: TENANT_XXX',
   `channel_type` varchar(32) NOT NULL COMMENT '登录类型【IDENTITYTYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；',
-  PRIMARY KEY (`aid`),
-  UNIQUE KEY `IDX_IDENTIFIER_TENANT_ID` (`identifier`, `tenant_id`),
-  KEY `IDX_AID` (`aid`),
-  KEY `IDX_INTENT_ID` (`tenant_id`)
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_TENANT_ID_AND_IDENTIFIER` (`tenant_id`, `identifier`),
+  KEY `IDX_AID` (`aid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-标识';
 
 /*Table structure for table `account_member` */
@@ -77,8 +91,14 @@ CREATE TABLE `account_member` (
   `member_level_id` int(3) NOT NULL COMMENT '会员级别ID',
   `start_time` datetime NOT NULL COMMENT '开始时间',
   `end_time` datetime NOT NULL COMMENT '结束时间',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_ACCOUNT_ID` (`account_id`)
+  KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-会员账号';
 
 /*Table structure for table `account_menu` */
@@ -88,7 +108,6 @@ DROP TABLE IF EXISTS `account_menu`;
 CREATE TABLE `account_menu` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号-菜单ID',
   `pid` bigint(19) NOT NULL COMMENT '父节点ID',
-  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `menu_code` varchar(64) NOT NULL COMMENT '英文码',
   `menu_name` varchar(64) NOT NULL COMMENT '菜单名称',
   `menu_val` varchar(64) DEFAULT NULL COMMENT '菜单值',
@@ -96,8 +115,14 @@ CREATE TABLE `account_menu` (
   `sorted` int(2) NOT NULL COMMENT '排序',
   `frame` int(1) NOT NULL DEFAULT '1' COMMENT '是否iframe: 1是, 0不是, 默认: 1',
   `icon` varchar(64) DEFAULT NULL COMMENT '图标',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_PID_SORTED` (`pid`,`sorted`),
+  KEY `IDX_PID_AND_SORTED` (`pid`,`sorted`),
   KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-菜单';
 
@@ -106,25 +131,39 @@ CREATE TABLE `account_menu` (
 DROP TABLE IF EXISTS `account_name`;
 
 CREATE TABLE `account_name` (
+  `id` BIGINT(19) NOT NULL AUTO_INCREMENT COMMENT '账号-名称ID',
   `account_id` bigint(19) NOT NULL COMMENT '账号ID/用户ID/会员ID/商户ID',
-  `nick_name` varchar(64) DEFAULT NULL COMMENT '用户昵称可随机生成',
-  `avatar` varchar(64) DEFAULT NULL COMMENT '头像',
+  `nick_name` varchar(64) NOT NULL COMMENT '用户昵称可随机生成',
+  `avatar` varchar(255) NOT NULL COMMENT '头像',
   `source` varchar(64) DEFAULT NULL COMMENT '来源, 推广统计用',
-  PRIMARY KEY (`account_id`)
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号名';
 
-/*Table structure for table `account_oauth_client` */
+/*Table structure for table `account_auth_client` */
 
-DROP TABLE IF EXISTS `account_oauth_client`;
+DROP TABLE IF EXISTS `account_auth_client`;
 
-CREATE TABLE `account_oauth_client` (
+CREATE TABLE `account_auth_client` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '授权客户端ID',
-  `app_id` varchar(32) NOT NULL COMMENT 'appId 或 客户端ID',
-  `app_code` varchar(32) NOT NULL COMMENT 'appSecret 或 客户端secret',
+  `client_id` varchar(32) NOT NULL COMMENT '客户端 ID',
+  `client_secret` varchar(32) NOT NULL COMMENT '客户端 secret',
   `scopes` varchar(255) NOT NULL COMMENT 'openid/userinfo/token/code/资源服务器标识等',
-  `app_type` varchar(32) NOT NULL COMMENT '客户端类型: web, 安卓, ios, 小程序…',
+  `client_type` varchar(32) NOT NULL COMMENT '客户端类型: web, 安卓, ios, 小程序…',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_CLIENT_ID_SECRET_TYP` (`app_id`,`app_code`)
+  UNIQUE KEY `IDX_TENANT_ID_AND_CLIENT_ID_AND_SECRET_TYP` (`tenant_id`, `client_id`, `client_secret`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='授权客户端';
 
 /*Table structure for table `account_oauth_token` */
@@ -132,7 +171,9 @@ CREATE TABLE `account_oauth_client` (
 DROP TABLE IF EXISTS `account_oauth_token`;
 
 CREATE TABLE `account_oauth_token` (
-  `account_identifier_id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT 'AccountIdentifierId',
+  `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT 'account_oauth_token id',
+  `account_identifier_id` bigint(19) NOT NULL COMMENT 'AccountIdentifierId',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
   `enable_refresh` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否支持 refreshToken, 默认: 0. 1 表示支持, 0 表示不支持',
   `provider_id` varchar(20) DEFAULT NULL COMMENT '第三方服务商,如: qq,github',
   `access_token` varchar(64) DEFAULT NULL COMMENT 'accessToken',
@@ -156,8 +197,8 @@ CREATE TABLE `account_oauth_token` (
   `oauth_callback_confirmed` varchar(64) DEFAULT NULL COMMENT 'Twitter附带属性',
   `expire_time` bigint(20) DEFAULT '-1' COMMENT '过期时间, 基于 1970-01-01T00:00:00Z, 无过期时间默认为 -1',
   `st` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳',
-  PRIMARY KEY (`account_identifier_id`),
-  KEY `IDX_ACCOUNT_IDENTIFIER_ID` (`account_identifier_id`)
+  PRIMARY KEY (`id`),
+  KEY `IDX_TENANT_ID_AND_ACCOUNT_IDENTIFIER_ID` (`tenant_id`, `account_identifier_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='第三方账号授权';
 
 /*Table structure for table `account_operate_log` */
@@ -167,11 +208,17 @@ DROP TABLE IF EXISTS `account_operate_log`;
 CREATE TABLE `account_operate_log` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `account_id` bigint(19) NOT NULL COMMENT '用户id',
-  `operator_typ` int(4) NOT NULL COMMENT '操作类型()',
+  `operator_type` varchar(32) NOT NULL COMMENT '操作类型(crud)',
   `operator_time` datetime NOT NULL COMMENT '操作时间',
   `record_val` varchar(512) NOT NULL COMMENT '记录的值json',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_ACCOUNT_ID` (`account_id`)
+  KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号操作记录';
 
 /*Table structure for table `account_permission` */
@@ -180,13 +227,18 @@ DROP TABLE IF EXISTS `account_permission`;
 
 CREATE TABLE `account_permission` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号-菜单ID',
-  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `permission_code` varchar(64) NOT NULL COMMENT '权限码(与RequestMethod对应)list(GET)/add(POST)/edit(PUT)/delete(DELETE)/..',
   `permission_name` varchar(64) DEFAULT NULL COMMENT '权限名称',
   `permission_val` varchar(64) DEFAULT NULL COMMENT '权限值',
   `permission_uri` varchar(64) NOT NULL COMMENT 'uri',
-  `permission_typ` int(2) NOT NULL COMMENT '权限类型：0->目录；1->菜单；2->按钮（接口绑定权限）',
+  `resource_type` varchar(64) NOT NULL COMMENT '权限类型：0->目录；1->菜单；2->按钮（接口绑定权限）, 4->链接',
   `sorted` int(3) NOT NULL COMMENT '排序',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-权限';
@@ -198,11 +250,16 @@ DROP TABLE IF EXISTS `account_post`;
 CREATE TABLE `account_post` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `post_pid` bigint(19) NOT NULL COMMENT '父id',
-  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `post_name` varchar(32) NOT NULL COMMENT '岗位名',
   `post_code` varchar(32) NOT NULL COMMENT '岗位code',
   `post_icon` varchar(32) DEFAULT NULL COMMENT 'icon',
   `salary` decimal(19,4) NOT NULL COMMENT '薪资',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-岗位';
@@ -223,8 +280,15 @@ CREATE TABLE `account_relationship` (
   `to_user_id` varchar(19) NOT NULL COMMENT '账号ID',
   `to_user_name` varchar(32) NOT NULL COMMENT '用户名',
   `to_user_phone` varchar(11) NOT NULL COMMENT '用户手机',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_PID_SEQ` (`pid`, `seq`)
+  KEY `IDX_PID_AND_SEQ` (`pid`, `seq`),
+  KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-关系';
 
 /*Table structure for table `account_resource` */
@@ -234,16 +298,21 @@ DROP TABLE IF EXISTS `account_resource`;
 CREATE TABLE `account_resource` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号-资源表ID',
   `category_id` bigint(19) NOT NULL COMMENT '账号-资源类目ID',
-  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `resource_name` varchar(64) NOT NULL COMMENT '资源名',
   `resource_code` varchar(64) NOT NULL COMMENT '资源码',
-  `resource_Typ` int(4) NOT NULL COMMENT '类型: 1目录, 2菜单, 3按钮, 4链接',
+  `resource_type` varchar(64) NOT NULL COMMENT '类型: 1目录, 2菜单, 3按钮, 4链接',
   `resource_val` varchar(64) DEFAULT NULL COMMENT '资源值',
   `resource_path` varchar(64) NOT NULL COMMENT '资源路径',
   `resource_icon` varchar(64) DEFAULT NULL COMMENT '资源图标',
   `resource_desc` varchar(64) DEFAULT NULL COMMENT '资源描述',
   `visible` int(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏: 0不隐藏, 1隐藏. 默认: 0',
   `level` int(2) DEFAULT NULL COMMENT '层级',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-资源';
@@ -254,13 +323,17 @@ DROP TABLE IF EXISTS `account_role`;
 
 CREATE TABLE `account_role` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号角色ID',
-  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `role_name` varchar(32) NOT NULL COMMENT '角色名',
   `icon` varchar(32) DEFAULT NULL COMMENT '角色icon',
   `sorted` int(3) NOT NULL COMMENT '顺序',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_SORTED` (`sorted`),
-  KEY `IDX_TENANT_ID` (`tenant_id`)
+  KEY `IDX_TENANT_ID_AND_SORTED` (`tenant_id`, `sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色';
 
 /*Table structure for table `account_role_group` */
@@ -269,12 +342,16 @@ DROP TABLE IF EXISTS `account_role_group`;
 
 CREATE TABLE `account_role_group` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
   `role_id` bigint(19) NOT NULL COMMENT '角色ID',
   `group_id` bigint(19) NOT NULL COMMENT '组织ID',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_roleId_groupId_tenantId` (`role_id`,`group_id`, `tenant_id`),
-  KEY `IDX_TENANT_ID` (`tenant_id`)
+  UNIQUE KEY `IDX_tenantId_roleId_groupId` (`tenant_id`, `role_id`,`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色组织或机构';
 
 /*Table structure for table `account_role_menu` */
@@ -283,12 +360,16 @@ DROP TABLE IF EXISTS `account_role_menu`;
 
 CREATE TABLE `account_role_menu` (
  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
- `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
  `role_id` bigint(19) NOT NULL COMMENT '角色ID',
  `menu_id` bigint(19) NOT NULL COMMENT '菜单ID',
+ `tenant_id` int NOT NULL COMMENT '租户 id',
+ `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+ `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+ `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+ `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+ `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
  PRIMARY KEY (`id`),
- UNIQUE KEY `IDX_roleId_menuId_tenantId` (`role_id`,`menu_id`, `tenant_id`),
- KEY `IDX_TENANT_ID` (`tenant_id`)
+ UNIQUE KEY `IDX_tenantId_roleId_menuId_tenantId` (`tenant_id`, `role_id`,`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色菜单';
 
 /*Table structure for table `account_role_permission` */
@@ -297,12 +378,16 @@ DROP TABLE IF EXISTS `account_role_permission`;
 
 CREATE TABLE `account_role_permission` (
    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
-   `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
    `role_id` bigint(19) NOT NULL COMMENT '角色ID',
    `permission_id` bigint(19) NOT NULL COMMENT '权限ID',
-   PRIMARY KEY (`id`,`role_id`,`permission_id`),
-   UNIQUE KEY `IDX_roleId_permissionId_tenantId` (`role_id`,`permission_id`, `tenant_id`),
-   KEY `IDX_TENANT_ID` (`tenant_id`)
+   `tenant_id` int NOT NULL COMMENT '租户 id',
+   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+   `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `IDX_tenantId_roleId_permissionId` (`tenant_id`, `role_id`,`permission_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色权限表';
 
 /*Table structure for table `account_role_resource` */
@@ -311,12 +396,16 @@ DROP TABLE IF EXISTS `account_role_resource`;
 
 CREATE TABLE `account_role_resource` (
  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
- `tenant_id` VARCHAR(19) NOT NULL COMMENT '租户 id',
  `role_id` bigint(19) NOT NULL COMMENT '角色ID',
  `resource_id` bigint(19) NOT NULL COMMENT '资源ID',
+ `tenant_id` int NOT NULL COMMENT '租户 id',
+ `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+ `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+ `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+ `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+ `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
  PRIMARY KEY (`id`),
- UNIQUE KEY `IDX_roleId_resourceId_tenantId` (`role_id`,`resource_id`, `tenant_id`),
- KEY `IDX_TENANT_ID` (`tenant_id`)
+ UNIQUE KEY `IDX_tenantId_roleId_resourceId` (`tenant_id`, `role_id`,`resource_id` )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色资源表';
 
 
@@ -330,8 +419,14 @@ CREATE TABLE `account_tag` (
   `tag_category` varchar(32) NOT NULL COMMENT '标签类目',
   `tag_name` varchar(64) NOT NULL COMMENT '标签名',
   `tag_color` varchar(32) NOT NULL COMMENT '标签色',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_ACCOUNT_ID` (`account_id`)
+  KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-标签';
 
 /*Table structure for table `account_ticket` */
@@ -341,16 +436,18 @@ DROP TABLE IF EXISTS `account_ticket`;
 CREATE TABLE `account_ticket` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号-券ID',
   `account_id` bigint(19) NOT NULL COMMENT '用户id',
-  `ticket_typ` int(2) NOT NULL COMMENT '券类型：打折，优惠，抵用....',
+  `ticket_type` int(2) NOT NULL COMMENT '券类型：打折，优惠，抵用....',
   `ticket_no` varchar(32) NOT NULL COMMENT '券号',
   `ticket_val` varchar(6) NOT NULL COMMENT '券值',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_ACCOUNT_ID` (`account_id`)
+  KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-券';
-
-/*Table structure for table `auth_token` */
-
-DROP TABLE IF EXISTS `auth_token`;
 
 /*Table structure for table `user_address` */
 
@@ -363,13 +460,18 @@ CREATE TABLE `user_address` (
   `city` varchar(32) DEFAULT NULL COMMENT '市',
   `district` varchar(32) DEFAULT NULL COMMENT '区',
   `street` varchar(32) DEFAULT NULL COMMENT '街道',
-  `typ` int(1) DEFAULT NULL COMMENT '地址类型:工作地址/家庭地址/收获地址/..',
+  `address_type` int(1) DEFAULT NULL COMMENT '地址类型:工作地址/家庭地址/收获地址/..',
   `sorted` int(2) NOT NULL COMMENT '顺序',
   `contacts` varchar(32) DEFAULT NULL COMMENT '联系人',
   `phone_num` varchar(11) DEFAULT NULL COMMENT '手机号',
-  `st` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳',
-  PRIMARY KEY (`id`,`user_id`),
-  KEY `IDX_USER_ID_SORTED` (`user_id`,`sorted`)
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+  PRIMARY KEY (`id`),
+  KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户地址表';
 
 /*Table structure for table `user_bank_card` */
@@ -383,12 +485,17 @@ CREATE TABLE `user_bank_card` (
   `card_bin` varchar(16) NOT NULL COMMENT '卡bin 如: 6221, 6222',
   `card_code` varchar(32) NOT NULL COMMENT '卡code 如: ICBC, ABC',
   `cvv` varchar(32) NOT NULL COMMENT '卡cvv',
-  `cardTyp` int(1) NOT NULL COMMENT '卡类型:0: 储蓄卡, 1: 借记卡',
+  `card_type` int(1) NOT NULL COMMENT '卡类型:0: 储蓄卡, 1: 借记卡',
   `sorted` int(2) NOT NULL COMMENT '基于user_id的顺序',
   `validity` date NOT NULL COMMENT '有效期',
-  `st` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_USER_ID_SORTED` (`user_id`,`sorted`)
+  KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户银行卡信息';
 
 /*Table structure for table `user_education` */
@@ -404,9 +511,14 @@ CREATE TABLE `user_education` (
   `certificate_level` varchar(32) NOT NULL COMMENT '学历(如: 大专, 本科, 硕士, 博士)',
   `sorted` int(2) NOT NULL COMMENT '顺序',
   `awardtime` date DEFAULT NULL COMMENT '颁发时间',
-  `st` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_USER_ID_SORTED` (`user_id`,`sorted`)
+  KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户学历信息';
 
 /*Table structure for table `user_id_card` */
@@ -414,8 +526,9 @@ CREATE TABLE `user_education` (
 DROP TABLE IF EXISTS `user_id_card`;
 
 CREATE TABLE `user_id_card` (
+  `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '用户身份证表ID',
   `user_id` bigint(19) NOT NULL COMMENT '用户ID',
-  `idcard` varchar(24) NOT NULL COMMENT '身份证号',
+  `id_card` varchar(24) NOT NULL COMMENT '身份证号',
   `name` varchar(32) NOT NULL COMMENT '名字',
   `age` int(2) NOT NULL COMMENT '年龄',
   `sex` int(1) NOT NULL COMMENT '性别',
@@ -423,9 +536,15 @@ CREATE TABLE `user_id_card` (
   `nation` varchar(32) NOT NULL COMMENT '民族',
   `domicile` varchar(32) NOT NULL COMMENT '居住地',
   `sign_org` varchar(64) NOT NULL COMMENT '颁发机构',
-  `st` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳',
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `IDX_ID_CARD` (`idcard`)
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_TENANT_ID_AND_ID_CARD` (`tenant_id`, `id_card`),
+  UNIQUE KEY `IDX_TENANT_ID_AND_USER_ID` (`tenant_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户身份证表';
 
 /*Table structure for table `user_job` */
@@ -442,9 +561,14 @@ CREATE TABLE `user_job` (
   `sorted` int(2) NOT NULL COMMENT '顺序',
   `hiredate_time` date DEFAULT NULL COMMENT '入职时间',
   `dimission_time` date DEFAULT NULL COMMENT '离职时间',
-  `st` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_USER_ID_SORTED` (`user_id`,`sorted`)
+  KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户工作信息';
 
 /*Table structure for table `user_phone` */
@@ -458,9 +582,14 @@ CREATE TABLE `user_phone` (
   `location` varchar(12) DEFAULT NULL COMMENT '号码归属地',
   `mno` varchar(12) DEFAULT NULL COMMENT '运营商: 移动/电信/联通/电话..',
   `sorted` int(2) DEFAULT NULL COMMENT '顺序',
-  `st` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_USER_ID_SORTED` (`user_id`,`sorted`)
+  KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户电话信息';
 
 /*Table structure for table `user_relatives` */
@@ -475,9 +604,14 @@ CREATE TABLE `user_relatives` (
   `relatives_sex` int(1) DEFAULT NULL COMMENT '亲朋性别: 0男, 1女',
   `sorted` int(2) NOT NULL COMMENT '顺序',
   `awardtime` date DEFAULT NULL COMMENT '颁发时间',
-  `st` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_USER_ID_SORTED` (`user_id`,`sorted`)
+  KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户亲朋信息';
 
 

@@ -1,6 +1,5 @@
 package org.arch.auth.jwt.service;
 
-import org.arch.framework.beans.utils.StringUtils;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
@@ -16,6 +15,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import top.dcenter.ums.security.jwt.api.cache.service.JwtCacheTransformService;
 import top.dcenter.ums.security.jwt.properties.JwtProperties;
 
+import java.util.Collection;
 import java.util.List;
 
 import static java.util.Objects.nonNull;
@@ -73,10 +73,12 @@ public class ArchJwtCacheTransformServiceImpl implements JwtCacheTransformServic
         {
             JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
             Jwt jwt = token.getToken();
-            String authorityString = jwt.getClaim(JwtArchClaimNames.AUTHORITIES.getClaimName());
-            List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(StringUtils.split(authorityString));
+            Collection<String> authorityList = jwt.getClaimAsStringList(JwtArchClaimNames.AUTHORITIES.getClaimName());
+            List<GrantedAuthority> authorities =
+                    AuthorityUtils.createAuthorityList(authorityList.toArray(authorityList.toArray(new String[0])));
             return TokenInfo.builder()
                             .accountId(Long.valueOf(jwt.getClaimAsString(JwtArchClaimNames.ACCOUNT_ID.getClaimName())))
+                            .tenantId(Integer.valueOf(jwt.getClaimAsString(JwtArchClaimNames.TENANT_ID.getClaimName())))
                             .accountName(jwt.getClaimAsString(principalClaimName))
                             .channelType(ChannelType.valueOf(jwt.getClaimAsString(JwtArchClaimNames.CHANNEL_TYPE
                                                                                           .getClaimName())))

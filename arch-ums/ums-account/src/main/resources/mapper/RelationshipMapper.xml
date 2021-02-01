@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.account.mapper.RelationshipMapper">
+
+    <resultMap type="org.arch.ums.account.entity.Relationship" id="RelationshipMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="pid" column="pid" jdbcType="INTEGER"/>
+        <result property="org" column="org" jdbcType="INTEGER"/>
+        <result property="deep" column="deep" jdbcType="INTEGER"/>
+        <result property="seq" column="seq" jdbcType="INTEGER"/>
+        <result property="fromUserId" column="from_user_id" jdbcType="INTEGER"/>
+        <result property="fromUserName" column="from_user_name" jdbcType="VARCHAR"/>
+        <result property="fromUserPhone" column="from_user_phone" jdbcType="VARCHAR"/>
+        <result property="toUserId" column="to_user_id" jdbcType="VARCHAR"/>
+        <result property="toUserName" column="to_user_name" jdbcType="VARCHAR"/>
+        <result property="toUserPhone" column="to_user_phone" jdbcType="VARCHAR"/>
+        <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
+        <result property="appId" column="app_id" jdbcType="INTEGER"/>
+        <result property="storeId" column="store_id" jdbcType="INTEGER"/>
+        <result property="rev" column="rev" jdbcType="INTEGER"/>
+        <result property="st" column="st" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <sql id="tableName">
+        `id`
+    </sql>
+
+    <sql id="baseColumn">
+        `id`, `pid`, `org`, `deep`, `seq`, `from_user_id`, `from_user_name`, `from_user_phone`, `to_user_id`, `to_user_name`, `to_user_phone`, `tenant_id`, `app_id`, `store_id`, `rev`, `st`, `deleted`
+    </sql>
+
+</mapper>

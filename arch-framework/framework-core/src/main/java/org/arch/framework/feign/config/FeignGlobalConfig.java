@@ -3,6 +3,7 @@ package org.arch.framework.feign.config;
 import feign.Logger;
 import org.arch.framework.feign.interceptor.FeignGlobalRequestInterceptor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 /**
@@ -23,17 +24,17 @@ public class FeignGlobalConfig {
         this.tenantHeaderName = tenantHeaderName;
     }
 
-//    @Profile("dev")
+    @Profile("dev")
     @Bean
     public Logger.Level umsAccountDevLogger() {
         return Logger.Level.FULL;
     }
 
-//    @Profile("prod")
-//    @Bean
-//    public Logger.Level umsAccountProdLogger() {
-//        return Logger.Level.BASIC;
-//    }
+    @Profile("prod")
+    @Bean
+    public Logger.Level umsAccountProdLogger() {
+        return Logger.Level.BASIC;
+    }
 
     @Bean
     public FeignGlobalRequestInterceptor tokenRequestInterceptor() {

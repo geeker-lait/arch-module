@@ -1,6 +1,7 @@
 ### auth-sdk 基本功能:
 > 1. JWT 功能
 > 2. RBAC 功能
+> 3. springMVC TokenInfo 参数解析功能, 通过 spring-boot-starter 自动配置.
 
 ### 资源服务器引用方式:
 
@@ -41,8 +42,8 @@ public class SdkWebSecurityAutoConfigurer  {
 ```yaml
 arch:
   app:
-    app-id: 001
-    app-code: 001
+    client-id: "003"
+    client-secret: "003"
   csrf:
     # 是否支持 csrf, 默认: true
     enable: true
@@ -83,7 +84,9 @@ logging:
 ```
 
 
-5. 开发时: account_oauth_client 添加记录
+5. 开发时: account_auth_client 添加记录
 ```sql
-insert into `account_oauth_client` (`app_id`, `app_code`, `scopes`, `app_type`) values('006', '006', 'AUTH,OAUTH2,OSS,UMS,ACCOUNT,USER,MEMBER,MERCHANT,PMS,OMS,JWK,PAY,MARKETING,WATCHDOG', 'ums-api');
+insert into `account_auth_client` (`client_id`, `client_secret`, `scopes`, `client_type`) values('006', '006', 'AUTH,
+OAUTH2,
+OSS,UMS,ACCOUNT,USER,MEMBER,MERCHANT,PMS,OMS,JWK,PAY,MARKETING,WATCHDOG', 'ums-api');
 ```

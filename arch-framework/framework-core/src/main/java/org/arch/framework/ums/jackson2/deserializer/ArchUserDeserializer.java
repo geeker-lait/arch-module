@@ -59,6 +59,7 @@ public class ArchUserDeserializer extends StdDeserializer<ArchUser> {
         ArchUser result = new ArchUser(this.readJsonNode(jsonNode, "username").asText(),
                                        password.asText(""),
                                        this.readJsonNode(jsonNode, "accountId").asLong(),
+                                       this.readJsonNode(jsonNode, "tenantId").asInt(),
                                        channelType,
                                        nickName.asText(""),
                                        avatar.asText(""),

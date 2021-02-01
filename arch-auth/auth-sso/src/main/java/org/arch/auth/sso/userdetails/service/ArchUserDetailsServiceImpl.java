@@ -4,10 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthUser;
 import org.arch.auth.sso.properties.SsoProperties;
-import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.beans.Response;
+import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 import org.arch.framework.id.IdKey;
 import org.arch.framework.id.IdService;
+import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.ums.userdetails.ArchUser;
+import org.arch.ums.account.dto.AuthLoginDto;
+import org.arch.ums.feign.account.client.UmsAccountClient;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -18,13 +22,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.ServletWebRequest;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
 import top.dcenter.ums.security.core.api.service.UmsUserDetailsService;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.auth.properties.ClientProperties;
 import top.dcenter.ums.security.core.exception.RegisterUserFailureException;
 import top.dcenter.ums.security.core.exception.UserNotExistException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Objects.isNull;
 
 /**
  * 用户登录与注册服务实现
@@ -36,7 +44,6 @@ import java.util.List;
 @Service
 public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
-//    private final Biz
     /**
      * 用于密码加解密
      */
@@ -44,6 +51,8 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     private final ClientProperties clientProperties;
     private final IdService idService;
     private final SsoProperties ssoProperties;
+    private final TenantContextHolder tenantContextHolder;
+    private final UmsAccountClient umsAccountClient;
 
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
@@ -52,33 +61,37 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
     @Override
     public UserDetails loadUserByUserId(@NonNull String userId) throws UsernameNotFoundException {
-        // TODO
-        try
-        {
-            // 从缓存中查询用户信息:
+        try {
             // 根据用户名获取用户信息
+            AuthLoginDto authLoginDto = null;
+            final Response<AuthLoginDto> response = umsAccountClient.loadAccountByIdentifier(userId);
+            if (ResponseStatusCode.SUCCESS.getCode() == response.getCode()) {
+                authLoginDto = response.getData();
+            }
 
-            // 获取用户信息逻辑。。。
-            // ...
+            if (isNull(authLoginDto)) {
+                throw new UsernameNotFoundException(userId + " not found");
+            }
 
-            // 示例：只是从用户登录日志表中提取的信息，
             log.info("Demo ======>: 登录用户名：{}, 登录成功", userId);
-            String admin = passwordEncoder.encode("admin");
-            return new ArchUser(userId,
-                                admin,
-                                1L,
-                                ChannelType.ACCOUNT,
-                                "admin",
-                                ssoProperties.getDefaultAvatar(),
+            return new ArchUser(authLoginDto.getIdentifier(),
+                                authLoginDto.getCredential(),
+                                authLoginDto.getAid(),
+                                authLoginDto.getTenantId(),
+                                authLoginDto.getChannelType(),
+                                authLoginDto.getNickName(),
+                                authLoginDto.getAvatar(),
                                 true,
                                 true,
                                 true,
                                 true,
-                                AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_00"));
+                                AuthorityUtils.commaSeparatedStringToAuthorityList(authLoginDto.getAuthorities()));
 
         }
-        catch (Exception e)
-        {
+        catch (UsernameNotFoundException e) {
+            throw e;
+        }
+        catch (Exception e) {
             String msg = String.format("Demo ======>: 登录用户名：%s, 登录失败: %s", userId, e.getMessage());
             log.error(msg);
             throw new UserNotExistException(ErrorCodeEnum.QUERY_USER_INFO_ERROR, e, userId);
@@ -90,9 +103,11 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         // todo
         // 示例：
         log.info("Demo ======>: 注册用户名：{}, 注册成功", mobile);
+        String tenantId = tenantContextHolder.getTenantId();
         return new ArchUser(mobile,
                             passwordEncoder.encode("admin"),
                             Long.valueOf(idService.generateId(IdKey.UMS_ACCOUNT_ID)),
+                            Integer.valueOf(tenantId),
                             ChannelType.PHONE,
                             "admin",
                             ssoProperties.getDefaultAvatar(),
@@ -100,7 +115,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                             true,
                             true,
                             true,
-                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_00"));
+                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_" + tenantId));
     }
 
     @Override
@@ -109,9 +124,11 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         String username = request.getParameter(clientProperties.getUsernameParameter());
         // 示例：
         log.info("Demo ======>: 注册用户名：{}, 注册成功", username);
+        String tenantId = tenantContextHolder.getTenantId();
         return new ArchUser(username,
                             passwordEncoder.encode("admin"),
                             Long.valueOf(idService.generateId(IdKey.UMS_ACCOUNT_ID)),
+                            Integer.valueOf(tenantId),
                             ChannelType.ACCOUNT,
                             "admin",
                             ssoProperties.getDefaultAvatar(),
@@ -119,7 +136,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                             true,
                             true,
                             true,
-                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_00"));
+                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_" + tenantId));
     }
 
     @Override
@@ -131,9 +148,11 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
         // 示例：
         log.info("Demo ======>: 注册用户名：{}, 第三方登录注册成功", username);
+        String tenantId = tenantContextHolder.getTenantId();
         return new ArchUser(username,
                             passwordEncoder.encode(authUser.getToken().getAccessToken()),
                             Long.valueOf(idService.generateId(IdKey.UMS_ACCOUNT_ID)),
+                            Integer.valueOf(tenantId),
                             ChannelType.OAUTH2,
                             "admin",
                             ssoProperties.getDefaultAvatar(),
@@ -141,15 +160,16 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                             true,
                             true,
                             true,
-                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_00"));
+                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_" + tenantId));
     }
 
     @Override
     public String[] generateUsernames(@NonNull AuthUser authUser) {
-        // 待扩展
-        // providerId = authUser.getSource();
-        // 第三方系统的唯一id: authUser.getUuid()
-        // 用户名: authUser.getUsername()
+        /*
+         providerId = authUser.getSource()
+         第三方系统的唯一id: authUser.getUuid()
+         用户名: authUser.getUsername()
+        */
         return new String[]{
                 authUser.getSource() + "_" + authUser.getUuid(),
         };
@@ -157,11 +177,18 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
     @Override
     public List<Boolean> existedByUsernames(String... usernames) throws IOException {
-        // TODO 测试
+
         List<Boolean> result = new ArrayList<>();
-        for (int i = 0; i < usernames.length; i++) {
-            result.add(Boolean.TRUE);
+        int length = usernames.length;
+
+        if (length == 0) {
+            return result;
         }
-        return result;
+
+        Response<List<Boolean>> response = umsAccountClient.exists(Arrays.asList(usernames));
+        if (ResponseStatusCode.SUCCESS.getCode() == response.getCode()) {
+            return response.getData();
+        }
+        throw new IOException("查询数据库时发生异常");
     }
 }

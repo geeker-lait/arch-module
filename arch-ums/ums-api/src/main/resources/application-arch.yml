@@ -5,8 +5,8 @@ spring:
 
 arch:
   app:
-    app-id: "003"
-    app-code: "003"
+    client-id: "003"
+    client-secret: "003"
 
   csrf:
     # 是否支持 csrf, 默认: true
@@ -21,8 +21,8 @@ spring:
 
 arch:
   app:
-    app-id: "003"
-    app-code: "003"
+    client-id: "003"
+    client-secret: "003"
 
   csrf:
     # 是否支持 csrf, 默认: true

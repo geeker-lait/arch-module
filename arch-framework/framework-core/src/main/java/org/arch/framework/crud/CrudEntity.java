@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * @author lait.zhang@gmail.com
@@ -26,7 +26,7 @@ public abstract class CrudEntity<T extends Model<?>> extends Model<T> implements
     /** 乐观锁 */
     protected Integer rev;
     /** 时间戳/创建时间 */
-    protected Timestamp st;
+    protected LocalDateTime st;
     /**
      * 是否逻辑删除: 0 未删除, 1 已删除; 默认: 0
      */

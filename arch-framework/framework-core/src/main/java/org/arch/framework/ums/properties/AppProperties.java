@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * app 属性 与 多租户属性
+ * client 属性 与 多租户属性
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.6 23:15
@@ -16,19 +16,19 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AppProperties {
 
     /**
-     * appId 的值
+     * clientId 的值
      */
-    private String appId;
+    private String clientId;
 
     /**
-     * appCode 的值
+     * clientSecret 的值
      */
-    private String appCode;
+    private String clientSecret;
 
     /**
-     * 系统租户 id, 默认: 00
+     * 系统租户 id, 默认: 0
      */
-    private final String systemTenantId = "00";
+    private final Integer systemTenantId = 0;
 
     /**
      * 行级多租户字段名称, 默认: tenant_id

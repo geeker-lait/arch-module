@@ -2,9 +2,9 @@ package org.arch.auth.sso.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.beans.utils.StringUtils;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.utils.SecurityUtils;
-import org.arch.framework.utils.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +27,7 @@ public class IndexController {
         try {
             TokenInfo currentUser = SecurityUtils.getCurrentUser();
             model.addAttribute("username", currentUser.getAccountName());
-            model.addAttribute("roles", StringUtils.join(currentUser.getAuthorities(),","));
+            model.addAttribute("roles", StringUtils.join(currentUser.getAuthorities(), ","));
         }
         catch (Exception e) {
             return "index";

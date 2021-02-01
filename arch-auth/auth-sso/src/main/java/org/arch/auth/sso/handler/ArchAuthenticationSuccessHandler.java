@@ -139,9 +139,9 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
                                                           username,
                                                           null,
                                                           null,
-                                                          -1L,
+                                                          null,
                                                           getJsonTargetUrl(targetUrl, request),
-                                                          token.getAuthorities());
+                                                          null);
                 // 设置 jwt
                 String jwtStringIfAllowBodyParameter = JwtContext.getJwtStringIfAllowBodyParameter(authentication);
                 if (hasText(jwtStringIfAllowBodyParameter)) {
