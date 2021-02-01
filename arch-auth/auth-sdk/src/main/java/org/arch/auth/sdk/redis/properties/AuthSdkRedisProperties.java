@@ -2,7 +2,6 @@ package org.arch.auth.sdk.redis.properties;
 
 import org.arch.auth.sdk.factory.MixPropertySourceFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
@@ -10,15 +9,22 @@ import java.time.Duration;
 import java.util.List;
 
 /**
- * REDIS 属性
+ * Configuration properties for Redis.
+ *
+ * @author Dave Syer
+ * @author Christoph Strobl
+ * @author Eddú Meléndez
+ * @author Marco Aust
+ * @author Mark Paluch
+ * @author Stephane Nicoll
  * @author YongWu zheng
  * @weixin z56133
- * @since 2021.1.17 21:11
+ * @since 1.0.0
  */
 @SuppressWarnings("jol")
 @Configuration
 @PropertySource(value = {"classpath:auth-sdk-redis.yml"}, factory = MixPropertySourceFactory.class)
-@ConfigurationProperties(prefix = "auth.sdk.redis")
+@ConfigurationProperties(prefix = "spring.redis")
 public class AuthSdkRedisProperties {
 
     /**
@@ -80,7 +86,9 @@ public class AuthSdkRedisProperties {
     private Sentinel sentinel;
 
     private Cluster cluster;
+
     private final Jedis jedis = new Jedis();
+
     private final Lettuce lettuce = new Lettuce();
 
     public int getDatabase() {
@@ -405,7 +413,6 @@ public class AuthSdkRedisProperties {
         /**
          * Lettuce pool configuration.
          */
-        @NestedConfigurationProperty
         private Pool pool;
 
         private final Lettuce.Cluster cluster = new Lettuce.Cluster();
