@@ -33,7 +33,7 @@ public class AuthSdkRedisAutoConfiguration {
         this.authSdkRedisProperties = authSdkRedisProperties;
     }
 
-    @Bean("jwtRedisConnectionFactory")
+    @Bean(value = "jwtRedisConnectionFactory", destroyMethod = "destroy")
     public LettuceConnectionFactory jwtRedisConnectionFactory() {
         AuthSdkRedisProperties.Lettuce lettuce = authSdkRedisProperties.getLettuce();
         AuthSdkRedisProperties.Pool pool = lettuce.getPool();
@@ -79,11 +79,7 @@ public class AuthSdkRedisAutoConfiguration {
         builder.poolConfig(genericObjectPoolConfig);
         LettuceClientConfiguration lettuceClientConfiguration = builder.build();
         //根据配置和客户端配置创建连接
-        LettuceConnectionFactory lettuceConnectionFactory = new
-                LettuceConnectionFactory(redisConfiguration,lettuceClientConfiguration);
-
-        lettuceConnectionFactory.afterPropertiesSet();
-        return lettuceConnectionFactory;
+        return new LettuceConnectionFactory(redisConfiguration,lettuceClientConfiguration);
     }
 
 }
