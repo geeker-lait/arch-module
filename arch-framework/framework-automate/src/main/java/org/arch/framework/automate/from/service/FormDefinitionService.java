@@ -8,6 +8,6 @@ package org.arch.framework.automate.from.service;
  * @since 2021-01-18 20:28:43
  * @description PN15855012581
  */
-public interface FormDefinitionService {
+public class FormDefinitionService {
 
 }

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class FormDefinitionServiceImpl implements FormDefinitionService {
+public class FormDefinitionServiceImpl/* implements FormDefinitionService*/ {
     private final FormDefinitionDao formDefinitionDao;
 
 }

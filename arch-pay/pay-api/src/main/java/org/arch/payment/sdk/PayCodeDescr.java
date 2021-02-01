@@ -8,7 +8,7 @@ import org.arch.framework.beans.enums.StatusCode;
  * @weixin PN15855012581
  * @date 12/29/2020 7:39 PM
  */
-public enum PayStatusCode implements StatusCode {
+public enum PayCodeDescr implements StatusCode {
     ;
 
     @Override
