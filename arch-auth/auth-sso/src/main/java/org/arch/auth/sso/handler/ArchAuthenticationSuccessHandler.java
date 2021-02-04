@@ -138,6 +138,7 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
                                                           null,
                                                           null,
                                                           null,
+                                                          null,
                                                           getJsonTargetUrl(targetUrl, request),
                                                           null);
                 // 设置 jwt
