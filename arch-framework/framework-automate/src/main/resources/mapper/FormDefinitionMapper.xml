@@ -10,7 +10,7 @@
     </sql>
 
 
-    <delete id="dropTableBak" parameterType="string">
+    <delete id="dropTable" parameterType="string">
         drop table ${tableName}
     </delete>
 
@@ -101,5 +101,6 @@
             IS
             '${comments}'
     </update>
+
 
 </mapper>
