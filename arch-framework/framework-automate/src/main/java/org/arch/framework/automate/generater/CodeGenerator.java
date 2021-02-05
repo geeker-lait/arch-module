@@ -2,19 +2,19 @@ package org.arch.framework.automate.generater;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.common.metadata.PkFiledInfo;
 import org.arch.framework.automate.generater.config.CodeGeneratorConfig;
 import org.arch.framework.automate.generater.config.GeneratorConstants;
 import org.arch.framework.automate.generater.config.ModuleConfig;
-import org.arch.framework.automate.generater.db.DataBaseEntityUtils;
+import org.arch.framework.automate.common.utils.DataBaseEntityUtils;
 import org.arch.framework.automate.generater.ex.CodegenException;
-import org.arch.framework.automate.generater.metadata.EntityInfo;
-import org.arch.framework.automate.generater.metadata.FieldInfo;
-import org.arch.framework.automate.generater.metadata.IdInfo;
-import org.arch.framework.automate.generater.parser.EntityParseable;
-import org.arch.framework.automate.generater.parser.MybatisEntityInfoParser;
+import org.arch.framework.automate.common.metadata.EntityInfo;
+import org.arch.framework.automate.common.metadata.FieldInfo;
+import org.arch.framework.automate.common.parser.EntityParseable;
+import org.arch.framework.automate.common.parser.MybatisEntityInfoParser;
 import org.arch.framework.automate.generater.render.DefaultRender;
 import org.arch.framework.automate.generater.render.Rendable;
-import org.arch.framework.automate.generater.utils.ReflectUtils;
+import org.arch.framework.automate.common.utils.ReflectUtils;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.CollectionUtils;
@@ -259,10 +259,10 @@ public class CodeGenerator {
                     pack = pack.replace("*", e.getModuleName());
                 }
                 e.setPackageName(pack);
-                IdInfo idInfo = new IdInfo();
-                idInfo.setClassName(config.getEntityIdClass());
-                idInfo.setPackageName(config.getEntityIdPackName());
-                e.setId(idInfo);
+                PkFiledInfo pkFiledInfo = new PkFiledInfo();
+                pkFiledInfo.setClassName(config.getEntityIdClass());
+                pkFiledInfo.setPackageName(config.getEntityIdPackName());
+                e.setId(pkFiledInfo);
             });
         }
 

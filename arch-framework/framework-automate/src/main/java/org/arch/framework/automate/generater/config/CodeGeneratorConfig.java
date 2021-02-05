@@ -1,7 +1,7 @@
 package org.arch.framework.automate.generater.config;
 
 import lombok.Data;
-import org.arch.framework.automate.generater.db.DataBaseProperties;
+import org.arch.framework.automate.common.utils.DataBaseProperties;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -329,6 +329,11 @@
                 <artifactId>jedis</artifactId>
                 <version>3.3.0</version>
             </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>3.14.0</version>
+            </dependency>
 
 
 

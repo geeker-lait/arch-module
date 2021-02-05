@@ -1,8 +1,8 @@
 package org.arch.framework.automate.generater.render;
 
 import lombok.Data;
-import org.arch.framework.automate.generater.metadata.EntityInfo;
-import org.arch.framework.automate.generater.metadata.ModuleInfo;
+import org.arch.framework.automate.common.metadata.EntityInfo;
+import org.arch.framework.automate.common.metadata.DatabaseInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class RenderingRequest {
     private String author;
     private String date;
     private String comments;
-    private List<ModuleInfo> moduleInfos;
+    private List<DatabaseInfo> databaseInfos;
     private EntityInfo entity;
     private Set<String> imports;
     private Map<String, RenderingResponse> lastRenderResponse;

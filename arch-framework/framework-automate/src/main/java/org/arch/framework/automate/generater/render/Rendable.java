@@ -1,6 +1,6 @@
 package org.arch.framework.automate.generater.render;
 
-import org.arch.framework.automate.generater.metadata.EntityInfo;
+import org.arch.framework.automate.common.metadata.EntityInfo;
 
 /**
  * 模板渲染接口

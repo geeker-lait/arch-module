@@ -5,9 +5,9 @@ import org.apache.logging.log4j.util.Strings;
 import org.arch.framework.automate.generater.config.CodeGeneratorConfig;
 import org.arch.framework.automate.generater.config.GeneratorConstants;
 import org.arch.framework.automate.generater.config.ModuleConfig;
-import org.arch.framework.automate.generater.metadata.EntityInfo;
-import org.arch.framework.automate.generater.metadata.FieldInfo;
-import org.arch.framework.automate.generater.utils.FreeMarkerUtils;
+import org.arch.framework.automate.common.metadata.EntityInfo;
+import org.arch.framework.automate.common.metadata.FieldInfo;
+import org.arch.framework.automate.common.utils.FreeMarkerUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;

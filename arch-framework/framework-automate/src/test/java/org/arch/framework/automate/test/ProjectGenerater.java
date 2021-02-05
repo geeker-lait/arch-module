@@ -1,14 +1,13 @@
 package org.arch.framework.automate.test;
 
-import cn.hutool.json.JSON;
 import com.alibaba.fastjson.JSONArray;
 import org.arch.framework.automate.generater.core.DaoProcessor;
 import org.arch.framework.automate.generater.core.DdlProcessor;
 import org.arch.framework.automate.generater.core.ModuleInfos;
 import org.arch.framework.automate.generater.core.TableSchema;
-import org.arch.framework.automate.generater.metadata.ModuleInfo;
+import org.arch.framework.automate.common.metadata.DatabaseInfo;
 import org.arch.framework.automate.generater.render.RenderingRequest;
-import org.arch.framework.automate.generater.utils.FreeMarkerUtils;
+import org.arch.framework.automate.common.utils.FreeMarkerUtils;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -40,8 +39,8 @@ public class ProjectGenerater {
         FileInputStream fileInputStream = new FileInputStream(savePath + file);
         JSONArray gson = new JSONArray();
         ModuleInfos<TableSchema> excelUtils = new ModuleInfos(file, fileInputStream, TableSchema.class);
-        List<ModuleInfo> moduleInfosList =  excelUtils.getModuleInfos();
-        System.out.println(gson.toJSONString(moduleInfosList));
+        List<DatabaseInfo> databaseInfosList =  excelUtils.getDatabaseInfos();
+        System.out.println(gson.toJSONString(databaseInfosList));
 
         List<RenderingRequest> renderingRequests=new ArrayList<>();
         // 后面读取yml,实现定义生成
@@ -49,7 +48,7 @@ public class ProjectGenerater {
         renderingRequest.setFtlPath(ftlPath + "templates");
         renderingRequest.setFtlName("ddl.ftl");
         renderingRequest.setSavePath(savePath);
-        renderingRequest.setModuleInfos(excelUtils.getModuleInfos());
+        renderingRequest.setDatabaseInfos(excelUtils.getDatabaseInfos());
         renderingRequest.setCover(true);
 
 
@@ -63,24 +62,24 @@ public class ProjectGenerater {
 
 
         FreeMarkerUtils.addFtlProcessor(new DdlProcessor()).add(new DaoProcessor());
-        moduleInfosList.forEach(moduleInfo -> {
+        databaseInfosList.forEach(databaseInfo -> {
 
             RenderingRequest daoRenderingRequest = new RenderingRequest();
             daoRenderingRequest.setFtlPath(ftlPath + "templates");
             daoRenderingRequest.setFtlName("dao.ftl");
             daoRenderingRequest.setSavePath(savePath);
-            daoRenderingRequest.setModuleInfos(excelUtils.getModuleInfos());
+            daoRenderingRequest.setDatabaseInfos(excelUtils.getDatabaseInfos());
             daoRenderingRequest.setCover(true);
-            daoRenderingRequest.setModuleName(moduleInfo.getModuleName());
+            daoRenderingRequest.setModuleName(databaseInfo.getModuleName());
 
 
             RenderingRequest entityRenderingRequest = new RenderingRequest();
             entityRenderingRequest.setFtlPath(ftlPath + "templates");
             entityRenderingRequest.setFtlName("entity.ftl");
             entityRenderingRequest.setSavePath(savePath);
-            entityRenderingRequest.setModuleInfos(excelUtils.getModuleInfos());
+            entityRenderingRequest.setDatabaseInfos(excelUtils.getDatabaseInfos());
             entityRenderingRequest.setCover(true);
-            entityRenderingRequest.setModuleName(moduleInfo.getModuleName());
+            entityRenderingRequest.setModuleName(databaseInfo.getModuleName());
 
             renderingRequests.add(entityRenderingRequest);
             renderingRequests.add(daoRenderingRequest);

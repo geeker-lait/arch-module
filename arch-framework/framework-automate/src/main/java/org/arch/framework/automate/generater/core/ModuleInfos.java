@@ -9,10 +9,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.arch.framework.automate.generater.metadata.EntityInfo;
-import org.arch.framework.automate.generater.metadata.FieldInfo;
-import org.arch.framework.automate.generater.metadata.ModuleInfo;
-import org.arch.framework.automate.generater.utils.ExcelUtils;
+import org.arch.framework.automate.common.metadata.EntityInfo;
+import org.arch.framework.automate.common.metadata.FieldInfo;
+import org.arch.framework.automate.common.metadata.DatabaseInfo;
+import org.arch.framework.automate.common.utils.ExcelUtils;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.Map;
 public class ModuleInfos<T extends NameToField> {
 
     @Getter
-    private List<ModuleInfo> moduleInfos;
+    private List<DatabaseInfo> databaseInfos;
 
     public ModuleInfos(String filePath, InputStream inputStream, Class<T> t) throws Exception {
         Workbook workbook = ExcelUtils.initWorkBook(filePath, inputStream);
@@ -38,16 +38,16 @@ public class ModuleInfos<T extends NameToField> {
     }
 
     public void init(Workbook workbook, Class<T> t) {
-        moduleInfos = new ArrayList<>();
+        databaseInfos = new ArrayList<>();
         Map<String, String> tables = new HashMap<>();
         for (int i = 0, length = workbook.getNumberOfSheets(); i < length; ++i) {
             // 初始化ModuleInfo
             Sheet sheet = workbook.getSheetAt(i);
-            ModuleInfo moduleInfo = new ModuleInfo();
+            DatabaseInfo databaseInfo = new DatabaseInfo();
             List<EntityInfo> entityInfos = new ArrayList<>();
-            moduleInfo.setModuleName(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, sheet.getSheetName()));
-            moduleInfo.setEntityInfos(entityInfos);
-            moduleInfos.add(moduleInfo);
+            databaseInfo.setModuleName(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, sheet.getSheetName()));
+            databaseInfo.setEntityInfos(entityInfos);
+            databaseInfos.add(databaseInfo);
             // 处理sheet
             Row firstRow = sheet.getRow(sheet.getFirstRowNum());
             String moduleName = sheet.getSheetName();
