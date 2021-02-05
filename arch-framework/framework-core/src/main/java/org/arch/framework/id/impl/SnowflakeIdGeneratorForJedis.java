@@ -7,7 +7,6 @@ import org.arch.framework.id.IdKey;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStringCommands;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.types.Expiration;
 
 import java.nio.charset.StandardCharsets;
@@ -32,29 +31,26 @@ public abstract class SnowflakeIdGeneratorForJedis {
     private long lastTimestamp = -1L;
 
     protected RedisConnectionFactory redisConnectionFactory;
-    protected RedisTemplate redisTemplate;
 
-    public SnowflakeIdGeneratorForJedis(RedisConnectionFactory redisConnectionFactory, RedisTemplate redisTemplate) {
+    public SnowflakeIdGeneratorForJedis(RedisConnectionFactory redisConnectionFactory) {
         this.redisConnectionFactory = redisConnectionFactory;
-        this.redisTemplate = redisTemplate;
     }
 
     private void init(IdKey idType) {
-        RedisConnection connection = this.redisConnectionFactory.getConnection();
 
-        try {
+        try (RedisConnection connection = this.redisConnectionFactory.getConnection()) {
             String workerIdRedisKey = idType.getKey();
             boolean hasGetWorkerId = false;
 
-            for(int i = 1; (long)i <= 1023L; ++i) {
+            for (int i = 1; (long) i <= 1023L; ++i) {
                 String workerIdKey = workerIdRedisKey + i;
                 Boolean exists = connection.exists(workerIdKey.getBytes(StandardCharsets.UTF_8));
                 if (isNull(exists) || !exists) {
                     // 1分44秒
                     Boolean setResult = connection.set(workerIdKey.getBytes(StandardCharsets.UTF_8),
-                                                 ("" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8),
-                                                 Expiration.from(86400L, TimeUnit.MICROSECONDS),
-                                                 RedisStringCommands.SetOption.SET_IF_ABSENT);
+                                                       ("" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8),
+                                                       Expiration.from(86400L, TimeUnit.MICROSECONDS),
+                                                       RedisStringCommands.SetOption.SET_IF_ABSENT);
                     if (setResult != null && setResult) {
                         this.workerId = i;
                         hasGetWorkerId = true;
@@ -69,19 +65,14 @@ public abstract class SnowflakeIdGeneratorForJedis {
 
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
             executor.scheduleAtFixedRate(() -> {
-                RedisConnection connection1 = this.redisConnectionFactory.getConnection();
 
-                try {
+                try (RedisConnection connection1 = this.redisConnectionFactory.getConnection()) {
                     String workerIdKey = workerIdRedisKey + this.workerId;
                     log.info("SnowflakeIdGenerator机器号预占续期，{}", workerIdKey);
                     connection1.expire(workerIdKey.getBytes(StandardCharsets.UTF_8), 86400);
-                } finally {
-                    connection1.close();
                 }
 
             }, 3600L, 3600L, TimeUnit.SECONDS);
-        } finally {
-            connection.close();
         }
 
     }

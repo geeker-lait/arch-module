@@ -3,18 +3,20 @@ package org.arch.framework.id.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.id.IdKey;
 import org.arch.framework.id.IdService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.TimeoutUtils;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+
+import static java.util.Objects.nonNull;
 
 /**
  * 描述: id生产
@@ -27,8 +29,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisIdService extends  SnowflakeIdGeneratorForJedis implements IdService {
 
-    public RedisIdService(RedisConnectionFactory redisConnectionFactory, RedisTemplate redisTemplate) {
-        super(redisConnectionFactory, redisTemplate);
+    public RedisIdService(RedisConnectionFactory redisConnectionFactory) {
+        super(redisConnectionFactory);
     }
 
     /**
@@ -38,16 +40,20 @@ public class RedisIdService extends  SnowflakeIdGeneratorForJedis implements IdS
     public String generateId(IdKey idBizCode) {
 
         String prefix = getTimePrefix(idBizCode);
-        // idKey 20 123 13 24 34
+        // idKey 20 123 86400
         String key = idBizCode.getKey().concat(prefix);
-        try {
-            long index = redisTemplate.opsForValue().increment(key);
+        try (RedisConnection connection = this.redisConnectionFactory.getConnection()) {
+
+            final byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+            final Long index = connection.incr(keyBytes);
             // 设置一秒后超时，清楚key
-            redisTemplate.expire(key, idBizCode.getTimeout(), idBizCode.getTimeUnit());
+            if (nonNull(index) && 2L > index) {
+                long seconds = TimeoutUtils.toSeconds(idBizCode.getTimeout(), idBizCode.getTimeUnit());
+                connection.expire(keyBytes, seconds);
+            }
 
             // 补位操作 保证满足6位  id = BizPrefix + 时间 + 000000
-            String id = idBizCode.getBizPrefix().concat(prefix.concat(String.format(idBizCode.getFmtSuffix(), index)));
-            return id;
+            return idBizCode.getBizPrefix().concat(prefix.concat(String.format(idBizCode.getFmtSuffix(), index)));
         } catch (Exception ex) {
             log.error("分布式用户ID生成失败异常: " + ex.getMessage());
             //throw new UnichainException(ExceptionType.BusinessException, "分布式用户ID生成异常");
@@ -63,16 +69,21 @@ public class RedisIdService extends  SnowflakeIdGeneratorForJedis implements IdS
         if (prefix == null) {
             prefix = "";
         }
-        String timePrefix = getTimePrefix(idBizCode);
-        // idKey 20 123 13 24 34
+        //timePrefix 20 123 86400
+        String timePrefix = getYDSOfNowPrefix(idBizCode.getTimeUnit());
+        // idKey 20 123 86400
         String key = idBizCode.getKey().concat(prefix).concat(timePrefix);
-        try {
-            long index = redisTemplate.opsForValue().increment(key);
-            // 设置一个分钟后超时，清楚key
-            redisTemplate.expire(key, idBizCode.getTimeout(), idBizCode.getTimeUnit());
+        try (RedisConnection connection = this.redisConnectionFactory.getConnection()) {
+
+            byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+            final Long index = connection.incr(keyBytes);
+            // 设置一秒后超时，清除key
+            if (nonNull(index) && 2L > index) {
+                long seconds = TimeoutUtils.toSeconds(idBizCode.getTimeout(), idBizCode.getTimeUnit());
+                connection.expire(keyBytes, seconds);
+            }
             // 补位操作 保证满足6位  id = BizPrefix + 时间 + 000000
-            String id = prefix.concat(idBizCode.getBizPrefix().concat(timePrefix.concat(String.format(idBizCode.getFmtSuffix(), index))));
-            return id;
+            return prefix.concat(idBizCode.getBizPrefix().concat(timePrefix.concat(String.format(idBizCode.getFmtSuffix(), index))));
         } catch (Exception ex) {
             log.error("分布式用户ID生成失败异常: " + ex.getMessage());
             //throw new UnichainException(ExceptionType.BusinessException, "分布式用户ID生成异常");
@@ -111,13 +122,58 @@ public class RedisIdService extends  SnowflakeIdGeneratorForJedis implements IdS
         return Long.valueOf(prefix.concat(str.toString()));
     }
 
+    /**
+     * 获取一年中的第多少天的第几秒 19年310天86400秒
+     *
+     * @param timeUnit  生成该 时间单位 的秒数
+     * @return  一年中的第多少天的第几秒 19年310天86400秒
+     */
+    private static String getYDSOfNowPrefix(TimeUnit timeUnit) {
+        LocalDateTime dateTime = LocalDateTime.now();
+        // 今天是第多少天
+        int year = dateTime.getYear();
+        int day = dateTime.getDayOfYear();
+        int second;
+        // 0补位操作 必须满足2位
+        String yearFmt = String.format("%1$02d", (year - 2000));
+        // 0补位操作 必须满足3位
+        String dayFmt = String.format("%1$03d", day);
+        // 生成该 时间单位 的秒数
+        if (timeUnit == TimeUnit.SECONDS) {
+            second = (dateTime.getHour() * 3600) +
+                    (dateTime.getMinute() * 60) +
+                    dateTime.getSecond();
+        }
+        else if (timeUnit == TimeUnit.MINUTES) {
+            second = (dateTime.getHour() * 3600) +
+                    (dateTime.getMinute() * 60);
+        }
+        else if (timeUnit == TimeUnit.HOURS) {
+            second = dateTime.getHour() * 3600;
+        }
+        else if (timeUnit == TimeUnit.DAYS) {
+            second = 0;
+        }
+        else {
+            second = (dateTime.getHour() * 3600) +
+                    (dateTime.getMinute() * 60) +
+                    dateTime.getSecond();
+        }
+
+        // 0补位操作 必须满足5位
+        String secondFmt = String.format("%1$05d", second);
+        return yearFmt + dayFmt + secondFmt;
+    }
+
     private String getTimePrefix(IdKey idBizCode) {
         // 20 123 13 24 34
         String prefix = getYDHMPrefix(new Date());
+
         if (idBizCode.getTimeUnit() == TimeUnit.DAYS) {
             prefix = prefix.substring(0, 5);
         } else if (idBizCode.getTimeUnit() == TimeUnit.HOURS) {
-            prefix = prefix.substring(0, 7);
+            prefix = prefix.substring(0, 5) +
+                    Integer.parseInt(prefix.substring(5)) / 3600 * 3600;
         } else if (idBizCode.getTimeUnit() == TimeUnit.MINUTES) {
             prefix = prefix.substring(0, 9);
         } else if (idBizCode.getTimeUnit() == TimeUnit.SECONDS) {
@@ -125,7 +181,6 @@ public class RedisIdService extends  SnowflakeIdGeneratorForJedis implements IdS
         }
         return prefix;
     }
-
 
     /**
      * 获取一年中的第多少天的第多少个小时的第多少分 19年310天20时30分
