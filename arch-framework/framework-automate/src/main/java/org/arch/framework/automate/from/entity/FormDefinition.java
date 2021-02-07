@@ -8,6 +8,7 @@ import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.arch.framework.crud.CrudEntity;
 
 /**
  * 表单定义(form_definition)实体类
@@ -20,7 +21,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 @TableName("form_definition")
-public class FormDefinition extends Model<FormDefinition> implements Serializable {
+public class FormDefinition extends CrudEntity<FormDefinition> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**

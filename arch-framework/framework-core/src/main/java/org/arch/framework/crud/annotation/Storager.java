@@ -1,6 +1,6 @@
 package org.arch.framework.crud.annotation;
 
-import org.arch.framework.crud.StoragerType;
+import org.arch.framework.crud.sharding.StoragerType;
 
 import java.lang.annotation.*;
 

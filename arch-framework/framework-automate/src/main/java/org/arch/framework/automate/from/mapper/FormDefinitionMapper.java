@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.arch.framework.automate.from.entity.FormDefinition;
+import org.arch.framework.crud.CrudMapper;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Map;
  * @since 2021-01-18 20:28:43
  */
 @Mapper
-public interface FormDefinitionMapper extends BaseMapper<FormDefinition> {
+public interface FormDefinitionMapper extends CrudMapper<FormDefinition> {
 
     //删除该表的备份表
     int dropTable(@Param("tableName") String tableName);

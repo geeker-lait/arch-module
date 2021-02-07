@@ -1,8 +1,11 @@
-package org.arch.framework.automate.from.directive;
+package org.arch.framework.automate.from.directive.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.arch.framework.automate.from.directive.request.CreateDatabaseRequest;
+import org.arch.framework.automate.from.directive.DirectiveResponse;
+import org.arch.framework.automate.from.directive.SqlDirective;
+import org.arch.framework.automate.from.directive.SqlDirectiveCode;
 import org.arch.framework.automate.from.directive.request.CreateTableRequest;
+import org.arch.framework.automate.from.directive.response.CreateTableResponse;
 import org.arch.framework.automate.from.service.FormDefinitionService;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +17,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class DdlCreateTbDirective implements SqlDirective<CreateTableRequest> {
+public class DdlCreateTbDirective extends AbstractDirective  implements SqlDirective<CreateTableRequest> {
 
     private final FormDefinitionService formDefinitionService;
 
     @Override
-    public <R extends DirectiveResponse> R exec(CreateTableRequest directiveRequest) {
+    public CreateTableResponse exec(CreateTableRequest directiveRequest) {
 
         //formDefinitionService.
         return null;

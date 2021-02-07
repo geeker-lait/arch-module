@@ -1,4 +1,4 @@
-package org.arch.framework.crud;
+package org.arch.framework.crud.sharding;
 
 /**
  * @author lait.zhang@gmail.com

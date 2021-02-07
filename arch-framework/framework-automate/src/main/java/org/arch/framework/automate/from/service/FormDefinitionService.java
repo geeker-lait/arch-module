@@ -18,24 +18,24 @@ import java.util.Map;
  */
 @RequiredArgsConstructor
 @Service
-public class FormDefinitionService {
-    private final FormDefinitionMapper formDefinitionMapper;
-
-    public Integer existTable(String tableName) {
-        //return formDefinitionMapper.existTable(tableName);
-        return null;
-    }
-
-    public Integer countTableRow(Map<String, Object> map) {
-        return formDefinitionMapper.insert(null);
-    }
-
-    public Integer dropTable(Map<String, Object> map) {
-        return formDefinitionMapper.dropTable("");
-    }
-
-    public Integer createNewTable(Map<String, Object> map) {
-        formDefinitionMapper.createNewTable(map);
-        return null;
-    }
+public class FormDefinitionService extends CrudService<FormDefinition,Long> {
+//    private final FormDefinitionMapper formDefinitionMapper;
+//
+//    public Integer existTable(String tableName) {
+//        //return formDefinitionMapper.existTable(tableName);
+//        return null;
+//    }
+//
+//    public Integer countTableRow(Map<String, Object> map) {
+//        return formDefinitionMapper.insert(null);
+//    }
+//
+//    public Integer dropTable(Map<String, Object> map) {
+//        return formDefinitionMapper.dropTable("");
+//    }
+//
+//    public Integer createNewTable(Map<String, Object> map) {
+//        formDefinitionMapper.createNewTable(map);
+//        return null;
+//    }
 }

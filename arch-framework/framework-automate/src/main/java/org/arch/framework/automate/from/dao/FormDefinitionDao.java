@@ -1,9 +1,10 @@
 package org.arch.framework.automate.from.dao;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.from.entity.FormDefinition;
 import org.arch.framework.automate.from.mapper.FormDefinitionMapper;
+import org.arch.framework.crud.CrudDao;
+import org.arch.framework.crud.CrudServiceImpl;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,6 +16,6 @@ import org.springframework.stereotype.Repository;
  */
 @Slf4j
 @Repository
-public class FormDefinitionDao extends ServiceImpl<FormDefinitionMapper, FormDefinition> {
+public class FormDefinitionDao extends CrudServiceImpl<FormDefinitionMapper, FormDefinition> implements CrudDao<FormDefinition> {
 
 }
