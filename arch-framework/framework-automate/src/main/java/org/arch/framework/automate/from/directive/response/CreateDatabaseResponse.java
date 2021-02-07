@@ -9,4 +9,5 @@ import org.arch.framework.automate.from.directive.DirectiveResponse;
  * @date 2/5/2021 6:30 PM
  */
 public class CreateDatabaseResponse implements DirectiveResponse {
+
 }

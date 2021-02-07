@@ -33,10 +33,6 @@ public class FieldInfo extends BaseClassInfo {
      */
     private String type;
 
-    /**
-     * 字段上的注解
-     */
-    private List<AnnotationInfo> annotations;
 
     /**
      * 字段在数据库的注释

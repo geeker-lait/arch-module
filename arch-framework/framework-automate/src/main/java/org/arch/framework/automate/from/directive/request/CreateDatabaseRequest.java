@@ -1,5 +1,6 @@
 package org.arch.framework.automate.from.directive.request;
 
+import lombok.Data;
 import org.arch.framework.automate.from.directive.DirectiveRequest;
 
 /**
@@ -8,5 +9,8 @@ import org.arch.framework.automate.from.directive.DirectiveRequest;
  * @weixin PN15855012581
  * @date 2/5/2021 6:29 PM
  */
+@Data
 public class CreateDatabaseRequest implements DirectiveRequest {
+    private String dbName;
+
 }

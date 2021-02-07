@@ -2,6 +2,8 @@ package org.arch.framework.automate.common.metadata;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 类描述信息
  */
@@ -22,5 +24,10 @@ public abstract class BaseClassInfo {
      * 模块名
      */
     protected String moduleName;
+
+    /**
+     * 注解
+     */
+    private List<AnnotationInfo> annotations;
 
 }

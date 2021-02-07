@@ -1,9 +1,11 @@
 package org.arch.framework.automate.from.directive.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.arch.framework.automate.from.directive.SqlDirective;
 import org.arch.framework.automate.from.directive.SqlDirectiveCode;
 import org.arch.framework.automate.from.directive.request.CreateDatabaseRequest;
 import org.arch.framework.automate.from.directive.response.CreateDatabaseResponse;
+import org.arch.framework.automate.from.service.FormDefinitionService;
 
 /**
  * @author lait.zhang@gmail.com
@@ -11,11 +13,14 @@ import org.arch.framework.automate.from.directive.response.CreateDatabaseRespons
  * @weixin PN15855012581
  * @date 2/5/2021 5:26 PM
  */
+@RequiredArgsConstructor
 public class DdlCreateDbDirective extends AbstractDirective implements SqlDirective<CreateDatabaseRequest> {
-
+    private final FormDefinitionService formDefinitionService;
 
     @Override
     public CreateDatabaseResponse exec(CreateDatabaseRequest directiveRequest) {
+        //directiveRequest
+        //formDefinitionService.save();
         return null;
     }
 

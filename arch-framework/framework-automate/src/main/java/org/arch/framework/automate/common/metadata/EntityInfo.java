@@ -37,10 +37,7 @@ public class EntityInfo extends BaseClassInfo {
      */
     private List<UniqueFiledInfo> uniqueFiledInfos;
 
-    /**
-     * 注解
-     */
-    private List<AnnotationInfo> annotations;
+
 
 
 }

@@ -7,4 +7,5 @@ package org.arch.framework.automate.from.directive.impl;
  * @date 2/7/2021 5:43 PM
  */
 public abstract class AbstractDirective {
+
 }
