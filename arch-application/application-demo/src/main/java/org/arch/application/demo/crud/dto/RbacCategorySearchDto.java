@@ -2,7 +2,7 @@ package org.arch.application.demo.crud.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.arch.framework.crud.dto.BaseSearchDto;
+import org.arch.framework.api.crud.BaseSearchDto;
 
 import java.util.Date;
 import java.util.Map;

@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.arch.framework.crud.dto.BaseSearchDto;
+import org.arch.framework.api.crud.BaseSearchDto;
 import org.arch.framework.ums.enums.ClientType;
 
 import java.time.LocalDateTime;
