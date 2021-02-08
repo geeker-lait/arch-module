@@ -2,7 +2,11 @@ package org.arch.framework.automate.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.api.FormDefinitionClient;
+import org.arch.framework.automate.api.request.AlterTableRequest;
 import org.arch.framework.automate.api.request.FormDefinitionRequest;
+import org.arch.framework.automate.api.response.AlterTableResponse;
+import org.arch.framework.automate.api.response.FormDefinitionResponse;
 import org.arch.framework.automate.from.entity.FormDefinition;
 import org.arch.framework.automate.from.service.FormDefinitionService;
 import org.arch.framework.crud.CrudController;
@@ -29,6 +33,7 @@ public class FormDefinitionController implements CrudController<FormDefinition, 
 
     private final AppProperties appProperties;
     private final FormDefinitionService formDefinitionService;
+    private final FormDefinitionClient formDefinitionClient;
 
     @Override
     public FormDefinition resolver(TokenInfo token, FormDefinition formDefinition) {
@@ -50,5 +55,6 @@ public class FormDefinitionController implements CrudController<FormDefinition, 
     public FormDefinitionSearchDto getSearchDto() {
         return new FormDefinitionSearchDto();
     }
+
 
 }
