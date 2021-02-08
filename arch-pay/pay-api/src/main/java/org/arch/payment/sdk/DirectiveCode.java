@@ -1,7 +1,7 @@
 package org.arch.payment.sdk;
 
 import lombok.Getter;
-import org.arch.framework.id.IdKey;
+import org.arch.framework.api.IdKey;
 import org.arch.payment.sdk.directive.BindCardDirective;
 import org.arch.payment.sdk.directive.PayingDirective;
 import org.arch.payment.sdk.directive.PreBindCardDirective;

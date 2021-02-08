@@ -1,6 +1,8 @@
 package org.arch.framework.id;
 
 
+import org.arch.framework.api.IdKey;
+
 /**
  * @Description 分布式ID生成接口
  */

@@ -1,4 +1,4 @@
-package org.arch.framework.id;
+package org.arch.framework.api;
 
 import java.util.concurrent.TimeUnit;
 

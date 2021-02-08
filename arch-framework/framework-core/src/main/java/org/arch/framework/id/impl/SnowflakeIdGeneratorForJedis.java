@@ -3,7 +3,7 @@ package org.arch.framework.id.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.exception.BusinessException;
 import org.arch.framework.beans.exception.constant.CommonStatusCode;
-import org.arch.framework.id.IdKey;
+import org.arch.framework.api.IdKey;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;

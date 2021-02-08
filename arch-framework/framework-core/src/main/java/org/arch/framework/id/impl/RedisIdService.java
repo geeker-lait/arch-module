@@ -1,11 +1,8 @@
 package org.arch.framework.id.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.id.IdKey;
+import org.arch.framework.api.IdKey;
 import org.arch.framework.id.IdService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

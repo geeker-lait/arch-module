@@ -6,7 +6,7 @@ import me.zhyd.oauth.model.AuthUser;
 import org.arch.auth.sso.properties.SsoProperties;
 import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.constant.ResponseStatusCode;
-import org.arch.framework.id.IdKey;
+import org.arch.framework.api.IdKey;
 import org.arch.framework.id.IdService;
 import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.ums.userdetails.ArchUser;
