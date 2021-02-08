@@ -67,6 +67,10 @@
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>automate-api</artifactId>
+        </dependency>
 
 
     </dependencies>

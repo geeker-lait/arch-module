@@ -1,6 +1,6 @@
-package org.arch.framework.automate.from.directive.response;
+package org.arch.framework.automate.api.response;
 
-import org.arch.framework.automate.from.directive.DirectiveResponse;
+import org.arch.framework.automate.api.DirectiveResponse;
 
 /**
  * @author lait.zhang@gmail.com

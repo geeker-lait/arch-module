@@ -1,4 +1,4 @@
-package org.arch.framework.automate.from.directive;
+package org.arch.framework.automate.api;
 
 /**
  * @author lait.zhang@gmail.com

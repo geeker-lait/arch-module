@@ -1,5 +1,8 @@
 package org.arch.framework.automate.from.directive;
 
+import org.arch.framework.automate.api.DirectiveRequest;
+import org.arch.framework.automate.api.DirectiveResponse;
+
 /**
  * @author lait.zhang@gmail.com
  * @description: 1.DDL（data definition language）——数据定义语言，用于定义和管理 SQL 数据库中的所有对象的语言

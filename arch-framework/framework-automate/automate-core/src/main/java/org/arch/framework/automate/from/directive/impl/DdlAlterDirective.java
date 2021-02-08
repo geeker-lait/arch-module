@@ -1,9 +1,9 @@
 package org.arch.framework.automate.from.directive.impl;
 
+import org.arch.framework.automate.api.request.FormDefinitionRequest;
 import org.arch.framework.automate.from.directive.SqlDirective;
 import org.arch.framework.automate.from.directive.SqlDirectiveCode;
-import org.arch.framework.automate.from.directive.request.AlterTableRequest;
-import org.arch.framework.automate.from.directive.response.AlterTableResponse;
+import org.arch.framework.automate.api.response.AlterTableResponse;
 
 /**
  * @author lait.zhang@gmail.com
@@ -11,9 +11,9 @@ import org.arch.framework.automate.from.directive.response.AlterTableResponse;
  * @weixin PN15855012581
  * @date 2/5/2021 5:26 PM
  */
-public class DdlAlterDirective extends AbstractDirective implements SqlDirective<AlterTableRequest> {
+public class DdlAlterDirective extends AbstractDirective implements SqlDirective<FormDefinitionRequest> {
     @Override
-    public AlterTableResponse exec(AlterTableRequest directiveRequest) {
+    public AlterTableResponse exec(FormDefinitionRequest directiveRequest) {
         // do
         return null;
     }
