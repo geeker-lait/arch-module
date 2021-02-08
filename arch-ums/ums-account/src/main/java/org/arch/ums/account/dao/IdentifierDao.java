@@ -67,4 +67,5 @@ public class IdentifierDao extends ServiceImpl<IdentifierMapper, Identifier> imp
     public AuthLoginDto findAuthLoginDtoByIdentifier(@NonNull String identifier, @NonNull Integer tenantId) {
         return identifierMapper.findAuthLoginDtoByIdentifier(identifier, tenantId);
     }
+
 }

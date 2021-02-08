@@ -1,5 +1,6 @@
 package org.arch.ums.account.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -7,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
-import org.arch.framework.ums.enums.SourceType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -28,9 +28,9 @@ public class Name extends CrudEntity<Name> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 账号-名称ID
+     * 账号-标识 ID
      */
-    @TableId("id")
+    @TableId(value = "id", type = IdType.INPUT)
     private Long id;
 
     /**
@@ -51,7 +51,7 @@ public class Name extends CrudEntity<Name> {
     /**
      * 来源, 推广统计用
      */
-    private SourceType source;
+    private String source;
 
     /**
      * 租户 id

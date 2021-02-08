@@ -24,7 +24,7 @@ import java.util.Map;
 public class IdentifierSearchDto extends BaseSearchDto {
 
     /**
-     * AccountIdentifier ID
+     * 账号-标识 ID
      */
     private Long id;
 

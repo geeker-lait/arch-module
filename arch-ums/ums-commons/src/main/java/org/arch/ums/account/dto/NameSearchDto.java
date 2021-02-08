@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.dto.BaseSearchDto;
-import org.arch.framework.ums.enums.SourceType;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -24,7 +23,7 @@ import java.util.Map;
 public class NameSearchDto extends BaseSearchDto {
 
     /**
-     * 账号-名称ID
+     * 账号-标识 ID
      */
     private Long id;
 
@@ -46,7 +45,7 @@ public class NameSearchDto extends BaseSearchDto {
     /**
      * 来源, 推广统计用
      */
-    private SourceType source;
+    private String source;
 
     /**
      * 租户 id

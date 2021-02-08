@@ -73,6 +73,7 @@ logging:
   config: classpath:logback-spring-dev.xml
   level:
     # feign 日志配置
-    org.arch.auth.ums.feign.client.ArchUmsAccountClient: debug
+    org.arch.auth.ums.feign.client.UmsAccountClient: debug
+    org.arch.auth.ums.feign.client.UmsAccountAuthClient: debug
 
 debug: true

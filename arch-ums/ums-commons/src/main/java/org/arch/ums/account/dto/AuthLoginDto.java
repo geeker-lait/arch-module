@@ -1,5 +1,7 @@
 package org.arch.ums.account.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.arch.framework.ums.enums.ChannelType;
 
@@ -13,8 +15,13 @@ import java.io.Serializable;
  * @date 2020/3/28 16:17
  */
 @Data
+@AllArgsConstructor
+@Builder
 public class AuthLoginDto implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    public AuthLoginDto() {
+    }
 
     private Long id;
     /**
