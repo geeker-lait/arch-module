@@ -1,5 +1,7 @@
 package org.arch.framework.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.arch.framework.beans.enums.StatusCode;
 import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 
@@ -25,7 +27,7 @@ public class Response<T> implements Serializable {
     /**
      * 响应数据，为空时json序列化时会忽略
      */
-//    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     private Response() { }
@@ -189,6 +191,7 @@ public class Response<T> implements Serializable {
      * 获取 code 等于 {@link ResponseStatusCode#SUCCESS} 时的 data 数据.
      * @return  返回 code 等于 {@link ResponseStatusCode#SUCCESS} 时的 data 数据, 否则返回 null.
      */
+    @JsonIgnore
     public T getSuccessData() {
         if (ResponseStatusCode.SUCCESS.getCode() == code) {
             return data;
