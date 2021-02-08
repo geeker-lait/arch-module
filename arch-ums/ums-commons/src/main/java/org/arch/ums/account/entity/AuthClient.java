@@ -1,5 +1,6 @@
 package org.arch.ums.account.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -30,7 +31,7 @@ public class AuthClient extends CrudEntity<AuthClient> {
     /**
      * 授权客户端ID
      */
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**

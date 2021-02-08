@@ -1,11 +1,10 @@
 package org.arch.auth.sso.jwt.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.ums.properties.AuthClientScopesCacheProperties;
 import org.arch.framework.beans.Response;
-import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 import org.arch.framework.beans.utils.IpUtils;
 import org.arch.framework.ums.enums.ScopesType;
+import org.arch.framework.ums.properties.AuthClientScopesCacheProperties;
 import org.arch.ums.account.vo.AuthClientVo;
 import org.arch.ums.feign.account.client.UmsAccountAuthClient;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static org.arch.framework.ums.consts.ClientConstants.CLIENT_ID_HEADER_NAME;
 import static org.arch.framework.ums.consts.ClientConstants.CLIENT_SECRET_HEADER_NAME;
 
@@ -162,9 +162,10 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
 
     private void syncToLocalCache() {
         // 对 scopes 进行本地缓存.
-        final Response<Map<Integer, Map<String, AuthClientVo>>> allScopes = umsAccountOauthClient.getAllScopes();
-        if (ResponseStatusCode.SUCCESS.getCode() == allScopes.getCode()) {
-            allScopeMap = allScopes.getData();
+        final Response<Map<Integer, Map<String, AuthClientVo>>> response = umsAccountOauthClient.getAllScopes();
+        Map<Integer, Map<String, AuthClientVo>> allScopeMap = response.getSuccessData();
+        if (nonNull(allScopeMap)) {
+        	this.allScopeMap = allScopeMap;
         }
     }
 }
