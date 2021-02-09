@@ -23,7 +23,7 @@ public class ProjectGenerater {
 
     public static void main(String[] args) throws Exception {
         String os = System.getProperty("os.name");
-        String file = "uni-life-pms.xlsx";
+        String file = "uni-life-sys.xlsx";
         String path = ProjectGenerater.class.getResource("/").getPath();
 
         String ftlPath;

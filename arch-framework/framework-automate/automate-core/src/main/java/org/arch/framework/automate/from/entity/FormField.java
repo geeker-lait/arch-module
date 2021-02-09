@@ -25,13 +25,8 @@ import java.time.LocalDateTime;
 @TableName("form_field")
 public class FormField extends CrudEntity<FormField> {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 主键
-     */
-    @TableId("id")
-    private Long id;
-
+    @TableId
+    protected Long id;
     /**
      * 表单Id
      */
@@ -66,11 +61,6 @@ public class FormField extends CrudEntity<FormField> {
      * 字段排序
      */
     private Integer sorted;
-
-    /**
-     * 时间戳
-     */
-    private LocalDateTime st;
 
 
     /**

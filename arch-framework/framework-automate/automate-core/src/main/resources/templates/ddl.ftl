@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS `arch_module`;
 USE `arch_module`;
-<#list moduleInfos as module>
+<#list moduleInfos?? as module>
 -- 若库不存在创建一个
 <#--CREATE DATABASE IF NOT EXISTS `${module.moduleName!"arch_lait"}`;
 USE `${module.moduleName!"arch_lait"}`;-->

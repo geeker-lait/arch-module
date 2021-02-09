@@ -18,7 +18,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FromBytearraySearchDto implements BaseSearchDto {
+public class FromBytearraySearchDto extends BaseSearchDto {
 
     /**
      * 主键

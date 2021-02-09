@@ -25,13 +25,8 @@ import java.time.LocalDateTime;
 @TableName("from_bytearray")
 public class FromBytearray extends CrudEntity<FromBytearray> {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 主键
-     */
-    @TableId("id")
-    private Long id;
-
+    @TableId
+    protected Long id;
     /**
      * 名称
      */
@@ -41,12 +36,6 @@ public class FromBytearray extends CrudEntity<FromBytearray> {
      * 二进制内容
      */
     private String contentByte;
-
-    /**
-     * 时间戳
-     */
-    private LocalDateTime st;
-
 
     /**
      * 获取主键值

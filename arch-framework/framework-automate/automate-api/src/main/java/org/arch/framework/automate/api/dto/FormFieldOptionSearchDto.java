@@ -19,7 +19,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormFieldOptionSearchDto implements BaseSearchDto {
+public class FormFieldOptionSearchDto extends BaseSearchDto {
 
     /**
      * 主键
