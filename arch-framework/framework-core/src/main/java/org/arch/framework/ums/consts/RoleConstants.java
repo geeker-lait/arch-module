@@ -18,6 +18,6 @@ public interface RoleConstants {
     /**
      * 权限分隔符
      */
-    String AUTHORITY_SEPARATE = ",";
+    String AUTHORITY_SEPARATOR = ",";
 
 }
