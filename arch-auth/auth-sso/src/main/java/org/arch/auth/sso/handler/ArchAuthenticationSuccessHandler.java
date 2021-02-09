@@ -3,12 +3,13 @@ package org.arch.auth.sso.handler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.auth.sso.properties.SsoProperties;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.utils.SecurityUtils;
 import org.springframework.core.log.LogMessage;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AbstractOAuth2Token;
 import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
@@ -84,21 +85,17 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        // 客户端成功处理器,
-        String username = authentication.getName();
-        String ip = IpUtil.getRealIp(request);
-        String userAgent = request.getHeader(SecurityConstants.HEADER_USER_AGENT);
         HttpSession session = request.getSession();
-        String sid = session.getId();
 
-        log.info("登录成功: uid={}, ip={}, ua={}, sid={}",
-                 username, ip, userAgent, sid);
-
-        AbstractAuthenticationToken token = (AbstractAuthenticationToken) authentication;
+        if (log.isInfoEnabled()) {
+            // 客户端成功处理器,
+            log.info("登录成功: uid={}, ip={}, ua={}, sid={}",
+                     authentication.getName(), IpUtil.getRealIp(request),
+                     request.getHeader(SecurityConstants.HEADER_USER_AGENT), session.getId());
+        }
 
         try
         {
-
             // 设置跳转的 url
             String targetUrl = determineTargetUrl(request, response);
 
@@ -135,8 +132,10 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
             if (LoginProcessType.JSON.equals(this.loginProcessType) || isAjaxOrJson(request))
             {
                 clearAuthenticationAttributes(request);
-                AuthTokenVo authTokenVo = new AuthTokenVo(username,
-                                                          username,
+                TokenInfo currentUser = SecurityUtils.getCurrentUser();
+                AuthTokenVo authTokenVo = new AuthTokenVo(currentUser.getAccountId().toString(),
+                                                          currentUser.getAccountName(),
+                                                          null,
                                                           null,
                                                           null,
                                                           null,
@@ -166,7 +165,8 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
         catch (Exception e)
         {
             log.error(String.format("设置登录成功后跳转的URL失败: error=%s, uid=%s, ip=%s, ua=%s, sid=%s",
-                                    e.getMessage(), username, ip, userAgent, sid), e);
+                                    e.getMessage(), authentication.getName(), IpUtil.getRealIp(request),
+                                    request.getHeader(SecurityConstants.HEADER_USER_AGENT), session.getId()), e);
             super.onAuthenticationSuccess(request, response, authentication);
         }
 

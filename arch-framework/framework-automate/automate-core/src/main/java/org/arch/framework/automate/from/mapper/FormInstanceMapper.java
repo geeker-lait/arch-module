@@ -1,8 +1,8 @@
 package org.arch.framework.automate.from.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.arch.framework.crud.CrudMapper;
 import org.arch.framework.automate.from.entity.FormInstance;
+import org.arch.framework.crud.CrudMapper;
 
 /**
  * 表单实例(FormInstance) 表数据库 Mapper 层

@@ -4,7 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.common.metadata.EntityInfo;
 import org.arch.framework.automate.common.metadata.FieldInfo;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

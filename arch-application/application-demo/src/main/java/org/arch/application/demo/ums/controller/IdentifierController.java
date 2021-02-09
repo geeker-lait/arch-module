@@ -2,13 +2,13 @@ package org.arch.application.demo.ums.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.application.demo.ums.dto.IdentifierSearchDto;
+import org.arch.application.demo.ums.entity.Identifier;
+import org.arch.application.demo.ums.service.IdentifierService;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.arch.application.demo.ums.dto.IdentifierSearchDto;
-import org.arch.application.demo.ums.entity.Identifier;
-import org.arch.application.demo.ums.service.IdentifierService;
 
 /**
  * 用户-标识(Identifier) 表服务控制器

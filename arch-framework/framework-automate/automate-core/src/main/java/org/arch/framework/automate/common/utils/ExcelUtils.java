@@ -3,7 +3,13 @@ package org.arch.framework.automate.common.utils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -26,6 +32,7 @@ public class ExcelUtils {
     //由于使用yyyyMMdd时间格式是方便转成int类型进行大小判断
     private static final DateFormat df = new SimpleDateFormat("yyyyMMdd");
     private static final DecimalFormat decimalFormat = new DecimalFormat("#.#");
+    private static final Pattern humpPattern = Pattern.compile("[A-Z]");
 
 
     public static Workbook initWorkBook(String filePath, InputStream inputStream) throws IOException {
@@ -233,7 +240,6 @@ public class ExcelUtils {
      * @return
      */
     public static String toLine(String camelCase) {
-        Pattern humpPattern = Pattern.compile("[A-Z]");
         Matcher matcher = humpPattern.matcher(camelCase);
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {

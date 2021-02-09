@@ -7,7 +7,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.exception.TenantIdNotFoundException;
 
@@ -68,7 +67,7 @@ public class ArchTenantContextHolder implements TenantContextHolder {
         // 未登录用户获取租户 id
         String tenantId = context.get();
         if (!hasText(tenantId)) {
-            throw new TenantIdNotFoundException(ErrorCodeEnum.TENANT_ID_NOT_FOUND, null, null);
+            return systemTenantId.toString();
         }
         return tenantId;
     }

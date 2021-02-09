@@ -52,7 +52,7 @@ public class RbacCategorySearchDto implements BaseSearchDto {
     private Date createdDate;
 
     @Override
-    protected void buildSearchParams(Map<String, Object> map) {
+    public void buildSearchParams(Map<String, Object> map) {
         putNoNull("EQ_categoryName",this.getCategoryName(),map);
         putNoNull("EQ_isActive",this.getIsActive(),map);
     }

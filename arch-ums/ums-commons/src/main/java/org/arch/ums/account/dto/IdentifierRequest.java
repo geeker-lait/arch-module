@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class IdentifierRequest {
 
     /**
-     * AccountIdentifier ID
+     * 账号-标识 ID
      */
     private Long id;
 

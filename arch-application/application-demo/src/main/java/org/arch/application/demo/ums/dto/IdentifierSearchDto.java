@@ -1,7 +1,6 @@
 package org.arch.application.demo.ums.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
@@ -18,10 +17,9 @@ import java.util.Map;
  * @since 1.0.0
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-public class IdentifierSearchDto extends BaseSearchDto {
+public class IdentifierSearchDto implements BaseSearchDto {
 
     /**
      * AccountIdentifier ID
@@ -79,7 +77,7 @@ public class IdentifierSearchDto extends BaseSearchDto {
     private LocalDateTime st;
 
     @Override
-    protected void buildSearchParams(Map<String, Object> map) {
+    public void buildSearchParams(Map<String, Object> map) {
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_identifier", this.getIdentifier(), map);
         putNoNull("EQ_aid", this.getAid(), map);

@@ -1,5 +1,7 @@
 package org.arch.framework.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.arch.framework.beans.enums.StatusCode;
 import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 
@@ -25,7 +27,7 @@ public class Response<T> implements Serializable {
     /**
      * 响应数据，为空时json序列化时会忽略
      */
-//    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     private Response() { }
@@ -47,7 +49,7 @@ public class Response<T> implements Serializable {
 
 
     public static <T> Response<T> success() {
-        return new Response<T>(ResponseStatusCode.SUCCESS.getCode(), ResponseStatusCode.SUCCESS.getDescr());
+        return new Response<>(ResponseStatusCode.SUCCESS.getCode(), ResponseStatusCode.SUCCESS.getDescr());
     }
 
     /**
@@ -57,7 +59,7 @@ public class Response<T> implements Serializable {
      * @param message 提示信息
      */
     public static <T> Response<T> success(T data, String message) {
-        return new Response<T>(ResponseStatusCode.SUCCESS.getCode(), message, data);
+        return new Response<>(ResponseStatusCode.SUCCESS.getCode(), message, data);
     }
 
     /**
@@ -67,7 +69,7 @@ public class Response<T> implements Serializable {
      * @return 成功响应参数
      */
     public static <T> Response<T> success(T data) {
-        return new Response<T>(ResponseStatusCode.SUCCESS.getCode(), ResponseStatusCode.SUCCESS.getDescr(), data);
+        return new Response<>(ResponseStatusCode.SUCCESS.getCode(), ResponseStatusCode.SUCCESS.getDescr(), data);
     }
 
 
@@ -77,7 +79,7 @@ public class Response<T> implements Serializable {
      * @param statusCode 错误码
      */
     public static <T> Response<T> failed(StatusCode statusCode) {
-        return new Response<T>(statusCode.getCode(), statusCode.getDescr(), null);
+        return new Response<>(statusCode.getCode(), statusCode.getDescr(), null);
     }
 
 
@@ -88,7 +90,7 @@ public class Response<T> implements Serializable {
      * @param message   错误信息
      */
     public static <T> Response<T> failed(StatusCode errorCode, String message) {
-        return new Response<T>(errorCode.getCode(), message, null);
+        return new Response<>(errorCode.getCode(), message, null);
     }
 
     /**
@@ -97,7 +99,7 @@ public class Response<T> implements Serializable {
      * @param message 提示信息
      */
     public static <T> Response<T> failed(String message) {
-        return new Response<T>(ResponseStatusCode.FAILED.getCode(), message, null);
+        return new Response<>(ResponseStatusCode.FAILED.getCode(), message, null);
     }
 
     /**
@@ -120,21 +122,21 @@ public class Response<T> implements Serializable {
      * @param message 提示信息
      */
     public static <T> Response<T> validateFailed(String message) {
-        return new Response<T>(ResponseStatusCode.VALIDATE_FAILED.getCode(), message, null);
+        return new Response<>(ResponseStatusCode.VALIDATE_FAILED.getCode(), message, null);
     }
 
     /**
      * 未登录返回结果
      */
     public static <T> Response<T> unauthorized(T data) {
-        return new Response<T>(ResponseStatusCode.UNAUTHORIZED.getCode(), ResponseStatusCode.UNAUTHORIZED.getDescr(), data);
+        return new Response<>(ResponseStatusCode.UNAUTHORIZED.getCode(), ResponseStatusCode.UNAUTHORIZED.getDescr(), data);
     }
 
     /**
      * 未授权返回结果
      */
     public static <T> Response<T> forbidden(T data) {
-        return new Response<T>(ResponseStatusCode.FORBIDDEN.getCode(), ResponseStatusCode.FORBIDDEN.getDescr(), data);
+        return new Response<>(ResponseStatusCode.FORBIDDEN.getCode(), ResponseStatusCode.FORBIDDEN.getDescr(), data);
     }
 
     /**
@@ -155,14 +157,14 @@ public class Response<T> implements Serializable {
      * @return 失败的响应参数
      */
     public static <T> Response<T> error(StatusCode code) {
-        return new Response(code.getCode(), code.getDescr());
+        return new Response<>(code.getCode(), code.getDescr());
     }
 
     public int getCode() {
         return code;
     }
 
-    public Response setCode(int code) {
+    public Response<T> setCode(int code) {
         this.code = code;
         return this;
     }
@@ -171,7 +173,7 @@ public class Response<T> implements Serializable {
         return msg;
     }
 
-    public Response setMsg(String msg) {
+    public Response<T> setMsg(String msg) {
         this.msg = msg;
         return this;
     }
@@ -180,9 +182,21 @@ public class Response<T> implements Serializable {
         return data;
     }
 
-    public Response setData(T data) {
+    public Response<T> setData(T data) {
         this.data = data;
         return this;
+    }
+
+    /**
+     * 获取 code 等于 {@link ResponseStatusCode#SUCCESS} 时的 data 数据.
+     * @return  返回 code 等于 {@link ResponseStatusCode#SUCCESS} 时的 data 数据, 否则返回 null.
+     */
+    @JsonIgnore
+    public T getSuccessData() {
+        if (ResponseStatusCode.SUCCESS.getCode() == code) {
+            return data;
+        }
+        return null;
     }
 
 }

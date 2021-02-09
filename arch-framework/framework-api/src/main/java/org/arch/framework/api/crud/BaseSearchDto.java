@@ -21,8 +21,8 @@ public abstract class BaseSearchDto {
      */
     public Map<String, Object> getSearchParams() {
         Map<String, Object> map = new LinkedHashMap<>();
-        buildSearchParams(map);
         map.put("EQ_deleted", deleted);
+        buildSearchParams(map);
         return map;
     }
 

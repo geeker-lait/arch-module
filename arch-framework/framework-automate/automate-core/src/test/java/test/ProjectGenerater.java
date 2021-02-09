@@ -1,13 +1,13 @@
 package test;
 
 import com.alibaba.fastjson.JSONArray;
+import org.arch.framework.automate.common.metadata.DatabaseInfo;
+import org.arch.framework.automate.common.utils.FreeMarkerUtils;
 import org.arch.framework.automate.generater.core.DaoProcessor;
 import org.arch.framework.automate.generater.core.DdlProcessor;
 import org.arch.framework.automate.generater.core.ModuleInfos;
 import org.arch.framework.automate.generater.core.TableSchema;
-import org.arch.framework.automate.common.metadata.DatabaseInfo;
 import org.arch.framework.automate.generater.render.RenderingRequest;
-import org.arch.framework.automate.common.utils.FreeMarkerUtils;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;

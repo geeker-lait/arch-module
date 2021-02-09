@@ -1,7 +1,6 @@
 package org.arch.ums.account.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
@@ -17,10 +16,9 @@ import java.util.Map;
  * @since 1.0.0
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-public class GroupSearchDto extends BaseSearchDto {
+public class GroupSearchDto implements BaseSearchDto {
 
     /**
      * 账号-权限ID
@@ -83,7 +81,7 @@ public class GroupSearchDto extends BaseSearchDto {
     private Boolean deleted;
 
     @Override
-    protected void buildSearchParams(Map<String, Object> map) {
+    public void buildSearchParams(Map<String, Object> map) {
         // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
         putNoNull("EQ_group_pid", this.getGroupPid(), map);
         putNoNull("EQ_group_code", this.getGroupCode(), map);

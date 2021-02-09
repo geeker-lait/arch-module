@@ -10,6 +10,7 @@ import org.arch.framework.automate.from.mapper.bak.FormMapper;
 import org.arch.framework.automate.from.mapper.bak.OperateTableMapper;
 import org.arch.framework.automate.from.service.bak.FieldService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class FieldServiceImpl implements FieldService {
     /**
      * 插入新字段后，自动生成并更新field_code，此处应该用事务
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
     public int insert(Field obj) {
         Integer checkResult = 0;
         //判断是否可以新增

@@ -3,8 +3,6 @@ package org.arch.framework.automate.common.metadata;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
-
 /**
  * 字段信息
  * {

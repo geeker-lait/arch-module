@@ -15,5 +15,9 @@ public interface RoleConstants {
      * 租户前缀
      */
     String TENANT_PREFIX = "TENANT_";
+    /**
+     * 权限分隔符
+     */
+    String AUTHORITY_SEPARATE = ",";
 
 }

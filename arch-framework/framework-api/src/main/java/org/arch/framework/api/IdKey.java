@@ -6,97 +6,97 @@ public enum IdKey {
     /**
      * app
      */
-    APP_ID("id.app.", 1, TimeUnit.DAYS, "00", "%1$06d"),
+    APP_ID("id.app.", 1, TimeUnit.DAYS, "0", "%1$06d"),
 
     // =================== UMS系统ID ===================
     /**
      * 账户
      */
-    UMS_ACCOUNT_ID("id.account.", 60, TimeUnit.MILLISECONDS, "01", "%1$08d"),
+    UMS_ACCOUNT_ID("id.account.", 60, TimeUnit.SECONDS, "1", "%1$07d"),
     /**
      * 用户
      */
-    UMS_USER_ID("id.account.", 60, TimeUnit.MILLISECONDS, "02", "%1$08d"),
+    UMS_USER_ID("id.account.", 60, TimeUnit.SECONDS, "2", "%1$07d"),
     /**
      * 会员
      */
-    UMS_MEMBER_ID("id.account.", 60, TimeUnit.MILLISECONDS, "05", "%1$08d"),
+    UMS_MEMBER_ID("id.account.", 60, TimeUnit.SECONDS, "5", "%1$07d"),
     /**
      * 商户
      */
-    UMS_MERCHANT_ID("id.account.", 60, TimeUnit.MILLISECONDS, "07", "%1$08d"),
+    UMS_MERCHANT_ID("id.account.", 60, TimeUnit.SECONDS, "7", "%1$07d"),
     /**
      * 账号-标识/AccountIdentifier
      */
-    UMS_ACCOUNT_IDENTIFIER_ID("id.identifier.", 60, TimeUnit.MILLISECONDS, "08", "%1$08d"),
+    UMS_ACCOUNT_IDENTIFIER_ID("id.identifier.", 60, TimeUnit.SECONDS, "8", "%1$07d"),
 
 
     // =================== OMS系统ID ===================
     /**
      * 订单
      */
-    OMS_ORDER_ID("id.order.", 60, TimeUnit.MILLISECONDS, "06", "%1$08d"),
+    OMS_ORDER_ID("id.order.", 60, TimeUnit.SECONDS, "6", "%1$07d"),
 
 
     // =================== PMS系统ID ===================
-    PMS_PRODUCT_ID("id.product.", 60, TimeUnit.MILLISECONDS, "04", "%1$08d"),
+    PMS_PRODUCT_ID("id.product.", 60, TimeUnit.SECONDS, "4", "%1$07d"),
 
 
     // =================== PAY系统ID ===================
     /**
      * 绑卡
      */
-    BANGKCARD_ID("id.bankcard.", 60, TimeUnit.MILLISECONDS, "03", "%1$08d"),
+    BANGKCARD_ID("id.bankcard.", 60, TimeUnit.SECONDS, "3", "%1$07d"),
     /**
      * 产品
      */
     /* 绑卡ID */
-    PAY_BINDCARD_ID("id.pay.bindcard.", 60, TimeUnit.MILLISECONDS, "10", "%1$08d"),
+    PAY_BINDCARD_ID("id.pay.bindcard.", 60, TimeUnit.SECONDS, "10", "%1$07d"),
     /**
      * 代扣ID
      */
-    PAY_WITHHOLD_ID("id.pay.withold.", 60, TimeUnit.MILLISECONDS, "11", "%1$08d"),
+    PAY_WITHHOLD_ID("id.pay.withold.", 60, TimeUnit.SECONDS, "11", "%1$07d"),
     /**
      * 支付ID
      */
-    PAY_ORDER("id.pay.order", 60, TimeUnit.MILLISECONDS, "12", "%1$08d"),
+    PAY_ORDER("id.pay.order", 60, TimeUnit.SECONDS, "12", "%1$07d"),
     /**
      * 退款订单ID
      */
-    PAY_REFUND_ID("id.pay.refund.", 60, TimeUnit.MILLISECONDS, "13", "%1$08d"),
+    PAY_REFUND_ID("id.pay.refund.", 60, TimeUnit.SECONDS, "13", "%1$07d"),
     /**
      * 代付
      */
-    PAY_FOR_ANOTHER_ID("id.pay.for.another.", 60, TimeUnit.MILLISECONDS, "14", "%1$08d"),
+    PAY_FOR_ANOTHER_ID("id.pay.for.another.", 60, TimeUnit.SECONDS, "14", "%1$07d"),
     /**
      * 还款订单号
      */
-    REPAY("id.pay.repay.", 60, TimeUnit.MILLISECONDS, "15", "%1$08d"),
+    REPAY("id.pay.repay.", 60, TimeUnit.SECONDS, "15", "%1$07d"),
 
 
     // =================== 支付系统ID ===================
     /**
      * 账单
      */
-    BILL("id.bill.", 60, TimeUnit.MILLISECONDS, "20", "%1$08d"),
+    BILL("id.bill.", 60, TimeUnit.SECONDS, "20", "%1$07d"),
     /**
      * 评估报告ID
      */
-    ASSESS("id.assess.", 60, TimeUnit.MILLISECONDS, "21", "%1$08d"),
+    ASSESS("id.assess.", 60, TimeUnit.SECONDS, "21", "%1$07d"),
     /**
      * 推荐ID
      */
-    RECOMMEND("id.recommend.", 60, TimeUnit.MILLISECONDS, "22", "%1$08d"),
+    RECOMMEND("id.recommend.", 60, TimeUnit.SECONDS, "22", "%1$07d"),
 
     // =================== jwt ID ===================
     /**
      * JWT jti
      */
-    JWT_JTI("id.jwt.", 60, TimeUnit.MILLISECONDS, "30", "%1$08d"),
+    JWT_JTI("id.jwt.", 60, TimeUnit.SECONDS, "30", "%1$07d"),
     /**
      * JWT refresh Token
      */
-    JWT_REFRESH_TOKEN("id.jwt.refresh.token.", 60, TimeUnit.MILLISECONDS, "31", "%1$08d"),
+    JWT_REFRESH_TOKEN("id.jwt.refresh.token.", 60, TimeUnit.SECONDS, "31", "%1$07d"),
     ;
 
     private String key;

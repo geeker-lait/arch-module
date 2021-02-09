@@ -3,7 +3,6 @@ package org.arch.framework.api.crud;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 基础Dto信息<br>

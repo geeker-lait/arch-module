@@ -44,4 +44,6 @@ public interface IdentifierMapper extends BaseMapper<Identifier> {
             " INNER JOIN account_name AS an ON a.aid = an.account_id")
     AuthLoginDto findAuthLoginDtoByIdentifier(@NonNull @Param("identifier") String identifier,
                                               @NonNull @Param("tenantId") Integer tenantId);
+
+
 }

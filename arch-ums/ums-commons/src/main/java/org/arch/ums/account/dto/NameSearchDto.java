@@ -1,11 +1,9 @@
 package org.arch.ums.account.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
-import org.arch.framework.ums.enums.SourceType;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -18,13 +16,12 @@ import java.util.Map;
  * @since 1.0.0
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-public class NameSearchDto extends BaseSearchDto {
+public class NameSearchDto implements BaseSearchDto {
 
     /**
-     * 账号-名称ID
+     * 账号-标识 ID
      */
     private Long id;
 
@@ -46,7 +43,7 @@ public class NameSearchDto extends BaseSearchDto {
     /**
      * 来源, 推广统计用
      */
-    private SourceType source;
+    private String source;
 
     /**
      * 租户 id
@@ -79,7 +76,7 @@ public class NameSearchDto extends BaseSearchDto {
     private Boolean deleted;
 
     @Override
-    protected void buildSearchParams(Map<String, Object> map) {
+    public void buildSearchParams(Map<String, Object> map) {
         // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
         putNoNull("EQ_account_id", this.getAccountId(), map);
         putNoNull("EQ_nick_name", this.getNickName(), map);

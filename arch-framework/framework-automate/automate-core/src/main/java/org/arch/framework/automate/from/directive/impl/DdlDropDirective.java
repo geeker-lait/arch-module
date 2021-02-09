@@ -1,9 +1,9 @@
 package org.arch.framework.automate.from.directive.impl;
 
 import org.arch.framework.automate.api.request.FormDefinitionRequest;
+import org.arch.framework.automate.api.response.AlterTableResponse;
 import org.arch.framework.automate.from.directive.SqlDirective;
 import org.arch.framework.automate.from.directive.SqlDirectiveCode;
-import org.arch.framework.automate.api.response.AlterTableResponse;
 
 /**
  * @author lait.zhang@gmail.com

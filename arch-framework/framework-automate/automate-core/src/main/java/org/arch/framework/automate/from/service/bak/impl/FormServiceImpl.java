@@ -10,6 +10,7 @@ import org.arch.framework.automate.from.mapper.bak.FormMapper;
 import org.arch.framework.automate.from.mapper.bak.OperateTableMapper;
 import org.arch.framework.automate.from.service.bak.FormService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -25,7 +26,8 @@ public class FormServiceImpl implements FormService {
     private final OperateTableMapper operateTableMapper;
 
     @Override
-    @Transactional //事务，保证table_name不为空
+    //事务，保证table_name不为空
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
     public int insert(Form obj) {
         int result = 0;
         //此处先验证formName是否重复
@@ -52,7 +54,7 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    @Transactional //开启事务
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class}) //开启事务
     public int deleteById(int id) {
         int result = 0;
         //需要判断该表单对应的数据库表中是否有数据，有数据删除需要谨慎！

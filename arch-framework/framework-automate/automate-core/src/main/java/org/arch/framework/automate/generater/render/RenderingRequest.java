@@ -1,8 +1,8 @@
 package org.arch.framework.automate.generater.render;
 
 import lombok.Data;
-import org.arch.framework.automate.common.metadata.EntityInfo;
 import org.arch.framework.automate.common.metadata.DatabaseInfo;
+import org.arch.framework.automate.common.metadata.EntityInfo;
 
 import java.util.List;
 import java.util.Map;

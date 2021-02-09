@@ -2,6 +2,8 @@ package org.arch.auth.sso.properties;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.arch.framework.ums.enums.AccountType;
+import org.arch.framework.ums.enums.SourceType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -66,4 +68,14 @@ public class SsoProperties {
      * 第三方登录成功后, 临时存储在 redis 的 token 值的 TTL, 默认: 30 秒
      */
     private Duration tempOauth2TokenTimeout = Duration.ofSeconds(30);
+
+    /**
+     * {@link SourceType} 参数名称, 默认: _from
+     */
+    private String sourceParameterName = "_from";
+
+    /**
+     * {@link AccountType} 参数名称, 默认: accountType
+     */
+    private String accountTypeParameterName = "accountType";
 }

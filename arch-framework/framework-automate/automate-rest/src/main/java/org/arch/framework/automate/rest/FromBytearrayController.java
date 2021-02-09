@@ -2,12 +2,12 @@ package org.arch.framework.automate.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.framework.automate.api.dto.FromBytearraySearchDto;
 import org.arch.framework.automate.from.entity.FromBytearray;
 import org.arch.framework.automate.from.service.FromBytearrayService;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.ums.properties.AppProperties;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

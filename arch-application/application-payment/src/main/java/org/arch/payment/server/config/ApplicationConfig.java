@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,13 +23,11 @@ public class ApplicationConfig {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private RedisTemplate redisTemplate;
-    @Autowired
     private RedisConnectionFactory redisConnectionFactory;
 
     @Bean
     public IdService idService() {
-        return new RedisIdService(redisConnectionFactory, redisTemplate);
+        return new RedisIdService(redisConnectionFactory);
     }
 
 

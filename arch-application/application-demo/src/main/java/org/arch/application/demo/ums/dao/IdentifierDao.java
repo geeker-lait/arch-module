@@ -2,10 +2,10 @@ package org.arch.application.demo.ums.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.crud.CrudDao;
-import org.springframework.stereotype.Repository;
 import org.arch.application.demo.ums.entity.Identifier;
 import org.arch.application.demo.ums.mapper.IdentifierMapper;
+import org.arch.framework.crud.CrudDao;
+import org.springframework.stereotype.Repository;
 
 /**
  * 用户-标识(Identifier) 表数据库访问层
