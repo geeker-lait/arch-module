@@ -7,6 +7,7 @@ import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.feign.account.config.UmsAccountDeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ public interface UmsAccountClient {
      * @param identifier    用户唯一标识
      * @return  返回 {@link AuthLoginDto}
      */
+    @NonNull
     @GetMapping("/load/{identifier}")
     Response<AuthLoginDto> loadAccountByIdentifier(@PathVariable("identifier") String identifier);
 
@@ -39,6 +41,7 @@ public interface UmsAccountClient {
      * @param identifiers   identifiers 数组
      * @return  identifiers 对应的结果集.
      */
+    @NonNull
     @PostMapping(value = "/exists", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     Response<List<Boolean>> exists(@RequestParam("identifiers") List<String> identifiers);
 
@@ -47,6 +50,7 @@ public interface UmsAccountClient {
      * @param authRegRequest    注册用户参数封装
      * @return  返回 {@link AuthLoginDto}
      */
+    @NonNull
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     Response<AuthLoginDto> register(AuthRegRequest authRegRequest);
 }
