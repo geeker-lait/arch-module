@@ -2,8 +2,8 @@ package org.arch.framework.crud;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import org.arch.framework.api.crud.BaseSearchDto;
 import org.arch.framework.beans.Response;
-import org.arch.framework.crud.dto.BaseSearchDto;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;

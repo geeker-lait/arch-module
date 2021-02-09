@@ -2,10 +2,10 @@ package org.arch.ums.account.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.api.IdKey;
 import org.arch.framework.beans.exception.BusinessException;
 import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 import org.arch.framework.crud.CrudService;
-import org.arch.framework.id.IdKey;
 import org.arch.framework.id.IdService;
 import org.arch.ums.account.dao.IdentifierDao;
 import org.arch.ums.account.dao.NameDao;

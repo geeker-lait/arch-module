@@ -105,6 +105,11 @@
             <artifactId>framework-beans</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>framework-api</artifactId>
+        </dependency>
+
 
     </dependencies>
 

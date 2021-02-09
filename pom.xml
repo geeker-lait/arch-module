@@ -79,16 +79,41 @@
                 <artifactId>pay-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>framework-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>framework-automate</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>framework-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>automate-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>automate-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>automate-rest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>framework-utils</artifactId>
@@ -140,7 +165,6 @@
                 <artifactId>ums-user</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
 
 
             <!-- auth -->
@@ -269,6 +293,12 @@
                 <version>3.1.0</version>
             </dependency>
 
+            <!-- 解决: 未知的枚举常量 javax.annotation.meta.When.MAYBE -->
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>3.0.2</version>
+            </dependency>
 
             <!-- other -->
             <dependency>
@@ -345,7 +375,11 @@
                 <artifactId>jedis</artifactId>
                 <version>3.3.0</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>3.14.0</version>
+            </dependency>
 
 
         </dependencies>
@@ -379,42 +413,42 @@
 
     <repositories>
 
-       <!-- <repository>
-            <id>central</id>
-            <name>aliyun maven</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <layout>default</layout>
-            &lt;!&ndash; 是否开启发布版构件下载 &ndash;&gt;
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            &lt;!&ndash; 是否开启快照版构件下载 &ndash;&gt;
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-        </repository>
+        <!-- <repository>
+             <id>central</id>
+             <name>aliyun maven</name>
+             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+             <layout>default</layout>
+             &lt;!&ndash; 是否开启发布版构件下载 &ndash;&gt;
+             <releases>
+                 <enabled>true</enabled>
+             </releases>
+             &lt;!&ndash; 是否开启快照版构件下载 &ndash;&gt;
+             <snapshots>
+                 <enabled>false</enabled>
+             </snapshots>
+         </repository>
+         <repository>
+             <id>spring-milestones</id>
+             <name>Spring Milestones</name>
+             <url>https://repo.spring.io/milestone</url>
+         </repository>
 
-        <repository>
-            <id>snoatype-snapshots</id>
-            <name>sonatype snapshots</name>
-            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
+         <repository>
+             <id>snoatype-snapshots</id>
+             <name>sonatype snapshots</name>
+             <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+         </repository>
 
-        <repository>
-            <id>central</id>
-            <name>central maven</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>central</id>
-            <name>central maven</name>
-            <url>http://central.maven.org/maven2/</url>
-        </repository>-->
+         <repository>
+             <id>central</id>
+             <name>central maven</name>
+             <url>https://repo1.maven.org/maven2/</url>
+         </repository>
+         <repository>
+             <id>central</id>
+             <name>central maven</name>
+             <url>http://central.maven.org/maven2/</url>
+         </repository>-->
     </repositories>
 
 </project>

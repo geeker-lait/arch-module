@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.framework.automate.from.mapper.FormDefinitionMapper">
+    <sql id="tableName">
+        form_definition
+    </sql>
+
+    <sql id="baseColumn">
+        id,category,form_name,form_code,table_name,field_id,layout_id,version,descr,st
+    </sql>
+
+
+    <delete id="dropTable" parameterType="string">
+        drop table ${tableName}
+    </delete>
+
+    <update id="renameTableToBak" parameterType="string">
+        rename ${tableName} to ${tableNameBak}
+    </update>
+
+    <select id="queryAllData" parameterType="string" resultType="java.util.LinkedHashMap">
+        select * from ${tableName}
+    </select>
+
+    <select id="getTableKey" parameterType="string" resultType="string">
+        select ucc.column_name
+         from user_cons_columns ucc,user_constraints uc
+         where ucc.constraint_name = uc.constraint_name
+         and uc.table_name = #{tableNameBak}
+         and uc.constraint_type='P'
+    </select>
+
+    <select id="getTableComments" parameterType="string" resultType="string">
+        select comments from user_tab_comments t
+        where t.TABLE_NAME=#{tableName}
+    </select>
+    <select id="getTableStruct" parameterType="string" resultType="map">
+        select c.COLUMN_NAME,DATA_TYPE,DATA_LENGTH,DATA_PRECISION,DATA_SCALE,NULLABLE,COMMENTS,CHAR_LENGTH,DATA_DEFAULT
+        from user_tab_columns t,user_col_comments c
+        where t.TABLE_NAME=c.TABLE_NAME
+        and t.COLUMN_NAME=c.COLUMN_NAME
+        and t.TABLE_NAME= #{tableName}
+        order by t.COLUMN_ID
+    </select>
+
+    <update id="createNewTable" statementType="STATEMENT">
+        create table ${map.tableName} (
+        <foreach collection="map.columns" item="column">
+            ${column.COLUMN_NAME} ${column.DATA_TYPE}
+            <choose>
+                <when test="column.DATA_TYPE == 'VARCHAR2'.toString()">
+                    (${column.CHAR_LENGTH} CHAR)
+                </when>
+                <when test="column.DATA_TYPE == 'NUMBER'.toString()">
+                    (${column.DATA_PRECISION},${column.DATA_SCALE})
+                </when>
+                <when test="column.DATA_TYPE == 'TIMESTAMP(0)'.toString()">
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+            <if test="column.DATA_DEFAULT != null">
+                DEFAULT ${column.DATA_DEFAULT}
+            </if>
+            <if test="column.NULLABLE == 'N'.toString()">
+                NOT NULL ENABLE
+            </if>
+
+            ,
+        </foreach>
+        <if test="map.CONSTRAINT_NAME != null and map.CONSTRAINT_NAME != ''">
+            CONSTRAINT ${map.CONSTRAINT_NAME}
+        </if>
+        PRIMARY KEY (${map.COLUMN_NAME})
+        )
+
+    </update>
+
+
+    <insert id="insertBatch">
+        INSERT ALL
+        <foreach collection="data" item="obj">
+            INTO ${tableName}
+            <foreach collection="obj.keySet()" item="entry" open="(" separator="," close=")">
+                "${entry}"
+            </foreach>
+            VALUES
+            <foreach collection="obj.keySet()" item="key" open="(" separator="," close=")">
+                #{obj.${key}}
+            </foreach>
+        </foreach>
+        SELECT 1 FROM DUAL
+    </insert>
+    <update id="updateTableComment" statementType="STATEMENT">
+            COMMENT ON TABLE ${tableName}
+            IS
+            '${tableComments}'
+    </update>
+    <update id="updateColumnComments" statementType="STATEMENT">
+            COMMENT ON COLUMN ${tableName}."${columnName}"
+            IS
+            '${comments}'
+    </update>
+
+
+</mapper>

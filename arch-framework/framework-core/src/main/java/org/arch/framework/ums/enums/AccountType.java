@@ -1,6 +1,6 @@
 package org.arch.framework.ums.enums;
 
-import org.arch.framework.id.IdKey;
+import org.arch.framework.api.IdKey;
 import org.springframework.lang.Nullable;
 
 import static java.util.Objects.isNull;

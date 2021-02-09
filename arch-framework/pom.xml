@@ -12,6 +12,7 @@
 
 
     <modules>
+        <module>framework-api</module>
         <module>framework-automate</module>
         <module>framework-beans</module>
         <module>framework-core</module>

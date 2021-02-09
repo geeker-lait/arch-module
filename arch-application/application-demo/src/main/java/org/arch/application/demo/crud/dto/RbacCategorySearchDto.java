@@ -2,7 +2,7 @@ package org.arch.application.demo.crud.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.arch.framework.crud.dto.BaseSearchDto;
+import org.arch.framework.api.crud.BaseSearchDto;
 
 import java.util.Date;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @Data
 @NoArgsConstructor
-public class RbacCategorySearchDto extends BaseSearchDto {
+public class RbacCategorySearchDto implements BaseSearchDto {
 
     private Long id;
     /**
@@ -52,7 +52,7 @@ public class RbacCategorySearchDto extends BaseSearchDto {
     private Date createdDate;
 
     @Override
-    protected void buildSearchParams(Map<String, Object> map) {
+    public void buildSearchParams(Map<String, Object> map) {
         putNoNull("EQ_categoryName",this.getCategoryName(),map);
         putNoNull("EQ_isActive",this.getIsActive(),map);
     }

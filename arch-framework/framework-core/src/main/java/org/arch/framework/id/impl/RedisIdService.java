@@ -1,7 +1,7 @@
 package org.arch.framework.id.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.id.IdKey;
+import org.arch.framework.api.IdKey;
 import org.arch.framework.id.IdService;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

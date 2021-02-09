@@ -1,6 +1,8 @@
 package org.arch.framework.id;
 
 
+import org.arch.framework.api.IdKey;
+
 /**
  * @Description 分布式ID生成接口
  */
@@ -16,14 +18,14 @@ public interface IdService {
      * </pre>
      * 除 {@link IdKey#APP_ID} 外返回
      * <pre>
-     * // 返回 id: 012023410351100000001
-     * // idBizCode  年  日  时 分  秒 redis原子自增
-     * //   01       20 234 10 35 11 00000001
+     * // 返回 id: 1202348639900000001
+     * // idBizCode  年  日  日内的秒数 redis原子自增
+     * //   1        20 234 86399 0000001
      * </pre>
      * @param idBizCode     {@link IdKey}
      * @return  返回 id.
      * @Description 生成分布式 ID, 支持一个小时100w个订单号的生成
-     * 01 2023410332500000001
+     * 1 202348639900000001
      */
     String generateId(IdKey idBizCode);
 
@@ -36,9 +38,9 @@ public interface IdService {
      * </pre>
      * 除 {@link IdKey#APP_ID} 外返回
      * <pre>
-     * // 返回 id: prefix + 012023410351100000001
-     * // prefix  idBizCode  年  日  时 分  秒 redis原子自增
-     * // prefix    01       20 234 10 35 11 00000001
+     * // 返回 id: prefix + 202348639900000001
+     * // prefix      年  日  日内的秒数 redis原子自增
+     * //   1        20 234 86399 0000001
      * </pre>
      * @param prefix    bizPrefix
      * @param idKey     {@link IdKey}

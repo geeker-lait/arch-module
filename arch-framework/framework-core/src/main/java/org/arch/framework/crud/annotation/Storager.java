@@ -1,8 +1,12 @@
 package org.arch.framework.crud.annotation;
 
-import org.arch.framework.crud.StoragerType;
+import org.arch.framework.crud.sharding.StoragerType;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Created by Lait on 2017/7/10.

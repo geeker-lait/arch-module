@@ -1,10 +1,9 @@
 package org.arch.ums.account.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.arch.framework.crud.dto.BaseSearchDto;
+import org.arch.framework.api.crud.BaseSearchDto;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -17,10 +16,9 @@ import java.util.Map;
  * @since 1.0.0
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-public class OauthTokenSearchDto extends BaseSearchDto {
+public class OauthTokenSearchDto implements BaseSearchDto {
 
     /**
      * account_oauth_token id
@@ -153,7 +151,7 @@ public class OauthTokenSearchDto extends BaseSearchDto {
     private LocalDateTime st;
 
     @Override
-    protected void buildSearchParams(Map<String, Object> map) {
+    public void buildSearchParams(Map<String, Object> map) {
         // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
         putNoNull("EQ_account_identifier_id", this.getAccountIdentifierId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);

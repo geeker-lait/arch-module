@@ -1,7 +1,7 @@
 package org.arch.auth.jwt.service;
 
 import lombok.RequiredArgsConstructor;
-import org.arch.framework.id.IdKey;
+import org.arch.framework.api.IdKey;
 import org.arch.framework.id.IdService;
 import org.springframework.lang.NonNull;
 import top.dcenter.ums.security.jwt.api.id.service.JwtIdService;
