@@ -6,7 +6,6 @@ import me.zhyd.oauth.model.AuthUser;
 import org.arch.auth.sso.properties.SsoProperties;
 import org.arch.auth.sso.request.bind.RegRequest;
 import org.arch.auth.sso.utils.RegisterUtils;
-import org.arch.framework.api.IdKey;
 import org.arch.framework.beans.Response;
 import org.arch.framework.id.IdService;
 import org.arch.framework.ums.enums.AccountType;
@@ -151,7 +150,6 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     @Override
     public UserDetails registerUser(@NonNull ServletWebRequest request) throws RegisterUserFailureException {
         try {
-
             RegRequest regRequest =
                     (RegRequest) request.getAttribute(REG_REQUEST_PARAMETER_NAME, RequestAttributes.SCOPE_REQUEST);
             if (isNull(regRequest)) {
@@ -172,7 +170,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
             }
 
             // 用户注册
-            AuthRegRequest authRegRequest = getAuthRegRequest(regRequest, accountType);
+            AuthRegRequest authRegRequest = getUsernamePasswordRegRequest(regRequest, accountType);
             return registerUser(authRegRequest);
 
         }
@@ -196,23 +194,16 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                                     @NonNull String username,
                                     @NonNull String defaultAuthority,
                                     @Nullable String decodeState) throws RegisterUserFailureException {
-        // TODO
+        // 获取注册的账户类型
+        AccountType accountType = RegisterUtils.getAccountType(ssoProperties.getAccountTypeParameterName());
+        if (isNull(accountType)) {
+            log.warn("用户注册失败, accountType 没有传递 或 格式错误");
+            throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, username);
+        }
 
-        // 示例：
-        log.info("Demo ======>: 注册用户名：{}, 第三方登录注册成功", username);
-        String tenantId = tenantContextHolder.getTenantId();
-        return new ArchUser(username,
-                            passwordEncoder.encode(authUser.getToken().getAccessToken()),
-                            Long.valueOf(idService.generateId(IdKey.UMS_ACCOUNT_ID)),
-                            Integer.valueOf(tenantId),
-                            ChannelType.OAUTH2,
-                            "admin",
-                            ssoProperties.getDefaultAvatar(),
-                            true,
-                            true,
-                            true,
-                            true,
-                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,TENANT_" + tenantId));
+        // 第三方授权登录用户注册
+        AuthRegRequest authRegRequest = getOauth2RegRequest(authUser, username, defaultAuthority, accountType);
+        return registerUser(authRegRequest);
     }
 
     /**
@@ -285,7 +276,34 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     }
 
     @NonNull
+    private AuthRegRequest getOauth2RegRequest(@NonNull AuthUser authUser, @NonNull String username,
+                                               @NonNull String defaultAuthority, @NonNull AccountType accountType) {
+        // 第三方登录注册
+
+        // 获取推荐信息
+        String source = RegisterUtils.getSource(ssoProperties.getSourceParameterName());
+        // 获取租户 ID
+        String tenantId = tenantContextHolder.getTenantId();
+        // 构建默认的用户权限
+        String authorities = RegisterUtils.getDefaultAuthorities(defaultAuthority, tenantId);
+        // 构建注册参数
+        return AuthRegRequest.builder()
+                             .aid(Long.valueOf(idService.generateId(accountType.getIdKey())))
+                             .tenantId(Integer.valueOf(tenantId))
+                             .identifier(username)
+                             .credential(passwordEncoder.encode(ssoProperties.getDefaultPassword()))
+                             .authorities(authorities)
+                             .avatar(authUser.getAvatar())
+                             .channelType(ChannelType.OAUTH2)
+                             .nickName(authUser.getUsername())
+                             .source(source)
+                             .build();
+    }
+
+    @NonNull
     private AuthRegRequest getMobileRegRequest(@NonNull String mobile, @NonNull AccountType accountType) {
+        // 手机注册
+
         // 获取推荐信息
         String source = RegisterUtils.getSource(ssoProperties.getSourceParameterName());
         // 获取租户 ID
@@ -306,7 +324,10 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                              .build();
     }
 
-    private AuthRegRequest getAuthRegRequest(RegRequest regRequest, AccountType accountType) {
+    @NonNull
+    private AuthRegRequest getUsernamePasswordRegRequest(@NonNull RegRequest regRequest, @NonNull AccountType accountType) {
+        // 用户名密码注册
+
         // 获取头像
         String avatar = regRequest.getAvatar();
         if (!hasText(avatar)) {

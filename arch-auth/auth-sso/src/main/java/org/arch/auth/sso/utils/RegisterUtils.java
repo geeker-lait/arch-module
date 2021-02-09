@@ -66,7 +66,19 @@ public class RegisterUtils {
     @NonNull
     public static String getDefaultAuthorities(@NonNull SsoProperties ssoProperties, @NonNull String tenantId) {
         // 构建默认的用户权限
-        return ssoProperties.getDefaultAuthorities() + AUTHORITY_SEPARATE + TENANT_PREFIX + tenantId;
+        return getDefaultAuthorities(ssoProperties.getDefaultAuthorities(), tenantId);
+    }
+
+    /**
+     * 获取默认的用户权限
+     * @param defaultAuthority  用户默认权限
+     * @param tenantId          租户 ID
+     * @return  默认的用户权限
+     */
+    @NonNull
+    public static String getDefaultAuthorities(@NonNull String defaultAuthority, @NonNull String tenantId) {
+        // 构建默认的用户权限
+        return defaultAuthority + AUTHORITY_SEPARATE + TENANT_PREFIX + tenantId;
     }
 
     /**
