@@ -64,6 +64,15 @@ public class ProjectGenerater {
         FreeMarkerUtils.addFtlProcessor(new DdlProcessor()).add(new DaoProcessor());
         databaseInfosList.forEach(databaseInfo -> {
 
+            RenderingRequest pomRenderingRequest = new RenderingRequest();
+            pomRenderingRequest.setFtlPath(ftlPath + "templates");
+            pomRenderingRequest.setFtlName("pom.ftl");
+            pomRenderingRequest.setSavePath(savePath);
+            pomRenderingRequest.setDatabaseInfos(excelUtils.getDatabaseInfos());
+            pomRenderingRequest.setCover(true);
+            pomRenderingRequest.setModuleName(databaseInfo.getModuleName());
+
+
             RenderingRequest daoRenderingRequest = new RenderingRequest();
             daoRenderingRequest.setFtlPath(ftlPath + "templates");
             daoRenderingRequest.setFtlName("dao.ftl");

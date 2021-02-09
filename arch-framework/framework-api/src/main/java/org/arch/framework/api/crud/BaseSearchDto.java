@@ -14,7 +14,7 @@ public abstract class BaseSearchDto {
     /**
      * 是否逻辑删除: 0 未删除, 1 已删除; 默认: 0
      */
-    Boolean deleted = false;
+    protected Boolean deleted = false;
 
     /**
      * 获取查询条件与值

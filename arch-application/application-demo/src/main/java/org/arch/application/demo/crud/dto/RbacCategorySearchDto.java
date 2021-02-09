@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @Data
 @NoArgsConstructor
-public class RbacCategorySearchDto implements BaseSearchDto {
+public class RbacCategorySearchDto extends BaseSearchDto {
 
     private Long id;
     /**

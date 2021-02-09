@@ -11,10 +11,10 @@ import java.io.IOException;
  * @weixin PN15855012581
  * @date 12/20/2020 9:57 AM
  */
-public class DaoProcessor extends AbstractProcessor implements FtlProcessor {
+public class DaoProcessor extends AbstractProcessor implements TemplateProcessor {
     @Override
-    public String getFile() {
-        return "dao.ftl";
+    public TemplateName getTemplate() {
+        return TemplateName.DAO;
     }
 
     @Override

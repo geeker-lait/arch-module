@@ -7,7 +7,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.generater.core.FtlProcessor;
+import org.arch.framework.automate.generater.core.TemplateProcessor;
 import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.render.RenderingRequest;
 import org.arch.framework.automate.generater.render.RenderingResponse;
@@ -28,19 +28,19 @@ public class FreeMarkerUtils {
 
     private static Configuration configuration;
 
-    private static List<FtlProcessor> ftlProcessors;
+    private static List<TemplateProcessor> templateProcessors;
 
     static {
         configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
         configuration.setObjectWrapper(Configuration.getDefaultObjectWrapper(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS));
         configuration.setDefaultEncoding("UTF-8");
-        ftlProcessors = new ArrayList<>();
+        templateProcessors = new ArrayList<>();
     }
 
 
-    public static List<FtlProcessor> addFtlProcessor(FtlProcessor ftlProcessor) {
-        ftlProcessors.add(ftlProcessor);
-        return ftlProcessors;
+    public static List<TemplateProcessor> addFtlProcessor(TemplateProcessor templateProcessor) {
+        templateProcessors.add(templateProcessor);
+        return templateProcessors;
     }
 
     /**
@@ -79,8 +79,8 @@ public class FreeMarkerUtils {
         String code = render(renderingRequest);
         if (code != null) {
             // 处理模板文件
-            ftlProcessors.forEach(ftlProcessor -> {
-                if (ftlProcessor.getFile().equals(renderingRequest.getFtlName())) {
+            templateProcessors.forEach(ftlProcessor -> {
+                if (ftlProcessor.getTemplate().getFile().equals(renderingRequest.getFtlName())) {
                     ftlProcessor.process(code, renderingRequest);
                 }
             });
