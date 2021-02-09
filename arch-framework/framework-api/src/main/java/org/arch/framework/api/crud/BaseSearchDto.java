@@ -21,8 +21,8 @@ public interface BaseSearchDto {
      */
     default Map<String, Object> getSearchParams() {
         Map<String, Object> map = new LinkedHashMap<>();
-        buildSearchParams(map);
         map.put("EQ_deleted", deleted);
+        buildSearchParams(map);
         return map;
     }
 
