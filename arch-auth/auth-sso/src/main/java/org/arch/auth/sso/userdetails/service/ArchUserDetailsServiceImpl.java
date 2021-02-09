@@ -138,31 +138,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
         // 注册
         AuthRegRequest authRegRequest = getMobileRegRequest(mobile, accountType);
-        Response<AuthLoginDto> response = umsAccountClient.register(authRegRequest);
-        AuthLoginDto authLoginDto = response.getSuccessData();
-        if (isNull(authLoginDto)) {
-            log.warn("用户注册失败: {}", response.getMsg());
-            throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, mobile);
-        }
-        // 注册成功
-        final ArchUser archUser = new ArchUser(authLoginDto.getIdentifier(),
-                                               authLoginDto.getCredential(),
-                                               authLoginDto.getAid(),
-                                               authLoginDto.getTenantId(),
-                                               authLoginDto.getChannelType(),
-                                               authLoginDto.getNickName(),
-                                               authLoginDto.getAvatar(),
-                                               true,
-                                               true,
-                                               true,
-                                               true,
-                                               AuthorityUtils.commaSeparatedStringToAuthorityList(authLoginDto.getAuthorities()));
-        if (log.isInfoEnabled()) {
-            log.info("用户注册成功: 租户: {}, 注册用户名: {}, aid: {}, accountType: {}, source: {}",
-                     authLoginDto.getTenantId(), mobile, authRegRequest.getAid(),
-                     accountType.name(), authRegRequest.getSource());
-        }
-        return archUser;
+        return registerUser(authRegRequest);
     }
 
     /**
@@ -197,26 +173,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
             // 用户注册
             AuthRegRequest authRegRequest = getAuthRegRequest(regRequest, accountType);
-            Response<AuthLoginDto> loginDtoResponse = umsAccountClient.register(authRegRequest);
-            AuthLoginDto authLoginDto = loginDtoResponse.getSuccessData();
-            if (isNull(authLoginDto)) {
-                throw new RegisterUserFailureException(ErrorCodeEnum.USERNAME_USED, regRequest.getUsername());
-            }
-
-            // 用户注册成功转换为 UserDetails
-            return new ArchUser(authLoginDto.getIdentifier(),
-                                                   authLoginDto.getCredential(),
-                                                   authLoginDto.getAid(),
-                                                   authLoginDto.getTenantId(),
-                                                   authLoginDto.getChannelType(),
-                                                   authLoginDto.getNickName(),
-                                                   authLoginDto.getAvatar(),
-                                                   true,
-                                                   true,
-                                                   true,
-                                                   true,
-                                                   AuthorityUtils.commaSeparatedStringToAuthorityList(
-                                                           authLoginDto.getAuthorities()));
+            return registerUser(authRegRequest);
 
         }
         catch (Exception e) {
@@ -294,6 +251,37 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         	return successData;
         }
         throw new IOException("查询数据库时发生异常");
+    }
+
+    @NonNull
+    private ArchUser registerUser(@NonNull AuthRegRequest authRegRequest) {
+        Response<AuthLoginDto> response = umsAccountClient.register(authRegRequest);
+        AuthLoginDto authLoginDto = response.getSuccessData();
+        if (isNull(authLoginDto)) {
+            log.warn("用户注册失败: {}", response.getMsg());
+            throw new RegisterUserFailureException(ErrorCodeEnum.USERNAME_USED, authRegRequest.getIdentifier());
+        }
+
+        // 用户注册成功转换为 UserDetails
+        final ArchUser archUser = new ArchUser(authLoginDto.getIdentifier(),
+                                               authLoginDto.getCredential(),
+                                               authLoginDto.getAid(),
+                                               authLoginDto.getTenantId(),
+                                               authLoginDto.getChannelType(),
+                                               authLoginDto.getNickName(),
+                                               authLoginDto.getAvatar(),
+                                               true,
+                                               true,
+                                               true,
+                                               true,
+                                               AuthorityUtils.commaSeparatedStringToAuthorityList(
+                                                       authLoginDto.getAuthorities()));
+        if (log.isInfoEnabled()) {
+            log.info("用户注册成功: 租户: {}, 注册用户名: {}, aid: {}, channelType: {}, source: {}",
+                     archUser.getTenantId(), archUser.getUsername(), archUser.getAccountId(),
+                     archUser.getChannelType().name(), authRegRequest.getSource());
+        }
+        return archUser;
     }
 
     @NonNull

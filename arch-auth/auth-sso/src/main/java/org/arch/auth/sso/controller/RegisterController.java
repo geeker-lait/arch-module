@@ -83,12 +83,6 @@ public class RegisterController {
                     new UsernamePasswordAuthenticationToken(archUser, archUser.getPassword(), archUser.getAuthorities());
             login(request, response, authenticationToken);
 
-            if (log.isInfoEnabled()) {
-                log.info("用户注册成功: 租户: {}, 注册用户名: {}, aid: {}, channelType: {}",
-                         archUser.getTenantId(), archUser.getUsername(), archUser.getAccountId(),
-                         archUser.getChannelType().name());
-            }
-
             return Response.success(null, "注册成功");
 
         }
