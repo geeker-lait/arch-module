@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.isNull;
-import static org.arch.framework.ums.consts.RoleConstants.AUTHORITY_SEPARATE;
+import static org.arch.framework.ums.consts.RoleConstants.AUTHORITY_SEPARATOR;
 import static org.arch.framework.ums.consts.RoleConstants.TENANT_PREFIX;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -31,6 +31,22 @@ public class RegisterUtils {
      * 如果用户 ID 为 001, 则-用户的推荐类型为: user_001
      */
     public static final String USER_RECOMMEND_SOURCE_PREFIX = "user_";
+
+    /**
+     * 第三方用户 identifier(账号-标识) 分隔符
+     */
+    public static final String OAUTH_IDENTIFIER_SEPARATOR = "_";
+
+    /**
+     * 生成第三方用户 identifier(账号-标识)
+     * @param provider          第三方服务商
+     * @param providerUserId    用户在第三方服务商的用户 ID
+     * @return  identifier(账号-标识)
+     */
+    @NonNull
+    public static String getIdentifierForOauth2(@NonNull String provider, @NonNull String providerUserId) {
+        return provider + OAUTH_IDENTIFIER_SEPARATOR + providerUserId;
+    }
 
     /**
      * 从 request 中 获取账号类型.
@@ -78,7 +94,7 @@ public class RegisterUtils {
     @NonNull
     public static String getDefaultAuthorities(@NonNull String defaultAuthority, @NonNull String tenantId) {
         // 构建默认的用户权限
-        return defaultAuthority + AUTHORITY_SEPARATE + TENANT_PREFIX + tenantId;
+        return defaultAuthority + AUTHORITY_SEPARATOR + TENANT_PREFIX + tenantId;
     }
 
     /**

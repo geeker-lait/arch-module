@@ -85,23 +85,18 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                 throw new UsernameNotFoundException(userId + " not found");
             }
 
-            final ArchUser archUser = new ArchUser(authLoginDto.getIdentifier(),
-                                                   authLoginDto.getCredential(),
-                                                   authLoginDto.getAid(),
-                                                   authLoginDto.getTenantId(),
-                                                   authLoginDto.getChannelType(),
-                                                   authLoginDto.getNickName(),
-                                                   authLoginDto.getAvatar(),
-                                                   true,
-                                                   true,
-                                                   true,
-                                                   true,
-                                                   AuthorityUtils.commaSeparatedStringToAuthorityList(authLoginDto.getAuthorities()));
-            if (log.isInfoEnabled()) {
-                log.info("用户登录成功: 租户: {}, 登录用户名: {}, aid: {}",
-                         authLoginDto.getTenantId(), userId, authLoginDto.getAid());
-            }
-            return archUser;
+            return new ArchUser(authLoginDto.getIdentifier(),
+                                authLoginDto.getCredential(),
+                                authLoginDto.getAid(),
+                                authLoginDto.getTenantId(),
+                                authLoginDto.getChannelType(),
+                                authLoginDto.getNickName(),
+                                authLoginDto.getAvatar(),
+                                true,
+                                true,
+                                true,
+                                true,
+                                AuthorityUtils.commaSeparatedStringToAuthorityList(authLoginDto.getAuthorities()));
 
         }
         catch (UsernameNotFoundException e) {
@@ -220,7 +215,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
          用户名: authUser.getUsername()
         */
         return new String[]{
-                authUser.getSource() + "_" + authUser.getUuid(),
+                RegisterUtils.getIdentifierForOauth2(authUser.getSource(),authUser.getUuid())
         };
     }
 
