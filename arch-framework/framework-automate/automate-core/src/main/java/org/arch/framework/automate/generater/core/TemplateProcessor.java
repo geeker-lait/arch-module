@@ -8,16 +8,21 @@ import org.arch.framework.automate.generater.render.RenderingRequest;
  * @weixin PN15855012581
  * @date 12/18/2020 8:02 PM
  */
-public interface FtlProcessor{
+public interface TemplateProcessor<T extends RenderingRequest> {
 
     /**
      * 获取文件
+     *
      * @return
      */
-    String getFile();
+    TemplateName getTemplate();
 
 
-
-
-    void process(String code, RenderingRequest renderingRequest);
+    /**
+     * 模板处理器
+     *
+     * @param code
+     * @param renderingRequest
+     */
+    void process(String code, T renderingRequest);
 }

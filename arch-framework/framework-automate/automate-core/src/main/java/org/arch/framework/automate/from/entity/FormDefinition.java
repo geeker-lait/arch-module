@@ -9,7 +9,6 @@ import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 表单定义(FormDefinition) 实体类
@@ -25,13 +24,8 @@ import java.time.LocalDateTime;
 @TableName("form_definition")
 public class FormDefinition extends CrudEntity<FormDefinition> {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 主键
-     */
-    @TableId("id")
-    private Long id;
-
+    @TableId
+    protected Long id;
     /**
      * 表单分类
      */
@@ -71,11 +65,6 @@ public class FormDefinition extends CrudEntity<FormDefinition> {
      * 表单描述
      */
     private String descr;
-
-    /**
-     * 时间戳
-     */
-    private LocalDateTime st;
 
 
     /**

@@ -16,7 +16,7 @@ import java.nio.file.Paths;
  * @date 12/20/2020 9:57 AM
  */
 @Slf4j
-public abstract class AbstractProcessor implements FtlProcessor {
+public abstract class AbstractProcessor implements TemplateProcessor {
 
     /**
      * 创建模块

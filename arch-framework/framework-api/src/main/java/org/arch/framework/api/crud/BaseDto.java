@@ -19,12 +19,12 @@ public abstract class BaseDto implements Serializable {
     /**
      * 租户ID, 主键
      */
-    protected Integer tenantId;
+    protected Long tenantId;
 
     /**
      * 应用ID, 主键
      */
-    protected Integer appId;
+    protected Long appId;
 
     /**
      * 实体删除标记，为false表示删除

@@ -18,7 +18,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormInstanceSearchDto implements BaseSearchDto {
+public class FormInstanceSearchDto extends BaseSearchDto {
 
     /**
      * 主键

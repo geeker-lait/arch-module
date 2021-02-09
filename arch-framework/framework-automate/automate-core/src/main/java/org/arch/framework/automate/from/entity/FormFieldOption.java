@@ -25,13 +25,8 @@ import java.time.LocalDateTime;
 @TableName("form_field_option")
 public class FormFieldOption extends CrudEntity<FormFieldOption> {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 主键
-     */
-    @TableId("id")
-    private Long id;
-
+    @TableId
+    protected Long id;
     /**
      * 字段id
      */
@@ -51,11 +46,6 @@ public class FormFieldOption extends CrudEntity<FormFieldOption> {
      * 选项值
      */
     private String optionVal;
-
-    /**
-     * 时间戳
-     */
-    private LocalDateTime st;
 
 
     /**

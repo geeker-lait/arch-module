@@ -25,13 +25,8 @@ import java.time.LocalDateTime;
 @TableName("form_field_typ")
 public class FormFieldTyp extends CrudEntity<FormFieldTyp> {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 主键
-     */
-    @TableId("id")
-    private Long id;
-
+    @TableId
+    protected Long id;
     /**
      * 类型code：input/checkbox/radio/select/textarea
      */
@@ -52,10 +47,6 @@ public class FormFieldTyp extends CrudEntity<FormFieldTyp> {
      */
     private Integer sorted;
 
-    /**
-     * 时间戳
-     */
-    private LocalDateTime st;
 
 
     /**

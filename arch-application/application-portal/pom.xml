@@ -17,8 +17,9 @@
 
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>framework-automate</artifactId>
+            <artifactId>automate-core</artifactId>
         </dependency>
+
 
 
         <dependency>

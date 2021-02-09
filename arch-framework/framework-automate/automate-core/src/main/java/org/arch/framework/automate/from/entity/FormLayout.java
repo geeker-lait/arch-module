@@ -25,12 +25,8 @@ import java.time.LocalDateTime;
 @TableName("form_layout")
 public class FormLayout extends CrudEntity<FormLayout> {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 主键
-     */
-    @TableId("id")
-    private Long id;
+    @TableId
+    protected Long id;
 
     /**
      * 表ID
@@ -57,10 +53,6 @@ public class FormLayout extends CrudEntity<FormLayout> {
      */
     private Long editorSourceId;
 
-    /**
-     * 时间戳
-     */
-    private LocalDateTime st;
 
 
     /**

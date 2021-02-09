@@ -25,12 +25,8 @@ import java.time.LocalDateTime;
 @TableName("form_instance")
 public class FormInstance extends CrudEntity<FormInstance> {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 主键
-     */
-    @TableId("id")
-    private Long id;
+    @TableId
+    protected Long id;
 
     /**
      * 表单ID
@@ -62,10 +58,6 @@ public class FormInstance extends CrudEntity<FormInstance> {
      */
     private String formDescr;
 
-    /**
-     * 时间戳
-     */
-    private LocalDateTime st;
 
 
     /**

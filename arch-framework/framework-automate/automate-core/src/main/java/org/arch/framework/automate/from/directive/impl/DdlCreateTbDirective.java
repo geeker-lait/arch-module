@@ -5,6 +5,7 @@ import org.arch.framework.automate.api.request.FormDefinitionRequest;
 import org.arch.framework.automate.api.response.CreateTableResponse;
 import org.arch.framework.automate.from.directive.SqlDirective;
 import org.arch.framework.automate.from.directive.SqlDirectiveCode;
+import org.arch.framework.automate.from.entity.FormDefinition;
 import org.arch.framework.automate.from.service.FormDefinitionService;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,8 @@ public class DdlCreateTbDirective extends AbstractDirective implements SqlDirect
     @Override
     public CreateTableResponse exec(FormDefinitionRequest directiveRequest) {
 
-        //formDefinitionService.
+        FormDefinition formDefinition = new FormDefinition();
+        //formDefinitionService.save();
         return null;
     }
 
