@@ -48,9 +48,9 @@ public class SecurityUtils {
     }
 
     /**
-     * 获取系统用户ID
+     * 获取系统用户ID, 这里的 userId 即 accountId
      *
-     * @return 系统用户ID
+     * @return 系统用户ID, 这里的 userId 即 accountId
      */
     public static Long getCurrentUserId() {
         TokenInfo tokenInfo = getCurrentUser();
