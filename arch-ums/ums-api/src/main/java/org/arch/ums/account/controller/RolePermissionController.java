@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.account.dto.RolePermissionSearchDto;
 import org.arch.ums.account.entity.RolePermission;
 import org.arch.ums.account.service.RolePermissionService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/account/role/permission")
 public class RolePermissionController implements CrudController<RolePermission, java.lang.Long, RolePermissionSearchDto, RolePermissionService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final RolePermissionService rolePermissionService;
 
     @Override
@@ -36,7 +36,7 @@ public class RolePermissionController implements CrudController<RolePermission, 
             rolePermission.setTenantId(token.getTenantId());
         }
         else {
-            rolePermission.setTenantId(appProperties.getSystemTenantId());
+            rolePermission.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return rolePermission;
     }

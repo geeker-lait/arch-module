@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.account.dto.TagSearchDto;
 import org.arch.ums.account.entity.Tag;
 import org.arch.ums.account.service.TagService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/account/tag")
 public class TagController implements CrudController<Tag, Long, TagSearchDto, TagService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final TagService tagService;
 
     @Override
@@ -36,7 +36,7 @@ public class TagController implements CrudController<Tag, Long, TagSearchDto, Ta
             tag.setTenantId(token.getTenantId());
         }
         else {
-            tag.setTenantId(appProperties.getSystemTenantId());
+            tag.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return tag;
     }

@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.dto.IdentifierSearchDto;
@@ -42,7 +41,6 @@ public class IdentifierController implements CrudController<Identifier, java.lan
 
     private final IdentifierService identifierService;
     private final TenantContextHolder tenantContextHolder;
-    private final AppProperties appProperties;
 
     @Override
     public Identifier resolver(TokenInfo token, Identifier identifier) {
@@ -50,7 +48,7 @@ public class IdentifierController implements CrudController<Identifier, java.lan
             identifier.setTenantId(token.getTenantId());
         }
         else {
-            identifier.setTenantId(appProperties.getSystemTenantId());
+            identifier.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return identifier;
     }
@@ -123,7 +121,7 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     @PostMapping(value = "/register")
     @NotNull
     public Response<AuthLoginDto> register(@Validated AuthRegRequest authRegRequest) {
-        AuthLoginDto register = null;
+        AuthLoginDto register;
         try {
             register = identifierService.register(authRegRequest);
         }

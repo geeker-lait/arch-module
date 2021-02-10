@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.account.dto.AuthClientSearchDto;
 import org.arch.ums.account.entity.AuthClient;
 import org.arch.ums.account.service.AuthClientService;
@@ -36,7 +35,6 @@ import static java.util.Objects.nonNull;
 public class AuthClientController implements CrudController<AuthClient, java.lang.Long, AuthClientSearchDto, AuthClientService> {
 
     private final AuthClientService authClientService;
-    private final AppProperties appProperties;
     private final TenantContextHolder tenantContextHolder;
 
     @Override
@@ -45,7 +43,7 @@ public class AuthClientController implements CrudController<AuthClient, java.lan
             authClient.setTenantId(token.getTenantId());
         }
         else {
-            authClient.setTenantId(appProperties.getSystemTenantId());
+            authClient.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return authClient;
     }

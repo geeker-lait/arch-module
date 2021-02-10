@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.account.dto.RoleMenuSearchDto;
 import org.arch.ums.account.entity.RoleMenu;
 import org.arch.ums.account.service.RoleMenuService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/account/role/menu")
 public class RoleMenuController implements CrudController<RoleMenu, Long, RoleMenuSearchDto, RoleMenuService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final RoleMenuService roleMenuService;
 
     @Override
@@ -36,7 +36,7 @@ public class RoleMenuController implements CrudController<RoleMenu, Long, RoleMe
             roleMenu.setTenantId(token.getTenantId());
         }
         else {
-            roleMenu.setTenantId(appProperties.getSystemTenantId());
+            roleMenu.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return roleMenu;
     }

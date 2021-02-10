@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.user.dto.RelativesSearchDto;
 import org.arch.ums.user.entity.Relatives;
 import org.arch.ums.user.service.RelativesService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/user/relatives")
 public class RelativesController implements CrudController<Relatives, Long, RelativesSearchDto, RelativesService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final RelativesService relativesService;
 
     @Override
@@ -36,7 +36,7 @@ public class RelativesController implements CrudController<Relatives, Long, Rela
             relatives.setTenantId(token.getTenantId());
         }
         else {
-            relatives.setTenantId(appProperties.getSystemTenantId());
+            relatives.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return relatives;
     }

@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.account.dto.MemberSearchDto;
 import org.arch.ums.account.entity.Member;
 import org.arch.ums.account.service.MemberService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/account/member")
 public class MemberController implements CrudController<Member, Long, MemberSearchDto, MemberService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final MemberService memberService;
 
     @Override
@@ -36,7 +36,7 @@ public class MemberController implements CrudController<Member, Long, MemberSear
             member.setTenantId(token.getTenantId());
         }
         else {
-            member.setTenantId(appProperties.getSystemTenantId());
+            member.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return member;
     }

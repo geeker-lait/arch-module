@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.user.dto.IdCardSearchDto;
 import org.arch.ums.user.entity.IdCard;
 import org.arch.ums.user.service.IdCardService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/user/id/card")
 public class IdCardController implements CrudController<IdCard, Long, IdCardSearchDto, IdCardService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final IdCardService idCardService;
 
     @Override
@@ -36,7 +36,7 @@ public class IdCardController implements CrudController<IdCard, Long, IdCardSear
             idCard.setTenantId(token.getTenantId());
         }
         else {
-            idCard.setTenantId(appProperties.getSystemTenantId());
+            idCard.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return idCard;
     }
