@@ -9,6 +9,7 @@ import org.arch.ums.account.dto.AuthClientSearchDto;
 import org.arch.ums.account.entity.AuthClient;
 import org.arch.ums.account.service.AuthClientService;
 import org.arch.ums.account.vo.AuthClientVo;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,17 +65,18 @@ public class AuthClientController implements CrudController<AuthClient, java.lan
      * @param clientSecret  client secret
      * @return  返回 scopes 集合, 如果不存在, 返回空集合.
      */
+    @NonNull
     @PostMapping("/scopes")
     public Response<Set<String>> getScopesByClientIdAndClientSecret(@RequestParam("clientId") String clientId,
                                                                    @RequestParam("clientSecret") String clientSecret) {
-        Set<String> scopes = null;
+        Set<String> scopes;
         try {
             scopes = authClientService.getScopesByClientIdAndClientSecret(clientId, clientSecret);
         }
         catch (Exception e) {
             log.error(String.format("获取 scopes 失败: tenantId: %s, clientId: %s",
                                     tenantContextHolder.getTenantId(), clientId), e);
-            Response.failed("获取 scopes 失败");
+            return Response.failed("获取 scopes 失败");
         }
         return Response.success(scopes);
     }
@@ -84,16 +86,17 @@ public class AuthClientController implements CrudController<AuthClient, java.lan
      *
      * @return scopes
      */
+    @NonNull
     @GetMapping("/scopes/list")
     public Response<Map<Integer, Map<String, AuthClientVo>>> getAllScopes() {
-        Map<Integer, Map<String, AuthClientVo>> allScopes = null;
+        Map<Integer, Map<String, AuthClientVo>> allScopes;
         try {
             allScopes = authClientService.getAllScopes();
         }
         catch (Exception e) {
             log.error(String.format("获取所有 scopes 失败: tenantId: %s",
                                     tenantContextHolder.getTenantId()), e);
-            Response.failed("获取所有 scopes 失败");
+            return Response.failed("获取所有 scopes 失败");
         }
         return Response.success(allScopes);
     }
