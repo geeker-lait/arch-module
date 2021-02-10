@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author lait.zhang@gmail.com
@@ -17,6 +19,11 @@ import java.nio.file.Paths;
  */
 @Slf4j
 public abstract class AbstractProcessor implements TemplateProcessor {
+
+    protected final static String MAIN_JAVA = "src" + File.separator + "main" + File.separator + "java" + File.separator;
+    protected final static String MAIN_RESOURCES = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
+    protected final static String TEST_JAVA = "src" + File.separator + "test" + File.separator + "java" + File.separator;
+    protected final static String TEST_RESOURCES = "src" + File.separator + "test" + File.separator + "resources" + File.separator;
 
     /**
      * 创建模块
@@ -37,15 +44,35 @@ public abstract class AbstractProcessor implements TemplateProcessor {
     /**
      * 创建maven
      * 这里该用从yaml读取结构
+     *
      * @param renderingRequest
      */
-    protected void creatMavenDirectory(RenderingRequest renderingRequest) {
-        Path dirPath = Paths.get(renderingRequest.getSavePath() + File.separator + renderingRequest.getModuleName());
-        try {
-            Files.createDirectories(dirPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected Map<String, Path> creatMavenDirectory(RenderingRequest renderingRequest) {
+        Map<String, Path> pathMap = new HashMap<>();
+        // 构架模块根目录
+        Path rootPath = Paths.get(renderingRequest.getSavePath() + File.separator + renderingRequest.getModuleName());
+        // 构建src/java
+        Path srcJava = rootPath.resolve(MAIN_JAVA);
+        // 构建src/resources
+        Path srcResources = rootPath.resolve(MAIN_RESOURCES);
+        // 构建test/java
+        Path testJava = rootPath.resolve(TEST_JAVA);
+        // 构建test/resources
+        Path testResources = rootPath.resolve(TEST_RESOURCES);
+
+        pathMap.put("srcJava", srcJava);
+        pathMap.put("srcResources", srcResources);
+        pathMap.put("testJava", testJava);
+        pathMap.put("testResources", testResources);
+
+        pathMap.forEach((k, v) -> {
+            try {
+                Files.createDirectories(v);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        return pathMap;
     }
 
     /**
@@ -58,7 +85,7 @@ public abstract class AbstractProcessor implements TemplateProcessor {
      * @throws IOException
      */
     protected void saveToFile(String code, String filePath, String fileName, boolean cover) throws IOException {
-        String finalFileName = filePath + fileName;
+        String finalFileName = filePath + File.separator + fileName;
         // 这里有一个bug mac/linux 下没有盘符的问题,这里需要处理一下
         //new File(new File(“C:/a/b.txt”).getPath().substring(1)).toPath(), “c/a/b.txt”
         Path path = Paths.get(finalFileName);

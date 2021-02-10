@@ -3,6 +3,7 @@ package org.arch.framework.automate.generater.core;
 import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.render.RenderingRequest;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -33,7 +34,7 @@ public class DdlProcessor extends AbstractProcessor implements TemplateProcessor
     public void createFile(String code, RenderingRequest renderingRequest) {
         renderingRequest.getDatabaseInfos().forEach(databaseInfo -> {
             try {
-                saveToFile(code, renderingRequest.getSavePath(), databaseInfo.getModuleName() + "-schema.sql", renderingRequest.isCover());
+                saveToFile(code, renderingRequest.getSavePath() + File.separator + databaseInfo.getModuleName() + File.separator + MAIN_RESOURCES, databaseInfo.getModuleName() + "-schema.sql", renderingRequest.isCover());
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new CodegenException(String.format("render %s code source failed.", renderingRequest.getEntity().getClassName()), e);

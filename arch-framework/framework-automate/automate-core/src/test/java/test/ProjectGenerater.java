@@ -3,10 +3,7 @@ package test;
 import com.alibaba.fastjson.JSONArray;
 import org.arch.framework.automate.common.metadata.DatabaseInfo;
 import org.arch.framework.automate.common.utils.FreeMarkerUtils;
-import org.arch.framework.automate.generater.core.DaoProcessor;
-import org.arch.framework.automate.generater.core.DdlProcessor;
-import org.arch.framework.automate.generater.core.ModuleInfos;
-import org.arch.framework.automate.generater.core.TableSchema;
+import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.render.RenderingRequest;
 
 import java.io.FileInputStream;
@@ -23,7 +20,7 @@ public class ProjectGenerater {
 
     public static void main(String[] args) throws Exception {
         String os = System.getProperty("os.name");
-        String file = "uni-life-sys.xlsx";
+        String file = "uni-life-form.xlsx";
         String path = ProjectGenerater.class.getResource("/").getPath();
 
         String ftlPath;
@@ -47,6 +44,7 @@ public class ProjectGenerater {
         RenderingRequest renderingRequest = new RenderingRequest();
         renderingRequest.setFtlPath(ftlPath + "templates");
         renderingRequest.setFtlName("ddl.ftl");
+
         renderingRequest.setSavePath(savePath);
         renderingRequest.setDatabaseInfos(excelUtils.getDatabaseInfos());
         renderingRequest.setCover(true);
@@ -61,7 +59,10 @@ public class ProjectGenerater {
 
 
 
-        FreeMarkerUtils.addFtlProcessor(new DdlProcessor()).add(new DaoProcessor());
+        FreeMarkerUtils.addFtlProcessor(new DdlProcessor());
+        FreeMarkerUtils.addFtlProcessor(new DaoProcessor());
+        FreeMarkerUtils.addFtlProcessor(new PomProcessor());
+        FreeMarkerUtils.addFtlProcessor(new EntityProcessor());
         databaseInfosList.forEach(databaseInfo -> {
 
             RenderingRequest pomRenderingRequest = new RenderingRequest();
@@ -76,6 +77,7 @@ public class ProjectGenerater {
             RenderingRequest daoRenderingRequest = new RenderingRequest();
             daoRenderingRequest.setFtlPath(ftlPath + "templates");
             daoRenderingRequest.setFtlName("dao.ftl");
+            daoRenderingRequest.setPackageName("org.arch.projects");
             daoRenderingRequest.setSavePath(savePath);
             daoRenderingRequest.setDatabaseInfos(excelUtils.getDatabaseInfos());
             daoRenderingRequest.setCover(true);
@@ -85,15 +87,18 @@ public class ProjectGenerater {
             RenderingRequest entityRenderingRequest = new RenderingRequest();
             entityRenderingRequest.setFtlPath(ftlPath + "templates");
             entityRenderingRequest.setFtlName("entity.ftl");
+            entityRenderingRequest.setPackageName("org.arch.projects");
             entityRenderingRequest.setSavePath(savePath);
             entityRenderingRequest.setDatabaseInfos(excelUtils.getDatabaseInfos());
             entityRenderingRequest.setCover(true);
             entityRenderingRequest.setModuleName(databaseInfo.getModuleName());
 
+
+            renderingRequests.add(pomRenderingRequest);
             renderingRequests.add(entityRenderingRequest);
             renderingRequests.add(daoRenderingRequest);
 
-            renderingRequests.forEach(renderingRequest1 -> FreeMarkerUtils.process(renderingRequest1));
+            renderingRequests.forEach(r -> FreeMarkerUtils.process(r));
         });
     }
 }
