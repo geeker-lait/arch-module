@@ -19,10 +19,10 @@ public abstract class CrudEntity<T extends Model<?>> extends Model<T> implements
 //     */
 //    @TableId
 //    protected Long id;
-//    /**
-//     * 租户ID saas
-//     */
-//    protected Integer tenantId;
+    /**
+     * 租户ID saas
+     */
+    protected Integer tenantId;
 //    /**
 //     * 应用ID
 //     */

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.framework.automate.from.mapper.FormSchemaConfigMapper">
+
+    <resultMap type="org.arch.framework.automate.from.entity.FormSchemaConfig" id="FormSchemaConfigMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="schemaId" column="schema_id" jdbcType="INTEGER"/>
+        <result property="mvnJson" column="mvn_json" jdbcType="VARCHAR"/>
+        <result property="devops" column="devops" jdbcType="VARCHAR"/>
+        <result property="git" column="git" jdbcType="VARCHAR"/>
+        <result property="docker" column="docker" jdbcType="VARCHAR"/>
+        <result property="descr" column="descr" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="tableName">
+        `id`
+    </sql>
+
+    <sql id="baseColumn">
+        `id`, `schema_id`, `mvn_json`, `devops`, `git`, `docker`, `descr`, `deleted`, `dt`
+    </sql>
+
+</mapper>

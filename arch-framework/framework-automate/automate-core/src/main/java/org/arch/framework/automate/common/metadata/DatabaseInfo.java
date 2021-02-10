@@ -11,7 +11,7 @@ import java.util.List;
  * @Description
  * {
  *   "name": "mydatabase",
- *   "table": {
+ *   "table": [{
  *     "name": "user",
  *     "field_list": [
  *       {
@@ -50,7 +50,7 @@ import java.util.List;
  *       ["username"],
  *       ["email"]
  *     ]
- *   }
+ *   }]
  * }
  */
 @Data

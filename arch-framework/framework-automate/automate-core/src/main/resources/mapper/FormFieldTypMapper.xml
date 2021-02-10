@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.arch.framework.automate.from.mapper.FormFieldTypMapper">
+
+    <resultMap type="org.arch.framework.automate.from.entity.FormFieldTyp" id="FormFieldTypMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="typCode" column="typ_code" jdbcType="VARCHAR"/>
+        <result property="typName" column="typ_name" jdbcType="VARCHAR"/>
+        <result property="descr" column="descr" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+        <result property="sorted" column="sorted" jdbcType="INTEGER"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
     <sql id="tableName">
-        form_field_typ
+        `id`
     </sql>
 
     <sql id="baseColumn">
-        id,typ_code,typ_name,descr,sorted,st
+        `id`, `typ_code`, `typ_name`, `descr`, `deleted`, `sorted`, `dt`
     </sql>
 
 </mapper>

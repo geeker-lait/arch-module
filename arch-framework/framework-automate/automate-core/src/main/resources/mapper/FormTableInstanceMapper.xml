@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.framework.automate.from.mapper.FormTableInstanceMapper">
+
+    <resultMap type="org.arch.framework.automate.from.entity.FormTableInstance" id="FormTableInstanceMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="projectId" column="project_id" jdbcType="INTEGER"/>
+        <result property="formDefinitionId" column="form_definition_id" jdbcType="INTEGER"/>
+        <result property="interfaceIds" column="interface_ids" jdbcType="INTEGER"/>
+        <result property="formName" column="form_name" jdbcType="VARCHAR"/>
+        <result property="formCode" column="form_code" jdbcType="VARCHAR"/>
+        <result property="formTableId" column="form_table_id" jdbcType="INTEGER"/>
+        <result property="formTableName" column="form_table_name" jdbcType="VARCHAR"/>
+        <result property="descr" column="descr" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="tableName">
+        `id`
+    </sql>
+
+    <sql id="baseColumn">
+        `id`, `project_id`, `form_definition_id`, `interface_ids`, `form_name`, `form_code`, `form_table_id`, `form_table_name`, `descr`, `deleted`, `dt`
+    </sql>
+
+</mapper>

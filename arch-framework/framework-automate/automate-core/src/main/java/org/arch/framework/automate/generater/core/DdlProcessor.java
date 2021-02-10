@@ -19,7 +19,7 @@ public class DdlProcessor extends AbstractProcessor implements TemplateProcessor
 
     @Override
     public void process(String code, RenderingRequest renderingRequest) {
-        createFile(code,renderingRequest);
+        createFile(code, renderingRequest);
     }
 
 
@@ -31,11 +31,13 @@ public class DdlProcessor extends AbstractProcessor implements TemplateProcessor
 
     @Override
     public void createFile(String code, RenderingRequest renderingRequest) {
-        try {
-            saveToFile(code, renderingRequest.getSavePath(), "ddl-schema.sql", renderingRequest.isCover());
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new CodegenException(String.format("render %s code source failed.", renderingRequest.getEntity().getClassName()), e);
-        }
+        renderingRequest.getDatabaseInfos().forEach(databaseInfo -> {
+            try {
+                saveToFile(code, renderingRequest.getSavePath(), databaseInfo.getModuleName() + "-schema.sql", renderingRequest.isCover());
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new CodegenException(String.format("render %s code source failed.", renderingRequest.getEntity().getClassName()), e);
+            }
+        });
     }
 }

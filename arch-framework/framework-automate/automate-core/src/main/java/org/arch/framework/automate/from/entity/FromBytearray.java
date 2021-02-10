@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * 表单数据(FromBytearray) 实体类
  *
  * @author lait
- * @date 2021-02-08 13:25:29
+ * @date 2021-02-10 15:40:14
  * @since 1.0.0
  */
 @Data
@@ -25,17 +25,37 @@ import java.time.LocalDateTime;
 @TableName("from_bytearray")
 public class FromBytearray extends CrudEntity<FromBytearray> {
     private static final long serialVersionUID = 1L;
-    @TableId
-    protected Long id;
+
+    /**
+     * id主键
+     */
+    @TableId("id")
+    private Long id;
+
+    /**
+     * 表单id
+     */
+    private Long tableId;
+    /**
+     * 字段Id
+     */
+    private Long fieldId;
     /**
      * 名称
      */
     private String name;
-
     /**
      * 二进制内容
      */
     private String contentByte;
+    /**
+     * 是否逻辑删除
+     */
+    private Boolean deleted;
+    /**
+     * 时间戳
+     */
+    private LocalDateTime dt;
 
     /**
      * 获取主键值
