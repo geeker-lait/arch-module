@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.account.dto.GroupSearchDto;
 import org.arch.ums.account.entity.Group;
 import org.arch.ums.account.service.GroupService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/account/group")
 public class GroupController implements CrudController<Group, Long, GroupSearchDto, GroupService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final GroupService groupService;
 
     @Override
@@ -36,7 +36,7 @@ public class GroupController implements CrudController<Group, Long, GroupSearchD
             group.setTenantId(token.getTenantId());
         }
         else {
-            group.setTenantId(appProperties.getSystemTenantId());
+            group.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return group;
     }

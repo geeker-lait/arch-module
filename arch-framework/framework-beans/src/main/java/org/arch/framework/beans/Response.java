@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.arch.framework.beans.enums.StatusCode;
 import org.arch.framework.beans.exception.constant.ResponseStatusCode;
+import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 
 /**
  * 封装统一返回的Json数据结构
- *
+ * @author lait.zhang@gmail.com
  * @param <T>
  */
 public class Response<T> implements Serializable {
@@ -191,6 +192,7 @@ public class Response<T> implements Serializable {
      * 获取 code 等于 {@link ResponseStatusCode#SUCCESS} 时的 data 数据.
      * @return  返回 code 等于 {@link ResponseStatusCode#SUCCESS} 时的 data 数据, 否则返回 null.
      */
+    @Nullable
     @JsonIgnore
     public T getSuccessData() {
         if (ResponseStatusCode.SUCCESS.getCode() == code) {

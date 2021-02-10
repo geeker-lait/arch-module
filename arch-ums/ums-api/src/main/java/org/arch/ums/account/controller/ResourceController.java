@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.account.dto.ResourceSearchDto;
 import org.arch.ums.account.entity.Resource;
 import org.arch.ums.account.service.ResourceService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/account/resource")
 public class ResourceController implements CrudController<Resource, Long, ResourceSearchDto, ResourceService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final ResourceService resourceService;
 
     @Override
@@ -36,7 +36,7 @@ public class ResourceController implements CrudController<Resource, Long, Resour
             resource.setTenantId(token.getTenantId());
         }
         else {
-            resource.setTenantId(appProperties.getSystemTenantId());
+            resource.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return resource;
     }

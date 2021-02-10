@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.account.dto.PostSearchDto;
 import org.arch.ums.account.entity.Post;
 import org.arch.ums.account.service.PostService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,8 +26,8 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/account/post")
 public class PostController implements CrudController<Post, Long, PostSearchDto, PostService> {
 
-    private final AppProperties appProperties;
     private final PostService postService;
+    private final TenantContextHolder tenantContextHolder;
 
     @Override
     public Post resolver(TokenInfo token, Post post) {
@@ -36,7 +36,7 @@ public class PostController implements CrudController<Post, Long, PostSearchDto,
             post.setTenantId(token.getTenantId());
         }
         else {
-            post.setTenantId(appProperties.getSystemTenantId());
+            post.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return post;
     }

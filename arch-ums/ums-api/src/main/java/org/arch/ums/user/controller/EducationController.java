@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.user.dto.EducationSearchDto;
 import org.arch.ums.user.entity.Education;
 import org.arch.ums.user.service.EducationService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/user/education")
 public class EducationController implements CrudController<Education, Long, EducationSearchDto, EducationService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final EducationService educationService;
 
     @Override
@@ -36,7 +36,7 @@ public class EducationController implements CrudController<Education, Long, Educ
             education.setTenantId(token.getTenantId());
         }
         else {
-            education.setTenantId(appProperties.getSystemTenantId());
+            education.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return education;
     }

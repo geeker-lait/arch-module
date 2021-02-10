@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.user.dto.AddressSearchDto;
 import org.arch.ums.user.entity.Address;
 import org.arch.ums.user.service.AddressService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/user/address")
 public class AddressController implements CrudController<Address, Long, AddressSearchDto, AddressService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final AddressService addressService;
 
     @Override
@@ -36,7 +36,7 @@ public class AddressController implements CrudController<Address, Long, AddressS
             address.setTenantId(token.getTenantId());
         }
         else {
-            address.setTenantId(appProperties.getSystemTenantId());
+            address.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return address;
     }

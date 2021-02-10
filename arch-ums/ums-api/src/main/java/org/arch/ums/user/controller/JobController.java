@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.user.dto.JobSearchDto;
 import org.arch.ums.user.entity.Job;
 import org.arch.ums.user.service.JobService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/user/job")
 public class JobController implements CrudController<Job, Long, JobSearchDto, JobService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final JobService jobService;
 
     @Override
@@ -36,7 +36,7 @@ public class JobController implements CrudController<Job, Long, JobSearchDto, Jo
             job.setTenantId(token.getTenantId());
         }
         else {
-            job.setTenantId(appProperties.getSystemTenantId());
+            job.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return job;
     }

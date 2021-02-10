@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.user.dto.PhoneSearchDto;
 import org.arch.ums.user.entity.Phone;
 import org.arch.ums.user.service.PhoneService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/user/phone")
 public class PhoneController implements CrudController<Phone, Long, PhoneSearchDto, PhoneService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final PhoneService phoneService;
 
     @Override
@@ -36,7 +36,7 @@ public class PhoneController implements CrudController<Phone, Long, PhoneSearchD
             phone.setTenantId(token.getTenantId());
         }
         else {
-            phone.setTenantId(appProperties.getSystemTenantId());
+            phone.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return phone;
     }

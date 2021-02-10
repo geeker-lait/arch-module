@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.user.dto.BankCardSearchDto;
 import org.arch.ums.user.entity.BankCard;
 import org.arch.ums.user.service.BankCardService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/user/bank/card")
 public class BankCardController implements CrudController<BankCard, Long, BankCardSearchDto, BankCardService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final BankCardService bankCardService;
 
     @Override
@@ -36,7 +36,7 @@ public class BankCardController implements CrudController<BankCard, Long, BankCa
             bankCard.setTenantId(token.getTenantId());
         }
         else {
-            bankCard.setTenantId(appProperties.getSystemTenantId());
+            bankCard.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return bankCard;
     }

@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.properties.AppProperties;
 import org.arch.ums.account.dto.OauthTokenSearchDto;
 import org.arch.ums.account.entity.OauthToken;
 import org.arch.ums.account.service.OauthTokenService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/account/oauth/token")
 public class OauthTokenController implements CrudController<OauthToken, Long, OauthTokenSearchDto, OauthTokenService> {
 
-    private final AppProperties appProperties;
+    private final TenantContextHolder tenantContextHolder;
     private final OauthTokenService oauthTokenService;
 
     @Override
@@ -36,7 +36,7 @@ public class OauthTokenController implements CrudController<OauthToken, Long, Oa
             oauthToken.setTenantId(token.getTenantId());
         }
         else {
-            oauthToken.setTenantId(appProperties.getSystemTenantId());
+            oauthToken.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return oauthToken;
     }

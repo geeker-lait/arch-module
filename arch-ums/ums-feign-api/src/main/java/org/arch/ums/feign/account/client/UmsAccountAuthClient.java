@@ -5,6 +5,7 @@ import org.arch.ums.account.vo.AuthClientVo;
 import org.arch.ums.feign.account.config.UmsAccountDeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,7 @@ public interface UmsAccountAuthClient {
      * @param clientSecret  client secret
      * @return  返回 scopes 集合, 如果不存在, 返回空集合.
      */
+    @NonNull
     @PostMapping(value = "/scopes", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     Response<Set<String>> getScopesByClientIdAndClientSecret(@RequestParam("clientId") String clientId,
                                                              @RequestParam("clientSecret") String clientSecret);
@@ -39,6 +41,7 @@ public interface UmsAccountAuthClient {
      *
      * @return scopes
      */
+    @NonNull
     @GetMapping("/scopes/list")
     Response<Map<Integer, Map<String, AuthClientVo>>> getAllScopes();
 }
