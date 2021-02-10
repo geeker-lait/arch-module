@@ -10,18 +10,18 @@ import java.util.Map;
  * 搜索参数的基类
  */
 @Accessors(chain = true)
-public abstract class BaseSearchDto {
+public interface BaseSearchDto {
     /**
      * 是否逻辑删除: 0 未删除, 1 已删除; 默认: 0
      */
-    protected Boolean deleted = false;
+    Boolean DELETED = false;
 
     /**
      * 获取查询条件与值
      */
-    public Map<String, Object> getSearchParams() {
+    default Map<String, Object> getSearchParams() {
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("EQ_deleted", deleted);
+        map.put("EQ_deleted", DELETED);
         buildSearchParams(map);
         return map;
     }
@@ -34,7 +34,7 @@ public abstract class BaseSearchDto {
      *
      * @param map 保持查询条件和值的集合, 为 {@link LinkedHashMap} 类型, 根据添加的条件顺序转换为 SQL 语句
      */
-    abstract protected void buildSearchParams(Map<String, Object> map);
+    void buildSearchParams(Map<String, Object> map);
 
     /**
      * 查询的值不为空才放入集合中<br>
@@ -46,7 +46,7 @@ public abstract class BaseSearchDto {
      * @param value 对应的值，不为空，如：123
      * @param map   存放搜索参数map
      */
-    protected void putNoNull(String key, Object value, Map<String, Object> map) {
+    default void putNoNull(String key, Object value, Map<String, Object> map) {
         boolean isCanSearch;
         if (value instanceof String) {
             isCanSearch = !value.toString().equals("");
