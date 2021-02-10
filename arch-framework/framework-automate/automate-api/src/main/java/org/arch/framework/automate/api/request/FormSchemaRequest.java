@@ -1,4 +1,4 @@
-package org.arch.framework.automate.from.dto;
+package org.arch.framework.automate.api.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * 表单schema(FormSchema) request
  *
  * @author lait
- * @date 2021-02-10 15:45:17
+ * @date 2021-02-10 15:55:49
  * @since 1.0.0
  */
 @Data

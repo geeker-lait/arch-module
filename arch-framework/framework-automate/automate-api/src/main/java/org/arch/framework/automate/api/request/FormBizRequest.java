@@ -1,4 +1,4 @@
-package org.arch.framework.automate.from.dto;
+package org.arch.framework.automate.api.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,16 +7,16 @@ import lombok.experimental.Accessors;
 import java.time.LocalDateTime;
 
 /**
- * 业务表单(FormTable) request
+ * 项目业务(FormBiz) request
  *
  * @author lait
- * @date 2021-02-10 15:45:29
+ * @date 2021-02-10 15:55:42
  * @since 1.0.0
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormTableRequest {
+public class FormBizRequest {
 
     /**
      * id主键
@@ -29,14 +29,24 @@ public class FormTableRequest {
     private Long projectId;
 
     /**
-     * 业务id
+     * 业务名称
      */
-    private Long bizId;
+    private String bizName;
 
     /**
-     * 表单实力id
+     * 业务码
      */
-    private Long tableInstanceId;
+    private String bizCode;
+
+    /**
+     * 业务说明
+     */
+    private String descr;
+
+    /**
+     * 排序
+     */
+    private Integer sorted;
 
     /**
      * 是否逻辑删除

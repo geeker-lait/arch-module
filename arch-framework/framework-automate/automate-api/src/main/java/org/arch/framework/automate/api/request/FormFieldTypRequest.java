@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * 表单字段类型(FormFieldTyp) request
  *
  * @author lait
- * @date 2021-02-08 13:25:22
+ * @date 2021-02-10 15:55:46
  * @since 1.0.0
  */
 @Data
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class FormFieldTypRequest {
 
     /**
-     * 主键
+     * 主键id
      */
     private Long id;
 
@@ -39,6 +39,11 @@ public class FormFieldTypRequest {
     private String descr;
 
     /**
+     * 逻辑删除
+     */
+    private Boolean deleted;
+
+    /**
      * 排序
      */
     private Integer sorted;
@@ -46,6 +51,6 @@ public class FormFieldTypRequest {
     /**
      * 时间戳
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
 }

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.automate.from.dto.FormSchemaConfigSearchDto;
+import org.arch.framework.automate.api.dto.FormSchemaConfigSearchDto;
 import org.arch.framework.automate.from.entity.FormSchemaConfig;
 import org.arch.framework.automate.from.service.FormSchemaConfigService;
 import org.springframework.web.bind.annotation.RequestMapping;

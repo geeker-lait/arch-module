@@ -1,4 +1,4 @@
-package org.arch.framework.automate.from.dto;
+package org.arch.framework.automate.api.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,16 +7,16 @@ import lombok.experimental.Accessors;
 import java.time.LocalDateTime;
 
 /**
- * 表单数据(FromBytearray) request
+ * 业务表单(FormTable) request
  *
  * @author lait
- * @date 2021-02-10 15:45:43
+ * @date 2021-02-10 15:55:51
  * @since 1.0.0
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FromBytearrayRequest {
+public class FormTableRequest {
 
     /**
      * id主键
@@ -24,24 +24,19 @@ public class FromBytearrayRequest {
     private Long id;
 
     /**
-     * 表单id
+     * 项目id
      */
-    private Long tableId;
+    private Long projectId;
 
     /**
-     * 字段Id
+     * 业务id
      */
-    private Long fieldId;
+    private Long bizId;
 
     /**
-     * 名称
+     * 表单实力id
      */
-    private String name;
-
-    /**
-     * 二进制内容
-     */
-    private String contentByte;
+    private Long tableInstanceId;
 
     /**
      * 是否逻辑删除

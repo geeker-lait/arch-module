@@ -1,7 +1,6 @@
-package org.arch.framework.automate.from.dto;
+package org.arch.framework.automate.api.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
@@ -10,52 +9,51 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
- * 表单布局(FormLayout) search dto
+ * 项目配置(FormSchemaConfig) search dto
  *
  * @author lait
- * @date 2021-02-10 15:45:11
+ * @date 2021-02-10 15:55:50
  * @since 1.0.0
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormLayoutSearchDto extends BaseSearchDto {
+public class FormSchemaConfigSearchDto implements BaseSearchDto {
 
     /**
-     * 主键
+     * id主键
      */
     private Long id;
 
     /**
-     * 表ID
+     * 项目id
      */
-    private Long tableId;
+    private Long schemaId;
 
     /**
-     * 布局名称
+     * 技术框架
      */
-    private String layoutName;
+    private String mvnJson;
 
     /**
-     * 布局码
+     * 开发环境配置
      */
-    private String layoutCode;
+    private String devops;
 
     /**
-     * 布局css样式
+     * 仓库地址
      */
-    private String layoutStyle;
+    private String git;
+
+    /**
+     * docker配置
+     */
+    private String docker;
 
     /**
      * 描述
      */
     private String descr;
-
-    /**
-     * 版本
-     */
-    private Integer ver;
 
     /**
      * 是否逻辑删除
@@ -68,14 +66,14 @@ public class FormLayoutSearchDto extends BaseSearchDto {
     private LocalDateTime dt;
 
     @Override
-    protected void buildSearchParams(Map<String, Object> map) {
+    public void buildSearchParams(Map<String, Object> map) {
         // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
-        putNoNull("EQ_table_id", this.getTableId(), map);
-        putNoNull("EQ_layout_name", this.getLayoutName(), map);
-        putNoNull("EQ_layout_code", this.getLayoutCode(), map);
-        putNoNull("EQ_layout_style", this.getLayoutStyle(), map);
+        putNoNull("EQ_schema_id", this.getSchemaId(), map);
+        putNoNull("EQ_mvn_json", this.getMvnJson(), map);
+        putNoNull("EQ_devops", this.getDevops(), map);
+        putNoNull("EQ_git", this.getGit(), map);
+        putNoNull("EQ_docker", this.getDocker(), map);
         putNoNull("EQ_descr", this.getDescr(), map);
-        putNoNull("EQ_ver", this.getVer(), map);
         putNoNull("EQ_deleted", this.getDeleted(), map);
         putNoNull("EQ_dt", this.getDt(), map);
     }

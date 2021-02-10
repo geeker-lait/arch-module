@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * 表单字段(FormField) request
  *
  * @author lait
- * @date 2021-02-08 13:25:15
+ * @date 2021-02-10 15:55:44
  * @since 1.0.0
  */
 @Data
@@ -19,19 +19,14 @@ import java.time.LocalDateTime;
 public class FormFieldRequest {
 
     /**
-     * 主键
+     * 表单Id
      */
     private Long id;
 
     /**
-     * 表单Id
-     */
-    private Long formId;
-
-    /**
      * 字段Id
      */
-    private Long fieldId;
+    private Long formId;
 
     /**
      * 字段编码，自动生成，对应到数据库中的字段名
@@ -61,6 +56,6 @@ public class FormFieldRequest {
     /**
      * 时间戳
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
 }

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * 表单布局(FormLayout) request
  *
  * @author lait
- * @date 2021-02-08 13:25:28
+ * @date 2021-02-10 15:55:48
  * @since 1.0.0
  */
 @Data
@@ -39,18 +39,28 @@ public class FormLayoutRequest {
     private String layoutCode;
 
     /**
+     * 布局css样式
+     */
+    private String layoutStyle;
+
+    /**
      * 描述
      */
     private String descr;
 
     /**
-     * 原sourceId
+     * 版本
      */
-    private Long editorSourceId;
+    private Integer ver;
+
+    /**
+     * 是否逻辑删除
+     */
+    private Boolean deleted;
 
     /**
      * 时间戳
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
 }

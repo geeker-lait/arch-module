@@ -1,7 +1,6 @@
-package org.arch.framework.automate.from.dto;
+package org.arch.framework.automate.api.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
@@ -10,42 +9,41 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
- * 表单字段类型(FormFieldTyp) search dto
+ * 项目业务(FormBiz) search dto
  *
  * @author lait
- * @date 2021-02-10 15:45:00
+ * @date 2021-02-10 15:55:42
  * @since 1.0.0
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormFieldTypSearchDto extends BaseSearchDto {
+public class FormBizSearchDto implements BaseSearchDto {
 
     /**
-     * 主键id
+     * id主键
      */
     private Long id;
 
     /**
-     * 类型code：input/checkbox/radio/select/textarea
+     * 项目id
      */
-    private String typCode;
+    private Long projectId;
 
     /**
-     * 类型名称
+     * 业务名称
      */
-    private String typName;
+    private String bizName;
 
     /**
-     * 描述
+     * 业务码
+     */
+    private String bizCode;
+
+    /**
+     * 业务说明
      */
     private String descr;
-
-    /**
-     * 逻辑删除
-     */
-    private Boolean deleted;
 
     /**
      * 排序
@@ -53,18 +51,24 @@ public class FormFieldTypSearchDto extends BaseSearchDto {
     private Integer sorted;
 
     /**
+     * 是否逻辑删除
+     */
+    private Boolean deleted;
+
+    /**
      * 时间戳
      */
     private LocalDateTime dt;
 
     @Override
-    protected void buildSearchParams(Map<String, Object> map) {
+    public void buildSearchParams(Map<String, Object> map) {
         // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
-        putNoNull("EQ_typ_code", this.getTypCode(), map);
-        putNoNull("EQ_typ_name", this.getTypName(), map);
+        putNoNull("EQ_project_id", this.getProjectId(), map);
+        putNoNull("EQ_biz_name", this.getBizName(), map);
+        putNoNull("EQ_biz_code", this.getBizCode(), map);
         putNoNull("EQ_descr", this.getDescr(), map);
-        putNoNull("EQ_deleted", this.getDeleted(), map);
         putNoNull("EQ_sorted", this.getSorted(), map);
+        putNoNull("EQ_deleted", this.getDeleted(), map);
         putNoNull("EQ_dt", this.getDt(), map);
     }
 }

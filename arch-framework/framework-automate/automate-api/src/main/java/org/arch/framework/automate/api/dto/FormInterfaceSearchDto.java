@@ -1,7 +1,6 @@
-package org.arch.framework.automate.from.dto;
+package org.arch.framework.automate.api.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
@@ -10,17 +9,16 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
- * 项目配置(FormSchemaConfig) search dto
+ * 表单接口(FormInterface) search dto
  *
  * @author lait
- * @date 2021-02-10 15:45:23
+ * @date 2021-02-10 15:55:47
  * @since 1.0.0
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormSchemaConfigSearchDto extends BaseSearchDto {
+public class FormInterfaceSearchDto implements BaseSearchDto {
 
     /**
      * id主键
@@ -28,32 +26,32 @@ public class FormSchemaConfigSearchDto extends BaseSearchDto {
     private Long id;
 
     /**
-     * 项目id
+     * 接口名称
      */
-    private Long schemaId;
+    private String formCategory;
 
     /**
-     * 技术框架
+     * 接口
      */
-    private String mvnJson;
+    private String interfaceName;
 
     /**
-     * 开发环境配置
+     * 接口参数
      */
-    private String devops;
+    private String interfaceCode;
 
     /**
-     * 仓库地址
+     * 接口uri
      */
-    private String git;
+    private String interfaceUri;
 
     /**
-     * docker配置
+     * json 参数
      */
-    private String docker;
+    private String paramJson;
 
     /**
-     * 描述
+     * 接口描述
      */
     private String descr;
 
@@ -68,13 +66,13 @@ public class FormSchemaConfigSearchDto extends BaseSearchDto {
     private LocalDateTime dt;
 
     @Override
-    protected void buildSearchParams(Map<String, Object> map) {
+    public void buildSearchParams(Map<String, Object> map) {
         // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
-        putNoNull("EQ_schema_id", this.getSchemaId(), map);
-        putNoNull("EQ_mvn_json", this.getMvnJson(), map);
-        putNoNull("EQ_devops", this.getDevops(), map);
-        putNoNull("EQ_git", this.getGit(), map);
-        putNoNull("EQ_docker", this.getDocker(), map);
+        putNoNull("EQ_form_category", this.getFormCategory(), map);
+        putNoNull("EQ_interface_name", this.getInterfaceName(), map);
+        putNoNull("EQ_interface_code", this.getInterfaceCode(), map);
+        putNoNull("EQ_interface_uri", this.getInterfaceUri(), map);
+        putNoNull("EQ_param_json", this.getParamJson(), map);
         putNoNull("EQ_descr", this.getDescr(), map);
         putNoNull("EQ_deleted", this.getDeleted(), map);
         putNoNull("EQ_dt", this.getDt(), map);

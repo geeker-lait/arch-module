@@ -1,7 +1,6 @@
-package org.arch.framework.automate.from.dto;
+package org.arch.framework.automate.api.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
@@ -13,14 +12,13 @@ import java.util.Map;
  * 表单schema(FormSchema) search dto
  *
  * @author lait
- * @date 2021-02-10 15:45:17
+ * @date 2021-02-10 15:55:49
  * @since 1.0.0
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormSchemaSearchDto extends BaseSearchDto {
+public class FormSchemaSearchDto implements BaseSearchDto {
 
     /**
      * 主键ID
@@ -48,7 +46,7 @@ public class FormSchemaSearchDto extends BaseSearchDto {
     private LocalDateTime st;
 
     @Override
-    protected void buildSearchParams(Map<String, Object> map) {
+    public void buildSearchParams(Map<String, Object> map) {
         // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
         putNoNull("EQ_schema_name", this.getSchemaName(), map);
         putNoNull("EQ_schema_code", this.getSchemaCode(), map);

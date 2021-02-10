@@ -1,4 +1,4 @@
-package org.arch.framework.automate.from.dto;
+package org.arch.framework.automate.api.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,16 +7,16 @@ import lombok.experimental.Accessors;
 import java.time.LocalDateTime;
 
 /**
- * 项目业务(FormBiz) request
+ * 项目配置(FormSchemaConfig) request
  *
  * @author lait
- * @date 2021-02-10 15:44:40
+ * @date 2021-02-10 15:55:50
  * @since 1.0.0
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormBizRequest {
+public class FormSchemaConfigRequest {
 
     /**
      * id主键
@@ -26,27 +26,32 @@ public class FormBizRequest {
     /**
      * 项目id
      */
-    private Long projectId;
+    private Long schemaId;
 
     /**
-     * 业务名称
+     * 技术框架
      */
-    private String bizName;
+    private String mvnJson;
 
     /**
-     * 业务码
+     * 开发环境配置
      */
-    private String bizCode;
+    private String devops;
 
     /**
-     * 业务说明
+     * 仓库地址
+     */
+    private String git;
+
+    /**
+     * docker配置
+     */
+    private String docker;
+
+    /**
+     * 描述
      */
     private String descr;
-
-    /**
-     * 排序
-     */
-    private Integer sorted;
 
     /**
      * 是否逻辑删除
