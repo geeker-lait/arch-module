@@ -1,32 +1,53 @@
-generater:
-  author: lait
-  cover: true
-  template:
-    dir: src/main/resources/templates
-  project:
-    path:
-    name:
-    version:
-    groupId:
-    artifactIds:
-  modules:
-    - artifactId:
-      groupId:
-      version:
-      packages: entity,dao,service
-      modules:
+spring:
+  generator:
+    cover: true
+    author: lait
+    template:
+      dir: src/main/resources/templates
+    project:
+      path:
+      poms:
         - artifactId:
           groupId:
           version:
           packages: entity,dao,service
-  packages:
-    - name: entity
-      pkg:
-      template:
-      suffix:
-  database:
-    driver: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
-    username: root
-    password: root
+          dependencies:
+            - groupId:
+              artifactId:
+          poms:
+            - artifactId:
+              groupId:
+              version:
+              packages: entity,dao,service
+    packages:
+      - id: entity
+        pkg:
+        template:
+        suffix:
+      - id: mapper
+        pkg:
+        template:
+        suffix:
+      - id: dao
+        pkg:
+        template:
+        suffix:
+      - id: service
+        pkg:
+        template:
+        suffix:
+      - id: controller
+        pkg:
+        template:
+        suffix:
+      - id: dto
+        pkg:
+        template:
+        suffix:
+    database:
+      driver: com.mysql.cj.jdbc.Driver
+      url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
+      username: root
+      password: root
+
 

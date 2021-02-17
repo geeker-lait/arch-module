@@ -2,6 +2,8 @@ package org.arch.framework.automate.generater.config;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author lait.zhang@gmail.com
  * @description:
@@ -13,9 +15,14 @@ import lombok.Data;
  * @date :
  */
 @Data
-public class Database {
+public class DatabaseProperties {
     private String driver;
-    private String url;
+    private String dialect;
+    private String host;
+    private Integer port;
+    private String name;
     private String username;
     private String password;
+
+    private List<TableProperties> tables;
 }
