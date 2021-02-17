@@ -1,0 +1,32 @@
+generater:
+  author: lait
+  cover: true
+  template:
+    dir: src/main/resources/templates
+  project:
+    path:
+    name:
+    version:
+    groupId:
+    artifactIds:
+  modules:
+    - artifactId:
+      groupId:
+      version:
+      packages: entity,dao,service
+      modules:
+        - artifactId:
+          groupId:
+          version:
+          packages: entity,dao,service
+  packages:
+    - name: entity
+      pkg:
+      template:
+      suffix:
+  database:
+    driver: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
+    username: root
+    password: root
+

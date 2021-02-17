@@ -60,6 +60,7 @@ public abstract class AbstractProcessor implements TemplateProcessor {
         // 构建test/resources
         Path testResources = rootPath.resolve(TEST_RESOURCES);
 
+        pathMap.put("rootPath",rootPath);
         pathMap.put("srcJava", srcJava);
         pathMap.put("srcResources", srcResources);
         pathMap.put("testJava", testJava);
