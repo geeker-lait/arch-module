@@ -1,8 +1,11 @@
 package org.arch.framework.automate.generater.core;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.generater.config.DataProperties;
+import org.arch.framework.automate.generater.config.GeneratorConfig;
 import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.render.RenderingRequest;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +19,15 @@ import java.nio.file.Path;
  * @date :
  */
 @Slf4j
+@Service
 public class PomProcessor extends AbstractProcessor implements TemplateProcessor {
     @Override
-    void createModule(RenderingRequest renderingRequest) {
+    public void build(GeneratorConfig generatorConfig) {
+
+    }
+
+    @Override
+    public void createModule(RenderingRequest renderingRequest) {
 
         log.info("==========={}", renderingRequest.getSavePath());
         log.info("==========={}", renderingRequest.getModuleName());
@@ -27,7 +36,7 @@ public class PomProcessor extends AbstractProcessor implements TemplateProcessor
     }
 
     @Override
-    void createFile(String code, RenderingRequest renderingRequest) {
+    public void createFile(String code, RenderingRequest renderingRequest) {
         try {
             saveToFile(code, renderingRequest.getSavePath() + renderingRequest.getModuleName(), "pom.xml", renderingRequest.isCover());
         } catch (IOException e) {
@@ -39,6 +48,11 @@ public class PomProcessor extends AbstractProcessor implements TemplateProcessor
     @Override
     public TemplateName getTemplate() {
         return TemplateName.POM;
+    }
+
+    @Override
+    public DataProperties buildData() {
+        return null;
     }
 
     @Override

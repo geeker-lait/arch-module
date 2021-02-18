@@ -6,19 +6,36 @@ spring:
       dir: src/main/resources/templates
     project:
       path:
-      poms:
-        - artifactId:
-          groupId:
-          version:
-          packages: entity,dao,service
-          dependencies:
-            - groupId:
-              artifactId:
-          poms:
-            - artifactId:
-              groupId:
-              version:
-              packages: entity,dao,service
+      pom:
+        artifactId:
+        groupId:
+        version:
+        modules:
+          - artifactId:
+            groupId:
+            version:
+            packageIds: entity,dao,service
+            dependencies:
+              - groupId:
+                artifactId:
+            modules:
+              - artifactId:
+                groupId:
+                version:
+                packageIds: entity,dao,service
+              - artifactId:
+                groupId:
+                version:
+                packageIds: entity,dao,service
+                modules:
+                  - artifactId:
+                    groupId:
+                    version:
+                    packages: entity,dao,service
+                  - artifactId:
+                    groupId:
+                    version:
+                    packages: entity,dao,service
     packages:
       - id: entity
         pkg:
@@ -49,5 +66,12 @@ spring:
       url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
       username: root
       password: root
+      tables:
+        - name:
+          comment:
+          columns:
+            - name:
+              typ:
+              length:
 
 

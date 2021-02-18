@@ -1,4 +1,4 @@
-package test;
+package org.arch.framework.automate;
 
 import com.alibaba.fastjson.JSONArray;
 import org.arch.framework.automate.common.metadata.DatabaseInfo;

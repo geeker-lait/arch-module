@@ -1,7 +1,10 @@
 package org.arch.framework.automate.generater.core;
 
+import org.arch.framework.automate.generater.config.DataProperties;
+import org.arch.framework.automate.generater.config.GeneratorConfig;
 import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.render.RenderingRequest;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,14 +15,20 @@ import java.io.IOException;
  * @weixin PN15855012581
  * @date 12/20/2020 9:57 AM
  */
+@Service
 public class EntityProcessor extends AbstractProcessor implements TemplateProcessor {
     @Override
-    void createModule(RenderingRequest renderingRequest) {
+    public void build(GeneratorConfig generatorConfig) {
+
+    }
+
+    @Override
+    public void createModule(RenderingRequest renderingRequest) {
         creatMavenDirectory(renderingRequest);
     }
 
     @Override
-    void createFile(String code, RenderingRequest renderingRequest) {
+    public void createFile(String code, RenderingRequest renderingRequest) {
         String pack = renderingRequest.getPackageName().replace(".", File.separator);
         renderingRequest.getDatabaseInfos().forEach(databaseInfo -> {
             String mn = databaseInfo.getModuleName();
@@ -35,9 +44,16 @@ public class EntityProcessor extends AbstractProcessor implements TemplateProces
 
     }
 
+
+
     @Override
     public TemplateName getTemplate() {
         return TemplateName.ENTITY;
+    }
+
+    @Override
+    public DataProperties buildData() {
+        return null;
     }
 
     @Override

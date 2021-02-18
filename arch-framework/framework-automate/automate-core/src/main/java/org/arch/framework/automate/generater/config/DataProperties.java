@@ -1,5 +1,9 @@
 package org.arch.framework.automate.generater.config;
 
+import org.apache.poi.ss.formula.functions.T;
+
+import java.util.Map;
+
 /**
  * @ClassName DataProperties
  * @Author http://github.com/geeker-lait
@@ -9,5 +13,10 @@ package org.arch.framework.automate.generater.config;
  * @Description //TODO
  */
 public interface DataProperties {
+
+    default Map<String,Object> toDatamap(){
+        //this.
+        return null;
+    }
 
 }

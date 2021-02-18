@@ -1,4 +1,4 @@
-package test;
+package org.arch.framework.automate;
 
 /**
  * @author lait.zhang@gmail.com

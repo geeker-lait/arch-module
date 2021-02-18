@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS `form_schema`(
     `schema_code`  varchar(32) COMMENT '库名称/项目名称的code',
     `descr`  varchar(32) COMMENT '描述',
     `st` datetime COMMENT '时间戳',
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表单schema';
 
@@ -21,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `form_schema_config`(
     `descr`  varchar(128) COMMENT '描述',
     `deleted` boolean COMMENT '是否逻辑删除',
     `dt` datetime COMMENT '时间戳',
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='项目配置';
 
@@ -33,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `form_biz`(
     `sorted`  int(2) COMMENT '排序',
     `deleted` boolean COMMENT '是否逻辑删除',
     `dt` datetime COMMENT '时间戳',
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='项目业务';
 
@@ -43,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `form_table`(
     `table_instance_id`  bigint(19) COMMENT '表单实力id',
     `deleted` boolean COMMENT '是否逻辑删除',
     `dt` datetime COMMENT '时间戳',
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='业务表单';
 
@@ -56,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `form_interface`(
     `descr`  varchar(32) COMMENT '接口描述',
     `deleted` boolean COMMENT '是否逻辑删除',
     `dt` datetime COMMENT '时间戳',
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表单接口';
 
@@ -72,6 +77,7 @@ CREATE TABLE IF NOT EXISTS `form_definition`(
     `definition_json`  varchar(255) COMMENT '定义json',
     `deleted` boolean COMMENT '逻辑删除',
     `dt` datetime COMMENT '时间戳',
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表单定义';
 
@@ -87,6 +93,7 @@ CREATE TABLE IF NOT EXISTS `form_table_instance`(
     `descr`  varchar(255) COMMENT '描述',
     `deleted` boolean COMMENT '逻辑删除',
     `dt` datetime COMMENT '时间戳',
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表单实例';
 
@@ -99,6 +106,7 @@ CREATE TABLE IF NOT EXISTS `form_field`(
     `descr`  varchar(32) COMMENT '字段描述',
     `sorted`  int(2) COMMENT '字段排序',
     `dt` datetime COMMENT '时间戳',
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表单字段';
 
@@ -110,6 +118,7 @@ CREATE TABLE IF NOT EXISTS `form_field_typ`(
     `deleted` boolean COMMENT '逻辑删除',
     `sorted`  int(255) COMMENT '排序',
     `dt` datetime COMMENT '时间戳',
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表单字段类型';
 
@@ -121,6 +130,7 @@ CREATE TABLE IF NOT EXISTS `form_field_option`(
     `option_val`  varchar(32) COMMENT '选项值',
     `deleted` boolean COMMENT '逻辑删除',
     `dt` datetime COMMENT '时间戳',
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表单字段选项';
 
@@ -134,6 +144,7 @@ CREATE TABLE IF NOT EXISTS `form_layout`(
     `ver`  int(255) COMMENT '版本',
     `deleted` boolean COMMENT '是否逻辑删除',
     `dt` datetime COMMENT '时间戳',
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表单布局';
 
@@ -145,6 +156,7 @@ CREATE TABLE IF NOT EXISTS `from_bytearray`(
     `content_byte`  varchar(256) COMMENT '二进制内容',
     `deleted` boolean COMMENT '是否逻辑删除',
     `dt` datetime COMMENT '时间戳',
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表单数据';
 

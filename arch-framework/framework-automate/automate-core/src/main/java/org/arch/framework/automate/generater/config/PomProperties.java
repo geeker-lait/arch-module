@@ -20,11 +20,11 @@ public class PomProperties implements DataProperties {
     private String groupId;
     private String artifactId;
     private String version;
-    private String packages;
+    private String packageIds;
     // 父节点
     private DependencieProterties parent;
     // 子模块
-    private List<PomProperties> poms;
+    private List<PomProperties> modules;
     // 依赖
     private List<DependencieProterties> dependencies;
     // 依赖管理

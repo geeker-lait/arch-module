@@ -60,6 +60,99 @@ import java.util.List;
  *       url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
  *       username: root
  *       password: root
+ *       </p>
+ *       {
+ * 	"cover": true,
+ * 	"template": {
+ * 		"dir": "src/main/resources/templates"
+ *        },
+ * 	"database": {
+ * 		"password": "root",
+ * 		"tables": [{
+ * 			"columns": [{
+ * 				"length": "",
+ * 				"name": "",
+ * 				"typ": ""
+ *            }],
+ * 			"name": "",
+ * 			"comment": ""
+ *        }],
+ * 		"driver": "com.mysql.cj.jdbc.Driver",
+ * 		"username": "root"
+ *    },
+ * 	"author": "lait",
+ * 	"project": {
+ * 		"path": "",
+ * 		"pom": {
+ * 			"groupId": "",
+ * 			"artifactId": "",
+ * 			"version": "",
+ * 			"modules": [{
+ * 				"groupId": "",
+ * 				"artifactId": "",
+ * 				"packages": "entity,dao,service",
+ * 				"version": "",
+ * 				"modules": [{
+ * 					"groupId": "",
+ * 					"artifactId": "",
+ * 					"packages": "entity,dao,service",
+ * 					"version": ""
+ *                }, {
+ * 					"groupId": "",
+ * 					"artifactId": "",
+ * 					"packages": "entity,dao,service",
+ * 					"version": "",
+ * 					"modules": [{
+ * 						"groupId": "",
+ * 						"artifactId": "",
+ * 						"packages": "entity,dao,service",
+ * 						"version": ""
+ *                    }, {
+ * 						"groupId": "",
+ * 						"artifactId": "",
+ * 						"packages": "entity,dao,service",
+ * 						"version": ""
+ *                    }]
+ *                }],
+ * 				"dependencies": [{
+ * 					"groupId": "",
+ * 					"artifactId": ""
+ *                }]
+ *            }]
+ *        }
+ *    },
+ * 	"packages": [{
+ * 		"template": "",
+ * 		"id": "entity",
+ * 		"suffix": "",
+ * 		"pkg": ""
+ *    }, {
+ * 		"template": "",
+ * 		"id": "mapper",
+ * 		"suffix": "",
+ * 		"pkg": ""
+ *    }, {
+ * 		"template": "",
+ * 		"id": "dao",
+ * 		"suffix": "",
+ * 		"pkg": ""
+ *    }, {
+ * 		"template": "",
+ * 		"id": "service",
+ * 		"suffix": "",
+ * 		"pkg": ""
+ *    }, {
+ * 		"template": "",
+ * 		"id": "controller",
+ * 		"suffix": "",
+ * 		"pkg": ""
+ *    }, {
+ * 		"template": "",
+ * 		"id": "dto",
+ * 		"suffix": "",
+ * 		"pkg": ""
+ *    }]
+ * }
  * @weixin PN15855012581
  * @date :
  */
@@ -69,8 +162,8 @@ import java.util.List;
 public class GeneratorConfig {
     private String author;
     private boolean cover;
-    private TemplateProperties templateProperties;
-    private ProjectProperties projectProperties;
-    private DatabaseProperties databaseProperties;
+    private TemplateProperties template;
+    private ProjectProperties project;
+    private DatabaseProperties database;
     private List<PackageProperties> packages;
 }
