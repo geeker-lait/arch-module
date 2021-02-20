@@ -7,7 +7,7 @@
         <version>${(parent!).version!""}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>${(parent!).artifactId!""}</artifactId>
+    <artifactId>${artifactId!""}</artifactId>
 
     <dependencies>
 

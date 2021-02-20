@@ -9,7 +9,7 @@ import java.util.List;
  *   - artifactId:
  *     groupId:
  *     version:
- *     packages: entity,dao,service
+ *     packageTypes: entity,dao,service
  *     dependencies:
  *          - groupId:
  *            artifactId:
@@ -20,7 +20,8 @@ public class PomProperties implements DataProperties {
     private String groupId;
     private String artifactId;
     private String version;
-    private String packageIds;
+    // 包类型，即该pom模块下有哪些包类型
+    private String packageTypes;
     // 父节点
     private DependencieProterties parent;
     // 子模块

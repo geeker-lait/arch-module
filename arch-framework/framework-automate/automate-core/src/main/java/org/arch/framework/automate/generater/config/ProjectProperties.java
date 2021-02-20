@@ -3,6 +3,8 @@ package org.arch.framework.automate.generater.config;
 import lombok.Data;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author lait.zhang@gmail.com
@@ -32,10 +34,10 @@ public class ProjectProperties {
     private PomProperties pom;
 
 
-    public File getFile() {
+    public Path getProjectRootPath() {
         if (name == null) {
             name = pom.getArtifactId();
         }
-        return new File(path + File.separator + name);
+        return Paths.get(path + File.separator + name);
     }
 }

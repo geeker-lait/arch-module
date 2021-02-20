@@ -15,7 +15,7 @@ import java.io.IOException;
  * @weixin PN15855012581
  * @date 12/20/2020 9:57 AM
  */
-@Service
+//@Service
 public class DdlProcessor extends AbstractProcessor implements TemplateProcessor {
     @Override
     public void build(GeneratorConfig generatorConfig) {

@@ -3,75 +3,92 @@ spring:
     cover: true
     author: lait
     template:
-      dir: src/main/resources/templates
+      dir: templates
+      resource-mode: classpath
     project:
-      path:
+      path: E:/Workspaces/Java/Unichain/arch-module
+      basePkg: org.arch.gen
       pom:
-        artifactId:
+        artifactId: arch-gen
         groupId:
         version:
         modules:
-          - artifactId:
+          - artifactId: arch-gen-entity
             groupId:
             version:
-            packageIds: entity,dao,service
+            packageTypes: entity,dao,service
+          - artifactId: arch-gen-common
+            groupId:
+            version:
+            packageTypes: dao
             dependencies:
               - groupId:
                 artifactId:
             modules:
-              - artifactId:
+              - artifactId: arch-gen-common-a
                 groupId:
                 version:
-                packageIds: entity,dao,service
-              - artifactId:
+                packageIds: dao
+              - artifactId: arch-gen-common-b
                 groupId:
                 version:
-                packageIds: entity,dao,service
+                packageTypes: entity,dao,service
                 modules:
-                  - artifactId:
+                  - artifactId: arch-gen-common-b-1
                     groupId:
                     version:
-                    packages: entity,dao,service
-                  - artifactId:
+                    packageTypes: entity,dao,service
+                  - artifactId: arch-gen-common-b-2
                     groupId:
                     version:
-                    packages: entity,dao,service
+                    packageTypes:
     packages:
-      - id: entity
+      - type: entity
+        pkg: entity
+        template: entity.ftl
+        suffix: Entity
+      - type: mapper
         pkg:
-        template:
+        template: mapper.ftl
         suffix:
-      - id: mapper
-        pkg:
-        template:
+      - type: dao
+        pkg: dao
+        template: dao.ftl
+        suffix: Dao
+        ext: .java
+      - type: service
+        pkg: service
+        template: service.ftl
         suffix:
-      - id: dao
+      - type: controller
         pkg:
-        template:
+        template: controller.ftl
         suffix:
-      - id: service
+      - type: dto
         pkg:
-        template:
-        suffix:
-      - id: controller
-        pkg:
-        template:
-        suffix:
-      - id: dto
-        pkg:
-        template:
+        template: dto.ftl
         suffix:
     database:
+      name: arch
       driver: com.mysql.cj.jdbc.Driver
       url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
       username: root
       password: root
       tables:
-        - name:
-          comment:
+        - name: user
+          comment: 用户表
           columns:
-            - name:
-              typ:
-              length:
+            - name: id
+              typ: bigint
+              length: 19
+              comment: 主键id
+            - name: name
+              typ: varchar
+              length: 32
+              comment: 用户名
+            - name: age
+              typ: int
+              length: 2
+              comment: 年龄
 
 

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -29,7 +30,11 @@ public class GeneratorTest {
     public void buildProject() {
         System.out.println(JSONObject.toJSON(generatorConfig));
         templateProcessors.forEach(p->{
-            p.build(generatorConfig);
+            try {
+                p.build(generatorConfig);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 }

@@ -1,5 +1,6 @@
 package org.arch.framework.automate.generater.config;
 
+import cn.hutool.extra.template.TemplateConfig;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

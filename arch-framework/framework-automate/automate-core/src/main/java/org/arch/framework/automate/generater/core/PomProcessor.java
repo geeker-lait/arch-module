@@ -19,7 +19,7 @@ import java.nio.file.Path;
  * @date :
  */
 @Slf4j
-@Service
+//@Service
 public class PomProcessor extends AbstractProcessor implements TemplateProcessor {
     @Override
     public void build(GeneratorConfig generatorConfig) {

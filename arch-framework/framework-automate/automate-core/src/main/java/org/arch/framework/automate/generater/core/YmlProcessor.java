@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * @weixin PN15855012581
  * @date 2/10/2021 6:53 PM
  */
-@Service
+//@Service
 public class YmlProcessor implements TemplateProcessor {
 
     @Override

@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,12 +22,13 @@ import java.util.Map;
  */
 public interface TemplateProcessor<T extends RenderingRequest> {
 
-    String MAIN_JAVA = "src" + File.separator + "main" + File.separator + "java" + File.separator;
-    String MAIN_RESOURCES = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
-    String TEST_JAVA = "src" + File.separator + "test" + File.separator + "java" + File.separator;
-    String TEST_RESOURCES = "src" + File.separator + "test" + File.separator + "resources" + File.separator;
+//    String MAIN_JAVA = "src" + File.separator + "main" + File.separator + "java" + File.separator;
+//    String MAIN_RESOURCES = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
+//    String TEST_JAVA = "src" + File.separator + "test" + File.separator + "java" + File.separator;
+//    String TEST_RESOURCES = "src" + File.separator + "test" + File.separator + "resources" + File.separator;
 
-    void build(GeneratorConfig generatorConfig);
+
+    void build(GeneratorConfig generatorConfig) throws IOException;
 
     /**
      * 获取文件
@@ -69,34 +72,34 @@ public interface TemplateProcessor<T extends RenderingRequest> {
      *
      * @param renderingRequest
      */
-    default Map<String, Path> creatMavenDirectory(RenderingRequest renderingRequest) {
-        Map<String, Path> pathMap = new HashMap<>();
-        // 构架模块根目录
-        Path rootPath = Paths.get(renderingRequest.getSavePath() + File.separator + renderingRequest.getModuleName());
-        // 构建src/java
-        Path srcJava = rootPath.resolve(MAIN_JAVA);
-        // 构建src/resources
-        Path srcResources = rootPath.resolve(MAIN_RESOURCES);
-        // 构建test/java
-        Path testJava = rootPath.resolve(TEST_JAVA);
-        // 构建test/resources
-        Path testResources = rootPath.resolve(TEST_RESOURCES);
-
-        pathMap.put("rootPath", rootPath);
-        pathMap.put("srcJava", srcJava);
-        pathMap.put("srcResources", srcResources);
-        pathMap.put("testJava", testJava);
-        pathMap.put("testResources", testResources);
-
-        pathMap.forEach((k, v) -> {
-            try {
-                Files.createDirectories(v);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        return pathMap;
-    }
+//    default Map<String, Path> creatMavenDirectory(RenderingRequest renderingRequest) {
+//        Map<String, Path> pathMap = new HashMap<>();
+//        // 构架模块根目录
+//        Path rootPath = Paths.get(renderingRequest.getSavePath() + File.separator + renderingRequest.getModuleName());
+//        // 构建src/java
+//        Path srcJava = rootPath.resolve(MAIN_JAVA);
+//        // 构建src/resources
+//        Path srcResources = rootPath.resolve(MAIN_RESOURCES);
+//        // 构建test/java
+//        Path testJava = rootPath.resolve(TEST_JAVA);
+//        // 构建test/resources
+//        Path testResources = rootPath.resolve(TEST_RESOURCES);
+//
+//        pathMap.put("rootPath", rootPath);
+//        pathMap.put("srcJava", srcJava);
+//        pathMap.put("srcResources", srcResources);
+//        pathMap.put("testJava", testJava);
+//        pathMap.put("testResources", testResources);
+//
+//        pathMap.forEach((k, v) -> {
+//            try {
+//                Files.createDirectories(v);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//        return pathMap;
+//    }
 
     /**
      * 保存文件

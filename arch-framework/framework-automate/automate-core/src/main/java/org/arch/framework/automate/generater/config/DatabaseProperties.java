@@ -23,6 +23,5 @@ public class DatabaseProperties {
     private String name;
     private String username;
     private String password;
-
     private List<TableProperties> tables;
 }

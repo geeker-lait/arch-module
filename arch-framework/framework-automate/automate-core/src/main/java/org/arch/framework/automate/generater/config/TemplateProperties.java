@@ -1,5 +1,6 @@
 package org.arch.framework.automate.generater.config;
 
+import cn.hutool.extra.template.TemplateEngine;
 import lombok.Data;
 
 /**
@@ -11,4 +12,8 @@ import lombok.Data;
 @Data
 public class TemplateProperties {
     private String dir;
+    private String resourceMode;
+    // 模板引擎
+    private TemplateEngine templateEngine;
+
 }

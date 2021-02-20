@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * @weixin PN15855012581
  * @date 12/20/2020 9:57 AM
  */
-@Service
+//@Service
 public class ServiceProcessor implements TemplateProcessor {
     @Override
     public void build(GeneratorConfig generatorConfig) {

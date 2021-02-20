@@ -14,9 +14,10 @@ import lombok.Data;
  */
 @Data
 public class PackageProperties {
-    private String id;
+    private String type;
     private String pkg;
     private String template;
     private String suffix;
+    private String ext = ".java";
 
 }
