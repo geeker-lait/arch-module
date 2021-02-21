@@ -1,10 +1,7 @@
 package org.arch.framework.automate.generater.config;
 
 import lombok.Data;
-import org.arch.framework.automate.generater.config.properties.DatabaseProperties;
-import org.arch.framework.automate.generater.config.properties.PackageProperties;
-import org.arch.framework.automate.generater.config.properties.ProjectProperties;
-import org.arch.framework.automate.generater.config.properties.TemplateProperties;
+import org.arch.framework.automate.generater.config.properties.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -165,9 +162,16 @@ import java.util.List;
 @ConfigurationProperties(prefix="spring.generator")
 public class GeneratorConfig {
     private String author;
+    // 是否覆盖
     private boolean cover;
+    // 模版配置
     private TemplateProperties template;
+    // 项目配置
     private ProjectProperties project;
+    // Excel数据源 生产项目
+    private ExcelProperties excel;
+    // Db数据源 生产仙姑
     private DatabaseProperties database;
+    // 包集合
     private List<PackageProperties> packages;
 }
