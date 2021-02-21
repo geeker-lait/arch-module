@@ -6,17 +6,17 @@ spring:
       dir: templates
       resource-mode: classpath
     project:
-      path: E:/Workspaces/Java/Unichain/arch-module
+      path: /Users/lait.zhang/Workspaces/Java/Projects/arch-module
       basePkg: org.arch.gen
       pom:
         artifactId: arch-gen
-        groupId:
-        version:
+        groupId: org.arch.projects
+        version: 0.0.1
         modules:
-          - artifactId: arch-gen-entity
+          - artifactId: arch-gen-core
             groupId:
             version:
-            packageTypes: entity,dao,service
+            packageTypes: entity,dao
           - artifactId: arch-gen-common
             groupId:
             version:
@@ -44,7 +44,7 @@ spring:
                     packageTypes:
     packages:
       - type: entity
-        pkg: entity
+        pkg: aa.entity
         template: entity.ftl
         suffix: Entity
       - type: mapper

@@ -49,18 +49,19 @@ public class DaoProcessor extends AbstractProcessor implements TemplateProcessor
         boolean cover = generatorConfig.isCover();
         // 创建根目录
         Files.createDirectories(rootPath);
-        buildModule(cover, rootPath, projectProperties, pomProperties, packagePropertiesMap, databaseProperties, templateProperties);
+        buildModule(cover, rootPath, projectProperties, pomProperties, null,packagePropertiesMap, databaseProperties, templateProperties);
     }
 
-    public void buildModule(boolean cover, Path path, ProjectProperties projectProperties, PomProperties pomProperties, Map<String, PackageProperties> packagePropertiesMap, DatabaseProperties databaseProperties, TemplateProperties templateProperties) throws IOException {
+    public void buildModule(boolean cover, Path path, ProjectProperties projectProperties, PomProperties pomProperties,PomProperties pomPropertiesPatent, Map<String, PackageProperties> packagePropertiesMap, DatabaseProperties databaseProperties, TemplateProperties templateProperties) throws IOException {
         List<PomProperties> modules = pomProperties.getModules();
         // 创建pom
-        buildPom(cover, path, pomProperties);
+        buildPom(cover, path, pomProperties,pomPropertiesPatent);
         if (modules == null) {
             // 创建模块src目录,可不创建最后一起创建，这里为了标准化目录创建一下
             for (String dir : srcDirectorys) {
                 Files.createDirectories(path.resolve(dir));
             }
+
             String basePkg = null == projectProperties.getBasePkg() ? "" : projectProperties.getBasePkg();
             if (!StringUtils.isEmpty(pomProperties.getPackageTypes())) {
                 for (String p : Arrays.asList(pomProperties.getPackageTypes().split(","))) {
@@ -81,11 +82,13 @@ public class DaoProcessor extends AbstractProcessor implements TemplateProcessor
         }
         for (PomProperties module : modules) {
             Path subPath = path.resolve(module.getArtifactId());
-            buildModule(cover, subPath, projectProperties, module, packagePropertiesMap, databaseProperties, templateProperties);
+            pomPropertiesPatent = pomProperties;
+            buildModule(cover, subPath, projectProperties, module, pomPropertiesPatent,packagePropertiesMap, databaseProperties, templateProperties);
         }
     }
 
-    private void buildPom(boolean cover, Path path, PomProperties pomProperties) throws IOException {
+    private void buildPom(boolean cover, Path path, PomProperties pomProperties,PomProperties pomPropertiesPatent) throws IOException {
+        Files.createDirectories(path);
         Path pomFilePath = Paths.get(path.toFile().getAbsolutePath().concat(File.separator).concat("pom.xml"));
         // 写入dao文件
         if (Files.exists(pomFilePath)) {
@@ -98,11 +101,13 @@ public class DaoProcessor extends AbstractProcessor implements TemplateProcessor
             }
         }
 
-        if (pomProperties.getParent() == null) {
+        if (pomProperties.getParent() == null  && pomPropertiesPatent != null) {
             DependencieProterties parent = new DependencieProterties();
-            parent.setArtifactId(pomProperties.getArtifactId());
-            parent.setGroupId(pomProperties.getGroupId());
-            parent.setVersion(pomProperties.getVersion());
+            parent.setArtifactId(pomPropertiesPatent.getArtifactId());
+            parent.setGroupId(pomPropertiesPatent.getGroupId());
+            parent.setVersion(pomPropertiesPatent.getVersion());
+            pomProperties.setGroupId(pomPropertiesPatent.getGroupId());
+            pomProperties.setVersion(pomPropertiesPatent.getVersion());
             pomProperties.setParent(parent);
         }
 
