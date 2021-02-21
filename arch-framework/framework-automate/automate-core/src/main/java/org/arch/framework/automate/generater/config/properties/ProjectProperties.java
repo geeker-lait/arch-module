@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.config;
+package org.arch.framework.automate.generater.config.properties;
 
 import lombok.Data;
 

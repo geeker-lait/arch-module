@@ -5,6 +5,7 @@ spring:
     template:
       dir: templates
       resource-mode: classpath
+    schema: excel
     project:
       path: /Users/lait.zhang/Workspaces/Java/Projects/arch-module
       basePkg: org.arch.gen
@@ -68,6 +69,20 @@ spring:
         pkg:
         template: dto.ftl
         suffix:
+
+    excel:
+      heads: {
+        "表名/Table": "table",
+        "列名/Column": "column",
+        "数据类型/Type": "type",
+        "长度/Length": "length",
+        "是否为空/Null(Y,N)": "isnull",
+        "默认值/Default": "defaultValue",
+        "是否主键/Primary(Y,N)": "primaryKey",
+        "是否唯一/Unique(Y,N)": "unique",
+        "外键/Forigen(可空)": "forienKey",
+        "备注/Comment": "comment"
+      }
     database:
       name: arch
       driver: com.mysql.cj.jdbc.Driver

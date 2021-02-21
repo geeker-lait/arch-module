@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater;
+package org.arch.framework.automate;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,6 @@ import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.render.DefaultRender;
 import org.arch.framework.automate.generater.render.Rendable;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;

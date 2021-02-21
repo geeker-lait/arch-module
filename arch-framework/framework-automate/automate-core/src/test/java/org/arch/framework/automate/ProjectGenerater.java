@@ -3,6 +3,10 @@ package org.arch.framework.automate;
 import com.alibaba.fastjson.JSONArray;
 import org.arch.framework.automate.common.metadata.DatabaseInfo;
 import org.arch.framework.automate.common.utils.FreeMarkerUtils;
+import org.arch.framework.automate.generater.builder.DaoProcessor;
+import org.arch.framework.automate.generater.builder.DdlProcessor;
+import org.arch.framework.automate.generater.builder.EntityProcessor;
+import org.arch.framework.automate.generater.builder.PomProcessor;
 import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.render.RenderingRequest;
 

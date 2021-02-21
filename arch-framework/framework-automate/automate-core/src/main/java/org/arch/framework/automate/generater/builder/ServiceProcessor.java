@@ -1,9 +1,8 @@
-package org.arch.framework.automate.generater.core;
+package org.arch.framework.automate.generater.builder;
 
-import org.arch.framework.automate.generater.config.DataProperties;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
+import org.arch.framework.automate.generater.core.TemplateName;
 import org.arch.framework.automate.generater.render.RenderingRequest;
-import org.springframework.stereotype.Service;
 
 /**
  * @author lait.zhang@gmail.com
@@ -28,18 +27,4 @@ public class ServiceProcessor implements TemplateProcessor {
 
     }
 
-    @Override
-    public void createModule(RenderingRequest renderingRequest) {
-
-    }
-
-    @Override
-    public void createFile(String code, RenderingRequest renderingRequest) {
-
-    }
-
-    @Override
-    public DataProperties buildData() {
-        return null;
-    }
 }

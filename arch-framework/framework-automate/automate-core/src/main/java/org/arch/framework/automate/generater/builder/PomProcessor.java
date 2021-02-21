@@ -1,16 +1,12 @@
-package org.arch.framework.automate.generater.core;
+package org.arch.framework.automate.generater.builder;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.generater.config.DataProperties;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
+import org.arch.framework.automate.generater.core.TemplateName;
 import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.render.RenderingRequest;
-import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
  * @author lait.zhang@gmail.com
@@ -50,10 +46,6 @@ public class PomProcessor extends AbstractProcessor implements TemplateProcessor
         return TemplateName.POM;
     }
 
-    @Override
-    public DataProperties buildData() {
-        return null;
-    }
 
     @Override
     public void process(String code, RenderingRequest renderingRequest) {

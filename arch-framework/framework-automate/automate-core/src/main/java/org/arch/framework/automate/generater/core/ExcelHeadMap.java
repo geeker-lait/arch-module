@@ -3,7 +3,13 @@ package org.arch.framework.automate.generater.core;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class TranslationField {
+/**
+ * @author lait.zhang@gmail.com
+ * @description: excel表头映射
+ * @weixin PN15855012581
+ * @date 12/20/2020 9:56 AM
+ */
+public class ExcelHeadMap {
     //数据里的字段翻译
     private static final Map<String, String> certificatetypes;
     //表头字段翻译
