@@ -1,9 +1,11 @@
 package org.arch.auth.sso.controller;
 
 import org.arch.auth.sso.properties.SsoProperties;
+import org.arch.framework.utils.SecurityUtils;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
 import top.dcenter.ums.security.common.vo.ResponseResult;
+import top.dcenter.ums.security.jwt.JwtContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
@@ -46,6 +49,17 @@ public class LoginController {
      */
     @RequestMapping(value = "/login", method = {RequestMethod.GET})
     public String login() {
+        return "login";
+    }
+
+    /**
+     * 登出
+     * @return  跳转到登录页面
+     */
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout() {
+        JwtContext.addReAuthFlag(SecurityUtils.getCurrentUserId().toString());
+        SecurityContextHolder.clearContext();
         return "login";
     }
 
