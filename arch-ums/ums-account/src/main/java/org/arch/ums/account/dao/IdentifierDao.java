@@ -3,6 +3,7 @@ package org.arch.ums.account.dao;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudDao;
@@ -68,4 +69,24 @@ public class IdentifierDao extends ServiceImpl<IdentifierMapper, Identifier> imp
         return identifierMapper.findAuthLoginDtoByIdentifier(identifier, tenantId);
     }
 
+    /**
+     * 查询是否有最近的历史删除记录
+     * @param tenantId          租户 ID
+     * @param likeIdentifier    identifier 字段的 like 字符串
+     * @return  返回最近的逻辑删除的 {@link Identifier}, 如果没有则返回 null
+     */
+    @Nullable
+    public Identifier selectLogicDeleted(@NonNull Integer tenantId, @NonNull String likeIdentifier) {
+        return identifierMapper.selectLogicDeleted(tenantId, likeIdentifier);
+    }
+
+    /**
+     * 逻辑删除
+     * @param id                租户 ID
+     * @param identifierSuffix  _DELETED_0, _DELETED_0(防止用户重新通过此第三方注册时触发唯一索引问题), 0(防止多次删除同一个第三方账号时触发唯一索引问题).
+     * @return  是否删除成功
+     */
+    public boolean logicDeleted(Long id, String identifierSuffix) {
+        return SqlHelper.retBool(identifierMapper.logicDeleted(id, identifierSuffix));
+    }
 }

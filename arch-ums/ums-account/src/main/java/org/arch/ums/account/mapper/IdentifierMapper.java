@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.entity.Identifier;
 import org.springframework.lang.NonNull;
@@ -45,5 +46,26 @@ public interface IdentifierMapper extends BaseMapper<Identifier> {
     AuthLoginDto findAuthLoginDtoByIdentifier(@NonNull @Param("identifier") String identifier,
                                               @NonNull @Param("tenantId") Integer tenantId);
 
+    /**
+     * 查询是否有最近的历史删除记录
+     * @param tenantId          租户 ID
+     * @param likeIdentifier    identifier 字段的 like 字符串
+     * @return  返回最近的逻辑删除的 {@link Identifier}, 如果没有则返回 null
+     */
+    @Nullable
+    @Select(value = "SELECT * FROM account_identifier " +
+            " WHERE tenant_id = #{tenantId} AND identifier like #{identifier} AND deleted = 1 ORDER BY st DESC LIMIT 1")
+    Identifier selectLogicDeleted(@NonNull @Param("tenantId") Integer tenantId,
+                                  @NonNull @Param("identifier") String likeIdentifier);
 
+    /**
+     * 逻辑删除
+     * @param id                租户 ID
+     * @param identifierSuffix  _DELETED_0, _DELETED_0(防止用户重新通过此第三方注册时触发唯一索引问题), 0(防止多次删除同一个第三方账号时触发唯一索引问题).
+     * @return  是否删除成功
+     */
+    @Nullable
+    @Update(value = "UPDATE account_identifier SET identifier = CONCAT(identifier, #{identifierSuffix}), deleted = 1" +
+            " WHERE id = #{id}")
+    int logicDeleted(@NonNull @Param("id") Long id, @NonNull @Param("identifierSuffix") String identifierSuffix);
 }

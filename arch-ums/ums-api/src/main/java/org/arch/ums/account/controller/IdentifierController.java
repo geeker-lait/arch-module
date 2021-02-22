@@ -1,17 +1,23 @@
 package org.arch.ums.account.controller;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.dto.IdentifierSearchDto;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.service.IdentifierService;
+import org.arch.ums.account.service.NameService;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
+import top.dcenter.ums.security.jwt.JwtContext;
 
 import javax.validation.constraints.NotNull;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -40,6 +49,7 @@ import static java.util.Objects.nonNull;
 public class IdentifierController implements CrudController<Identifier, java.lang.Long, IdentifierSearchDto, IdentifierService> {
 
     private final IdentifierService identifierService;
+    private final NameService nameService;
     private final TenantContextHolder tenantContextHolder;
 
     @Override
@@ -137,5 +147,80 @@ public class IdentifierController implements CrudController<Identifier, java.lan
         }
 
         return Response.success(register);
+    }
+
+    /**
+     * 逻辑删除(执行 account_identifier 与 account_name 的逻辑删除):<br>
+     * & account_identifier:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     *     2. 对 identifier 字段添加 "_deleted_序号" 后缀;<br>
+     *        添加后缀防止用户重新通过此第三方注册时触发唯一索引问题;<br>
+     *        添加 序号 以防止多次删除同一个第三方账号时触发唯一索引问题.<br>
+     * & account_name:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     * @param id    {@link Identifier#getId()}
+     * @return  是否删除成功.
+     */
+    @NonNull
+    @DeleteMapping(value = "/{id:[0-9]+}")
+    @Override
+    public Response<Boolean> deleteById(@PathVariable(value = "id") Long id) {
+        Integer tenantId = Integer.valueOf(tenantContextHolder.getTenantId());
+        try {
+            // 获取 Identifier
+            Identifier identifier = identifierService.findById(id);
+            // 逻辑删除
+            Response<Boolean> success = Response.success(identifierService.logicDeletedByIdentifier(tenantId, identifier));
+            JwtContext.addReAuthFlag(SecurityUtils.getCurrentUserId().toString());
+            SecurityContextHolder.clearContext();
+            return success;
+        }
+        catch (Exception e) {
+            log.error(String.format("删除用户失败: tenantId: %s, id: %d",
+                                    tenantContextHolder.getTenantId(), id), e);
+            return Response.success(Boolean.FALSE);
+        }
+    }
+
+    /**
+     * 逻辑删除(执行 account_identifier 与 account_name 的逻辑删除):<br>
+     * & account_identifier:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     *     2. 对 identifier 字段添加 "_deleted_序号" 后缀;<br>
+     *        添加后缀防止用户重新通过此第三方注册时触发唯一索引问题;<br>
+     *        添加 序号 以防止多次删除同一个第三方账号时触发唯一索引问题.<br>
+     * & account_name:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     * @param identifier    {@link Identifier#getIdentifier()}
+     * @return  是否删除成功.
+     */
+    @DeleteMapping(value = "/username/{identifier}")
+    @NonNull
+    public Response<Boolean> logicDeleteByIdentifier(@PathVariable(value = "identifier") String identifier) {
+        Integer tenantId = Integer.valueOf(tenantContextHolder.getTenantId());
+        try {
+            // 获取 Identifier
+            Map<String, Object> params = new LinkedHashMap<>(2);
+            params.put("tenant_id", tenantId);
+            params.put("identifier", identifier);
+            Wrapper<Identifier> queryWrapper = Wrappers.<Identifier>query().allEq(params);
+            Identifier accountIdentifier = identifierService.findOneBySpec(queryWrapper);
+
+            if (isNull(accountIdentifier)) {
+            	return Response.success(Boolean.FALSE, identifier + " 账号不存在");
+            }
+
+            // 逻辑删除
+            Response<Boolean> success = Response.success(identifierService.logicDeletedByIdentifier(tenantId, accountIdentifier));
+            JwtContext.addReAuthFlag(SecurityUtils.getCurrentUserId().toString());
+            SecurityContextHolder.clearContext();
+            return success;
+        }
+        catch (Exception e) {
+            log.error(String.format("删除用户失败: tenantId: %s, identifier: %s",
+                                    tenantContextHolder.getTenantId(), identifier), e);
+            return Response.success(Boolean.FALSE);
+        }
+
     }
 }
