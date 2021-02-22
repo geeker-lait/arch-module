@@ -1,6 +1,8 @@
 package org.arch.framework.automate.generater.config.properties;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.util.List;
 
@@ -15,6 +17,7 @@ import java.util.List;
  * @date :
  */
 @Data
+@NoArgsConstructor
 public class DatabaseProperties {
     private String driver;
     private String dialect;
@@ -23,5 +26,6 @@ public class DatabaseProperties {
     private String name;
     private String username;
     private String password;
+    @NestedConfigurationProperty
     private List<TableProperties> tables;
 }

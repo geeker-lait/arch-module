@@ -2,6 +2,7 @@ package org.arch.framework.automate.generater.config.properties;
 
 import cn.hutool.extra.template.TemplateEngine;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author lait.zhang@gmail.com
@@ -10,6 +11,7 @@ import lombok.Data;
  * @date :
  */
 @Data
+@NoArgsConstructor
 public class TemplateProperties {
     private String dir;
     private String resourceMode;

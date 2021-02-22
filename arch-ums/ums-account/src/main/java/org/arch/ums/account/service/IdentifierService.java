@@ -1,5 +1,8 @@
 package org.arch.ums.account.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.api.IdKey;
@@ -7,8 +10,8 @@ import org.arch.framework.beans.exception.BusinessException;
 import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 import org.arch.framework.crud.CrudService;
 import org.arch.framework.id.IdService;
+import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.dao.IdentifierDao;
-import org.arch.ums.account.dao.NameDao;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
@@ -18,11 +21,18 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 /**
  * 用户-标识(Identifier) 表服务层
@@ -36,9 +46,18 @@ import java.util.Optional;
 @Service
 public class IdentifierService extends CrudService<Identifier, Long> {
 
+    /**
+     * 逻辑删除时 identifier 需要添加的后缀
+     */
+    public static final String IDENTIFIER_DELETED_SUFFIX = "_DELETED_";
+    /**
+     * 逻辑删除时 identifier 需要添加的后缀的分隔符
+     */
+    public static final String IDENTIFIER_SUFFIX_SEPARATOR = "_";
     private final IdentifierDao identifierDao;
-    private final NameDao nameDao;
+    private final NameService nameService;
     private final IdService idService;
+    private final TenantContextHolder tenantContextHolder;
 
     /**
      * 查询 identifiers 是否已经存在.
@@ -109,7 +128,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
             .setDeleted(false);
 
         boolean saveIdentifierResult = identifierDao.save(identifier);
-        boolean saveNameResult = nameDao.save(name);
+        boolean saveNameResult = nameService.save(name);
         if (saveIdentifierResult && saveNameResult) {
             return AuthLoginDto.builder()
                                .id(id)
@@ -128,6 +147,138 @@ public class IdentifierService extends CrudService<Identifier, Long> {
                                     new String[]{"tenantId:" + authRegRequest.getTenantId(),
                                                  "username:" + authRegRequest.getIdentifier()},
                                     "用户注册失败");
+    }
+
+    /**
+     * 逻辑删除(执行 account_identifier 与 account_name 的逻辑删除):<br>
+     * & account_identifier:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     *     2. 对 identifier 字段添加 "_deleted_序号" 后缀;<br>
+     *        添加后缀防止用户重新通过此第三方注册时触发唯一索引问题;<br>
+     *        添加 序号 以防止多次删除同一个第三方账号时触发唯一索引问题.<br>
+     * & account_name:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     * @param tenantId      租户 ID
+     * @param identifier    {@link Identifier}
+     * @return  是否删除成功.
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
+    @NotNull
+    public boolean logicDeletedByIdentifier(@NonNull Integer tenantId, @NonNull Identifier identifier) {
+        // 校验合法性
+        Long accountId = SecurityUtils.getCurrentUserId();
+        if (!(tenantId.equals(identifier.getTenantId()) && accountId.equals(identifier.getAid()))) {
+            log.warn("非法删除: 操作用户: {}, 目标租户: {}, 目标账号标识: {}",
+                     identifier, tenantId, identifier.getIdentifier());
+            return false;
+        }
+
+        // 查询是否有最近的历史删除记录
+        Identifier deletedIdentifier =
+                identifierDao.selectLogicDeleted(tenantId,
+                                                 identifier.getIdentifier() + IDENTIFIER_DELETED_SUFFIX + "%");
+        // 有则提取删除序号
+        final int seq;
+        if (nonNull(deletedIdentifier)) {
+            String[] splits = deletedIdentifier.getIdentifier().split(IDENTIFIER_SUFFIX_SEPARATOR);
+            seq = Integer.parseInt(splits[splits.length - 1]) + 1;
+        }
+        else {
+            seq = 0;
+        }
+
+        // 逻辑删除, likeIdentifierPrefix(防止用户重新通过此第三方注册时触发唯一索引问题), seq(防止多次删除同一个第三方账号时触发唯一索引问题)
+        boolean booleanIdentifier = identifierDao.logicDeleted(identifier.getId(), IDENTIFIER_DELETED_SUFFIX + seq);
+        boolean booleanName = nameService.deleteById(identifier.getId());
+        if (!booleanIdentifier || !booleanName) {
+            throw new RuntimeException("逻辑删除失败: " + identifier);
+        }
+        return true;
+    }
+
+
+    /**
+     * 逻辑删除(执行 account_identifier 与 account_name 的逻辑删除):<br>
+     * & account_identifier:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     *     2. 对 identifier 字段添加 "_deleted_序号" 后缀;<br>
+     *        添加后缀防止用户重新通过此第三方注册时触发唯一索引问题;<br>
+     *        添加 序号 以防止多次删除同一个第三方账号时触发唯一索引问题.<br>
+     * & account_name:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     * @param id    {@link Identifier#getId()}
+     * @return  是否删除成功.
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
+    public boolean deleteById(Long id) {
+        Integer tenantId = Integer.valueOf(tenantContextHolder.getTenantId());
+        // 获取 Identifier
+        Map<String, Object> params = new LinkedHashMap<>(2);
+        params.put("id", id);
+        params.put("tenant_id", tenantId);
+        Wrapper<Identifier> queryWrapper = Wrappers.<Identifier>query().allEq(params);
+        Identifier identifier = findOneBySpec(queryWrapper);
+        if (isNull(identifier)) {
+        	return false;
+        }
+        return logicDeletedByIdentifier(tenantId, identifier);
+    }
+
+    /**
+     * 逻辑删除(执行 account_identifier 与 account_name 的逻辑删除):<br>
+     * & account_identifier:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     *     2. 对 identifier 字段添加 "_deleted_序号" 后缀;<br>
+     *        添加后缀防止用户重新通过此第三方注册时触发唯一索引问题;<br>
+     *        添加 序号 以防止多次删除同一个第三方账号时触发唯一索引问题.<br>
+     * & account_name:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     * @param identifier    {@link Identifier}
+     * @return  是否删除成功.
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
+    public boolean deleteById(Identifier identifier) {
+        // 获取 Identifier
+        Identifier accountIdentifier = crudDao.getOne(new QueryWrapper<>(identifier));
+        if (isNull(identifier)) {
+            return false;
+        }
+        // 逻辑删除
+        return logicDeletedByIdentifier(identifier.getTenantId(), accountIdentifier);
+    }
+
+    /**
+     * 逻辑删除(执行 account_identifier 与 account_name 的逻辑删除):<br>
+     * & account_identifier:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     *     2. 对 identifier 字段添加 "_deleted_序号" 后缀;<br>
+     *        添加后缀防止用户重新通过此第三方注册时触发唯一索引问题;<br>
+     *        添加 序号 以防止多次删除同一个第三方账号时触发唯一索引问题.<br>
+     * & account_name:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     * @param ids    ids
+     * @return  是否删除成功.
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
+    public boolean deleteAllById(List<Long> ids) {
+        Integer tenantId = Integer.valueOf(tenantContextHolder.getTenantId());
+        // 获取 Identifier
+        Wrapper<Identifier> queryWrapper =
+                Wrappers.<Identifier>lambdaQuery()
+                        .in(Identifier::getId, ids)
+                        .and(i -> i.eq(Identifier::getTenantId, tenantId));
+        List<Identifier> identifierList = findAllBySpec(queryWrapper);
+        if (isNull(identifierList) || identifierList.size() == 0) {
+            return false;
+        }
+        // 逻辑删除, 待优化
+        for (Identifier identifier : identifierList) {
+            logicDeletedByIdentifier(tenantId, identifier);
+        }
+        return true;
     }
 
 }

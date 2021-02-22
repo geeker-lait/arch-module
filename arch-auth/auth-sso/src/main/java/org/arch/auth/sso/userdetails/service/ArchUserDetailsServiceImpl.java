@@ -144,34 +144,35 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     @NonNull
     @Override
     public UserDetails registerUser(@NonNull ServletWebRequest request) throws RegisterUserFailureException {
+        RegRequest regRequest =
+                (RegRequest) request.getAttribute(REG_REQUEST_PARAMETER_NAME, RequestAttributes.SCOPE_REQUEST);
+        if (isNull(regRequest)) {
+            throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, null);
+        }
+
+        // 获取注册的账户类型
+        AccountType accountType = RegisterUtils.getAccountType(ssoProperties.getAccountTypeParameterName());
+        if (isNull(accountType)) {
+            log.warn("用户注册失败, accountType 没有传递 或 格式错误");
+            throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, regRequest.getUsername());
+        }
+
+        // 查询用户是否已被注册
+        List<Boolean> exists;
         try {
-            RegRequest regRequest =
-                    (RegRequest) request.getAttribute(REG_REQUEST_PARAMETER_NAME, RequestAttributes.SCOPE_REQUEST);
-            if (isNull(regRequest)) {
-                throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, null);
-            }
-
-            // 获取注册的账户类型
-            AccountType accountType = RegisterUtils.getAccountType(ssoProperties.getAccountTypeParameterName());
-            if (isNull(accountType)) {
-                log.warn("用户注册失败, accountType 没有传递 或 格式错误");
-                throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, regRequest.getUsername());
-            }
-
-            // 查询用户是否已被注册
-            List<Boolean> exists = existedByUsernames(regRequest.getUsername());
-            if (exists.get(0)) {
-                throw new RegisterUserFailureException(ErrorCodeEnum.USERNAME_USED, regRequest.getUsername());
-            }
-
-            // 用户注册
-            AuthRegRequest authRegRequest = getUsernamePasswordRegRequest(regRequest, accountType);
-            return registerUser(authRegRequest);
-
+            exists = existedByUsernames(regRequest.getUsername());
         }
         catch (Exception e) {
-            throw new RegisterUserFailureException(ErrorCodeEnum.USERNAME_USED, e, null);
+            log.error(e.getMessage(), e);
+            throw new RegisterUserFailureException(ErrorCodeEnum.SERVER_ERROR, e, null);
         }
+        if (exists.get(0)) {
+            throw new RegisterUserFailureException(ErrorCodeEnum.USERNAME_USED, regRequest.getUsername());
+        }
+
+        // 用户注册
+        AuthRegRequest authRegRequest = getUsernamePasswordRegRequest(regRequest, accountType);
+        return registerUser(authRegRequest);
     }
 
     /**
@@ -198,7 +199,9 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
         // 第三方授权登录用户注册
         AuthRegRequest authRegRequest = getOauth2RegRequest(authUser, username, defaultAuthority, accountType);
+
         return registerUser(authRegRequest);
+
     }
 
     /**
@@ -231,17 +234,31 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         }
 
         List<String> usernameList = Arrays.stream(usernames).collect(Collectors.toList());
-        Response<List<Boolean>> response = umsAccountClient.exists(usernameList);
+        Response<List<Boolean>> response;
+        try {
+            response = umsAccountClient.exists(usernameList);
+        }
+        catch (Exception e) {
+            throw new IOException("查询用户名是否存在时 IO 异常");
+        }
         List<Boolean> successData = response.getSuccessData();
         if (nonNull(successData)) {
         	return successData;
         }
-        throw new IOException("查询数据库时发生异常");
+        throw new IOException("查询用户名是否存在时无结果异常");
     }
 
     @NonNull
     private ArchUser registerUser(@NonNull AuthRegRequest authRegRequest) {
-        Response<AuthLoginDto> response = umsAccountClient.register(authRegRequest);
+        Response<AuthLoginDto> response;
+        try {
+            response = umsAccountClient.register(authRegRequest);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new RegisterUserFailureException(ErrorCodeEnum.SERVER_ERROR, e, null);
+        }
+
         AuthLoginDto authLoginDto = response.getSuccessData();
         if (isNull(authLoginDto)) {
             log.warn("用户注册失败: {}", response.getMsg());
