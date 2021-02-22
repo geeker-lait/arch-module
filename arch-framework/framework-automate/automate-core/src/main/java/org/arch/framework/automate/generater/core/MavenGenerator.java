@@ -1,10 +1,7 @@
 package org.arch.framework.automate.generater.core;
 
-import org.arch.framework.automate.generater.Generable;
-import org.arch.framework.automate.generater.config.GeneratorConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 /**
  * @author lait.zhang@gmail.com
@@ -12,11 +9,9 @@ import java.io.IOException;
  * @weixin PN15855012581
  * @date :
  */
+@Slf4j
 @Service
-public class MavenGenerator implements Generable {
+public class MavenGenerator extends AbstractGenerator {
 
-    @Override
-    public void generate(GeneratorConfig generatorConfig) throws IOException {
 
-    }
 }
