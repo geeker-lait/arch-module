@@ -12,16 +12,16 @@ import java.util.Map;
  * 表单字段类型(FormFieldTyp) search dto
  *
  * @author lait
- * @date 2021-02-08 13:25:22
+ * @date 2021-02-10 15:55:46
  * @since 1.0.0
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormFieldTypSearchDto extends BaseSearchDto {
+public class FormFieldTypSearchDto implements BaseSearchDto {
 
     /**
-     * 主键
+     * 主键id
      */
     private Long id;
 
@@ -41,6 +41,11 @@ public class FormFieldTypSearchDto extends BaseSearchDto {
     private String descr;
 
     /**
+     * 逻辑删除
+     */
+    private Boolean deleted;
+
+    /**
      * 排序
      */
     private Integer sorted;
@@ -48,7 +53,7 @@ public class FormFieldTypSearchDto extends BaseSearchDto {
     /**
      * 时间戳
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
@@ -56,7 +61,8 @@ public class FormFieldTypSearchDto extends BaseSearchDto {
         putNoNull("EQ_typ_code", this.getTypCode(), map);
         putNoNull("EQ_typ_name", this.getTypName(), map);
         putNoNull("EQ_descr", this.getDescr(), map);
+        putNoNull("EQ_deleted", this.getDeleted(), map);
         putNoNull("EQ_sorted", this.getSorted(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
     }
 }

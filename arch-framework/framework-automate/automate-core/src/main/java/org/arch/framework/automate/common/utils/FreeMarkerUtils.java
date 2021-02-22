@@ -7,7 +7,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.generater.core.TemplateProcessor;
+import org.arch.framework.automate.generater.builder.TemplateProcessor;
 import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.render.RenderingRequest;
 import org.arch.framework.automate.generater.render.RenderingResponse;

@@ -1,8 +1,6 @@
 package org.arch.framework.automate.api;
 
-import org.arch.framework.automate.api.request.AlterTableRequest;
 import org.arch.framework.automate.api.request.FormDefinitionRequest;
-import org.arch.framework.automate.api.response.AlterTableResponse;
 import org.arch.framework.automate.api.response.FormDefinitionResponse;
 
 /**
@@ -24,9 +22,9 @@ public interface FormDefinitionClient {
 
     /**
      * 修改form表单
-     * @param alterTableRequest
+     * @param
      * @return
      */
-    AlterTableResponse alterFormTable(AlterTableRequest alterTableRequest);
+
 
 }

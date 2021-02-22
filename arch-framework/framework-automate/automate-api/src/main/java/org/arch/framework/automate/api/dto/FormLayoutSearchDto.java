@@ -12,13 +12,13 @@ import java.util.Map;
  * 表单布局(FormLayout) search dto
  *
  * @author lait
- * @date 2021-02-08 13:25:28
+ * @date 2021-02-10 15:55:48
  * @since 1.0.0
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormLayoutSearchDto extends BaseSearchDto {
+public class FormLayoutSearchDto implements BaseSearchDto {
 
     /**
      * 主键
@@ -41,19 +41,29 @@ public class FormLayoutSearchDto extends BaseSearchDto {
     private String layoutCode;
 
     /**
+     * 布局css样式
+     */
+    private String layoutStyle;
+
+    /**
      * 描述
      */
     private String descr;
 
     /**
-     * 原sourceId
+     * 版本
      */
-    private Long editorSourceId;
+    private Integer ver;
+
+    /**
+     * 是否逻辑删除
+     */
+    private Boolean deleted;
 
     /**
      * 时间戳
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
@@ -61,8 +71,10 @@ public class FormLayoutSearchDto extends BaseSearchDto {
         putNoNull("EQ_table_id", this.getTableId(), map);
         putNoNull("EQ_layout_name", this.getLayoutName(), map);
         putNoNull("EQ_layout_code", this.getLayoutCode(), map);
+        putNoNull("EQ_layout_style", this.getLayoutStyle(), map);
         putNoNull("EQ_descr", this.getDescr(), map);
-        putNoNull("EQ_editor_source_id", this.getEditorSourceId(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_ver", this.getVer(), map);
+        putNoNull("EQ_deleted", this.getDeleted(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
     }
 }

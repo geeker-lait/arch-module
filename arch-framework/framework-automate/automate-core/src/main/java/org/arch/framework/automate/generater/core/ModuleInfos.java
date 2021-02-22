@@ -83,7 +83,7 @@ public class ModuleInfos<T extends NameToField> {
                         }
                     } else {
                         Cell cell = row.getCell(k);
-                        name = TranslationField.getfieldMap().get(firstRow.getCell(k).getStringCellValue());
+                        name = ExcelHeadMap.getfieldMap().get(firstRow.getCell(k).getStringCellValue());
                         if (name != null && null != ExcelUtils.getCellValue(cell)) {
                             map.put(name, ExcelUtils.getCellValue(cell));
                         }

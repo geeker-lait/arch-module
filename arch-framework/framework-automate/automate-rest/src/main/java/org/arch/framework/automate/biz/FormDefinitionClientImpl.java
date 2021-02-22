@@ -1,9 +1,7 @@
 package org.arch.framework.automate.biz;
 
 import org.arch.framework.automate.api.FormDefinitionClient;
-import org.arch.framework.automate.api.request.AlterTableRequest;
 import org.arch.framework.automate.api.request.FormDefinitionRequest;
-import org.arch.framework.automate.api.response.AlterTableResponse;
 import org.arch.framework.automate.api.response.FormDefinitionResponse;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +19,5 @@ public class FormDefinitionClientImpl implements FormDefinitionClient {
         return null;
     }
 
-    @Override
-    public AlterTableResponse alterFormTable(AlterTableRequest alterTableRequest) {
-        return null;
-    }
+
 }

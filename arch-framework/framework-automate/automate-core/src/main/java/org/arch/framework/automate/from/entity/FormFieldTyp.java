@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * 表单字段类型(FormFieldTyp) 实体类
  *
  * @author lait
- * @date 2021-02-08 13:25:20
+ * @date 2021-02-10 15:40:00
  * @since 1.0.0
  */
 @Data
@@ -25,29 +25,37 @@ import java.time.LocalDateTime;
 @TableName("form_field_typ")
 public class FormFieldTyp extends CrudEntity<FormFieldTyp> {
     private static final long serialVersionUID = 1L;
-    @TableId
-    protected Long id;
+
+    /**
+     * 主键id
+     */
+    @TableId("id")
+    private Long id;
+
     /**
      * 类型code：input/checkbox/radio/select/textarea
      */
     private String typCode;
-
     /**
      * 类型名称
      */
     private String typName;
-
     /**
      * 描述
      */
     private String descr;
-
+    /**
+     * 逻辑删除
+     */
+    private Boolean deleted;
     /**
      * 排序
      */
     private Integer sorted;
-
-
+    /**
+     * 时间戳
+     */
+    private LocalDateTime dt;
 
     /**
      * 获取主键值

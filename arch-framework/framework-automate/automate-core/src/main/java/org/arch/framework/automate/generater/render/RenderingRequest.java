@@ -4,6 +4,7 @@ import lombok.Data;
 import org.arch.framework.automate.common.metadata.DatabaseInfo;
 import org.arch.framework.automate.common.metadata.DependencieInfo;
 import org.arch.framework.automate.common.metadata.EntityInfo;
+import org.arch.framework.automate.generater.config.DataProperties;
 
 import java.util.List;
 import java.util.Map;

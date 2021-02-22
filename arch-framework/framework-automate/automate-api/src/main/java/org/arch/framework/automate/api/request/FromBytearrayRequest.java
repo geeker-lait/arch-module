@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * 表单数据(FromBytearray) request
  *
  * @author lait
- * @date 2021-02-08 13:25:31
+ * @date 2021-02-10 15:55:53
  * @since 1.0.0
  */
 @Data
@@ -19,9 +19,19 @@ import java.time.LocalDateTime;
 public class FromBytearrayRequest {
 
     /**
-     * 主键
+     * id主键
      */
     private Long id;
+
+    /**
+     * 表单id
+     */
+    private Long tableId;
+
+    /**
+     * 字段Id
+     */
+    private Long fieldId;
 
     /**
      * 名称
@@ -34,8 +44,13 @@ public class FromBytearrayRequest {
     private String contentByte;
 
     /**
+     * 是否逻辑删除
+     */
+    private Boolean deleted;
+
+    /**
      * 时间戳
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
 }

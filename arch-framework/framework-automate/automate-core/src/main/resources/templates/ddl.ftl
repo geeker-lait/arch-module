@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `${entity.tableName!"tb_"+entity_index}`(
     <#list entity.fields as field>
     `${field.name!""}` <#if field.type?? && (field.type == 'datetime' || field.type == 'boolean')>${field.type!""}<#elseif field.type??> ${field.type!""}(${field.length!"255"})</#if> COMMENT '${field.comment!""}',
     </#list>
+    `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='${entity.comment!""}';
 

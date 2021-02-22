@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * 表单字段选项(FormFieldOption) 实体类
  *
  * @author lait
- * @date 2021-02-08 13:25:17
+ * @date 2021-02-10 15:39:58
  * @since 1.0.0
  */
 @Data
@@ -25,28 +25,37 @@ import java.time.LocalDateTime;
 @TableName("form_field_option")
 public class FormFieldOption extends CrudEntity<FormFieldOption> {
     private static final long serialVersionUID = 1L;
-    @TableId
-    protected Long id;
+
     /**
      * 字段id
      */
-    private Long fieldId;
+    @TableId("id")
+    private Long id;
 
+    /**
+     * 表单Id
+     */
+    private Long fieldId;
     /**
      * 选项id
      */
-    private Long optionId;
-
+    private String optionName;
     /**
      * 选项名
      */
-    private String optionName;
-
+    private String optionCode;
     /**
      * 选项值
      */
     private String optionVal;
-
+    /**
+     * 逻辑删除
+     */
+    private Boolean deleted;
+    /**
+     * 时间戳
+     */
+    private LocalDateTime dt;
 
     /**
      * 获取主键值

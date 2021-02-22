@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * 表单定义(FormDefinition) request
  *
  * @author lait
- * @date 2021-02-08 13:25:12
+ * @date 2021-02-10 15:55:43
  * @since 1.0.0
  */
 @Data
@@ -20,12 +20,12 @@ import java.time.LocalDateTime;
 public class FormDefinitionRequest implements DirectiveRequest {
 
     /**
-     * 主键
+     * 表单分类
      */
     private Long id;
 
     /**
-     * 表单分类
+     * schema主键id
      */
     private String category;
 
@@ -57,7 +57,7 @@ public class FormDefinitionRequest implements DirectiveRequest {
     /**
      * 版本
      */
-    private Integer version;
+    private Integer ver;
 
     /**
      * 表单描述
@@ -65,8 +65,18 @@ public class FormDefinitionRequest implements DirectiveRequest {
     private String descr;
 
     /**
+     * 定义json
+     */
+    private String definitionJson;
+
+    /**
+     * 逻辑删除
+     */
+    private Boolean deleted;
+
+    /**
      * 时间戳
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
 }

@@ -12,21 +12,21 @@ import java.util.Map;
  * 表单定义(FormDefinition) search dto
  *
  * @author lait
- * @date 2021-02-08 13:25:12
+ * @date 2021-02-10 15:55:43
  * @since 1.0.0
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormDefinitionSearchDto extends BaseSearchDto {
+public class FormDefinitionSearchDto implements BaseSearchDto {
 
     /**
-     * 主键
+     * 表单分类
      */
     private Long id;
 
     /**
-     * 表单分类
+     * schema主键id
      */
     private String category;
 
@@ -58,7 +58,7 @@ public class FormDefinitionSearchDto extends BaseSearchDto {
     /**
      * 版本
      */
-    private Integer version;
+    private Integer ver;
 
     /**
      * 表单描述
@@ -66,9 +66,19 @@ public class FormDefinitionSearchDto extends BaseSearchDto {
     private String descr;
 
     /**
+     * 定义json
+     */
+    private String definitionJson;
+
+    /**
+     * 逻辑删除
+     */
+    private Boolean deleted;
+
+    /**
      * 时间戳
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
@@ -79,8 +89,10 @@ public class FormDefinitionSearchDto extends BaseSearchDto {
         putNoNull("EQ_table_name", this.getTableName(), map);
         putNoNull("EQ_field_id", this.getFieldId(), map);
         putNoNull("EQ_layout_id", this.getLayoutId(), map);
-        putNoNull("EQ_version", this.getVersion(), map);
+        putNoNull("EQ_ver", this.getVer(), map);
         putNoNull("EQ_descr", this.getDescr(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_definition_json", this.getDefinitionJson(), map);
+        putNoNull("EQ_deleted", this.getDeleted(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
     }
 }
