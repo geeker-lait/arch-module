@@ -6,15 +6,33 @@
         <groupId>${(parent!).groupId!""}</groupId>
         <version>${(parent!).version!""}</version>
     </parent>
-    </#if>
-    <modelVersion>4.0.0</modelVersion>
+    </#if><modelVersion>4.0.0</modelVersion>
     <artifactId>${artifactId!""}</artifactId>
     <groupId>${groupId!""}</groupId>
     <version>${version!""}</version>
+    <#if packaging??>
+    <packaging>${packaging!""}</packaging>
+    </#if>
 
+    <#if modules ?? && (modules?size >0)>
+    <modules>
+        <#list modules as module>
+        <module>${(module.artifactId)!""}</module>
+        </#list>
+    </modules>
+    </#if>
 
+    <#if dependencies ?? && (dependencies?size >0)>
     <dependencies>
-
-
+        <#list dependencies as dependencie>
+        <dependency>
+            <artifactId>${(dependencie.artifactId)!""}</artifactId>
+            <groupId>${(dependencie.groupId)!""}</groupId>
+            <#if dependencie.versoin??>
+            <version>${(dependencie.version)!""}</version>
+            </#if>
+        </dependency>
+        </#list>
     </dependencies>
+    </#if>
 </project>

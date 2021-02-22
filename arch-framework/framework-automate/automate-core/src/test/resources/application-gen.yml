@@ -7,7 +7,7 @@ spring:
       resource-mode: classpath
     schema: excel
     project:
-      path: /Users/lait.zhang/Workspaces/Java/Projects/arch-module
+      path: /arch-gen
       basePkg: org.arch.gen
       pom:
         artifactId: arch-gen
@@ -23,8 +23,8 @@ spring:
             version:
             packageTypes: dao
             dependencies:
-              - groupId:
-                artifactId:
+              - groupId: org.arch.projects
+                artifactId: arch-gen-core
             modules:
               - artifactId: arch-gen-common-a
                 groupId:
@@ -92,6 +92,10 @@ spring:
       tables:
         - name: user
           comment: 用户表
+          pk:
+          fks: name,age
+          uniques:
+          indexs:
           columns:
             - name: id
               typ: bigint

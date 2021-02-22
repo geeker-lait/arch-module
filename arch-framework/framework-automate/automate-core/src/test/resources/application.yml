@@ -23,7 +23,15 @@ spring:
     #schema-username:
     sql-script-encoding: utf-8
     separator: ;
-
+#  freemarker:
+#    suffix: .html  #后缀名
+#    content-type: text/html
+#    enabled: true
+#    cache: false #缓存配置
+#    template-loader-path: classpath:/templates/ #模板加载路径 按需配置
+#    charset: UTF-8 #编码格式
+#    settings:
+#      number_format: '0.##'   #数字格式化，无小数点
 
 
 #  datasource:

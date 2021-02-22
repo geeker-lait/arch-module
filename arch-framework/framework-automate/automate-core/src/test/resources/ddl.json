@@ -45,8 +45,11 @@
       }
     ],
     "unique_list": [
-      ["username"],
-      ["email"]
+      {
+        "name": "username"
+      }, {
+        "name": "email"
+      }
     ]
   }
 }

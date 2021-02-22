@@ -7,7 +7,7 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.generater.config.*;
+import org.arch.framework.automate.generater.config.GeneratorConfig;
 import org.arch.framework.automate.generater.config.properties.*;
 import org.arch.framework.automate.generater.render.RenderingRequest;
 import org.arch.framework.beans.utils.StringUtils;
@@ -53,6 +53,8 @@ public abstract class AbstractProcessor implements TemplateProcessor {
             TemplateConfig templateConfig = new TemplateConfig(templateProperties.getDir(), resourceMode);
             engine = TemplateUtil.createEngine(templateConfig);
         }
+//        Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
+//        cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
         return engine;
     }
 
@@ -74,13 +76,13 @@ public abstract class AbstractProcessor implements TemplateProcessor {
         boolean cover = generatorConfig.isCover();
         // 创建根目录
         Files.createDirectories(rootPath);
-        buildModule(cover, rootPath, projectProperties, pomProperties, null,packagePropertiesMap, databaseProperties, templateProperties);
+        buildModule(cover, rootPath, projectProperties, pomProperties, null, packagePropertiesMap, databaseProperties, templateProperties);
     }
 
-    private void buildModule(boolean cover, Path path, ProjectProperties projectProperties, PomProperties pomProperties,PomProperties pomPropertiesPatent, Map<String, PackageProperties> packagePropertiesMap, DatabaseProperties databaseProperties, TemplateProperties templateProperties) throws IOException {
+    private void buildModule(boolean cover, Path path, ProjectProperties projectProperties, PomProperties pomProperties, PomProperties pomPropertiesPatent, Map<String, PackageProperties> packagePropertiesMap, DatabaseProperties databaseProperties, TemplateProperties templateProperties) throws IOException {
         List<PomProperties> modules = pomProperties.getModules();
         // 创建pom
-        buildPom(cover, path, pomProperties,pomPropertiesPatent);
+        buildPom(cover, path, pomProperties, pomPropertiesPatent);
         if (modules == null) {
             // 创建模块src目录,可不创建最后一起创建，这里为了标准化目录创建一下
             for (String dir : srcDirectorys) {
@@ -108,11 +110,11 @@ public abstract class AbstractProcessor implements TemplateProcessor {
         for (PomProperties module : modules) {
             Path subPath = path.resolve(module.getArtifactId());
             pomPropertiesPatent = pomProperties;
-            buildModule(cover, subPath, projectProperties, module, pomPropertiesPatent,packagePropertiesMap, databaseProperties, templateProperties);
+            buildModule(cover, subPath, projectProperties, module, pomPropertiesPatent, packagePropertiesMap, databaseProperties, templateProperties);
         }
     }
 
-    private void buildPom(boolean cover, Path path, PomProperties pomProperties,PomProperties pomPropertiesPatent) throws IOException {
+    private void buildPom(boolean cover, Path path, PomProperties pomProperties, PomProperties pomPropertiesPatent) throws IOException {
         Files.createDirectories(path);
         Path pomFilePath = Paths.get(path.toFile().getAbsolutePath().concat(File.separator).concat("pom.xml"));
         // 写入dao文件
@@ -126,16 +128,20 @@ public abstract class AbstractProcessor implements TemplateProcessor {
             }
         }
 
-        if (pomProperties.getParent() == null  && pomPropertiesPatent != null) {
+        if (pomProperties.getParent() == null && pomPropertiesPatent != null) {
             DependencieProterties parent = new DependencieProterties();
             parent.setArtifactId(pomPropertiesPatent.getArtifactId());
             parent.setGroupId(pomPropertiesPatent.getGroupId());
             parent.setVersion(pomPropertiesPatent.getVersion());
+
             pomProperties.setGroupId(pomPropertiesPatent.getGroupId());
             pomProperties.setVersion(pomPropertiesPatent.getVersion());
             pomProperties.setParent(parent);
         }
-
+        if (pomProperties.getModules() != null && pomProperties.getModules().size() > 0) {
+            pomProperties.setPackaging("pom");
+        }
+        log.info("create pom file in : {}", pomFilePath);
         Files.createFile(pomFilePath);
         // 获取模板
         Template template = getTemplateEngine().getTemplate("pom.ftl");
@@ -170,6 +176,8 @@ public abstract class AbstractProcessor implements TemplateProcessor {
         Files.createFile(daoFilePath);
         // 获取模板
         Template template = getTemplateEngine().getTemplate(packageProperties.getTemplate());
+
+
         // 渲染模板
         String code = template.render(JSONUtil.parseObj(tableProperties));
         // 写入文件
