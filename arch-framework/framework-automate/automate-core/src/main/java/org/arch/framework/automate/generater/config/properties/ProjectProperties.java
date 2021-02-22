@@ -1,6 +1,8 @@
 package org.arch.framework.automate.generater.config.properties;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -27,10 +29,12 @@ import java.nio.file.Paths;
  * @date :
  */
 @Data
+@NoArgsConstructor
 public class ProjectProperties {
     private String path;
     private String name;
     private String basePkg;
+    @NestedConfigurationProperty
     private PomProperties pom;
 
 

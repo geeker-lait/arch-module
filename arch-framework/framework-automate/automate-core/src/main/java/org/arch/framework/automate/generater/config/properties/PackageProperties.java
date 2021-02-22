@@ -1,6 +1,7 @@
 package org.arch.framework.automate.generater.config.properties;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author lait.zhang@gmail.com
@@ -13,6 +14,7 @@ import lombok.Data;
  * @date 2/17/2021 8:22 PM
  */
 @Data
+@NoArgsConstructor
 public class PackageProperties {
     private String type;
     private String pkg;
