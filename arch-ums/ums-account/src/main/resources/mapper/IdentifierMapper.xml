@@ -28,7 +28,7 @@
     <select id="exists" resultType="java.lang.Boolean">
         <foreach collection="identifiers" item="identifier" open=" " close=" " separator="UNION ALL">
             SELECT count(`identifier`) FROM `account_identifier`
-            WHERE `tenant_id` = #{tenantId} AND `identifier` = #{identifier}
+            WHERE `tenant_id` = #{tenantId} AND `identifier` = #{identifier} AND `deleted` = 0
         </foreach>
     </select>
 
