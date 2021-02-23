@@ -18,14 +18,19 @@ import java.time.LocalDateTime;
 * @date ${.now}
 */
 @Data
+<#if extendClass??>
 @EqualsAndHashCode(callSuper = true)
+</#if>
 @NoArgsConstructor
 @Accessors(chain = true)
 @TableName
-public class ${(name?cap_first)!""}${stuffix!""} <#if extendClass??> extends CrudEntity<FormBiz></#if> {
-<#if colums?? && (colums?size >0)>
-    <#list colums as column >
-    private ${column.typ!""} ${column.name!""}
+public class ${(name?cap_first)!""}${suffix!""} extends CrudEntity<${(name?cap_first)!""}>{
+<#if columns?? && (columns?size >0)>
+    <#list columns as column >
+    /**
+     * ${column.comment!""}
+     */
+    private ${column.typ!""} ${column.name!""};
     </#list>
 </#if>
 }

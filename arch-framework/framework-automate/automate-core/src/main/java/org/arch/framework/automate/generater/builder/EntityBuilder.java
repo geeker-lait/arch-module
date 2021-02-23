@@ -12,13 +12,14 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 
 @Slf4j
 @Component
-public class EntityBuilder implements Buildable {
+public class EntityBuilder extends AbstractBuilder implements Buildable {
 
     @Override
     public TemplateName getTemplateName() {
@@ -30,14 +31,12 @@ public class EntityBuilder implements Buildable {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.putAll(JSONUtil.parseObj(tableProperties));
         dataMap.putAll(JSONUtil.parseObj(packageProperties));
-        log.info("package :{}", packageProperties.getPkg());
-        String p = filePath.toString();
-        int l = p.indexOf(AbstractGenerator.MAIN_JAVA);
-        int ll = p.lastIndexOf(File.separator);
-        String pkg = p.substring(l+AbstractGenerator.MAIN_JAVA.length(),ll).replaceAll(Matcher.quoteReplacement(File.separator), "\\.");
-        dataMap.put("package", pkg);
-        dataMap.put("stuffix",packageProperties.getSuffix());
+        // 包
+        dataMap.put("package", buildPkg(filePath));
+        // 其他字段
         dataMap.put("", "");
+        // imports pack
+        dataMap.put("imports", Arrays.asList());
         return dataMap;
     }
 

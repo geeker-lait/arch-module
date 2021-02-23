@@ -22,21 +22,25 @@
     </modules>
     </#if>
 
-    <#if dependencies ?? && (dependencies?size >0)>
     <dependencies>
+        <#if modules ?? && (modules?size >0)>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.16</version>
         </dependency>
+        </#if>
+        <#if dependencies ?? && (dependencies?size >0)>
         <#list dependencies as dependencie>
         <dependency>
             <artifactId>${(dependencie.artifactId)!""}</artifactId>
             <groupId>${(dependencie.groupId)!""}</groupId>
-            <#if dependencie.versoin??>
+            <#if dependencie.version??>
             <version>${(dependencie.version)!""}</version>
             </#if>
         </dependency>
         </#list>
+        </#if>
     </dependencies>
-    </#if>
+
 </project>

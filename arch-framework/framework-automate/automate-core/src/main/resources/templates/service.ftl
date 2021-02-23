@@ -3,20 +3,17 @@ package ${pkg!""};
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudService;
-import org.arch.framework.automate.from.dao.FormBizDao;
-import org.arch.framework.automate.from.entity.FormBiz;
 import org.springframework.stereotype.Service;
 
 /**
-* 项目业务(FormBiz) 表服务层
+* @description 项目业务(${(name?cap_first)!""}) 表服务层
 *
-* @author lait
-* @date 2021-02-10 15:36:16
-* @since 1.0.0
+* @author ${author!""}
+* @date ${.now}
 */
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class FormBizService extends CrudService<FormBiz, java.lang.Long> {
-    private final FormBizDao formBizDao = (FormBizDao) crudDao;
+public class ${(name?cap_first)!""}${suffix!""} extends CrudService<${(name?cap_first)!""}, java.lang.Long>{
+    private final ${(name?cap_first)!""}Dao ${name!""}Dao = (${(name?cap_first)!""}Dao) crudDao;
 }

@@ -94,6 +94,10 @@ public abstract class AbstractGenerator implements Generable {
             if (!StringUtils.isEmpty(pomProperties.getPackageTypes())) {
                 for (String p : Arrays.asList(pomProperties.getPackageTypes().split(","))) {
                     PackageProperties packageProperties = packagePropertiesMap.get(p);
+                    // 如果后缀没有设置，默认为package typ
+                    if(StringUtils.isEmpty(packageProperties.getSuffix())){
+                        packageProperties.setSuffix(StringUtils.toCapitalizeCamelCase(p));
+                    }
                     String pkg = packageProperties.getPkg();
                     pkg = null == pkg ? "" : pkg;
                     /*String pack = basePkg.concat("." + pkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator));
@@ -186,9 +190,9 @@ public abstract class AbstractGenerator implements Generable {
             builderMap.putAll(builders.stream().collect(Collectors.toMap(b->b.getTemplateName().getTemplate(),Function.identity())));
             buildable = builderMap.get(stemplate);
         }
-        Map<String,Object> mapData = buildable.buildData(filePath,packageProperties,tableProperties);
+        Map<String,Object> dataMap = buildable.buildData(filePath,packageProperties,tableProperties);
         // 渲染模板
-        String code = template.render(mapData);
+        String code = template.render(dataMap);
         // 写入文件
         Files.write(filePath, code.getBytes());
     }

@@ -25,6 +25,7 @@ spring:
             dependencies:
               - groupId: org.arch.projects
                 artifactId: arch-gen-core
+                version: 0.0.1
             modules:
               - artifactId: arch-gen-common-a
                 groupId:
@@ -109,5 +110,20 @@ spring:
               typ: int
               length: 2
               comment: 年龄
+        - name: account
+          comment: 账号表
+          pk:
+          fks: name,age
+          uniques:
+          indexs:
+          columns:
+            - name: id
+              typ: bigint
+              length: 19
+              comment: 主键id
+            - name: name
+              typ: varchar
+              length: 32
+              comment: 账号名
 
 
