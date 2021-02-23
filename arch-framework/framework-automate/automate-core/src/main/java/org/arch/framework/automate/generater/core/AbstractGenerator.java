@@ -7,9 +7,8 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.generater.Generable;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
-import org.arch.framework.automate.generater.config.properties.*;
+import org.arch.framework.automate.generater.properties.*;
 import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,15 +34,18 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractGenerator implements Generable {
 
-    protected final static String MAIN_JAVA = "src" + File.separator + "main" + File.separator + "java" + File.separator;
-    protected final static String MAIN_RESOURCES = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
-    protected final static String TEST_JAVA = "src" + File.separator + "test" + File.separator + "java" + File.separator;
-    protected final static String TEST_RESOURCES = "src" + File.separator + "test" + File.separator + "resources" + File.separator;
+    public final static String MAIN_JAVA = "src" + File.separator + "main" + File.separator + "java" + File.separator;
+    public final static String MAIN_RESOURCES = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
+    public final static String TEST_JAVA = "src" + File.separator + "test" + File.separator + "java" + File.separator;
+    public final static String TEST_RESOURCES = "src" + File.separator + "test" + File.separator + "resources" + File.separator;
     protected final static List<String> srcDirectorys = Arrays.asList(MAIN_JAVA, MAIN_RESOURCES, TEST_JAVA, TEST_RESOURCES);
     protected final static Map<String, PackageProperties> packagePropertiesMap = new HashMap<>();
+    protected final static Map<String, Buildable> builderMap = new HashMap<>();
     private TemplateEngine engine;
     @Autowired
     private GeneratorConfig generatorConfig;
+    @Autowired
+    private List<Buildable> builders;
 
     public TemplateEngine getTemplateEngine() {
         if (engine == null) {
@@ -72,7 +74,7 @@ public abstract class AbstractGenerator implements Generable {
         TemplateProperties templateProperties = generatorConfig.getTemplate();
         packagePropertiesMap.putAll(generatorConfig.getPackages().stream().collect(Collectors.toMap(PackageProperties::getType, Function.identity())));
         Path rootPath = projectProperties.getProjectRootPath();
-        boolean cover = generatorConfig.isCover();
+        boolean cover = generatorConfig.getCover();
         // 创建根目录
         Files.createDirectories(rootPath);
         buildModule(cover, rootPath, projectProperties, pomProperties, null, packagePropertiesMap, databaseProperties, templateProperties);
@@ -94,13 +96,16 @@ public abstract class AbstractGenerator implements Generable {
                     PackageProperties packageProperties = packagePropertiesMap.get(p);
                     String pkg = packageProperties.getPkg();
                     pkg = null == pkg ? "" : pkg;
+                    /*String pack = basePkg.concat("." + pkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator));
+                    // 重设pack
+                    packageProperties.setPkg(pack);*/
                     Path _path = path.resolve(MAIN_JAVA.concat(basePkg).concat("." + pkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
                     if (!Files.exists(_path)) {
                         Files.createDirectories(_path);
                     }
                     // 写入文件
                     for (TableProperties tableProperties : databaseProperties.getTables()) {
-                        buildFile(cover, _path, packageProperties, tableProperties, templateProperties);
+                        buildFile(cover, _path, packageProperties, tableProperties);
                     }
                 }
             }
@@ -150,7 +155,7 @@ public abstract class AbstractGenerator implements Generable {
         Files.write(pomFilePath, code.getBytes());
     }
 
-    public void buildFile(boolean cover, Path path, PackageProperties packageProperties, TableProperties tableProperties, TemplateProperties templateProperties) throws IOException {
+    public void buildFile(boolean cover, Path path, PackageProperties packageProperties, TableProperties tableProperties) throws IOException {
         // 处理文件名，获取dao文件名称并转驼峰
         String fileName = StringUtils.toCapitalizeCamelCase(tableProperties.getName());
         String suffix = packageProperties.getSuffix();
@@ -161,25 +166,30 @@ public abstract class AbstractGenerator implements Generable {
         if (!StringUtils.isEmpty(ext)) {
             fileName = fileName + packageProperties.getExt();
         }
-        Path daoFilePath = Paths.get(path.toFile().getAbsolutePath().concat(File.separator).concat(fileName));
+        Path filePath = Paths.get(path.toFile().getAbsolutePath().concat(File.separator).concat(fileName));
         // 写入dao文件
-        if (Files.exists(daoFilePath)) {
+        if (Files.exists(filePath)) {
             // 是否覆盖
             if (!cover) {
                 log.info("skip {} due to file exists.", fileName);
                 return;
             } else {
-                Files.delete(daoFilePath);
+                Files.delete(filePath);
             }
         }
-        Files.createFile(daoFilePath);
+        Files.createFile(filePath);
         // 获取模板
-        Template template = getTemplateEngine().getTemplate(packageProperties.getTemplate());
-
-
+        String stemplate = packageProperties.getTemplate();
+        Template template = getTemplateEngine().getTemplate(stemplate);
+        Buildable buildable = builderMap.get(stemplate);
+        if(buildable == null){
+            builderMap.putAll(builders.stream().collect(Collectors.toMap(b->b.getTemplateName().getTemplate(),Function.identity())));
+            buildable = builderMap.get(stemplate);
+        }
+        Map<String,Object> mapData = buildable.buildData(filePath,packageProperties,tableProperties);
         // 渲染模板
-        String code = template.render(JSONUtil.parseObj(tableProperties));
+        String code = template.render(mapData);
         // 写入文件
-        Files.write(daoFilePath, code.getBytes());
+        Files.write(filePath, code.getBytes());
     }
 }

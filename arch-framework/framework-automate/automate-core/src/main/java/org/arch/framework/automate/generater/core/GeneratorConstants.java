@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.config;
+package org.arch.framework.automate.generater.core;
 
 /**
  * 定义自动生成相关的常量

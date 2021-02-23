@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.config.properties;
+package org.arch.framework.automate.generater.properties;
 
 import cn.hutool.extra.template.TemplateEngine;
 import lombok.Data;

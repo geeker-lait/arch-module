@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.core.template;
+package org.arch.framework.automate.generater.template;
 
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;

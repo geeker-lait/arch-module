@@ -6,20 +6,25 @@ import org.arch.framework.automate.generater.properties.PackageProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
 import org.arch.framework.automate.generater.core.Buildable;
 import org.arch.framework.automate.generater.core.TemplateName;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author lait.zhang@gmail.com
+ * @description: TODO
+ * @weixin PN15855012581
+ * @date 2/10/2021 6:53 PM
+ */
 @Slf4j
-@Service
-public class BizBuilder implements Buildable {
-
+@Component
+public class YmlBuilder implements Buildable {
 
     @Override
     public TemplateName getTemplateName() {
-        return TemplateName.BIZ;
+        return TemplateName.YML;
     }
 
     @Override

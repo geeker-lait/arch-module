@@ -1,45 +1,44 @@
-//package org.arch.framework.automate.generater.builder;
-//
-//import com.unichain.framework.code.api.Buildable;
-//import com.unichain.framework.code.database.DataType;
-//import com.unichain.framework.code.database.model.Table;
-//import com.unichain.framework.code.model.EntityModel;
-//import com.unichain.framework.code.model.FieldModel;
-//import com.unichain.framework.code.model.properties.PomModel;
-//import com.unichain.framework.code.model.properties.PropertiesModel;
-//import org.springframework.stereotype.Component;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//@Component("entityBuilder")
-//public class EntityBuilder implements Buildable<EntityModel> {
-//
-//
-//    @Override
-//    public EntityModel buildData(PropertiesModel propertiesModel, Table table) {
-//        EntityModel entityModel = new EntityModel();
-//        entityModel.setClassName(UPPER_CAMEL_CONVERT.convert(table.getName()));
-//        wrapperDefaultValue(propertiesModel,entityModel);
-//        List<FieldModel> fieldModels = new ArrayList<>();
-//        table.getColumns().forEach(column -> {
-//            String type = DataType.convertType(column.getTyp()).getSimpleName();
-//            fieldModels.add(new FieldModel(column.getComment(),LOWER_CAMEL_CONVERT.convert(column.getName()),type));
-//        });
-//        entityModel.setPkg( propertiesModel.getPkg());
-//        entityModel.setTableName(table.getName());
-//        entityModel.setFields(fieldModels);
-//
-//        return entityModel;
-//    }
-//
-//    @Override
-//    public void buildFile(PomModel pomModel, EntityModel entityModel) {
-//        genClassFile(pomModel,entityModel);
-//    }
-//
-//    @Override
-//    public String getTemplate() {
-//        return "templates/java/entity.ftl";
-//    }
-//}
+package org.arch.framework.automate.generater.builder;
+
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.generater.core.AbstractGenerator;
+import org.arch.framework.automate.generater.core.Buildable;
+import org.arch.framework.automate.generater.core.TemplateName;
+import org.arch.framework.automate.generater.properties.PackageProperties;
+import org.arch.framework.automate.generater.properties.TableProperties;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+
+@Slf4j
+@Component
+public class EntityBuilder implements Buildable {
+
+    @Override
+    public TemplateName getTemplateName() {
+        return TemplateName.ENTITY;
+    }
+
+    @Override
+    public Map<String, Object> buildData(Path filePath, PackageProperties packageProperties, TableProperties tableProperties) {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.putAll(JSONUtil.parseObj(tableProperties));
+        dataMap.putAll(JSONUtil.parseObj(packageProperties));
+        log.info("package :{}", packageProperties.getPkg());
+        String p = filePath.toString();
+        int l = p.indexOf(AbstractGenerator.MAIN_JAVA);
+        int ll = p.lastIndexOf(File.separator);
+        String pkg = p.substring(l+AbstractGenerator.MAIN_JAVA.length(),ll).replaceAll(Matcher.quoteReplacement(File.separator), "\\.");
+        dataMap.put("package", pkg);
+        dataMap.put("stuffix",packageProperties.getSuffix());
+        dataMap.put("", "");
+        return dataMap;
+    }
+
+}

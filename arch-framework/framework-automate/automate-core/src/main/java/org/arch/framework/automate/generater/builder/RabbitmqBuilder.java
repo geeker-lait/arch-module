@@ -1,32 +1,26 @@
 //package org.arch.framework.automate.generater.builder;
 //
-//import com.unichain.framework.code.api.Buildable;
-//import com.unichain.framework.code.api.DataModel;
-//import com.unichain.framework.code.database.model.Table;
-//import com.unichain.framework.code.model.ServiceModel;
-//import com.unichain.framework.code.model.properties.PomModel;
-//import com.unichain.framework.code.model.properties.PropertiesModel;
+//import lombok.extern.slf4j.Slf4j;
+//import org.arch.framework.automate.generater.properties.PackageProperties;
+//import org.arch.framework.automate.generater.properties.TableProperties;
+//import org.arch.framework.automate.generater.core.Buildable;
+//import org.arch.framework.automate.generater.core.TemplateName;
 //import org.springframework.stereotype.Component;
 //
-//@Component("rabbitmqBuilder")
+//import java.nio.file.Path;
+//import java.util.Map;
+//
+//@Slf4j
+//@Component
 //public class RabbitmqBuilder implements Buildable {
+//
 //    @Override
-//    public ServiceModel buildData(PropertiesModel pkgPath, Table table) {
+//    public TemplateName getTemplateName() {
 //        return null;
 //    }
 //
 //    @Override
-//    public void buildFile(PomModel pomModel, DataModel dataModel) {
-//
-//    }
-//
-//    @Override
-//    public String buildFolder(PomModel pomModel) {
+//    public Map<String, Object> buildData(Path filePath, PackageProperties packageProperties, TableProperties tableProperties) {
 //        return null;
-//    }
-//
-//    @Override
-//    public String getTemplate() {
-//        return "templates/java/rebbitmq.ftl";
 //    }
 //}

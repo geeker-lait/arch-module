@@ -1,40 +1,35 @@
-//package org.arch.framework.automate.generater.builder;
-//
-//import com.unichain.framework.code.api.Buildable;
-//import com.unichain.framework.code.database.model.Table;
-//import com.unichain.framework.code.model.ApplicationModel;
-//import com.unichain.framework.code.model.properties.PomModel;
-//import com.unichain.framework.code.model.properties.PropertiesModel;
-//import org.springframework.stereotype.Component;
-//
-//
-//@Component("applicationBuilder")
-//public class ApplicationBuilder implements Buildable<ApplicationModel> {
-//
-//
-//    @Override
-//    public ApplicationModel buildData(PropertiesModel propertiesModel, Table table) {
-//        ApplicationModel applicationModel = new ApplicationModel();
-//        if(table!=null) {
-//            applicationModel.setClassName(UPPER_CAMEL_CONVERT.convert(table.getName()));
-//            applicationModel.setRequestMapping(Buildable.LOWER_UNDERSCORE_CONVERT.convert(table.getName()));
-//        } else {
-//            applicationModel.setClassName(propertiesModel.getClassName());
-//        }
-//        applicationModel.setPkg(propertiesModel.getPkg());
-//        wrapperDefaultValue(propertiesModel,applicationModel);
-//        return applicationModel;
-//
-//    }
-//
-//    @Override
-//    public void buildFile(PomModel pomModel, ApplicationModel applicationModel) {
-//        genClassFile(pomModel,applicationModel);
-//    }
-//
-//    @Override
-//    public String getTemplate() {
-//        return "templates/java/application.ftl";
-//    }
-//
-//}
+package org.arch.framework.automate.generater.builder;
+
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.generater.properties.PackageProperties;
+import org.arch.framework.automate.generater.properties.TableProperties;
+import org.arch.framework.automate.generater.core.Buildable;
+import org.arch.framework.automate.generater.core.TemplateName;
+import org.springframework.stereotype.Service;
+
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+
+@Slf4j
+@Service
+public class ApplicationBuilder implements Buildable {
+
+
+    @Override
+    public TemplateName getTemplateName() {
+        return TemplateName.APPLICATION;
+    }
+
+    @Override
+    public Map<String, Object> buildData(Path filePath, PackageProperties packageProperties, TableProperties tableProperties) {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.putAll(JSONUtil.parseObj(tableProperties));
+        dataMap.put("package",filePath);
+        dataMap.put("","");
+        dataMap.put("","");
+        dataMap.put("","");
+        return dataMap;
+    }
+}

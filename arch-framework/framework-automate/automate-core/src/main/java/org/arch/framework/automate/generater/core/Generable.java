@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater;
+package org.arch.framework.automate.generater.core;
 
 import org.arch.framework.automate.generater.config.GeneratorConfig;
 

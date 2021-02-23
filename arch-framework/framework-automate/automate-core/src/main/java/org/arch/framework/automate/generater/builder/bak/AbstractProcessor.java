@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.builder;
+package org.arch.framework.automate.generater.builder.bak;
 
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.extra.template.Template;
@@ -8,7 +8,7 @@ import cn.hutool.extra.template.TemplateUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
-import org.arch.framework.automate.generater.config.properties.*;
+import org.arch.framework.automate.generater.properties.*;
 import org.arch.framework.automate.generater.render.RenderingRequest;
 import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +73,7 @@ public abstract class AbstractProcessor implements TemplateProcessor {
         TemplateProperties templateProperties = generatorConfig.getTemplate();
         packagePropertiesMap.putAll(generatorConfig.getPackages().stream().collect(Collectors.toMap(PackageProperties::getType, Function.identity())));
         Path rootPath = projectProperties.getProjectRootPath();
-        boolean cover = generatorConfig.isCover();
+        boolean cover = generatorConfig.getCover();
         // 创建根目录
         Files.createDirectories(rootPath);
         buildModule(cover, rootPath, projectProperties, pomProperties, null, packagePropertiesMap, databaseProperties, templateProperties);

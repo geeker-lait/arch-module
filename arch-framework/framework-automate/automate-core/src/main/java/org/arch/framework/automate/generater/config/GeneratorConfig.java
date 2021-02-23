@@ -2,7 +2,7 @@ package org.arch.framework.automate.generater.config;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.arch.framework.automate.generater.config.properties.*;
+import org.arch.framework.automate.generater.properties.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;

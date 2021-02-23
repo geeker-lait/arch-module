@@ -24,6 +24,10 @@
 
     <#if dependencies ?? && (dependencies?size >0)>
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
         <#list dependencies as dependencie>
         <dependency>
             <artifactId>${(dependencie.artifactId)!""}</artifactId>

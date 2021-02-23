@@ -10,7 +10,7 @@ import org.arch.framework.automate.common.parser.MybatisEntityInfoParser;
 import org.arch.framework.automate.common.utils.DataBaseEntityUtils;
 import org.arch.framework.automate.common.utils.ReflectUtils;
 import org.arch.framework.automate.generater.config.CodeGeneratorConfig;
-import org.arch.framework.automate.generater.config.GeneratorConstants;
+import org.arch.framework.automate.generater.core.GeneratorConstants;
 import org.arch.framework.automate.generater.config.ModuleConfig;
 import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.render.DefaultRender;

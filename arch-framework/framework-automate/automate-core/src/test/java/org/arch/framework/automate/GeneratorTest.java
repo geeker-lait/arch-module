@@ -1,8 +1,8 @@
 package org.arch.framework.automate;
 
 import com.alibaba.fastjson.JSONObject;
+import org.arch.framework.automate.generater.core.Generable;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
-import org.arch.framework.automate.generater.builder.TemplateProcessor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,16 +22,15 @@ import java.util.List;
 public class GeneratorTest {
     @Autowired
     private GeneratorConfig generatorConfig;
-
     @Autowired
-    private List<TemplateProcessor> templateProcessors;
+    private List<Generable> generables;
 
     @Test
     public void buildProject() {
         System.out.println(JSONObject.toJSON(generatorConfig));
-        templateProcessors.forEach(p->{
+        generables.forEach(p->{
             try {
-                p.build(generatorConfig);
+                p.generate(generatorConfig);
             } catch (IOException e) {
                 e.printStackTrace();
             }

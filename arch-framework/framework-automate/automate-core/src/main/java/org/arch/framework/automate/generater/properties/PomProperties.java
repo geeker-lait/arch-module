@@ -1,8 +1,8 @@
-package org.arch.framework.automate.generater.config.properties;
+package org.arch.framework.automate.generater.properties;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.arch.framework.automate.generater.config.DataProperties;
+import org.arch.framework.automate.generater.core.DataProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.util.List;

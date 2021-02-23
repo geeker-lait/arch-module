@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.config;
+package org.arch.framework.automate.generater.core;
 
 import org.apache.poi.ss.formula.functions.T;
 
