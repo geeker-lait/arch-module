@@ -1,6 +1,7 @@
 package org.arch.ums.account.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudService;
@@ -101,54 +102,65 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
     /**
      * 保存多个实体
      *
-     * @param tlist 实体
+     * @param authClientList 实体
      * @return 返回保存的实体
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public boolean saveList(List<AuthClient> tlist) {
-        final boolean saveBatch = crudDao.saveBatch(tlist);
+    public boolean saveList(List<AuthClient> authClientList) {
+        final boolean saveBatch = crudDao.saveBatch(authClientList);
         setRedisSyncFlag();
         return saveBatch;
     }
 
     /***
-     * 删除实体
+     * 逻辑删除实体
      *
      * @param id 主键id
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean deleteById(Long id) {
-        final boolean removeById = crudDao.removeById(id);
+        AuthClient authClient = new AuthClient();
+        authClient.setId(id);
+        LambdaUpdateWrapper<AuthClient> updateWrapper = Wrappers.lambdaUpdate(authClient).set(AuthClient::getDeleted, 1);
+        // 逻辑删除
+        final boolean remove = crudDao.update(updateWrapper);
         setRedisSyncFlag();
-        return removeById;
+        return remove;
     }
 
     /***
-     * 删除实体
+     * 逻辑删除实体
      *
      * @param t 需要删除的实体
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean deleteById(AuthClient t) {
-        final boolean remove = crudDao.remove(new QueryWrapper<>(t));
+        LambdaUpdateWrapper<AuthClient> updateWrapper = Wrappers.lambdaUpdate(t).set(AuthClient::getDeleted, 1);
+        // 逻辑删除
+        final boolean remove = crudDao.update(updateWrapper);
         setRedisSyncFlag();
         return remove;
     }
 
     /***
-     * 根据主键集合删除实体
+     * 根据主键集合逻辑删除实体
      *
      * @param ids 主键集合
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean deleteAllById(List<Long> ids) {
-        final boolean removeByIds = crudDao.removeByIds(ids);
+        LambdaUpdateWrapper<AuthClient> updateWrapper = Wrappers.<AuthClient>lambdaUpdate()
+                                                                .in(AuthClient::getId, ids)
+                                                                .set(AuthClient::getDeleted, 1);
+
+        // 逻辑删除
+        final boolean remove = crudDao.update(updateWrapper);
         setRedisSyncFlag();
-        return removeByIds;
+        return remove;
     }
 
 
