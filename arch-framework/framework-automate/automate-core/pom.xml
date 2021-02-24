@@ -76,7 +76,11 @@
             <groupId>org.arch.projects</groupId>
             <artifactId>automate-api</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>3.3.1</version>
+        </dependency>
 
     </dependencies>
 </project>

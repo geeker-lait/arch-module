@@ -1,6 +1,8 @@
 package org.arch.framework.automate.from.mapper;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.ibatis.annotations.Mapper;
+import org.arch.framework.automate.api.Constants;
 import org.arch.framework.crud.CrudMapper;
 import org.arch.framework.automate.from.entity.FormBiz;
 
@@ -12,6 +14,7 @@ import org.arch.framework.automate.from.entity.FormBiz;
  * @since 1.0.0
  */
 @Mapper
+@DS(Constants.DATASOURCE_MASTER_FORM)
 public interface FormBizMapper extends CrudMapper<FormBiz> {
 
 }
