@@ -1,6 +1,7 @@
 package org.arch.ums.feign.account.config;
 
 import feign.codec.Encoder;
+import feign.form.spring.SpringFormEncoder;
 import org.arch.framework.feign.config.FeignGlobalConfig;
 import org.arch.framework.ums.properties.AppProperties;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +26,7 @@ public class UmsAccountDeFaultFeignConfig extends FeignGlobalConfig {
     @Bean
     @Primary
     public Encoder multipartFormEncoder() {
-        return new ArchSpringFormEncoder();
+        return new SpringFormEncoder();
     }
 
 
