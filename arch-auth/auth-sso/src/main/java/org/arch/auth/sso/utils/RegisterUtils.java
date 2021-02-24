@@ -1,8 +1,15 @@
 package org.arch.auth.sso.utils;
 
+import com.xkcoding.http.config.HttpConfig;
+import me.zhyd.oauth.model.AuthToken;
+import me.zhyd.oauth.model.AuthUser;
 import org.arch.auth.sso.properties.SsoProperties;
 import org.arch.framework.ums.enums.AccountType;
 import org.arch.framework.ums.userdetails.ArchUser;
+import org.arch.ums.account.entity.Identifier;
+import org.arch.ums.account.entity.OauthToken;
+import org.arch.ums.feign.account.client.UmsAccountAuthToken;
+import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -13,6 +20,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 import static java.util.Objects.isNull;
 import static org.arch.framework.ums.consts.RoleConstants.AUTHORITY_SEPARATOR;
@@ -135,6 +144,44 @@ public class RegisterUtils {
 
     }
 
+    /**
+     * 保存 第三方用户的 OauthToken 信息
+     *
+     * @param authUser            第三方用户信息
+     * @param providerId          第三方服务商
+     * @param tenantId            租户 ID
+     * @param identifierId        {@link Identifier#getId()}
+     * @param timeout             {@link HttpConfig#getTimeout()}
+     * @param umsAccountAuthToken {@link UmsAccountAuthToken}
+     */
+    public static void saveOauthToken(@NonNull AuthUser authUser, @NonNull String providerId,
+                                      @NonNull String tenantId, @NonNull Long identifierId,
+                                      int timeout, @NonNull UmsAccountAuthToken umsAccountAuthToken) {
 
+        // 添加到 account_auth_token 表
+        // 获取 AuthTokenPo
+        AuthToken token = authUser.getToken();
+        OauthToken oauthToken = new OauthToken();
+        BeanUtils.copyProperties(token, oauthToken);
+        oauthToken.setProviderId(providerId)
+                  .setAccountIdentifierId(identifierId)
+                  .setTenantId(Integer.valueOf(tenantId))
+                  .setEnableRefresh(true)
+                  .setSt(LocalDateTime.now());
+
+        // 有效期转时间戳
+        int expireIn = token.getExpireIn();
+        if (expireIn < 1) {
+            // 无过期时间, 默认设置为 -1
+            oauthToken.setExpireTime(-1L);
+        }
+        else {
+            // 转换为到期日期的 EpochMilli, 考虑到网络延迟, 相对于第三方的过期时间, 减去根据用户设置的 timeout(HttpConfigProperties.timeout) 时间,
+            long dealLine = Instant.now().plusSeconds(expireIn).minusMillis(timeout).toEpochMilli();
+            oauthToken.setExpireTime(dealLine);
+        }
+
+        umsAccountAuthToken.save(oauthToken);
+    }
 
 }

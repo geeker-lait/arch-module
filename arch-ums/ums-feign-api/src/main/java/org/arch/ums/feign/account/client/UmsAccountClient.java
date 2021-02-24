@@ -9,11 +9,14 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -53,4 +56,44 @@ public interface UmsAccountClient {
     @NonNull
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     Response<AuthLoginDto> register(AuthRegRequest authRegRequest);
+
+    /**
+     * 保存 identifier
+     * @param identifier     实体类
+     * @return  {@link Response}
+     */
+    @NonNull
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    Response<Identifier> save(@RequestBody @Valid Identifier identifier);
+
+    /**
+     * 逻辑删除(执行 account_identifier 与 account_name 的逻辑删除):<br>
+     * & account_identifier:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     *     2. 对 identifier 字段添加 "_deleted_序号" 后缀;<br>
+     *        添加后缀防止用户重新通过此第三方注册时触发唯一索引问题;<br>
+     *        添加 序号 以防止多次删除同一个第三方账号时触发唯一索引问题.<br>
+     * & account_name:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     * @param identifier    {@link Identifier#getIdentifier()}
+     * @return  是否删除成功.
+     */
+    @DeleteMapping(value = "/username/{identifier}")
+    @NonNull
+    Response<Boolean> logicDeleteByIdentifier(@PathVariable(value = "identifier") String identifier);
+
+    /**
+     * 根据 aid 解绑 identifier(第三方标识) :<br>
+     * & account_identifier:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     *     2. 对 identifier 字段添加 "_deleted_序号" 后缀;<br>
+     *        添加后缀防止用户重新通过此第三方注册时触发唯一索引问题;<br>
+     *        添加 序号 以防止多次删除同一个第三方账号时触发唯一索引问题.<br>
+     * @param aid           {@link Identifier#getAid()}
+     * @param identifier    {@link Identifier#getIdentifier()}
+     * @return  是否解绑成功.
+     */
+    @DeleteMapping(value = "/unbinding/{aid}/{identifier}")
+    @NonNull
+    Response<Boolean> unbinding(@PathVariable(value = "aid") Long aid, @PathVariable(value = "identifier") String identifier);
 }

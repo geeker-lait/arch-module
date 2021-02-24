@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * arch-ums-api 服务远程调用的 feign 客户端.
+ * arch-ums-api {@code AuthClientService}服务远程调用的 feign 客户端.
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.12 13:44

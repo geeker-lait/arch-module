@@ -166,32 +166,42 @@ public class IdentifierService extends CrudService<Identifier, Long> {
     @NotNull
     public boolean logicDeletedByIdentifier(@NonNull Integer tenantId, @NonNull Identifier identifier) {
         // 校验合法性
-        Long accountId = SecurityUtils.getCurrentUserId();
-        if (!(tenantId.equals(identifier.getTenantId()) && accountId.equals(identifier.getAid()))) {
-            log.warn("非法删除: 操作用户: {}, 目标租户: {}, 目标账号标识: {}",
-                     identifier, tenantId, identifier.getIdentifier());
+        if (isNotCurrentUser(tenantId, identifier)) {
             return false;
         }
 
-        // 查询是否有最近的历史删除记录
-        Identifier deletedIdentifier =
-                identifierDao.selectLogicDeleted(tenantId,
-                                                 identifier.getIdentifier() + IDENTIFIER_DELETED_SUFFIX + "%");
-        // 有则提取删除序号
-        final int seq;
-        if (nonNull(deletedIdentifier)) {
-            String[] splits = deletedIdentifier.getIdentifier().split(IDENTIFIER_SUFFIX_SEPARATOR);
-            seq = Integer.parseInt(splits[splits.length - 1]) + 1;
-        }
-        else {
-            seq = 0;
-        }
+        // 逻辑删除
+        boolean booleanIdentifier = logicDeleted(tenantId, identifier);
 
-        // 逻辑删除, likeIdentifierPrefix(防止用户重新通过此第三方注册时触发唯一索引问题), seq(防止多次删除同一个第三方账号时触发唯一索引问题)
-        boolean booleanIdentifier = identifierDao.logicDeleted(identifier.getId(), IDENTIFIER_DELETED_SUFFIX + seq);
         boolean booleanName = nameService.deleteById(identifier.getId());
         if (!booleanIdentifier || !booleanName) {
             throw new RuntimeException("逻辑删除失败: " + identifier);
+        }
+        return true;
+    }
+
+    /**
+     * 解绑 identifier :<br>
+     * & account_identifier:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     *     2. 对 identifier 字段添加 "_deleted_序号" 后缀;<br>
+     *        添加后缀防止用户重新通过此第三方注册时触发唯一索引问题;<br>
+     *        添加 序号 以防止多次删除同一个第三方账号时触发唯一索引问题.<br>
+     * @param tenantId      租户 ID
+     * @param identifier    {@link Identifier}
+     * @return  是否解绑成功.
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
+    @NotNull
+    public boolean unbinding(@NonNull Integer tenantId, @NonNull Identifier identifier) {
+        if (isNotCurrentUser(tenantId, identifier)) {
+            return false;
+        }
+
+        // 逻辑删除
+        boolean booleanIdentifier = logicDeleted(tenantId, identifier);
+        if (!booleanIdentifier) {
+            throw new RuntimeException("解绑失败: " + identifier);
         }
         return true;
     }
@@ -281,4 +291,45 @@ public class IdentifierService extends CrudService<Identifier, Long> {
         return true;
     }
 
+    /**
+     * identifier 是否当为前用户
+     * @param tenantId      租户 ID
+     * @param identifier    {@link Identifier}
+     * @return  true 表示是当前用户, false 表示不是当前用户
+     */
+    private boolean isNotCurrentUser(@NonNull Integer tenantId, @NonNull Identifier identifier) {
+        // 校验合法性
+        Long accountId = SecurityUtils.getCurrentUserId();
+        if (!(tenantId.equals(identifier.getTenantId()) && accountId.equals(identifier.getAid()))) {
+            log.warn("非法删除: 操作用户: {}, 目标租户: {}, 目标账号标识: {}",
+                     identifier, tenantId, identifier.getIdentifier());
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 逻辑删除 identifier
+     * @param tenantId      租户 ID
+     * @param identifier    {@link Identifier}
+     * @return  true 表示逻辑删除成功, false 表示逻辑删除失败
+     */
+    private boolean logicDeleted(@NonNull Integer tenantId, @NonNull Identifier identifier) {
+        // 查询是否有最近的历史删除记录
+        Identifier deletedIdentifier =
+                identifierDao.selectLogicDeleted(tenantId,
+                                                 identifier.getIdentifier() + IDENTIFIER_DELETED_SUFFIX + "%");
+        // 有则提取删除序号
+        final int seq;
+        if (nonNull(deletedIdentifier)) {
+            String[] splits = deletedIdentifier.getIdentifier().split(IDENTIFIER_SUFFIX_SEPARATOR);
+            seq = Integer.parseInt(splits[splits.length - 1]) + 1;
+        }
+        else {
+            seq = 0;
+        }
+
+        // 逻辑删除, likeIdentifierPrefix(防止用户重新通过此第三方注册时触发唯一索引问题), seq(防止多次删除同一个第三方账号时触发唯一索引问题)
+        return identifierDao.logicDeleted(identifier.getId(), IDENTIFIER_DELETED_SUFFIX + seq);
+    }
 }

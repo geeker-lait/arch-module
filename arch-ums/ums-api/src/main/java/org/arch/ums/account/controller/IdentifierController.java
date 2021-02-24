@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
@@ -200,9 +201,10 @@ public class IdentifierController implements CrudController<Identifier, java.lan
         Integer tenantId = Integer.valueOf(tenantContextHolder.getTenantId());
         try {
             // 获取 Identifier
-            Map<String, Object> params = new LinkedHashMap<>(2);
+            Map<String, Object> params = new LinkedHashMap<>(3, 1.F);
             params.put("tenant_id", tenantId);
             params.put("identifier", identifier);
+            params.put("channel_type", ChannelType.OAUTH2);
             Wrapper<Identifier> queryWrapper = Wrappers.<Identifier>query().allEq(params);
             Identifier accountIdentifier = identifierService.findOneBySpec(queryWrapper);
 
@@ -222,5 +224,46 @@ public class IdentifierController implements CrudController<Identifier, java.lan
             return Response.success(Boolean.FALSE);
         }
 
+    }
+
+    /**
+     * 根据 aid 解绑 identifier(第三方标识) :<br>
+     * & account_identifier:<br>
+     *     1. 更新 deleted 字段值为 1.<br>
+     *     2. 对 identifier 字段添加 "_deleted_序号" 后缀;<br>
+     *        添加后缀防止用户重新通过此第三方注册时触发唯一索引问题;<br>
+     *        添加 序号 以防止多次删除同一个第三方账号时触发唯一索引问题.<br>
+     * @param aid           {@link Identifier#getAid()}
+     * @param identifier    {@link Identifier#getIdentifier()}
+     * @return  是否解绑成功.
+     */
+    @DeleteMapping(value = "/unbinding/{aid}/{identifier}")
+    @NonNull
+    Response<Boolean> unbinding(@PathVariable(value = "aid") Long aid,
+                                @PathVariable(value = "identifier") String identifier) {
+        Integer tenantId = Integer.valueOf(tenantContextHolder.getTenantId());
+        try {
+            // 获取 Identifier
+            Map<String, Object> params = new LinkedHashMap<>(5, 1.F);
+            params.put("tenant_id", tenantId);
+            params.put("identifier", identifier);
+            params.put("aid", aid);
+            params.put("channel_type", ChannelType.OAUTH2);
+            params.put("deleted", 0);
+            Wrapper<Identifier> queryWrapper = Wrappers.<Identifier>query().allEq(params);
+            Identifier accountIdentifier = identifierService.findOneBySpec(queryWrapper);
+
+            if (isNull(accountIdentifier)) {
+                return Response.success(Boolean.TRUE);
+            }
+
+            // 解绑
+            return Response.success(identifierService.unbinding(tenantId, accountIdentifier));
+        }
+        catch (Exception e) {
+            log.error(String.format("解绑失败: aid: %s, tenantId: %s, identifier: %s",
+                                    aid, tenantContextHolder.getTenantId(), identifier), e);
+            return Response.success(Boolean.FALSE);
+        }
     }
 }
