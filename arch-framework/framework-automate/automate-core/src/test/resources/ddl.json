@@ -2,36 +2,37 @@
   "name": "mydatabase",
   "table": {
     "name": "user",
+    "comment": "用户表",
     "field_list": [
       {
         "id": 1,
         "name": "username",
         "jdbcType": "VARCHAR",
-        "length": "3,2",
+        "length": "64",
         "not_null": true,
         "comment": "Login username"
       },
       {
         "id": 1,
         "name": "email",
-        "type": "VARCHAR",
-        "length": "3,2",
+        "jdbcType": "VARCHAR",
+        "length": "64",
         "not_null": true,
         "comment": "User email"
       },
       {
         "id": 1,
         "name": "password",
-        "type": "VARCHAR(128)",
-        "length": "3,2",
+        "jdbcType": "VARCHAR",
+        "length": "64",
         "not_null": true,
         "comment": "User password"
       },
       {
         "id": 1,
         "name": "confirmed_at",
-        "type": "DATETIME",
-        "length": "3,2",
+        "jdbcType": "DATETIME",
+        "length": "6",
         "not_null": false,
         "comment": "User confirmation date"
       }
@@ -41,14 +42,25 @@
       {
         "name": "inviter_id",
         "references": "user",
-        "comment": "If user was invited by someone, contains the ID of that user account, NULL otherwise"
+        "comment": "test"
       }
     ],
     "unique_list": [
       {
-        "name": "username"
-      }, {
-        "name": "email"
+        "name": "username",
+        "filed": ["username"],
+        "comment": "test"
+      },
+      {
+        "filed": ["email"],
+        "comment": "test"
+      }
+    ],
+    "index_list": [
+      {
+        "name":"",
+        "filed": ["username", "email"],
+        "comment": "test"
       }
     ]
   }

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.arch.framework.automate.from.mapper.DDLMapper">
+    <select id="existDatabase" resultType="Integer">
+        SELECT count(*)
+        FROM information_schema.SCHEMATA
+        WHERE LCASE(SCHEMA_NAME) = #{database}
+    </select>
+    <update id="createDatabase">
+        CREATE DATABASE IF NOT EXISTS ${database} Character Set utf8mb4 collate utf8mb4_general_ci;
+    </update>
+    <update id="dropDatabase">
+         DROP DATABASE IF EXISTS ${database};
+    </update>
+    <select id="existTable" resultType="Integer">
+        SELECT count(*)
+        FROM information_schema.TABLES
+        WHERE LCASE(TABLE_NAME) = #{tableName}
+        AND LCASE(TABLE_SCHEMA) = #{database}
+    </select>
+    <update id="dropTable">
+        DROP TABLE IF EXISTS ${database}.${tableName}
+    </update>
+
+    <update id="createTable">
+        CREATE TABLE IF NOT EXISTS ${record.databaseName}.${record.tableName} (
+        <trim suffixOverrides=",">
+            <if test="record.pk == null or record.pk == ''">
+                id bigint(19) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+            </if>
+            /* 循环字段 */
+            <if test="record.fieldList != null and record.fieldList.size() != 0">
+                <foreach collection="record.fieldList" item="field" >
+                    `${field.name}` ${field.jdbcType}(${field.length})
+                    <if test="field.notNull != null and field.notNull">
+                        NOT NULL
+                    </if>
+                    <if test="field.comment != null and field.comment != ''">
+                         COMMENT #{field.comment}
+                    </if>
+                    ,
+                </foreach>
+            </if>
+            /* 外键 如果外键表不存在创建会有问题，创建表时不处理外键 */
+            /* 唯一约束 */
+            <if test="record.uniqueList != null and record.uniqueList.size() != 0">
+                <foreach collection="record.uniqueList" item="unique" >
+                    UNIQUE `${unique.name}`
+                    <foreach collection="unique.fieldList" item="filed" open="(" close=")" separator=",">
+                        `${filed}`
+                    </foreach>
+                    USING BTREE
+                    <if test="unique.comment != null and unique.comment != ''">
+                         COMMENT #{unique.comment}
+                    </if>
+                    ,
+                </foreach>
+            </if>
+            /* 普通索引 */
+            <if test="record.indexList != null and record.indexList.size() != 0">
+                <foreach collection="record.indexList" item="index" >
+                    INDEX `${index.name}`
+                    <foreach collection="index.fieldList" item="filed" open="(" close=")" separator=",">
+                        `${filed}`
+                    </foreach>
+                    USING BTREE
+                    <if test="index.comment != null and index.comment != ''">
+                         COMMENT #{index.comment}
+                    </if>
+                    ,
+                </foreach>
+            </if>
+            /* 主键 - 如果没有指定主键则使用 id */
+            <choose>
+                <when test="record.pk == null or record.pk == ''">
+                    PRIMARY KEY (`id`),
+                </when>
+                <otherwise>
+                    PRIMARY KEY (${record.pk}),
+                </otherwise>
+            </choose>
+        </trim>
+        )
+        <if test="record.comment != null and record.comment != ''">
+            COMMENT = #{record.comment};
+        </if>
+    </update>
+    <select id="getDatabaseTables" resultType="Map">
+        SELECT TABLE_NAME tableName, TABLE_COMMENT tableComment
+        FROM information_schema.TABLES
+        WHERE LCASE(table_schema) = #{database}  ORDER BY table_name
+    </select>
+    <select id="getTableDetail" resultType="Map">
+        SELECT COLUMN_NAME columnName, DATA_TYPE dataType,COLUMN_COMMENT columnComment, COLUMN_TYPE columnType
+        FROM information_schema.columns
+        WHERE LCASE(TABLE_NAME) = #{tableName} and LCASE(TABLE_SCHEMA) = #{database} ORDER BY ordinal_position
+    </select>
+
+</mapper>
