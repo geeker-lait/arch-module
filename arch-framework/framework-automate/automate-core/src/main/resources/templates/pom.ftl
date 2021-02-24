@@ -22,6 +22,26 @@
     </modules>
     </#if>
 
+    <#if dependencyManagement ?? && (dependencyManagement?size >0)>
+    <dependencyManagement>
+        <dependencies>
+        <#list dependencyManagement as dm>
+            <dependency>
+                <groupId>${dm.groupId!""}</groupId>
+                <artifactId>${dm.artifactId!""}</artifactId>
+                <version>${dm.version!""}</version>
+                <#if dm.type??>
+                <type>${dm.type!""}</type>
+                </#if>
+                <#if dm.scope??>
+                <scope>${dm.scope!""}</scope>
+                </#if>
+            </dependency>
+        </#list>
+        </dependencies>
+    </dependencyManagement>
+    </#if>
+
     <dependencies>
         <#if modules ?? && (modules?size >0)>
         <dependency>
@@ -42,5 +62,49 @@
         </#list>
         </#if>
     </dependencies>
+
+    <build>
+        <#if mainClass??>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.yml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.sql</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.yml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.sql</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        </#if>
+        <plugins>
+            <#if mainClass??>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <delimiters>@</delimiters>
+                    <useDefaultDelimiters>false</useDefaultDelimiters>
+                </configuration>
+            </plugin>
+            </#if>
+        </plugins>
+    </build>
 
 </project>

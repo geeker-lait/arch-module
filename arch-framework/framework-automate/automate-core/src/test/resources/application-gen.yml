@@ -5,19 +5,25 @@ spring:
     template:
       dir: templates
       resource-mode: classpath
-    schema: excel
+    schema: database
     project:
       path: /arch-gen
       basePkg: org.arch.gen
       pom:
-        artifactId: arch-gen
+        artifactId: arch-test
         groupId: org.arch.projects
         version: 0.0.1
+        dependencyManagement:
+          - artifactId: spring-boot-dependencies
+            groupId: org.springframework.boot
+            version: 2.4.1
+            type: pom
+            scope: import
         modules:
-          - artifactId: arch-gen-core
+          - artifactId: test-core
             groupId:
             version:
-            packageTypes: entity,dao
+            packageTypes: entity,dao,application,yml,ddl,docker
           - artifactId: arch-gen-common
             groupId:
             version:
@@ -69,6 +75,27 @@ spring:
       - type: dto
         pkg:
         template: dto.ftl
+        suffix:
+      - type: application
+        pkg:
+        template: application.ftl
+        suffix: Application
+        bootstrap: Test
+      - type: yml
+        pkg:
+        template: yml.ftl
+        ext: .yml
+        bootstrap:
+        suffix:
+      - type: ddl
+        pkg:
+        template: ddl.ftl
+        ext: .sql
+        suffix:
+      - type: docker
+        pkg:
+        template: docker.ftl
+        ext:
         suffix:
 
     excel:

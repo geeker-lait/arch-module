@@ -10,4 +10,6 @@ public class DependencieProterties implements DataProperties {
     private String groupId;
     private String artifactId;
     private String version;
+    private String type;
+    private String scope;
 }

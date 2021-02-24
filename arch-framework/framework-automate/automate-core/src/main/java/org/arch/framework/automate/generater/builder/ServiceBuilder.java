@@ -23,7 +23,7 @@ public class ServiceBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public Map<String, Object> buildData(Path filePath, PackageProperties packageProperties, TableProperties tableProperties) {
+    public Map<String, Object> buildData(String fileName, Path filePath, PackageProperties packageProperties, TableProperties tableProperties) {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.putAll(JSONUtil.parseObj(tableProperties));
         dataMap.putAll(JSONUtil.parseObj(packageProperties));

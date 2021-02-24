@@ -89,27 +89,51 @@ public abstract class AbstractGenerator implements Generable {
             for (String dir : srcDirectorys) {
                 Files.createDirectories(path.resolve(dir));
             }
-
             String basePkg = null == projectProperties.getBasePkg() ? "" : projectProperties.getBasePkg();
             if (!StringUtils.isEmpty(pomProperties.getPackageTypes())) {
                 for (String p : Arrays.asList(pomProperties.getPackageTypes().split(","))) {
                     PackageProperties packageProperties = packagePropertiesMap.get(p);
-                    // 如果后缀没有设置，默认为package typ
-                    if(StringUtils.isEmpty(packageProperties.getSuffix())){
-                        packageProperties.setSuffix(StringUtils.toCapitalizeCamelCase(p));
-                    }
-                    String pkg = packageProperties.getPkg();
-                    pkg = null == pkg ? "" : pkg;
-                    /*String pack = basePkg.concat("." + pkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator));
-                    // 重设pack
-                    packageProperties.setPkg(pack);*/
-                    Path _path = path.resolve(MAIN_JAVA.concat(basePkg).concat("." + pkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
-                    if (!Files.exists(_path)) {
-                        Files.createDirectories(_path);
-                    }
-                    // 写入文件
-                    for (TableProperties tableProperties : databaseProperties.getTables()) {
-                        buildFile(cover, _path, packageProperties, tableProperties);
+                    Path filePath;
+                    // 创建main
+                    if (p.equalsIgnoreCase(TemplateName.APPLICATION.name())) {
+                        filePath = path.resolve(MAIN_JAVA.concat(basePkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
+                        if (!Files.exists(filePath)) {
+                            Files.createDirectories(filePath);
+                        }
+                        buildFile(cover, filePath, packageProperties, null);
+                    } else if (p.equalsIgnoreCase(TemplateName.YML.name())) { // 构建yml
+                        filePath = path.resolve(MAIN_RESOURCES);
+                        if (!Files.exists(filePath)) {
+                            Files.createDirectories(filePath);
+                        }
+                        buildFile(cover, filePath, packageProperties, null);
+                    } else if (p.equalsIgnoreCase(TemplateName.DDL.name())) {
+                        filePath = path.resolve(MAIN_RESOURCES);
+                        if (!Files.exists(filePath)) {
+                            Files.createDirectories(filePath);
+                        }
+                        buildFile(cover, filePath, packageProperties, null);
+                    } else if (p.equalsIgnoreCase(TemplateName.DOCKER.name())) {
+                        filePath = path.resolve(MAIN_RESOURCES);
+                        if (!Files.exists(filePath)) {
+                            Files.createDirectories(filePath);
+                        }
+                        buildFile(cover, filePath, packageProperties, null);
+                    } else {
+                        // 如果后缀没有设置，默认为package typ
+                        if (StringUtils.isEmpty(packageProperties.getSuffix())) {
+                            packageProperties.setSuffix(StringUtils.toCapitalizeCamelCase(p));
+                        }
+                        String pkg = packageProperties.getPkg();
+                        pkg = null == pkg ? "" : pkg;
+                        filePath = path.resolve(MAIN_JAVA.concat(basePkg).concat("." + pkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
+                        if (!Files.exists(filePath)) {
+                            Files.createDirectories(filePath);
+                        }
+                        // 写入文件
+                        for (TableProperties tableProperties : databaseProperties.getTables()) {
+                            buildFile(cover, filePath, packageProperties, tableProperties);
+                        }
                     }
                 }
             }
@@ -121,6 +145,7 @@ public abstract class AbstractGenerator implements Generable {
             buildModule(cover, subPath, projectProperties, module, pomPropertiesPatent, packagePropertiesMap, databaseProperties, templateProperties);
         }
     }
+
 
     private void buildPom(boolean cover, Path path, PomProperties pomProperties, PomProperties pomPropertiesPatent) throws IOException {
         Files.createDirectories(path);
@@ -159,19 +184,40 @@ public abstract class AbstractGenerator implements Generable {
         Files.write(pomFilePath, code.getBytes());
     }
 
-    public void buildFile(boolean cover, Path path, PackageProperties packageProperties, TableProperties tableProperties) throws IOException {
-        // 处理文件名，获取dao文件名称并转驼峰
-        String fileName = StringUtils.toCapitalizeCamelCase(tableProperties.getName());
+
+    private void buildFile(boolean cover, Path path, PackageProperties packageProperties, TableProperties tableProperties) throws IOException {
+        String fileName = null;
         String suffix = packageProperties.getSuffix();
         String ext = packageProperties.getExt();
+        String bootstrap = packageProperties.getBootstrap();
+        // 特殊处理的文件yml ddl docker
+        if (packageProperties.getType().equalsIgnoreCase(TemplateName.YML.name())) {
+            fileName = StringUtils.isEmpty(bootstrap) ? "application" : bootstrap;
+        }
+        if (packageProperties.getType().equalsIgnoreCase(TemplateName.DDL.name())) {
+            fileName = StringUtils.isEmpty(bootstrap) ? "ddl" : bootstrap;
+        }
+        if (packageProperties.getType().equalsIgnoreCase(TemplateName.DOCKER.name())) {
+            fileName = StringUtils.isEmpty(bootstrap) ? "Dockerfile" : bootstrap;
+        }
+        // 处理main
+        if (packageProperties.getType().equalsIgnoreCase(TemplateName.APPLICATION.name())) {
+            fileName = StringUtils.isEmpty(bootstrap) ? "application" : StringUtils.toCapitalizeCamelCase(bootstrap);
+        }
+        // 处理文件名，获取文件名称并转驼峰
+        if (tableProperties != null) {
+            fileName = StringUtils.toCapitalizeCamelCase(tableProperties.getName());
+        }
+        // 后缀不为空，增加后缀
         if (!StringUtils.isEmpty(suffix)) {
             fileName = fileName + StringUtils.toCapitalizeCamelCase(suffix);
         }
+        // 扩展名不为空，增加扩展名
         if (!StringUtils.isEmpty(ext)) {
             fileName = fileName + packageProperties.getExt();
         }
         Path filePath = Paths.get(path.toFile().getAbsolutePath().concat(File.separator).concat(fileName));
-        // 写入dao文件
+        // 写入文件
         if (Files.exists(filePath)) {
             // 是否覆盖
             if (!cover) {
@@ -186,11 +232,11 @@ public abstract class AbstractGenerator implements Generable {
         String stemplate = packageProperties.getTemplate();
         Template template = getTemplateEngine().getTemplate(stemplate);
         Buildable buildable = builderMap.get(stemplate);
-        if(buildable == null){
-            builderMap.putAll(builders.stream().collect(Collectors.toMap(b->b.getTemplateName().getTemplate(),Function.identity())));
+        if (buildable == null) {
+            builderMap.putAll(builders.stream().collect(Collectors.toMap(b -> b.getTemplateName().getTemplate(), Function.identity())));
             buildable = builderMap.get(stemplate);
         }
-        Map<String,Object> dataMap = buildable.buildData(filePath,packageProperties,tableProperties);
+        Map<String, Object> dataMap = buildable.buildData(fileName, filePath, packageProperties, tableProperties);
         // 渲染模板
         String code = template.render(dataMap);
         // 写入文件

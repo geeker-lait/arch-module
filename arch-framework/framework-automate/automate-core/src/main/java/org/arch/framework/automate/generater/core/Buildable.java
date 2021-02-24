@@ -13,8 +13,26 @@ import java.util.Map;
  * @date 2/22/2021 6:17 PM
  */
 public interface Buildable {
-
+    /**
+     * 获取模板名称
+     * @return
+     */
     TemplateName getTemplateName();
 
-    Map<String,Object> buildData(Path filePath, PackageProperties packageProperties, TableProperties tableProperties);
+    /**
+     * 构架模板文件
+      * @param fileName
+     * @param filePath
+     */
+    /*void buildFile(String fileName, Path filePath);*/
+
+    /**
+     * 构建模板文件数据
+     * @param fileName
+     * @param filePath
+     * @param packageProperties
+     * @param tableProperties
+     * @return
+     */
+    Map<String,Object> buildData(String fileName, Path filePath, PackageProperties packageProperties, TableProperties tableProperties);
 }

@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class ApplicationBuilder implements Buildable {
+public class ApplicationBuilder extends AbstractBuilder implements Buildable {
 
 
     @Override
@@ -23,13 +23,12 @@ public class ApplicationBuilder implements Buildable {
     }
 
     @Override
-    public Map<String, Object> buildData(Path filePath, PackageProperties packageProperties, TableProperties tableProperties) {
+    public Map<String, Object> buildData(String fileName, Path filePath, PackageProperties packageProperties, TableProperties tableProperties) {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.putAll(JSONUtil.parseObj(tableProperties));
-        dataMap.put("package",filePath);
-        dataMap.put("","");
-        dataMap.put("","");
-        dataMap.put("","");
+        dataMap.putAll(JSONUtil.parseObj(packageProperties));
+        dataMap.put("package",buildPkg(filePath));
+        dataMap.put("mainClass",fileName.substring(0,fileName.lastIndexOf(".")));
         return dataMap;
     }
 }
