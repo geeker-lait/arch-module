@@ -49,6 +49,13 @@ import static java.util.Objects.isNull;
 public class ArchConnectionServiceImpl implements ConnectionService {
 
     private final UmsAccountClient umsAccountClient;
+    private final UmsUserDetailsService umsUserDetailsService;
+    private final SsoProperties ssoProperties;
+    private final TenantContextHolder tenantContextHolder;
+    private final PasswordEncoder passwordEncoder;
+    private final IdService idService;
+    private final Auth2Properties auth2Properties;
+    private final UmsAccountAuthToken umsAccountAuthToken;
 
     @NonNull
     @Override
@@ -63,10 +70,24 @@ public class ArchConnectionServiceImpl implements ConnectionService {
 
     }
 
+    @Nullable
     @Override
-    public void binding(@NonNull UserDetails principal, @NonNull AuthUser authUser, @NonNull String providerId) {
-        // TODO
-
+    public List<ConnectionData> findConnectionByProviderIdAndProviderUserId(@NonNull String providerId,
+                                                                            @NonNull String providerUserId) {
+        String identifier = RegisterUtils.getIdentifierForOauth2(providerId, providerUserId);
+        Response<AuthLoginDto> response = umsAccountClient.loadAccountByIdentifier(identifier);
+        final AuthLoginDto authLoginDto = response.getSuccessData();
+        if (isNull(authLoginDto)) {
+            return null;
+        }
+        ConnectionData connectionData = ConnectionData.builder()
+                                                      .userId(authLoginDto.getIdentifier())
+                                                      .providerUserId(providerUserId)
+                                                      .providerId(providerId)
+                                                      .displayName(authLoginDto.getNickName())
+                                                      .imageUrl(authLoginDto.getAvatar())
+                                                      .build();
+        return Collections.singletonList(connectionData);
     }
 
     /**
