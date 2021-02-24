@@ -14,6 +14,7 @@ import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
+import org.arch.ums.feign.account.client.UmsAccountAuthToken;
 import org.arch.ums.feign.account.client.UmsAccountClient;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -31,6 +32,7 @@ import top.dcenter.ums.security.core.api.service.UmsUserDetailsService;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.exception.RegisterUserFailureException;
 import top.dcenter.ums.security.core.exception.UserNotExistException;
+import top.dcenter.ums.security.core.oauth.properties.Auth2Properties;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,6 +67,8 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     private final SsoProperties ssoProperties;
     private final TenantContextHolder tenantContextHolder;
     private final UmsAccountClient umsAccountClient;
+    private final Auth2Properties auth2Properties;
+    private final UmsAccountAuthToken umsAccountAuthToken;
 
     @NonNull
     @Override
@@ -199,8 +203,15 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
         // 第三方授权登录用户注册
         AuthRegRequest authRegRequest = getOauth2RegRequest(authUser, username, defaultAuthority, accountType);
+        AuthLoginDto authLoginDto = registerUserAndGetAuthLoginDto(authRegRequest);
+        ArchUser archUser = getArchUser(authRegRequest, authLoginDto);
 
-        return registerUser(authRegRequest);
+        // 保存第三方用户的 OauthToken 信息
+        int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
+        RegisterUtils.saveOauthToken(authUser, authUser.getSource(), tenantContextHolder.getTenantId(),
+                                     authLoginDto.getId(), timeout, this.umsAccountAuthToken);
+        return archUser;
+
 
     }
 
@@ -218,7 +229,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
          用户名: authUser.getUsername()
         */
         return new String[]{
-                RegisterUtils.getIdentifierForOauth2(authUser.getSource(),authUser.getUuid())
+                RegisterUtils.getIdentifierForOauth2(authUser.getSource(), authUser.getUuid())
         };
     }
 
@@ -250,21 +261,12 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
     @NonNull
     private ArchUser registerUser(@NonNull AuthRegRequest authRegRequest) {
-        Response<AuthLoginDto> response;
-        try {
-            response = umsAccountClient.register(authRegRequest);
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new RegisterUserFailureException(ErrorCodeEnum.SERVER_ERROR, e, null);
-        }
+        AuthLoginDto authLoginDto = registerUserAndGetAuthLoginDto(authRegRequest);
+        return getArchUser(authRegRequest, authLoginDto);
+    }
 
-        AuthLoginDto authLoginDto = response.getSuccessData();
-        if (isNull(authLoginDto)) {
-            log.warn("用户注册失败: {}", response.getMsg());
-            throw new RegisterUserFailureException(ErrorCodeEnum.USERNAME_USED, authRegRequest.getIdentifier());
-        }
-
+    @NonNull
+    private ArchUser getArchUser(@NonNull AuthRegRequest authRegRequest, @NonNull AuthLoginDto authLoginDto) {
         // 用户注册成功转换为 UserDetails
         final ArchUser archUser = new ArchUser(authLoginDto.getIdentifier(),
                                                authLoginDto.getCredential(),
@@ -285,6 +287,25 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                      archUser.getChannelType().name(), authRegRequest.getSource());
         }
         return archUser;
+    }
+
+    @NonNull
+    private AuthLoginDto registerUserAndGetAuthLoginDto(@NonNull AuthRegRequest authRegRequest) {
+        Response<AuthLoginDto> response;
+        try {
+            response = umsAccountClient.register(authRegRequest);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new RegisterUserFailureException(ErrorCodeEnum.SERVER_ERROR, e, null);
+        }
+
+        AuthLoginDto authLoginDto = response.getSuccessData();
+        if (isNull(authLoginDto)) {
+            log.warn("用户注册失败: {}", response.getMsg());
+            throw new RegisterUserFailureException(ErrorCodeEnum.USERNAME_USED, authRegRequest.getIdentifier());
+        }
+        return authLoginDto;
     }
 
     @NonNull
