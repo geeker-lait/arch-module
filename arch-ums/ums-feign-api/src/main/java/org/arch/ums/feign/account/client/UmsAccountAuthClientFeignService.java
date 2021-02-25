@@ -23,7 +23,7 @@ import java.util.Set;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-oauthClient", path = "/ums/account/auth/client",
         configuration = UmsAccountDeFaultFeignConfig.class)
-public interface UmsAccountAuthClient {
+public interface UmsAccountAuthClientFeignService {
 
     /**
      * 根据 clientId 与 clientSecret 查询 scopes

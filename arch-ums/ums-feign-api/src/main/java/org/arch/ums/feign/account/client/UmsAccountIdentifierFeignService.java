@@ -28,7 +28,7 @@ import java.util.List;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-identifier", path = "/ums/account/identifier",
         configuration = UmsAccountDeFaultFeignConfig.class)
-public interface UmsAccountClient {
+public interface UmsAccountIdentifierFeignService {
 
     /**
      * 通过 {@link Identifier#getIdentifier()} 来获取 {@link Identifier}

@@ -12,8 +12,8 @@ import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.entity.Identifier;
-import org.arch.ums.feign.account.client.UmsAccountAuthToken;
-import org.arch.ums.feign.account.client.UmsAccountClient;
+import org.arch.ums.feign.account.client.UmsAccountAuthTokenFeignService;
+import org.arch.ums.feign.account.client.UmsAccountIdentifierFeignService;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,14 +48,14 @@ import static java.util.Objects.isNull;
 @Slf4j
 public class ArchConnectionServiceImpl implements ConnectionService {
 
-    private final UmsAccountClient umsAccountClient;
+    private final UmsAccountIdentifierFeignService umsAccountIdentifierFeignService;
     private final UmsUserDetailsService umsUserDetailsService;
     private final SsoProperties ssoProperties;
     private final TenantContextHolder tenantContextHolder;
     private final PasswordEncoder passwordEncoder;
     private final IdService idService;
     private final Auth2Properties auth2Properties;
-    private final UmsAccountAuthToken umsAccountAuthToken;
+    private final UmsAccountAuthTokenFeignService umsAccountAuthTokenFeignService;
 
     @NonNull
     @Override
@@ -75,7 +75,7 @@ public class ArchConnectionServiceImpl implements ConnectionService {
     public List<ConnectionData> findConnectionByProviderIdAndProviderUserId(@NonNull String providerId,
                                                                             @NonNull String providerUserId) {
         String identifier = RegisterUtils.getIdentifierForOauth2(providerId, providerUserId);
-        Response<AuthLoginDto> response = umsAccountClient.loadAccountByIdentifier(identifier);
+        Response<AuthLoginDto> response = umsAccountIdentifierFeignService.loadAccountByIdentifier(identifier);
         final AuthLoginDto authLoginDto = response.getSuccessData();
         if (isNull(authLoginDto)) {
             return null;
@@ -100,7 +100,7 @@ public class ArchConnectionServiceImpl implements ConnectionService {
     public void unbinding(@NonNull String userId, @NonNull String providerId, @NonNull String providerUserId) {
 
         // 1. 获取 userId 对应的 Identifier 相关信息.
-        Response<AuthLoginDto> authLoginDtoResponse = umsAccountClient.loadAccountByIdentifier(userId);
+        Response<AuthLoginDto> authLoginDtoResponse = umsAccountIdentifierFeignService.loadAccountByIdentifier(userId);
         AuthLoginDto authLoginDto = authLoginDtoResponse.getSuccessData();
         if (isNull(authLoginDto)) {
             log.warn("用户 {} 进行解绑操作时, 获取用户信息失败; providerId: {}, providerUserId: {}",
@@ -110,7 +110,7 @@ public class ArchConnectionServiceImpl implements ConnectionService {
 
         // 2. 解绑
         String identifier = RegisterUtils.getIdentifierForOauth2(providerId, providerUserId);
-        Response<Boolean> response = umsAccountClient.unbinding(authLoginDto.getAid(), identifier);
+        Response<Boolean> response = umsAccountIdentifierFeignService.unbinding(authLoginDto.getAid(), identifier);
         Boolean successData = response.getSuccessData();
         if (isNull(successData) || !successData) {
             throw new UnBindingException(ErrorCodeEnum.UN_BINDING_ERROR, userId);
@@ -122,7 +122,7 @@ public class ArchConnectionServiceImpl implements ConnectionService {
 
         // 1. 获取 principal 对应的 Identifier 相关信息.
         ArchUser archUser = (ArchUser) principal;
-        Response<AuthLoginDto> authLoginDtoResponse = umsAccountClient.loadAccountByIdentifier(archUser.getUsername());
+        Response<AuthLoginDto> authLoginDtoResponse = umsAccountIdentifierFeignService.loadAccountByIdentifier(archUser.getUsername());
         AuthLoginDto authLoginDto = authLoginDtoResponse.getSuccessData();
         if (isNull(authLoginDto)) {
             log.warn("用户 {} 进行绑定操作时, 获取用户信息失败; providerId: {}, providerUserId: {}",
@@ -168,7 +168,7 @@ public class ArchConnectionServiceImpl implements ConnectionService {
                 .setChannelType(ChannelType.OAUTH2);
         // 绑定
         try {
-            umsAccountClient.save(identifierRequest);
+            umsAccountIdentifierFeignService.save(identifierRequest);
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -178,7 +178,7 @@ public class ArchConnectionServiceImpl implements ConnectionService {
         // 4. 保存第三方用户的 OauthToken 信息
         int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
         RegisterUtils.saveOauthToken(authUser, providerId, tenantId, identifierRequest.getId(),
-                                     timeout, this.umsAccountAuthToken);
+                                     timeout, this.umsAccountAuthTokenFeignService);
 
     }
 

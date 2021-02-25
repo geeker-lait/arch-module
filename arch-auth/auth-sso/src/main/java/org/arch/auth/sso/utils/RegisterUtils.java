@@ -8,7 +8,7 @@ import org.arch.framework.ums.enums.AccountType;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.entity.OauthToken;
-import org.arch.ums.feign.account.client.UmsAccountAuthToken;
+import org.arch.ums.feign.account.client.UmsAccountAuthTokenFeignService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -152,11 +152,11 @@ public class RegisterUtils {
      * @param tenantId            租户 ID
      * @param identifierId        {@link Identifier#getId()}
      * @param timeout             {@link HttpConfig#getTimeout()}
-     * @param umsAccountAuthToken {@link UmsAccountAuthToken}
+     * @param umsAccountAuthTokenFeignService {@link UmsAccountAuthTokenFeignService}
      */
     public static void saveOauthToken(@NonNull AuthUser authUser, @NonNull String providerId,
                                       @NonNull String tenantId, @NonNull Long identifierId,
-                                      int timeout, @NonNull UmsAccountAuthToken umsAccountAuthToken) {
+                                      int timeout, @NonNull UmsAccountAuthTokenFeignService umsAccountAuthTokenFeignService) {
 
         // 添加到 account_auth_token 表
         // 获取 AuthTokenPo
@@ -181,7 +181,7 @@ public class RegisterUtils {
             oauthToken.setExpireTime(dealLine);
         }
 
-        umsAccountAuthToken.save(oauthToken);
+        umsAccountAuthTokenFeignService.save(oauthToken);
     }
 
 }

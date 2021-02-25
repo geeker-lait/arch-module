@@ -21,7 +21,7 @@ import javax.validation.Valid;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-oauthToken", path = "/ums/account/oauth/token",
         configuration = UmsAccountDeFaultFeignConfig.class)
-public interface UmsAccountAuthToken {
+public interface UmsAccountAuthTokenFeignService {
 
     /**
      * 保存 oauthToken

@@ -14,8 +14,8 @@ import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
-import org.arch.ums.feign.account.client.UmsAccountAuthToken;
-import org.arch.ums.feign.account.client.UmsAccountClient;
+import org.arch.ums.feign.account.client.UmsAccountAuthTokenFeignService;
+import org.arch.ums.feign.account.client.UmsAccountIdentifierFeignService;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -66,9 +66,9 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     private final IdService idService;
     private final SsoProperties ssoProperties;
     private final TenantContextHolder tenantContextHolder;
-    private final UmsAccountClient umsAccountClient;
+    private final UmsAccountIdentifierFeignService umsAccountIdentifierFeignService;
     private final Auth2Properties auth2Properties;
-    private final UmsAccountAuthToken umsAccountAuthToken;
+    private final UmsAccountAuthTokenFeignService umsAccountAuthTokenFeignService;
 
     @NonNull
     @Override
@@ -82,7 +82,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         try {
             // 根据用户名获取用户信息
             AuthLoginDto authLoginDto;
-            final Response<AuthLoginDto> response = umsAccountClient.loadAccountByIdentifier(userId);
+            final Response<AuthLoginDto> response = umsAccountIdentifierFeignService.loadAccountByIdentifier(userId);
             authLoginDto = response.getSuccessData();
 
             if (isNull(authLoginDto)) {
@@ -209,7 +209,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         // 保存第三方用户的 OauthToken 信息
         int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
         RegisterUtils.saveOauthToken(authUser, authUser.getSource(), tenantContextHolder.getTenantId(),
-                                     authLoginDto.getId(), timeout, this.umsAccountAuthToken);
+                                     authLoginDto.getId(), timeout, this.umsAccountAuthTokenFeignService);
         return archUser;
 
 
@@ -247,7 +247,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         List<String> usernameList = Arrays.stream(usernames).collect(Collectors.toList());
         Response<List<Boolean>> response;
         try {
-            response = umsAccountClient.exists(usernameList);
+            response = umsAccountIdentifierFeignService.exists(usernameList);
         }
         catch (Exception e) {
             throw new IOException("查询用户名是否存在时 IO 异常");
@@ -293,7 +293,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     private AuthLoginDto registerUserAndGetAuthLoginDto(@NonNull AuthRegRequest authRegRequest) {
         Response<AuthLoginDto> response;
         try {
-            response = umsAccountClient.register(authRegRequest);
+            response = umsAccountIdentifierFeignService.register(authRegRequest);
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
