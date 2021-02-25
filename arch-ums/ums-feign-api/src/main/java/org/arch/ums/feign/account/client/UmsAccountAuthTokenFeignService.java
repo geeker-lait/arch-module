@@ -31,4 +31,13 @@ public interface UmsAccountAuthTokenFeignService {
     @NonNull
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     Response<OauthToken> save(@RequestBody @Valid OauthToken oauthToken);
+
+    /**
+     * 根据 identifier 更新 oauthToken
+     * @param oauthToken     实体类
+     * @return  {@link Response}
+     */
+    @NonNull
+    @PostMapping(value = "/update/by/identifier", consumes = MediaType.APPLICATION_JSON_VALUE)
+    Response<OauthToken> updateByIdentifier(@RequestBody @Valid OauthToken oauthToken);
 }

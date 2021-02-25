@@ -92,6 +92,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
             return new ArchUser(authLoginDto.getIdentifier(),
                                 authLoginDto.getCredential(),
+                                authLoginDto.getId(),
                                 authLoginDto.getAid(),
                                 authLoginDto.getTenantId(),
                                 authLoginDto.getChannelType(),
@@ -273,6 +274,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         // 用户注册成功转换为 UserDetails
         final ArchUser archUser = new ArchUser(authLoginDto.getIdentifier(),
                                                authLoginDto.getCredential(),
+                                               authLoginDto.getId(),
                                                authLoginDto.getAid(),
                                                authLoginDto.getTenantId(),
                                                authLoginDto.getChannelType(),

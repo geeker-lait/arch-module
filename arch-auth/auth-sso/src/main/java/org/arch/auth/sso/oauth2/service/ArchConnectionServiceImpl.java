@@ -68,7 +68,47 @@ public class ArchConnectionServiceImpl implements ConnectionService {
 
     @Override
     public void updateUserConnectionAndAuthToken(AuthUser authUser, ConnectionData connectionData) throws UpdateConnectionException {
-        // todo
+        // 因 第三方登录记录与账号为同一张表, 所以省略 UserConnection 的更新.
+
+        // 更新 OAuthToken
+        int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
+        if ((connectionData instanceof ConnectionDataDto)) {
+            ConnectionDataDto connectionDataDto = (ConnectionDataDto) connectionData;
+            umsAccountAuthTokenFeignService.updateByIdentifier(toOauthToken(authUser,
+                                                                            tenantContextHolder.getTenantId(),
+                                                                            connectionDataDto.getIdentifierId(),
+                                                                            timeout));
+//            return;
+        }
+
+//        String[] usernames = umsUserDetailsService.generateUsernames(authUser);
+//        ArchUser archUser = (ArchUser) umsUserDetailsService.loadUserByUserId(usernames[0]);
+//        ConnectionData connectionData = null;
+//        try
+//        {
+//
+//            // 获取 AuthTokenPo
+//            AuthToken token = authUser.getToken();
+//            AuthTokenPo authToken = JustAuthUtil.getAuthTokenPo(token, data.getProviderId(), timeout);
+//            authToken.setId(data.getTokenId());
+//            // 有效期转时间戳
+//            Auth2DefaultRequest.expireIn2Timestamp(timeout, token.getExpireIn(), authToken);
+//
+//            // 获取最新的 ConnectionData
+//            connectionData = JustAuthUtil.getConnectionData(data.getProviderId(), authUser, data.getUserId(), authToken);
+//            connectionData.setUserId(data.getUserId());
+//            connectionData.setTokenId(data.getTokenId());
+//
+//            // 更新 connectionData
+//            usersConnectionRepository.updateConnection(connectionData);
+//            // 更新 AuthTokenPo
+//            usersConnectionTokenRepository.updateAuthToken(authToken);
+//        }
+//        catch (Exception e)
+//        {
+//            log.error("更新第三方用户信息异常: " + e.getMessage());
+//            throw new UpdateConnectionException(ErrorCodeEnum.UPDATE_CONNECTION_DATA_FAILURE, connectionData, e);
+//        }
 
     }
 
