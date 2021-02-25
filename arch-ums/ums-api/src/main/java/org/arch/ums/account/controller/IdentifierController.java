@@ -14,7 +14,6 @@ import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.dto.IdentifierSearchDto;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.service.IdentifierService;
-import org.arch.ums.account.service.NameService;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -50,7 +49,6 @@ import static java.util.Objects.nonNull;
 public class IdentifierController implements CrudController<Identifier, java.lang.Long, IdentifierSearchDto, IdentifierService> {
 
     private final IdentifierService identifierService;
-    private final NameService nameService;
     private final TenantContextHolder tenantContextHolder;
 
     @Override
@@ -166,6 +164,13 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     @DeleteMapping(value = "/{id:[0-9]+}")
     @Override
     public Response<Boolean> deleteById(@PathVariable(value = "id") Long id) {
+        Long identifierId = SecurityUtils.getCurrentUser().getIdentifierId();
+        if (!identifierId.equals(id)) {
+            log.error("删除用户 id 与 当前用户 id 不匹配: tenantId: {}, id: {}, currentUserId: {}",
+                      tenantContextHolder.getTenantId(), id, identifierId);
+            return Response.success(Boolean.FALSE);
+        }
+
         Integer tenantId = Integer.valueOf(tenantContextHolder.getTenantId());
         try {
             // 获取 Identifier
@@ -207,9 +212,16 @@ public class IdentifierController implements CrudController<Identifier, java.lan
             params.put("channel_type", ChannelType.OAUTH2);
             Wrapper<Identifier> queryWrapper = Wrappers.<Identifier>query().allEq(params);
             Identifier accountIdentifier = identifierService.findOneBySpec(queryWrapper);
-
             if (isNull(accountIdentifier)) {
-            	return Response.success(Boolean.FALSE, identifier + " 账号不存在");
+                return Response.success(Boolean.FALSE, identifier + " 账号不存在");
+            }
+
+            Long id = accountIdentifier.getId();
+            Long identifierId = SecurityUtils.getCurrentUser().getIdentifierId();
+            if (!identifierId.equals(id)) {
+                log.error("删除用户 id 与 当前用户 id 不匹配: tenantId: {}, id: {}, currentUserId: {}",
+                          tenantContextHolder.getTenantId(), id, identifierId);
+                return Response.success(Boolean.FALSE);
             }
 
             // 逻辑删除
