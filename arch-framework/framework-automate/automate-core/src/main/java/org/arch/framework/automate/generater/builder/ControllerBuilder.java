@@ -30,14 +30,4 @@ public class ControllerBuilder implements Buildable {
 
     }
 
-    @Override
-    public Map<String, Object> build(String fileName, Path filePath, PackageProperties packageProperties, TableProperties tableProperties) {
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.putAll(JSONUtil.parseObj(tableProperties));
-        dataMap.put("package",filePath);
-        dataMap.put("","");
-        dataMap.put("","");
-        dataMap.put("","");
-        return dataMap;
-    }
 }

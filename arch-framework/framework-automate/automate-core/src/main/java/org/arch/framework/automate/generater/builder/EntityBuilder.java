@@ -32,18 +32,4 @@ public class EntityBuilder extends AbstractBuilder implements Buildable {
         buildPackageFile(cover, path, templateEngine, projectProperties, packageProperties, databaseProperties);
     }
 
-    @Override
-    public Map<String, Object> build(String fileName, Path filePath, PackageProperties packageProperties, TableProperties tableProperties) {
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.putAll(JSONUtil.parseObj(tableProperties));
-        dataMap.putAll(JSONUtil.parseObj(packageProperties));
-        // 包
-        dataMap.put("package", buildPkg(filePath));
-        // 其他字段
-        dataMap.put("", "");
-        // imports pack
-        dataMap.put("imports", Arrays.asList());
-        return dataMap;
-    }
-
 }

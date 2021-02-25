@@ -62,15 +62,4 @@ public class ApplicationBuilder extends AbstractBuilder implements Buildable {
         // 写入文件
         Files.write(filePath, code.getBytes());
     }
-
-
-    @Override
-    public Map<String, Object> build(String fileName, Path filePath, PackageProperties packageProperties, TableProperties tableProperties) {
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.putAll(JSONUtil.parseObj(tableProperties));
-        dataMap.putAll(JSONUtil.parseObj(packageProperties));
-        dataMap.put("package", buildPkg(filePath));
-        dataMap.put("mainClass", fileName.substring(0, fileName.lastIndexOf(".")));
-        return dataMap;
-    }
 }

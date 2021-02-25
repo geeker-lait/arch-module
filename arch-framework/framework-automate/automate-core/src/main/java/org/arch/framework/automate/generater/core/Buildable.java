@@ -33,14 +33,4 @@ public interface Buildable {
      * @param databaseProperties 数据库配置
      */
     void build(boolean cover, Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) throws IOException;
-
-    /**
-     * 构建模板文件数据
-     * @param fileName
-     * @param filePath
-     * @param packageProperties
-     * @param tableProperties
-     * @return
-     */
-    Map<String,Object> build(String fileName, Path filePath, PackageProperties packageProperties, TableProperties tableProperties);
 }
