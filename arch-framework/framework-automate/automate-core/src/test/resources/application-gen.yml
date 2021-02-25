@@ -56,7 +56,7 @@ spring:
         template: entity.ftl
         suffix: Entity
       - type: mapper
-        pkg:
+        pkg: mapper
         template: mapper.ftl
         suffix: Mapper
       - type: dao
@@ -112,7 +112,7 @@ spring:
         "备注/Comment": "comment"
       }
     database:
-      name: arch
+      name: arch_module
       driver: com.mysql.cj.jdbc.Driver
       url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
       username: root

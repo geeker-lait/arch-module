@@ -31,7 +31,7 @@ public class GeneratorTest {
         generables.forEach(p->{
             try {
                 p.generate(generatorConfig);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });

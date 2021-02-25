@@ -14,6 +14,8 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 public class ExcelProperties {
+    // excel 文件
+    private String file;
     // 表头
     private Map<String,Object> heads;
     // 其他配置

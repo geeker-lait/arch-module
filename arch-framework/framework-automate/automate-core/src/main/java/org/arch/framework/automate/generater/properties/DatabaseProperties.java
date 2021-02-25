@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,5 +28,5 @@ public class DatabaseProperties {
     private String username;
     private String password;
     @NestedConfigurationProperty
-    private List<TableProperties> tables;
+    private List<TableProperties> tables = new ArrayList<>();
 }

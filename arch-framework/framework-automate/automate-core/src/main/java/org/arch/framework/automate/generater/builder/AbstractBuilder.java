@@ -84,11 +84,12 @@ public abstract class AbstractBuilder {
      * @throws IOException
      */
     protected void buildPackageFile(boolean cover, Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) throws IOException {
-        String typ = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, packageProperties.getType());
+        String typ = packageProperties.getType();
         // 设置默认包和后缀名
         String pkg = (null == packageProperties.getPkg() ? typ : packageProperties.getPkg());
-        String suffix = (null == packageProperties.getSuffix() ? typ : packageProperties.getSuffix());
-        Path packPath = path.resolve(Generable.MAIN_JAVA.concat(projectProperties.getBasePkg()).concat("." + pkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
+        String suffix = (null == packageProperties.getSuffix() ? CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, typ) : packageProperties.getSuffix());
+        String currentPkg = projectProperties.getBasePkg().concat("." + pkg);
+        Path packPath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
         Files.createDirectories(packPath);
         // 写入文件
         for (TableProperties tableProperties : databaseProperties.getTables()) {
@@ -98,7 +99,7 @@ public abstract class AbstractBuilder {
             // 创建文件
             buildFile(cover, filePath);
             Map<String, Object> dataMap = buildData(projectProperties, packageProperties, tableProperties);
-            dataMap.put("package", buildPkg(filePath));
+            dataMap.put("package", currentPkg);
             dataMap.put("mainClass", fileName);
             // 获取模板并渲染
             String code = templateEngine.getTemplate(packageProperties.getTemplate()).render(dataMap);

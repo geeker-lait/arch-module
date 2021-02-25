@@ -5,15 +5,19 @@ import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.common.metadata.DatabaseInfo;
+import org.arch.framework.automate.from.service.DatabaseService;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
 import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.properties.*;
 import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +39,8 @@ public abstract class AbstractGenerator implements Generable {
     protected Boolean cover;
     @Autowired
     private List<Buildable> builders;
+    @Autowired
+    private DatabaseService databaseService;
 
     private void init(GeneratorConfig generatorConfig) {
         //Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
@@ -59,7 +65,7 @@ public abstract class AbstractGenerator implements Generable {
      * @throws IOException
      */
     @Override
-    public void generate(GeneratorConfig generatorConfig) throws IOException {
+    public void generate(GeneratorConfig generatorConfig) throws Exception {
         ProjectProperties projectProperties = generatorConfig.getProject();
         PomProperties pomProperties = projectProperties.getPom();
         DatabaseProperties databaseProperties;
@@ -69,12 +75,30 @@ public abstract class AbstractGenerator implements Generable {
         }
         // 默认支持database,如果是excel 转换为database
         if (generatorConfig.getSource().equalsIgnoreCase("database")) {
+            String databaseName = generatorConfig.getDatabase().getName();
+            if (databaseName == null) {
+                throw new CodegenException("database name is null");
+            }
             databaseProperties = generatorConfig.getDatabase();
+            // 获取数据库的table
+            List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(databaseName);
+            // 防止NullPoint报错
+            tableProperties = null == tableProperties ? new ArrayList() : tableProperties;
+            // 追加自定义的table
+            databaseProperties.getTables().addAll(tableProperties);
         } else if (generatorConfig.getSource().equalsIgnoreCase("excel")) {
-            // 转换为 database
+            // 将excel 转换为标准 database 对象
+            ExcelProperties excelProperties = generatorConfig.getExcel();
+            String excelFile = excelProperties.getFile();
+            if (StringUtils.isEmpty(excelFile)) {
+                throw new CodegenException("excel file is null");
+            }
+            ModuleInfos<TableSchema> excelUtils = new ModuleInfos(excelFile, new FileInputStream(excelFile), TableSchema.class);
+            List<DatabaseInfo> databaseInfosList = excelUtils.getDatabaseInfos();
+            // 转换
             databaseProperties = null;
         } else if (generatorConfig.getSource().equalsIgnoreCase("json")) {
-            // 转换为 database
+            // json 转换为 database 对象
             databaseProperties = null;
         } else {
             throw new CodegenException("not support source");

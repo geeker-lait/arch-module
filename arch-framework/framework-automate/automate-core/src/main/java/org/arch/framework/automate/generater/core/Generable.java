@@ -26,5 +26,5 @@ public interface Generable {
      * @param generatorConfig
      * @throws IOException
      */
-    void generate(GeneratorConfig generatorConfig) throws IOException;
+    void generate(GeneratorConfig generatorConfig) throws Exception;
 }

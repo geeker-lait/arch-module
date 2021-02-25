@@ -33,10 +33,10 @@ public class MavenGenerator extends AbstractGenerator {
         // 创建pom
         buildPom(cover, path, pomProperties, pomPropertiesPatent);
         if (modules == null) {
-            /*// 创建模块src目录,可不创建最后一起创建，这里为了标准化目录创建一下
+            // 创建模块src目录,可不创建最后一起创建，这里为了标准化目录创建一下
             for (String dir : srcDirectorys) {
                 Files.createDirectories(path.resolve(dir));
-            }*/
+            }
             //String basePkg = null == projectProperties.getBasePkg() ? "" : projectProperties.getBasePkg();
             if (!StringUtils.isEmpty(pomProperties.getPackageTypes())) {
                 for (String p : Arrays.asList(pomProperties.getPackageTypes().split(","))) {
