@@ -87,7 +87,7 @@ DROP TABLE IF EXISTS `account_member`;
 
 CREATE TABLE `account_member` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `account_id` bigint(19) NOT NULL COMMENT '用户id',
+  `account_id` bigint(19) NOT NULL COMMENT '会员id',
   `member_level_id` int(3) NOT NULL COMMENT '会员级别ID',
   `start_time` datetime NOT NULL COMMENT '开始时间',
   `end_time` datetime NOT NULL COMMENT '结束时间',

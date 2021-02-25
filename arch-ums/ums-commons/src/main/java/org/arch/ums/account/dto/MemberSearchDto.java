@@ -26,7 +26,7 @@ public class MemberSearchDto implements BaseSearchDto {
     private Long id;
 
     /**
-     * 用户id
+     * 会员id
      */
     private Long accountId;
 
