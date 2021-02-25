@@ -1,46 +1,33 @@
-//package org.arch.framework.automate.generater.builder;
-//
-//import com.unichain.framework.code.api.Buildable;
-//import com.unichain.framework.code.database.model.Table;
-//import com.unichain.framework.code.model.ControllerModel;
-//import com.unichain.framework.code.model.properties.PomModel;
-//import com.unichain.framework.code.model.properties.PropertiesModel;
-//import org.springframework.stereotype.Component;
-//
-//@Component("controllerBuilder")
-//public class ControllerBuilder implements Buildable<ControllerModel> {
-//
-//
-//    @Override
-//    public ControllerModel buildData(PropertiesModel propertiesModel, Table table) {
-//        ControllerModel controllerModel = new ControllerModel();
-//        controllerModel.setClassName(UPPER_CAMEL_CONVERT.convert(table.getName()));
-//        controllerModel.setPkg(propertiesModel.getPkg());
-//        controllerModel.setRequestMapping(Buildable.LOWER_UNDERSCORE_CONVERT.convert(table.getName()));
-//        wrapperDefaultValue(propertiesModel,controllerModel);
-//        return controllerModel;
-//    }
-//
-//    @Override
-//    public void buildFile(PomModel pomModel, ControllerModel dataModel) {
-////        genClassFile(pomModel,dataModel);
-////        ConfigProperties propertiesModel = pomModel.getProperties();
-////        String fileName = dataModel.getPrefix()+ dataModel.getClassName() + dataModel.getSuffix();
-////        String serviceFile = pomModel.getPath()+ File.separator + fileName  + "." + propertiesModel.getExtName();
-////        int i = propertiesModel.getTemplate().lastIndexOf("/");
-////        // 模板文件
-////        String ftlFile = propertiesModel.getTemplate().substring(i + 1);
-////        String ftlPaht = propertiesModel.getTemplate().substring(0,i);
-////        try {
-////            Freemarker.printFile(ftlPaht, ftlFile, serviceFile, dataModel);
-////        } catch (Exception e) {
-////            e.printStackTrace();
-////        }
-//
-//    }
-//
-//    @Override
-//    public String getTemplate() {
-//        return "templates/java/controller.ftl";
-//    }
-//}
+package org.arch.framework.automate.generater.builder;
+
+import cn.hutool.extra.template.TemplateEngine;
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.generater.properties.DatabaseProperties;
+import org.arch.framework.automate.generater.properties.PackageProperties;
+import org.arch.framework.automate.generater.properties.ProjectProperties;
+import org.arch.framework.automate.generater.properties.TableProperties;
+import org.arch.framework.automate.generater.core.Buildable;
+import org.arch.framework.automate.generater.core.TemplateName;
+import org.springframework.stereotype.Component;
+
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+
+@Slf4j
+@Component
+public class ControllerBuilder implements Buildable {
+
+
+    @Override
+    public TemplateName getTemplateName() {
+        return TemplateName.CONTROLLER;
+    }
+
+    @Override
+    public void build(boolean cover, Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) {
+
+    }
+
+}

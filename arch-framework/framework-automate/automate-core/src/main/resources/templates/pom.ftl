@@ -6,15 +6,105 @@
         <groupId>${(parent!).groupId!""}</groupId>
         <version>${(parent!).version!""}</version>
     </parent>
-    </#if>
-    <modelVersion>4.0.0</modelVersion>
+    </#if><modelVersion>4.0.0</modelVersion>
     <artifactId>${artifactId!""}</artifactId>
     <groupId>${groupId!""}</groupId>
     <version>${version!""}</version>
+    <#if packaging??>
+    <packaging>${packaging!""}</packaging>
+    </#if>
 
+    <#if modules ?? && (modules?size >0)>
+    <modules>
+        <#list modules as module>
+        <module>${(module.artifactId)!""}</module>
+        </#list>
+    </modules>
+    </#if>
+
+    <#if dependencyManagement ?? && (dependencyManagement?size >0)>
+    <dependencyManagement>
+        <dependencies>
+        <#list dependencyManagement as dm>
+            <dependency>
+                <groupId>${dm.groupId!""}</groupId>
+                <artifactId>${dm.artifactId!""}</artifactId>
+                <version>${dm.version!""}</version>
+                <#if dm.type??>
+                <type>${dm.type!""}</type>
+                </#if>
+                <#if dm.scope??>
+                <scope>${dm.scope!""}</scope>
+                </#if>
+            </dependency>
+        </#list>
+        </dependencies>
+    </dependencyManagement>
+    </#if>
 
     <dependencies>
-
-
+        <#if modules ?? && (modules?size >0)>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.16</version>
+        </dependency>
+        </#if>
+        <#if dependencies ?? && (dependencies?size >0)>
+        <#list dependencies as dependencie>
+        <dependency>
+            <artifactId>${(dependencie.artifactId)!""}</artifactId>
+            <groupId>${(dependencie.groupId)!""}</groupId>
+            <#if dependencie.version??>
+            <version>${(dependencie.version)!""}</version>
+            </#if>
+        </dependency>
+        </#list>
+        </#if>
     </dependencies>
+
+    <build>
+        <#if mainClass??>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.yml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.sql</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.yml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.sql</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        </#if>
+        <plugins>
+            <#if mainClass??>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <delimiters>@</delimiters>
+                    <useDefaultDelimiters>false</useDefaultDelimiters>
+                </configuration>
+            </plugin>
+            </#if>
+        </plugins>
+    </build>
+
 </project>

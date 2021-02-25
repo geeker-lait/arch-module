@@ -1,10 +1,12 @@
 package org.arch.framework.automate.generater.core;
 
-import org.arch.framework.automate.generater.Generable;
-import org.arch.framework.automate.generater.config.GeneratorConfig;
-import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.generater.properties.DatabaseProperties;
+import org.arch.framework.automate.generater.properties.PomProperties;
+import org.arch.framework.automate.generater.properties.ProjectProperties;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * @author lait.zhang@gmail.com
@@ -12,10 +14,12 @@ import java.io.IOException;
  * @weixin PN15855012581
  * @date :
  */
-@Service
-public class GradleGenerator implements Generable {
+@Slf4j
+//@Service
+public class GradleGenerator extends AbstractGenerator {
+
     @Override
-    public void generate(GeneratorConfig generatorConfig) throws IOException {
+    public void buildModule(Path path, ProjectProperties projectProperties, PomProperties pomProperties, PomProperties pomPropertiesPatent, DatabaseProperties databaseProperties) throws IOException {
 
     }
 }

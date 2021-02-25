@@ -46,9 +46,17 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:mysql://localhost:3306?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
-    username: root
-    password: root
+    dynamic:
+      strict: false
+      datasource:
+        master_form:
+          username: root
+          password: late856147
+          url: jdbc:mysql://139.224.225.88:3306/arch_module?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
+        master_ddl:
+          username: root
+          password: late856147
+          url: jdbc:mysql://139.224.225.88:3306?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000
 
 
 

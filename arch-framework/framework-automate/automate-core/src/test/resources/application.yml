@@ -2,14 +2,17 @@ server:
   servlet:
     context-path: /api
 spring:
+  profiles:
+    active:  ${profile:dev}
   config:
-    import: classpath:application-gen.yml
-  datasource:
-    username: root
-    password: root
-    url: jdbc:mysql://127.0.0.1:3306/arch?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    platform: mysql
+    import: classpath:application-gen.yml,classpath:application-db.yml
+
+    #  datasource:
+#    username: root
+#    password: root
+#    url: jdbc:mysql://127.0.0.1:3306/arch?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    platform: mysql
     #启动时需要初始化的建表语句
     #schema: classpath:form-schema.sql
     #初始化的数据
@@ -21,9 +24,18 @@ spring:
     #data-username:
     #schema-password:
     #schema-username:
-    sql-script-encoding: utf-8
-    separator: ;
 
+#    sql-script-encoding: utf-8
+#    separator: ;
+#  freemarker:
+#    suffix: .html  #后缀名
+#    content-type: text/html
+#    enabled: true
+#    cache: false #缓存配置
+#    template-loader-path: classpath:/templates/ #模板加载路径 按需配置
+#    charset: UTF-8 #编码格式
+#    settings:
+#      number_format: '0.##'   #数字格式化，无小数点
 
 
 #  datasource:

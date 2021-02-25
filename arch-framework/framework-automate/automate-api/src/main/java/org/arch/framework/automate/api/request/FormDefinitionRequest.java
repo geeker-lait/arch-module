@@ -3,7 +3,6 @@ package org.arch.framework.automate.api.request;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.arch.framework.automate.api.DirectiveRequest;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormDefinitionRequest implements DirectiveRequest {
+public class FormDefinitionRequest {
 
     /**
      * 表单分类

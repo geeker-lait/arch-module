@@ -12,16 +12,22 @@ public enum TemplateName {
     ENTITY("entity.ftl"),
     DAO("dao.ftl"),
     MAPPER("mapper.ftl"),
+    MAPPER_XML("mapper-xml.ftl"),
     SERVICE("service.ftl"),
+    BIZ("biz.ftl"),
+    CONTROLLER("controller.ftl"),
     SEARCH("search.ftl"),
     DTO("dto.ftl"),
     POM("pom.ftl"),
     DDL("ddl.ftl"),
+    YML("yml.ftl"),
+    APPLICATION("application.ftl"),
+    DOCKER("docker.ftl")
     ;
     @Getter
-    private String file;
+    private String template;
 
-    TemplateName(String file) {
-        this.file = file;
+    TemplateName(String template) {
+        this.template = template;
     }
 }

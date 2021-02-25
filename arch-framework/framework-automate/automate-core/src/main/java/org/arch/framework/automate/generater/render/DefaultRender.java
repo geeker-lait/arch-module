@@ -6,7 +6,7 @@ import org.arch.framework.automate.common.metadata.EntityInfo;
 import org.arch.framework.automate.common.metadata.FieldInfo;
 import org.arch.framework.automate.common.utils.FreeMarkerUtils;
 import org.arch.framework.automate.generater.config.CodeGeneratorConfig;
-import org.arch.framework.automate.generater.config.GeneratorConstants;
+import org.arch.framework.automate.generater.core.GeneratorConstants;
 import org.arch.framework.automate.generater.config.ModuleConfig;
 import org.springframework.util.CollectionUtils;
 

@@ -13,6 +13,5 @@ CREATE TABLE IF NOT EXISTS `${entity.tableName!"tb_"+entity_index}`(
     `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='${entity.comment!""}';
-
 </#list>
 </#list>

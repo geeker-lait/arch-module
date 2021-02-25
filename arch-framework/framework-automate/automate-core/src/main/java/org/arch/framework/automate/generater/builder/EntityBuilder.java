@@ -1,45 +1,35 @@
-//package org.arch.framework.automate.generater.builder;
-//
-//import com.unichain.framework.code.api.Buildable;
-//import com.unichain.framework.code.database.DataType;
-//import com.unichain.framework.code.database.model.Table;
-//import com.unichain.framework.code.model.EntityModel;
-//import com.unichain.framework.code.model.FieldModel;
-//import com.unichain.framework.code.model.properties.PomModel;
-//import com.unichain.framework.code.model.properties.PropertiesModel;
-//import org.springframework.stereotype.Component;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//@Component("entityBuilder")
-//public class EntityBuilder implements Buildable<EntityModel> {
-//
-//
-//    @Override
-//    public EntityModel buildData(PropertiesModel propertiesModel, Table table) {
-//        EntityModel entityModel = new EntityModel();
-//        entityModel.setClassName(UPPER_CAMEL_CONVERT.convert(table.getName()));
-//        wrapperDefaultValue(propertiesModel,entityModel);
-//        List<FieldModel> fieldModels = new ArrayList<>();
-//        table.getColumns().forEach(column -> {
-//            String type = DataType.convertType(column.getTyp()).getSimpleName();
-//            fieldModels.add(new FieldModel(column.getComment(),LOWER_CAMEL_CONVERT.convert(column.getName()),type));
-//        });
-//        entityModel.setPkg( propertiesModel.getPkg());
-//        entityModel.setTableName(table.getName());
-//        entityModel.setFields(fieldModels);
-//
-//        return entityModel;
-//    }
-//
-//    @Override
-//    public void buildFile(PomModel pomModel, EntityModel entityModel) {
-//        genClassFile(pomModel,entityModel);
-//    }
-//
-//    @Override
-//    public String getTemplate() {
-//        return "templates/java/entity.ftl";
-//    }
-//}
+package org.arch.framework.automate.generater.builder;
+
+import cn.hutool.extra.template.TemplateEngine;
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.generater.core.Buildable;
+import org.arch.framework.automate.generater.core.TemplateName;
+import org.arch.framework.automate.generater.properties.DatabaseProperties;
+import org.arch.framework.automate.generater.properties.PackageProperties;
+import org.arch.framework.automate.generater.properties.ProjectProperties;
+import org.arch.framework.automate.generater.properties.TableProperties;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+@Slf4j
+@Component
+public class EntityBuilder extends AbstractBuilder implements Buildable {
+
+    @Override
+    public TemplateName getTemplateName() {
+        return TemplateName.ENTITY;
+    }
+
+    @Override
+    public void build(boolean cover, Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) throws IOException {
+        log.info("EntityBuilder build: {}",path);
+        buildPackageFile(cover, path, templateEngine, projectProperties, packageProperties, databaseProperties);
+    }
+
+}

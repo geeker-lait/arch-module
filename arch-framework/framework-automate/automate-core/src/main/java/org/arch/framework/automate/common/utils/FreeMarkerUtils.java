@@ -7,7 +7,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.generater.builder.TemplateProcessor;
+import org.arch.framework.automate.generater.builder.bak.TemplateProcessor;
 import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.render.RenderingRequest;
 import org.arch.framework.automate.generater.render.RenderingResponse;
@@ -80,7 +80,7 @@ public class FreeMarkerUtils {
         if (code != null) {
             // 处理模板文件
             templateProcessors.forEach(ftlProcessor -> {
-                if (ftlProcessor.getTemplate().getFile().equals(renderingRequest.getFtlName())) {
+                if (ftlProcessor.getTemplate().getTemplate().equals(renderingRequest.getFtlName())) {
                     ftlProcessor.process(code, renderingRequest);
                 }
             });

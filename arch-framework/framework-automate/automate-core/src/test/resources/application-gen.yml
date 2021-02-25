@@ -5,26 +5,33 @@ spring:
     template:
       dir: templates
       resource-mode: classpath
-    schema: excel
+    source: database
     project:
-      path: /Users/lait.zhang/Workspaces/Java/Projects/arch-module
+      path: /arch-gen
       basePkg: org.arch.gen
       pom:
-        artifactId: arch-gen
+        artifactId: arch-test
         groupId: org.arch.projects
         version: 0.0.1
+        dependencyManagement:
+          - artifactId: spring-boot-dependencies
+            groupId: org.springframework.boot
+            version: 2.4.1
+            type: pom
+            scope: import
         modules:
-          - artifactId: arch-gen-core
+          - artifactId: test-core
             groupId:
             version:
-            packageTypes: entity,dao
+            packageTypes: yml,entity,dao,application,ddl,docker,mapper,service
           - artifactId: arch-gen-common
             groupId:
             version:
             packageTypes: dao
             dependencies:
-              - groupId:
-                artifactId:
+              - groupId: org.arch.projects
+                artifactId: arch-gen-core
+                version: 0.0.1
             modules:
               - artifactId: arch-gen-common-a
                 groupId:
@@ -33,12 +40,12 @@ spring:
               - artifactId: arch-gen-common-b
                 groupId:
                 version:
-                packageTypes: entity,dao,service
+                packageTypes: entity,dao,service,mapper
                 modules:
                   - artifactId: arch-gen-common-b-1
                     groupId:
                     version:
-                    packageTypes: entity,dao,service
+                    packageTypes: entity,dao,service,mapper
                   - artifactId: arch-gen-common-b-2
                     groupId:
                     version:
@@ -49,9 +56,9 @@ spring:
         template: entity.ftl
         suffix: Entity
       - type: mapper
-        pkg:
+        pkg: mapper
         template: mapper.ftl
-        suffix:
+        suffix: Mapper
       - type: dao
         pkg: dao
         template: dao.ftl
@@ -69,6 +76,27 @@ spring:
         pkg:
         template: dto.ftl
         suffix:
+      - type: application
+        pkg:
+        template: application.ftl
+        suffix: Application
+        bootstrap: Test
+      - type: yml
+        pkg:
+        template: yml.ftl
+        ext: .yml
+        bootstrap:
+        suffix:
+      - type: ddl
+        pkg:
+        template: ddl.ftl
+        ext: .sql
+        suffix:
+      - type: docker
+        pkg:
+        template: docker.ftl
+        ext:
+        suffix:
 
     excel:
       heads: {
@@ -84,7 +112,7 @@ spring:
         "备注/Comment": "comment"
       }
     database:
-      name: arch
+      name: arch_module
       driver: com.mysql.cj.jdbc.Driver
       url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
       username: root
@@ -92,6 +120,10 @@ spring:
       tables:
         - name: user
           comment: 用户表
+          pk:
+          fks: name,age
+          uniques:
+          indexs:
           columns:
             - name: id
               typ: bigint
@@ -105,5 +137,20 @@ spring:
               typ: int
               length: 2
               comment: 年龄
+        - name: account
+          comment: 账号表
+          pk:
+          fks: name,age
+          uniques:
+          indexs:
+          columns:
+            - name: id
+              typ: bigint
+              length: 19
+              comment: 主键id
+            - name: name
+              typ: varchar
+              length: 32
+              comment: 账号名
 
 

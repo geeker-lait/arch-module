@@ -2,7 +2,7 @@ package org.arch.framework.automate.generater.config;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.arch.framework.automate.generater.config.properties.*;
+import org.arch.framework.automate.generater.properties.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
@@ -179,7 +179,10 @@ public class GeneratorConfig {
     /** 是否覆盖 */
     private Boolean cover;
     private String author;
-    private String schema;
+    /**
+     * 源，指定是database/excel/json生成项目，默认数据库
+     */
+    private String source = "database";
     /** 模版配置 */
     @NestedConfigurationProperty
     private TemplateProperties template;
@@ -189,11 +192,15 @@ public class GeneratorConfig {
     /** 包集合 */
     @NestedConfigurationProperty
     private List<PackageProperties> packages;
+    /**
+     * json 数据源
+     */
+    private String json;
     /** Excel数据源 生产项目 */
     @NestedConfigurationProperty
     private ExcelProperties excel;
     /**
-     * Db数据源 生产仙姑
+     * Db数据源 生产项目
      */
     @NestedConfigurationProperty
     private DatabaseProperties database;

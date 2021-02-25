@@ -1,7 +1,9 @@
 package org.arch.framework.automate.from.service;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.api.Constants;
 import org.arch.framework.crud.CrudService;
 import org.arch.framework.automate.from.dao.FormFieldTypDao;
 import org.arch.framework.automate.from.entity.FormFieldTyp;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@DS(Constants.DATASOURCE_MASTER_FORM)
 public class FormFieldTypService extends CrudService<FormFieldTyp, java.lang.Long> {
     private final FormFieldTypDao formFieldTypDao = (FormFieldTypDao) crudDao;
 }
