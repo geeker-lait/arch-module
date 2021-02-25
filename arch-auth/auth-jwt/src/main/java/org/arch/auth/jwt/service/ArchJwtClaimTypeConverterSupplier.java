@@ -55,6 +55,7 @@ public class ArchJwtClaimTypeConverterSupplier implements JwtClaimTypeConverterS
     @NonNull
     public Map<String, Converter<Object, ?>> getConverter() {
         Map<String, Converter<Object, ?>> map = new HashMap<>(16);
+        map.put(JwtArchClaimNames.IDENTIFIER_ID.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
         map.put(JwtArchClaimNames.ACCOUNT_ID.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
         map.put(JwtArchClaimNames.NICK_NAME.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
         map.put(JwtArchClaimNames.AVATAR.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));

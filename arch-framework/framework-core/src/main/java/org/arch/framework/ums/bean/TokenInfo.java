@@ -20,8 +20,9 @@ public class TokenInfo implements Serializable {
     private static final long serialVersionUID = -1904982933624705568L;
 
     @Builder
-    public TokenInfo(Long accountId, Integer tenantId, String accountName, String nickName, String avatar,
+    public TokenInfo(Long identifierId, Long accountId, Integer tenantId, String accountName, String nickName, String avatar,
                      ChannelType channelType, Collection<GrantedAuthority> authorities) {
+        this.identifierId = identifierId;
         this.accountId = accountId;
         this.tenantId = tenantId;
         this.accountName = accountName;
@@ -30,6 +31,11 @@ public class TokenInfo implements Serializable {
         this.channelType = channelType;
         this.authorities = authorities;
     }
+
+    /**
+     * 账号标识(AccountIdentifier) id,
+     */
+    private Long identifierId;
 
     /**
      * 账号ID/用户ID/会员ID/商户ID

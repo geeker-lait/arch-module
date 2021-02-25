@@ -69,9 +69,11 @@ public class SecurityUtils {
     private static TokenInfo toTokenInfoFromUserDetails(@NonNull JwtAuthenticationToken authentication) {
         Jwt jwt = authentication.getToken();
         Long accountId = Long.valueOf(jwt.getClaimAsString(JwtArchClaimNames.ACCOUNT_ID.getClaimName()));
+        Long identifierId = Long.valueOf(jwt.getClaimAsString(JwtArchClaimNames.IDENTIFIER_ID.getClaimName()));
         Integer tenantId = Integer.valueOf(jwt.getClaimAsString(JwtArchClaimNames.TENANT_ID.getClaimName()));
         ChannelType channelType = ChannelType.valueOf(jwt.getClaimAsString(JwtArchClaimNames.CHANNEL_TYPE.getClaimName()));
         return TokenInfo.builder()
+                        .identifierId(identifierId)
                         .accountId(accountId)
                         .tenantId(tenantId)
                         // 这里的 ClaimName 必须与属性 ums.jwt.principalClaimName 值相同.

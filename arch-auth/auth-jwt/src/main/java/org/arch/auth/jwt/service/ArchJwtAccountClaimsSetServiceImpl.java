@@ -59,6 +59,7 @@ public class ArchJwtAccountClaimsSetServiceImpl implements CustomClaimsSetServic
     private void extractedClaimsSet2Builder(@NonNull UserDetails userDetails, @NonNull JWTClaimsSet.Builder builder) {
         if (userDetails instanceof ArchUser) {
             ArchUser user = ((ArchUser) userDetails);
+            builder.claim(JwtArchClaimNames.IDENTIFIER_ID.getClaimName(), user.getIdentifierId());
             builder.claim(JwtArchClaimNames.ACCOUNT_ID.getClaimName(), user.getAccountId());
             builder.claim(JwtArchClaimNames.TENANT_ID.getClaimName(), user.getTenantId());
             builder.claim(JwtArchClaimNames.CHANNEL_TYPE.getClaimName(), user.getChannelType());
