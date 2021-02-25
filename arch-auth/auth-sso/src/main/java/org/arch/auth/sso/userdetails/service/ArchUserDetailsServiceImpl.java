@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -208,8 +209,10 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
         // 保存第三方用户的 OauthToken 信息
         int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
-        RegisterUtils.saveOauthToken(authUser, authUser.getSource(), tenantContextHolder.getTenantId(),
-                                     authLoginDto.getId(), timeout, this.umsAccountAuthTokenFeignService);
+        umsAccountAuthTokenFeignService.save(toOauthToken(authUser,
+                                                          tenantContextHolder.getTenantId(),
+                                                          authLoginDto.getId(),
+                                                          timeout));
         return archUser;
 
 

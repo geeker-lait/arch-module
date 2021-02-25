@@ -3,6 +3,7 @@ package org.arch.auth.sso.oauth2.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthUser;
+import org.arch.auth.sso.oauth2.dto.ConnectionDataDto;
 import org.arch.auth.sso.properties.SsoProperties;
 import org.arch.auth.sso.utils.RegisterUtils;
 import org.arch.framework.api.IdKey;
@@ -36,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Objects.isNull;
+import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
 
 /**
  * arch 第三方登录时, 自动注册, 更新第三方用户信息, 绑定第三方用户到本地的服务实现..
@@ -66,7 +68,7 @@ public class ArchConnectionServiceImpl implements ConnectionService {
 
     @Override
     public void updateUserConnectionAndAuthToken(AuthUser authUser, ConnectionData connectionData) throws UpdateConnectionException {
-        // TODO
+        // todo
 
     }
 
@@ -80,14 +82,16 @@ public class ArchConnectionServiceImpl implements ConnectionService {
         if (isNull(authLoginDto)) {
             return null;
         }
-        ConnectionData connectionData = ConnectionData.builder()
-                                                      .userId(authLoginDto.getIdentifier())
-                                                      .providerUserId(providerUserId)
-                                                      .providerId(providerId)
-                                                      .displayName(authLoginDto.getNickName())
-                                                      .imageUrl(authLoginDto.getAvatar())
-                                                      .build();
-        return Collections.singletonList(connectionData);
+
+        ConnectionDataDto connectionDataDto = new ConnectionDataDto();
+        connectionDataDto.setIdentifierId(authLoginDto.getId());
+        connectionDataDto.setUserId(authLoginDto.getIdentifier());
+        connectionDataDto.setProviderId(providerId);
+        connectionDataDto.setProviderUserId(providerUserId);
+        connectionDataDto.setDisplayName(authLoginDto.getNickName());
+        connectionDataDto.setImageUrl(authLoginDto.getAvatar());
+
+        return Collections.singletonList(connectionDataDto);
     }
 
     /**
@@ -177,8 +181,10 @@ public class ArchConnectionServiceImpl implements ConnectionService {
 
         // 4. 保存第三方用户的 OauthToken 信息
         int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
-        RegisterUtils.saveOauthToken(authUser, providerId, tenantId, identifierRequest.getId(),
-                                     timeout, this.umsAccountAuthTokenFeignService);
+        umsAccountAuthTokenFeignService.save(toOauthToken(authUser,
+                                                          tenantContextHolder.getTenantId(),
+                                                          identifierRequest.getId(),
+                                                          timeout));
 
     }
 
