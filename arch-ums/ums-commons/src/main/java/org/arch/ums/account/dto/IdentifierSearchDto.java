@@ -27,7 +27,7 @@ public class IdentifierSearchDto implements BaseSearchDto {
     private Long id;
 
     /**
-     * 账号名ID
+     * 账号ID/用户ID/会员ID/商户ID
      */
     private Long aid;
 

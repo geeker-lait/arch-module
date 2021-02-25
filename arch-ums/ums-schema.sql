@@ -65,7 +65,7 @@ DROP TABLE IF EXISTS `account_identifier`;
 
 CREATE TABLE `account_identifier` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT 'AccountIdentifier ID',
-  `aid` bigint(19) NOT NULL COMMENT '账号名ID',
+  `aid` bigint(19) NOT NULL COMMENT '账号ID/用户ID/会员ID/商户ID',
   `identifier` varchar(32) NOT NULL COMMENT '识别标识:身份唯一标识，如：登录账号、邮箱地址、手机号码、QQ号码、微信号、微博号；',
   `credential` varchar(520) NOT NULL COMMENT '授权凭证【CREDENTIAL】：站内账号是密码、第三方登录是Token；',
   `authorities` varchar(255) DEFAULT NULL COMMENT '用户角色:ROLE_xxx 与 租户id: TENANT_XXX',
