@@ -5,31 +5,48 @@ import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.AbstractGenerator;
 import org.arch.framework.automate.generater.core.Buildable;
+import org.arch.framework.automate.generater.core.Generable;
 import org.arch.framework.automate.generater.core.TemplateName;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.PackageProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
+import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 
 @Slf4j
 @Component
-public class PoJoBuilder extends AbstractBuilder implements Buildable {
+public class MapperXmlBuilder extends AbstractBuilder implements Buildable {
+
 
     @Override
     public TemplateName getTemplateName() {
-        return TemplateName.DTO;
+        return TemplateName.MAPPER_XML;
     }
 
     @Override
-    public void build(boolean cover, Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) {
+    public void build(boolean cover, Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) throws IOException {
 
+        String fileName = buildFileName(packageProperties, "Mapper");
+        String ext = StringUtils.isEmpty(packageProperties.getExt()) ? "" : packageProperties.getExt();
+        Path filePath = Paths.get(path.resolve(Generable.MAIN_RESOURCES).toString().concat(File.separator).concat(fileName).concat(ext));
+        buildFile(cover,filePath);
+        Map<String, Object> dataMap = buildData(projectProperties,packageProperties,null);
+        dataMap.put("package", buildPkg(filePath));
+        dataMap.put("mainClass", fileName);
+        // 获取模板并渲染
+        String code = templateEngine.getTemplate(packageProperties.getTemplate()).render(dataMap);
+        // 写入文件
+        Files.write(filePath, code.getBytes());
     }
 
     @Override
@@ -41,9 +58,9 @@ public class PoJoBuilder extends AbstractBuilder implements Buildable {
         String p = filePath.toString();
         int l = p.indexOf(AbstractGenerator.MAIN_JAVA);
         int ll = p.lastIndexOf(File.separator);
-        String pkg = p.substring(l + AbstractGenerator.MAIN_JAVA.length(), ll).replaceAll(Matcher.quoteReplacement(File.separator), "\\.");
+        String pkg = p.substring(l+AbstractGenerator.MAIN_JAVA.length(),ll).replaceAll(Matcher.quoteReplacement(File.separator), "\\.");
         dataMap.put("package", pkg);
-        dataMap.put("stuffix", packageProperties.getSuffix());
+        dataMap.put("stuffix",packageProperties.getSuffix());
         dataMap.put("", "");
         return dataMap;
     }

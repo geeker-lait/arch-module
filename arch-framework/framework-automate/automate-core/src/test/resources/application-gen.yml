@@ -5,7 +5,7 @@ spring:
     template:
       dir: templates
       resource-mode: classpath
-    schema: database
+    source: database
     project:
       path: /arch-gen
       basePkg: org.arch.gen
@@ -23,7 +23,7 @@ spring:
           - artifactId: test-core
             groupId:
             version:
-            packageTypes: entity,dao,application,yml,ddl,docker
+            packageTypes: yml,entity,dao,application,ddl,docker,mapper,service
           - artifactId: arch-gen-common
             groupId:
             version:
@@ -40,12 +40,12 @@ spring:
               - artifactId: arch-gen-common-b
                 groupId:
                 version:
-                packageTypes: entity,dao,service
+                packageTypes: entity,dao,service,mapper
                 modules:
                   - artifactId: arch-gen-common-b-1
                     groupId:
                     version:
-                    packageTypes: entity,dao,service
+                    packageTypes: entity,dao,service,mapper
                   - artifactId: arch-gen-common-b-2
                     groupId:
                     version:
@@ -58,7 +58,7 @@ spring:
       - type: mapper
         pkg:
         template: mapper.ftl
-        suffix:
+        suffix: Mapper
       - type: dao
         pkg: dao
         template: dao.ftl
