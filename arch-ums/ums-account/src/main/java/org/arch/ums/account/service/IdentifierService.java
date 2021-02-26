@@ -56,7 +56,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
      * 逻辑删除时 identifier 需要添加的后缀的分隔符
      */
     public static final String IDENTIFIER_SUFFIX_SEPARATOR = "_";
-    private final IdentifierDao identifierDao;
+    private final IdentifierDao identifierDao = (IdentifierDao) crudDao;
     private final NameService nameService;
     private final IdService idService;
     private final TenantContextHolder tenantContextHolder;

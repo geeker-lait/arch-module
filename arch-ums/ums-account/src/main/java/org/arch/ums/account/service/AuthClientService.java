@@ -38,7 +38,7 @@ import static java.util.Objects.isNull;
 @Service
 public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
 
-    private final AuthClientDao authClientDao;
+    private final AuthClientDao authClientDao = (AuthClientDao) crudDao;
     /**
      * redisConnectionFactory.
      * 注意: 增加/更新/删除 操作后, 需要调用 {@link #setRedisSyncFlag()} 方法.
@@ -94,7 +94,7 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean save(AuthClient t) {
-        final boolean save = crudDao.save(t);
+        final boolean save = authClientDao.save(t);
         setRedisSyncFlag();
         return save;
     }
@@ -108,7 +108,7 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean saveList(List<AuthClient> authClientList) {
-        final boolean saveBatch = crudDao.saveBatch(authClientList);
+        final boolean saveBatch = authClientDao.saveBatch(authClientList);
         setRedisSyncFlag();
         return saveBatch;
     }
@@ -123,9 +123,10 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
     public boolean deleteById(Long id) {
         AuthClient authClient = new AuthClient();
         authClient.setId(id);
+        authClient.setDeleted(Boolean.FALSE);
         LambdaUpdateWrapper<AuthClient> updateWrapper = Wrappers.lambdaUpdate(authClient).set(AuthClient::getDeleted, 1);
         // 逻辑删除
-        final boolean remove = crudDao.update(updateWrapper);
+        final boolean remove = authClientDao.update(updateWrapper);
         setRedisSyncFlag();
         return remove;
     }
@@ -138,9 +139,10 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean deleteById(AuthClient t) {
+        t.setDeleted(Boolean.FALSE);
         LambdaUpdateWrapper<AuthClient> updateWrapper = Wrappers.lambdaUpdate(t).set(AuthClient::getDeleted, 1);
         // 逻辑删除
-        final boolean remove = crudDao.update(updateWrapper);
+        final boolean remove = authClientDao.update(updateWrapper);
         setRedisSyncFlag();
         return remove;
     }
@@ -154,11 +156,12 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean deleteAllById(List<Long> ids) {
         LambdaUpdateWrapper<AuthClient> updateWrapper = Wrappers.<AuthClient>lambdaUpdate()
-                                                                .in(AuthClient::getId, ids)
+                                                                .eq(AuthClient::getDeleted, 0)
+                                                                .and(w -> w.in(AuthClient::getId, ids))
                                                                 .set(AuthClient::getDeleted, 1);
 
         // 逻辑删除
-        final boolean remove = crudDao.update(updateWrapper);
+        final boolean remove = authClientDao.update(updateWrapper);
         setRedisSyncFlag();
         return remove;
     }
