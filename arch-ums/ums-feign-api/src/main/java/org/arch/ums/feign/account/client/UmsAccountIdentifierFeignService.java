@@ -1,6 +1,7 @@
 package org.arch.ums.feign.account.client;
 
 import org.arch.framework.beans.Response;
+import org.arch.framework.feign.BaseFeignService;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
@@ -28,7 +29,7 @@ import java.util.List;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-identifier", path = "/ums/account/identifier",
         configuration = UmsAccountDeFaultFeignConfig.class)
-public interface UmsAccountIdentifierFeignService {
+public interface UmsAccountIdentifierFeignService extends BaseFeignService<Identifier, Long> {
 
     /**
      * 通过 {@link Identifier#getIdentifier()} 来获取 {@link Identifier}
@@ -62,6 +63,7 @@ public interface UmsAccountIdentifierFeignService {
      * @param identifier     实体类
      * @return  {@link Response}
      */
+    @Override
     @NonNull
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     Response<Identifier> save(@RequestBody @Valid Identifier identifier);

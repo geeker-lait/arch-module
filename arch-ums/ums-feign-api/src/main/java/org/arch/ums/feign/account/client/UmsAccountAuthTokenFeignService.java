@@ -1,6 +1,7 @@
 package org.arch.ums.feign.account.client;
 
 import org.arch.framework.beans.Response;
+import org.arch.framework.feign.BaseFeignService;
 import org.arch.ums.account.entity.OauthToken;
 import org.arch.ums.feign.account.config.UmsAccountDeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -21,16 +22,7 @@ import javax.validation.Valid;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-oauthToken", path = "/ums/account/oauth/token",
         configuration = UmsAccountDeFaultFeignConfig.class)
-public interface UmsAccountAuthTokenFeignService {
-
-    /**
-     * 保存 oauthToken
-     * @param oauthToken     实体类
-     * @return  {@link Response}
-     */
-    @NonNull
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    Response<OauthToken> save(@RequestBody @Valid OauthToken oauthToken);
+public interface UmsAccountAuthTokenFeignService extends BaseFeignService<OauthToken, Long> {
 
     /**
      * 根据 identifierId 更新 oauthToken

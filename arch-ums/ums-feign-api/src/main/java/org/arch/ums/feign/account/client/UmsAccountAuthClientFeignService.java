@@ -1,6 +1,8 @@
 package org.arch.ums.feign.account.client;
 
 import org.arch.framework.beans.Response;
+import org.arch.framework.feign.BaseFeignService;
+import org.arch.ums.account.entity.AuthClient;
 import org.arch.ums.account.vo.AuthClientVo;
 import org.arch.ums.feign.account.config.UmsAccountDeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -23,7 +25,7 @@ import java.util.Set;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-oauthClient", path = "/ums/account/auth/client",
         configuration = UmsAccountDeFaultFeignConfig.class)
-public interface UmsAccountAuthClientFeignService {
+public interface UmsAccountAuthClientFeignService extends BaseFeignService<AuthClient, Long> {
 
     /**
      * 根据 clientId 与 clientSecret 查询 scopes
