@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TemplateProperties {
     private String dir;
-    private String resourceMode;
+    // 默认从classpath加载
+    private String resourceMode = "classpath";
     // 模板引擎
     private TemplateEngine templateEngine;
-
 }

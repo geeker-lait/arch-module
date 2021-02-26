@@ -8,6 +8,7 @@ import org.arch.framework.automate.generater.builder.bak.DdlProcessor;
 import org.arch.framework.automate.generater.builder.bak.EntityProcessor;
 import org.arch.framework.automate.generater.builder.bak.PomProcessor;
 import org.arch.framework.automate.generater.core.*;
+import org.arch.framework.automate.generater.core.read.SchemaReader;
 import org.arch.framework.automate.generater.render.RenderingRequest;
 
 import java.io.FileInputStream;
@@ -39,7 +40,8 @@ public class ProjectGenerater {
 
         FileInputStream fileInputStream = new FileInputStream(savePath + file);
         JSONArray gson = new JSONArray();
-        ModuleInfos<TableSchema> excelUtils = new ModuleInfos(file, fileInputStream, TableSchema.class);
+        SchemaReader excelUtils = new SchemaReader(savePath + file);
+        excelUtils.tableSchema(TableSchema.class).list();
         List<DatabaseInfo> databaseInfosList =  excelUtils.getDatabaseInfos();
         System.out.println(gson.toJSONString(databaseInfosList));
 

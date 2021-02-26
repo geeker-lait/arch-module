@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.core;
+package org.arch.framework.automate.generater.core.read;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.google.common.base.CaseFormat;
@@ -13,8 +13,13 @@ import org.arch.framework.automate.common.metadata.DatabaseInfo;
 import org.arch.framework.automate.common.metadata.EntityInfo;
 import org.arch.framework.automate.common.metadata.FieldInfo;
 import org.arch.framework.automate.common.utils.ExcelUtils;
+import org.arch.framework.automate.generater.core.ExcelHeadMap;
+import org.arch.framework.automate.generater.core.NameToField;
+import org.arch.framework.automate.generater.core.TableSchema;
+import org.arch.framework.automate.generater.properties.DatabaseProperties;
 
-import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,22 +27,88 @@ import java.util.Map;
 
 /**
  * @author lait.zhang@gmail.com
- * @description: TODO
+ * @description: schema 读取
  * @weixin PN15855012581
  * @date 12/20/2020 9:56 AM
  */
 @Slf4j
-public class ModuleInfos<T extends NameToField> {
+public class SchemaReader {
 
     @Getter
     private List<DatabaseInfo> databaseInfos;
+    private Workbook workbook;
+    private Class<? extends TableSchema> schemaClass;
 
-    public ModuleInfos(String filePath, InputStream inputStream, Class<T> t) throws Exception {
-        Workbook workbook = ExcelUtils.initWorkBook(filePath, inputStream);
-        init(workbook, t);
+    private SchemaReader() {
+
     }
 
-    public void init(Workbook workbook, Class<T> t) {
+    public SchemaReader(String file) throws IOException {
+        FileInputStream fileInputStream = new FileInputStream(file);
+        workbook = ExcelUtils.initWorkBook(file, fileInputStream);
+    }
+
+//    public SchemaReader read(String file) throws IOException {
+//        SchemaReader schemaReader = new SchemaReader();
+//        FileInputStream fileInputStream = new FileInputStream(file);
+//        workbook = ExcelUtils.initWorkBook(file, fileInputStream);
+//        return schemaReader;
+//    }
+
+    /**
+     * 读取excel
+     *
+     * @param excel
+     * @throws IOException
+     */
+    public static SchemaReader read(String excel) throws IOException {
+        SchemaReader schemaReader = new SchemaReader();
+        FileInputStream fileInputStream = new FileInputStream(excel);
+        schemaReader.workbook = ExcelUtils.initWorkBook(excel, fileInputStream);
+        return schemaReader;
+    }
+
+    /**
+     * 读取数据库
+     *
+     * @param host
+     * @param username
+     * @param password
+     * @param dbname
+     */
+    public static void read(String host, String username, String password, String... dbname) {
+
+    }
+
+    /**
+     * 获取数据库
+     *
+     * @param dbname
+     */
+    public DatabaseProperties getDatabase(String dbname) {
+        return null;
+    }
+
+
+    /**
+     * 获取数据库列表
+     *
+     * @return
+     */
+    public List<DatabaseProperties> getDatabases() {
+        return null;
+    }
+
+    /**
+     * 获取database列表
+     * @return
+     */
+    public List<DatabaseInfo> list() {
+        read(workbook, schemaClass);
+        return databaseInfos;
+    }
+
+    private <T extends NameToField> void read(Workbook workbook, Class<T> t) {
         databaseInfos = new ArrayList<>();
         Map<String, String> tables = new HashMap<>();
         for (int i = 0, length = workbook.getNumberOfSheets(); i < length; ++i) {
@@ -89,7 +160,7 @@ public class ModuleInfos<T extends NameToField> {
                         }
                     }
                 }
-                if(map.size()>0) {
+                if (map.size() > 0) {
                     //用来存储行列信息
                     T ta = BeanUtil.toBean(map, t);
                     ta.setRow(j + 1);
@@ -101,7 +172,7 @@ public class ModuleInfos<T extends NameToField> {
     }
 
 
-    public void addFields(T t, List<FieldInfo> fields) {
+    private <T extends NameToField> void addFields(T t, List<FieldInfo> fields) {
         TableSchema tableSchema;
         if (t != null && fields != null) {
             tableSchema = (TableSchema) t;
@@ -116,5 +187,15 @@ public class ModuleInfos<T extends NameToField> {
             fieldInfo.setType(tableSchema.getType());
             fields.add(fieldInfo);
         }
+    }
+
+    public SchemaReader tableSchema(Class<? extends TableSchema> schemaClass) {
+        this.schemaClass = schemaClass;
+        return this;
+    }
+
+
+    public class ExcelReader {
+
     }
 }

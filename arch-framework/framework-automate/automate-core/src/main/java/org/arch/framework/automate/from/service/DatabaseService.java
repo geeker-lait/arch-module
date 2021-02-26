@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.from.mapper.DDLMapper;
 import org.arch.framework.automate.from.utils.DefinitionTableUtil;
 import org.arch.framework.automate.generater.properties.ColumnsProperties;
@@ -69,7 +70,7 @@ public class DatabaseService {
             String length = columnType.indexOf("(") > 0 ? columnType.substring(columnType.indexOf("(") + 1, columnType.indexOf(")")) : null;
             ColumnsProperties columnsProperties = new ColumnsProperties();
             columnsProperties.setName(DefinitionTableUtil.lowerUnderscoreToLowerCamel(columnName));
-            columnsProperties.setTyp(DefinitionTableUtil.getFieldType(dataType).getSimpleName());
+            columnsProperties.setTyp(JdbcTypeUtils.getFieldType(dataType).getSimpleName());
             columnsProperties.setLength(length);
             columnsPropertiesList.add(columnsProperties);
         });

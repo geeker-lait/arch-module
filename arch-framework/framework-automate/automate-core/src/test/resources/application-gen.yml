@@ -5,7 +5,7 @@ spring:
     template:
       dir: templates
       resource-mode: classpath
-    source: database
+    source: excel
     project:
       path: /arch-gen
       basePkg: org.arch.gen
@@ -99,24 +99,25 @@ spring:
         suffix:
 
     excel:
+      file: classpath:uni-life-ums.xlsx
       heads: {
-        "表名/Table": "table",
-        "列名/Column": "column",
-        "数据类型/Type": "type",
-        "长度/Length": "length",
-        "是否为空/Null(Y,N)": "isnull",
-        "默认值/Default": "defaultValue",
-        "是否主键/Primary(Y,N)": "primaryKey",
-        "是否唯一/Unique(Y,N)": "unique",
-        "外键/Forigen(可空)": "forienKey",
-        "备注/Comment": "comment"
+        table: "表名/Table",
+        column: "列名/Column",
+        type: "数据类型/Type",
+        length: "长度/Length",
+        isnull: "是否为空/Null",
+        defaultValue: "默认值/Default",
+        pk: "是否主键/Primary(Y,N)",
+        fks: "外键/Forigen(可空)",
+        uniques: "是否唯一/Unique(Y,N)",
+        comment: "备注/Comment"
       }
     database:
-      name: arch_module
       driver: com.mysql.cj.jdbc.Driver
       url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
       username: root
       password: root
+      name: arch_module
       tables:
         - name: user
           comment: 用户表

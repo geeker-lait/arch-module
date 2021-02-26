@@ -19,4 +19,5 @@ public class ColumnsProperties {
     private String name;
     private String typ;
     private String length;
+    private String comment;
 }
