@@ -157,7 +157,7 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
      * @return  {@link Response}
      */
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    default Response<IPage<T>> pageFeign(T entity,
+    default Response<IPage<T>> page(T entity,
                                     @PathVariable(value = "pageNumber") Integer pageNumber,
                                     @PathVariable(value = "pageSize") Integer pageSize,
                                     TokenInfo token) {
