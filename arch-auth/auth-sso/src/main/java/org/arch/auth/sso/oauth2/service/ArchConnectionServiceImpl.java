@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
+import top.dcenter.ums.security.common.utils.JsonUtil;
 import top.dcenter.ums.security.core.api.oauth.entity.ConnectionData;
 import top.dcenter.ums.security.core.api.oauth.repository.exception.UpdateConnectionException;
 import top.dcenter.ums.security.core.api.oauth.signup.ConnectionService;
@@ -65,8 +66,47 @@ public class ArchConnectionServiceImpl implements ConnectionService {
     @NonNull
     @Override
     public UserDetails signUp(@NonNull AuthUser authUser, @NonNull String providerId, @NonNull String encodeState) throws RegisterUserFailureException {
-        // TODO
-        return null;
+
+        // 这里为第三方登录自动注册时调用，所以这里不需要实现对用户信息的注册，可以在用户登录完成后提示用户修改用户信息。
+        try {
+            String[] usernames = umsUserDetailsService.generateUsernames(authUser);
+            // 1. 重名检查
+            String username = null;
+            final List<Boolean> existedByUserIds = umsUserDetailsService.existedByUsernames(usernames);
+            for(int i = 0, len = existedByUserIds.size(); i < len; i++) {
+                if (!existedByUserIds.get(i))
+                {
+                    username = usernames[i];
+                    break;
+                }
+            }
+            // 2. 用户重名, 自动注册失败
+            if (username == null)
+            {
+                throw new RegisterUserFailureException(ErrorCodeEnum.USERNAME_USED, authUser.getUsername());
+            }
+
+            // 解密 encodeState  目前不需要
+
+            // 3. 注册到本地账户
+            String tenantId = tenantContextHolder.getTenantId();
+            String defaultAuthorities = RegisterUtils.getDefaultAuthorities(ssoProperties, tenantId);
+            ArchUser archUser = (ArchUser) umsUserDetailsService.registerUser(authUser, username,
+                                                                              defaultAuthorities, null);
+
+            // 4. 保存第三方用户的 OauthToken 信息
+            int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
+            umsAccountAuthTokenFeignService.save(toOauthToken(authUser, tenantId,
+                                                              archUser.getIdentifierId(), timeout));
+            return archUser;
+        }
+        catch (Exception e) {
+            String source = authUser.getSource();
+            log.error(String.format("OAuth2自动注册失败: error=%s, provider=%s, authUser=%s",
+                                    e.getMessage(), source, JsonUtil.toJsonString(authUser)), e);
+            throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, source);
+        }
+
     }
 
     @Override
