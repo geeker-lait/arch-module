@@ -58,7 +58,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     /**
      * 用于用户名密码注册时在 request 中传递 {@link RegRequest} 参数的参数名称.
      */
-    public static final String REG_REQUEST_PARAMETER_NAME = "regRequest";
+    public static final String REG_REQUEST_PARAMETER_NAME = "UNPW_regRequest";
 
     /**
      * 用于密码加解密
