@@ -1,13 +1,10 @@
 package org.arch.ums.account.controller;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
@@ -28,9 +25,7 @@ import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.jwt.JwtContext;
 
 import javax.validation.constraints.NotNull;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -171,14 +166,14 @@ public class IdentifierController implements CrudController<Identifier, java.lan
             return Response.success(Boolean.FALSE);
         }
 
-        Integer tenantId = Integer.valueOf(tenantContextHolder.getTenantId());
         try {
-            // 获取 Identifier
-            Identifier identifier = identifierService.findById(id);
             // 逻辑删除
-            Response<Boolean> success = Response.success(identifierService.logicDeletedByIdentifier(tenantId, identifier));
-            JwtContext.addReAuthFlag(SecurityUtils.getCurrentUserId().toString());
-            SecurityContextHolder.clearContext();
+            boolean deleteByIdResult = identifierService.deleteById(id);
+            Response<Boolean> success = Response.success(deleteByIdResult);
+            if (deleteByIdResult) {
+                JwtContext.addReAuthFlag(SecurityUtils.getCurrentUserId().toString());
+                SecurityContextHolder.clearContext();
+            }
             return success;
         }
         catch (Exception e) {
@@ -205,29 +200,13 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     public Response<Boolean> logicDeleteByIdentifier(@PathVariable(value = "identifier") String identifier) {
         Integer tenantId = Integer.valueOf(tenantContextHolder.getTenantId());
         try {
-            // 获取 Identifier
-            Map<String, Object> params = new LinkedHashMap<>(3, 1.F);
-            params.put("tenant_id", tenantId);
-            params.put("identifier", identifier);
-            params.put("channel_type", ChannelType.OAUTH2);
-            Wrapper<Identifier> queryWrapper = Wrappers.<Identifier>query().allEq(params);
-            Identifier accountIdentifier = identifierService.findOneBySpec(queryWrapper);
-            if (isNull(accountIdentifier)) {
-                return Response.success(Boolean.FALSE, identifier + " 账号不存在");
-            }
-
-            Long id = accountIdentifier.getId();
-            Long identifierId = SecurityUtils.getCurrentUser().getIdentifierId();
-            if (!identifierId.equals(id)) {
-                log.error("删除用户 id 与 当前用户 id 不匹配: tenantId: {}, id: {}, currentUserId: {}",
-                          tenantContextHolder.getTenantId(), id, identifierId);
-                return Response.success(Boolean.FALSE);
-            }
-
             // 逻辑删除
-            Response<Boolean> success = Response.success(identifierService.logicDeletedByIdentifier(tenantId, accountIdentifier));
-            JwtContext.addReAuthFlag(SecurityUtils.getCurrentUserId().toString());
-            SecurityContextHolder.clearContext();
+            Response<Boolean> success = identifierService.logicDeletedByIdentifier(tenantId, identifier);
+            Boolean successData = success.getSuccessData();
+            if (nonNull(successData) && successData) {
+                JwtContext.addReAuthFlag(SecurityUtils.getCurrentUserId().toString());
+                SecurityContextHolder.clearContext();
+            }
             return success;
         }
         catch (Exception e) {
@@ -251,26 +230,11 @@ public class IdentifierController implements CrudController<Identifier, java.lan
      */
     @DeleteMapping(value = "/unbinding/{aid}/{identifier}")
     @NonNull
-    Response<Boolean> unbinding(@PathVariable(value = "aid") Long aid,
+    public Response<Boolean> unbinding(@PathVariable(value = "aid") Long aid,
                                 @PathVariable(value = "identifier") String identifier) {
-        Integer tenantId = Integer.valueOf(tenantContextHolder.getTenantId());
         try {
-            // 获取 Identifier
-            Map<String, Object> params = new LinkedHashMap<>(5, 1.F);
-            params.put("tenant_id", tenantId);
-            params.put("identifier", identifier);
-            params.put("aid", aid);
-            params.put("channel_type", ChannelType.OAUTH2);
-            params.put("deleted", 0);
-            Wrapper<Identifier> queryWrapper = Wrappers.<Identifier>query().allEq(params);
-            Identifier accountIdentifier = identifierService.findOneBySpec(queryWrapper);
-
-            if (isNull(accountIdentifier)) {
-                return Response.success(Boolean.TRUE);
-            }
-
             // 解绑
-            return Response.success(identifierService.unbinding(tenantId, accountIdentifier));
+            return Response.success(identifierService.unbinding(identifier, aid));
         }
         catch (Exception e) {
             log.error(String.format("解绑失败: aid: %s, tenantId: %s, identifier: %s",

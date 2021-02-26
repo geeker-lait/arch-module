@@ -31,7 +31,6 @@ public class NameController implements CrudController<Name, Long, NameSearchDto,
 
     @Override
     public Name resolver(TokenInfo token, Name name) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 name 后返回 name, 如: tenantId 的处理等.
         if (nonNull(token) && nonNull(token.getTenantId())) {
             name.setTenantId(token.getTenantId());
         }
