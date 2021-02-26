@@ -83,17 +83,16 @@ public class PhoneSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
-        // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
+        putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_user_id", this.getUserId(), map);
+        putNoNull("EQ_sorted", this.getSorted(), map);
+        putNoNull("EQ_deleted", this.getDeleted(), map);
+        putNoNull("EQ_app_id", this.getAppId(), map);
+        putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_phone_no", this.getPhoneNo(), map);
         putNoNull("EQ_location", this.getLocation(), map);
         putNoNull("EQ_mno", this.getMno(), map);
-        putNoNull("EQ_sorted", this.getSorted(), map);
-        putNoNull("EQ_tenant_id", this.getTenantId(), map);
-        putNoNull("EQ_app_id", this.getAppId(), map);
-        putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_rev", this.getRev(), map);
         putNoNull("EQ_st", this.getSt(), map);
-        putNoNull("EQ_deleted", this.getDeleted(), map);
     }
 }

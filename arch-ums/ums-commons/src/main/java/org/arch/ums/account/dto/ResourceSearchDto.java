@@ -16,6 +16,7 @@ import java.util.Map;
  * @date 2021-01-29 21:22:56
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
@@ -108,8 +109,13 @@ public class ResourceSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
-        // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
+        putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_category_id", this.getCategoryId(), map);
+        putNoNull("EQ_level", this.getLevel(), map);
+        putNoNull("EQ_visible", this.getVisible(), map);
+        putNoNull("EQ_deleted", this.getDeleted(), map);
+        putNoNull("EQ_app_id", this.getAppId(), map);
+        putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_resource_name", this.getResourceName(), map);
         putNoNull("EQ_resource_code", this.getResourceCode(), map);
         putNoNull("EQ_resource_type", this.getResourceType(), map);
@@ -117,13 +123,7 @@ public class ResourceSearchDto implements BaseSearchDto {
         putNoNull("EQ_resource_path", this.getResourcePath(), map);
         putNoNull("EQ_resource_icon", this.getResourceIcon(), map);
         putNoNull("EQ_resource_desc", this.getResourceDesc(), map);
-        putNoNull("EQ_visible", this.getVisible(), map);
-        putNoNull("EQ_level", this.getLevel(), map);
-        putNoNull("EQ_tenant_id", this.getTenantId(), map);
-        putNoNull("EQ_app_id", this.getAppId(), map);
-        putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_rev", this.getRev(), map);
         putNoNull("EQ_st", this.getSt(), map);
-        putNoNull("EQ_deleted", this.getDeleted(), map);
     }
 }

@@ -16,6 +16,7 @@ import java.util.Map;
  * @date 2021-01-29 23:06:44
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
@@ -103,9 +104,12 @@ public class IdCardSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
-        // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
+        putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_user_id", this.getUserId(), map);
         putNoNull("EQ_id_card", this.getIdCard(), map);
+        putNoNull("EQ_deleted", this.getDeleted(), map);
+        putNoNull("EQ_app_id", this.getAppId(), map);
+        putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_name", this.getName(), map);
         putNoNull("EQ_age", this.getAge(), map);
         putNoNull("EQ_sex", this.getSex(), map);
@@ -113,11 +117,7 @@ public class IdCardSearchDto implements BaseSearchDto {
         putNoNull("EQ_nation", this.getNation(), map);
         putNoNull("EQ_domicile", this.getDomicile(), map);
         putNoNull("EQ_sign_org", this.getSignOrg(), map);
-        putNoNull("EQ_tenant_id", this.getTenantId(), map);
-        putNoNull("EQ_app_id", this.getAppId(), map);
-        putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_rev", this.getRev(), map);
         putNoNull("EQ_st", this.getSt(), map);
-        putNoNull("EQ_deleted", this.getDeleted(), map);
     }
 }

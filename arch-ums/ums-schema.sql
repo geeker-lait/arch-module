@@ -369,7 +369,7 @@ CREATE TABLE `account_role_menu` (
  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
  PRIMARY KEY (`id`),
- UNIQUE KEY `IDX_tenantId_roleId_menuId_tenantId` (`tenant_id`, `role_id`,`menu_id`)
+ UNIQUE KEY `IDX_tenantId_roleId_menuId` (`tenant_id`, `role_id`,`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色菜单';
 
 /*Table structure for table `account_role_permission` */
