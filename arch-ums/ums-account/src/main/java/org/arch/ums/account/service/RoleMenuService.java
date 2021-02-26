@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class RoleMenuService extends CrudService<RoleMenu, java.lang.Long> {
-    private final RoleMenuDao roleMenuDao = (RoleMenuDao) crudDao;
+    private final RoleMenuDao roleMenuDao;
 
     /**
      * 逻辑删除

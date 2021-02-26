@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class BankCardService extends CrudService<BankCard, java.lang.Long> {
-    private final BankCardDao bankCardDao = (BankCardDao) crudDao;
+    private final BankCardDao bankCardDao;
 
     /**
      * 逻辑删除

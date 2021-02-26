@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class ResourceService extends CrudService<Resource, java.lang.Long> {
-    private final ResourceDao resourceDao = (ResourceDao) crudDao;
+    private final ResourceDao resourceDao;
 
     /**
      * 逻辑删除

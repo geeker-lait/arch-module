@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class CategoryService extends CrudService<Category, java.lang.Long> {
-    private final CategoryDao categoryDao = (CategoryDao) crudDao;
+    private final CategoryDao categoryDao;
 
     /**
      * 逻辑删除

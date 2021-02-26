@@ -2,14 +2,11 @@ package org.arch.ums.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import org.arch.ums.user.entity.Job;
-import org.arch.ums.user.dao.JobDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.lang.Long;
-
 import org.arch.framework.crud.CrudService;
+import org.arch.ums.user.dao.JobDao;
+import org.arch.ums.user.entity.Job;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -28,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class JobService extends CrudService<Job, java.lang.Long> {
-    private final JobDao jobDao = (JobDao) crudDao;
+    private final JobDao jobDao;
 
     /**
      * 逻辑删除

@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class AddressService extends CrudService<Address, java.lang.Long> {
-    private final AddressDao addressDao = (AddressDao) crudDao;
+    private final AddressDao addressDao;
 
     /**
      * 逻辑删除

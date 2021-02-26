@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class RoleGroupService extends CrudService<RoleGroup, java.lang.Long> {
-    private final RoleGroupDao roleGroupDao = (RoleGroupDao) crudDao;
+    private final RoleGroupDao roleGroupDao;
 
     /**
      * 逻辑删除

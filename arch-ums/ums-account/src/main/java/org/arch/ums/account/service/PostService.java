@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class PostService extends CrudService<Post, java.lang.Long> {
-    private final PostDao postDao = (PostDao) crudDao;
+    private final PostDao postDao;
 
     /**
      * 逻辑删除

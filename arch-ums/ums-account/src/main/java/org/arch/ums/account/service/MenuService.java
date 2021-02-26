@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class MenuService extends CrudService<Menu, java.lang.Long> {
-    private final MenuDao menuDao = (MenuDao) crudDao;
+    private final MenuDao menuDao;
 
     /**
      * 逻辑删除

@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class OperateLogService extends CrudService<OperateLog, java.lang.Long> {
-    private final OperateLogDao operateLogDao = (OperateLogDao) crudDao;
+    private final OperateLogDao operateLogDao;
 
     /**
      * 逻辑删除

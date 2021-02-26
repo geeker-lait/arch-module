@@ -26,7 +26,7 @@ import java.util.List;
 @Service
 public class NameService extends CrudService<Name, java.lang.Long> {
 
-    private final NameDao nameDao = (NameDao) crudDao;
+    private final NameDao nameDao;
 
     /**
      * 逻辑删除

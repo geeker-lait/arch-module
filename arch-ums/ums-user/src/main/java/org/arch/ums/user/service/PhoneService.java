@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class PhoneService extends CrudService<Phone, java.lang.Long> {
-    private final PhoneDao phoneDao = (PhoneDao) crudDao;
+    private final PhoneDao phoneDao;
 
     /**
      * 逻辑删除

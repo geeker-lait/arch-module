@@ -28,7 +28,7 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @Service
 public class OauthTokenService extends CrudService<OauthToken, java.lang.Long> {
-    private final OauthTokenDao oauthTokenDao = (OauthTokenDao) crudDao;
+    private final OauthTokenDao oauthTokenDao;
 
     /**
      * 根据 identifierId 更新 oauthToken

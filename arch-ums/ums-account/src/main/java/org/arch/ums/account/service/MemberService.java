@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class MemberService extends CrudService<Member, java.lang.Long> {
-    private final MemberDao memberDao = (MemberDao) crudDao;
+    private final MemberDao memberDao;
 
     /**
      * 逻辑删除

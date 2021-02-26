@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class RelativesService extends CrudService<Relatives, java.lang.Long> {
-    private final RelativesDao relativesDao = (RelativesDao) crudDao;
+    private final RelativesDao relativesDao;
 
     /**
      * 逻辑删除

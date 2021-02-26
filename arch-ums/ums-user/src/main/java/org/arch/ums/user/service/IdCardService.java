@@ -28,7 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class IdCardService extends CrudService<IdCard, java.lang.Long> {
-    private final IdCardDao idCardDao = (IdCardDao) crudDao;
+    private final IdCardDao idCardDao;
 
     /**
      * 逻辑删除

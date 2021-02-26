@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class RolePermissionService extends CrudService<RolePermission, java.lang.Long> {
-    private final RolePermissionDao rolePermissionDao = (RolePermissionDao) crudDao;
+    private final RolePermissionDao rolePermissionDao;
 
     /**
      * 逻辑删除

@@ -38,7 +38,8 @@ import static java.util.Objects.isNull;
 @Service
 public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
 
-    private final AuthClientDao authClientDao = (AuthClientDao) crudDao;
+    private final AuthClientDao authClientDao;
+
     /**
      * redisConnectionFactory.
      * 注意: 增加/更新/删除 操作后, 需要调用 {@link #setRedisSyncFlag()} 方法.

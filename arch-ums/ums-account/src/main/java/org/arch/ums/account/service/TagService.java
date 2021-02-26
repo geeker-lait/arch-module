@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class TagService extends CrudService<Tag, java.lang.Long> {
-    private final TagDao tagDao = (TagDao) crudDao;
+    private final TagDao tagDao;
 
     /**
      * 逻辑删除

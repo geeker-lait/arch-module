@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class TicketService extends CrudService<Ticket, java.lang.Long> {
-    private final TicketDao ticketDao = (TicketDao) crudDao;
+    private final TicketDao ticketDao;
 
     /**
      * 逻辑删除

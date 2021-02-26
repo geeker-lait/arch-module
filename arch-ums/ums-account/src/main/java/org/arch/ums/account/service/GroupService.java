@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class GroupService extends CrudService<Group, java.lang.Long> {
-    private final GroupDao groupDao = (GroupDao) crudDao;
+    private final GroupDao groupDao;
 
     /**
      * 逻辑删除
