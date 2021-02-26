@@ -47,10 +47,10 @@ public abstract class AbstractGenerator implements Generable {
         TemplateConfig.ResourceMode resourceMode = EnumUtil.fromString(TemplateConfig.ResourceMode.class, StringUtils.upperCase(templateProperties.getResourceMode()));
         TemplateConfig templateConfig = new TemplateConfig(templateProperties.getDir(), resourceMode);
         engine = TemplateUtil.createEngine(templateConfig);
-        packagePropertiesMap.putAll(generatorConfig.getPackages().stream().collect(Collectors.toMap(PackageProperties::getType, Function.identity())));
+        packagePropertiesMap.putAll(generatorConfig.getDocuments().stream().collect(Collectors.toMap(PackageProperties::getType, Function.identity())));
         builderMap.putAll(builders.stream().collect(Collectors.toMap(b -> b.getTemplateName().getTemplate(), Function.identity())));
         schemaReaderMap.putAll(schemaReadables.stream().collect(Collectors.toMap(s -> s.getSource().getSource(), Function.identity())));
-        cover = generatorConfig.getCover();
+        cover = generatorConfig.getProject().getCover();
     }
 
 
@@ -70,11 +70,11 @@ public abstract class AbstractGenerator implements Generable {
         ProjectProperties projectProperties = generatorConfig.getProject();
         PomProperties pomProperties = projectProperties.getPom();
         List<DatabaseProperties> databasePropertiesList;
-        // 确定生成源
-        if (StringUtils.isEmpty(generatorConfig.getSource())) {
-            throw new CodegenException("must assign source");
-        }
         String source = generatorConfig.getSource();
+        // 确定生成源
+        if (StringUtils.isEmpty(source)) {
+            throw new CodegenException("must assign a source name,it can be database or excel or json");
+        }
         // 默认支持database,如果是excel 转换为database
         if (source.equalsIgnoreCase("database")) {
             String databaseName = generatorConfig.getDatabase().getName();
@@ -89,12 +89,10 @@ public abstract class AbstractGenerator implements Generable {
             }
             databasePropertiesList = schemaReaderMap.get(source).read(excelProperties);
         } else if (source.equalsIgnoreCase("json")) {
-            // json 转换为 database 对象
-            databasePropertiesList = null;
+            databasePropertiesList = schemaReaderMap.get(source).read(generatorConfig.getJson());
         } else {
             throw new CodegenException("not support source");
         }
-
         // 创建根目录
         Path rootPath = projectProperties.getProjectRootPath();
         Files.createDirectories(rootPath);

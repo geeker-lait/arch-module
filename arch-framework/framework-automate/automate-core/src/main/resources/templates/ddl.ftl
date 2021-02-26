@@ -1,17 +1,17 @@
-CREATE DATABASE IF NOT EXISTS `arch_module`;
-USE `arch_module`;
-<#list databaseInfos! as module>
 -- 若库不存在创建一个
-<#--CREATE DATABASE IF NOT EXISTS `${module.moduleName!"arch_lait"}`;
-USE `${module.moduleName!"arch_lait"}`;-->
+CREATE DATABASE IF NOT EXISTS `${(database?replace("([a-z])([A-Z]+)","$1_$2","r")?lower_case)!""}`;
+USE `${(database?replace("([a-z])([A-Z]+)","$1_$2","r")?lower_case)!""}`;
 
-<#list module.entityInfos as entity>
-CREATE TABLE IF NOT EXISTS `${entity.tableName!"tb_"+entity_index}`(
-    <#list entity.fields as field>
-    `${field.name!""}` <#if field.type?? && (field.type == 'datetime' || field.type == 'boolean')>${field.type!""}<#elseif field.type??> ${field.type!""}(${field.length!"255"})</#if> COMMENT '${field.comment!""}',
+<#list tables as table>
+<#if cover == true>
+DROP TABLE `${(table.name?replace("([a-z])([A-Z]+)","$1_$2","r")?lower_case)!"tb_"+table_index}`;
+</#if>
+CREATE TABLE IF NOT EXISTS `${(table.name?replace("([a-z])([A-Z]+)","$1_$2","r")?lower_case)!"tb_"+table_index}`(
+    <#list table.columns as column>
+    `${(column.name?replace("([a-z])([A-Z]+)","$1_$2","r")?lower_case)!""}` <#if column.typ?? && (column.typ == 'datetime' || column.typ == 'boolean')>${column.typ!""}<#elseif column.typ??> ${column.typ!""}(${column.length!"255"})</#if> COMMENT '${column.comment!""}',
     </#list>
     `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='${entity.comment!""}';
-</#list>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='${table.comment!""}';
+
 </#list>

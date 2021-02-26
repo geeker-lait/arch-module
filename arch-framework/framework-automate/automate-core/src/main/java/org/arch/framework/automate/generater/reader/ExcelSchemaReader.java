@@ -1,8 +1,7 @@
-package org.arch.framework.automate.generater.core.read;
+package org.arch.framework.automate.generater.reader;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
-import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
@@ -77,7 +76,7 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
                             String val = tableMap.get(key);
                             if (!StringUtils.isNotBlank(val)) {
                                 tableMap.put(key, table);
-                                log.info("current table name is : {}" + key);
+                                log.info("current table name is {}" + key);
                                 String tc[] = table.split("/");
                                 tableProperties = new TableProperties();
                                 tableProperties.setName(tc[1]);
@@ -98,12 +97,17 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
                 }
                 // 对每一行信息转换为对象
                 if (map.size() > 0) {
-                    ColumnsProperties columnsProperties = new ColumnsProperties();
                     TableSchema tableSchema = BeanUtil.toBean(map, TableSchema.class);
+                    /*Class c = JdbcTypeUtils.getFieldType(tableSchema.getType());
+                    if(c == null){
+                        log.info("jdbc type convert to java type is error {}",tableSchema);
+                        continue;
+                    }*/
+                    ColumnsProperties columnsProperties = new ColumnsProperties();
                     columnsProperties.setName(tableSchema.getColumn());
                     columnsProperties.setComment(tableSchema.getComment());
                     columnsProperties.setLength(tableSchema.getLength());
-                    columnsProperties.setTyp(JdbcTypeUtils.getFieldType(tableSchema.getType()).getSimpleName());
+                    columnsProperties.setTyp(tableSchema.getType());
                     columns.add(columnsProperties);
                 }
             }

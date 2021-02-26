@@ -31,9 +31,15 @@ import java.nio.file.Paths;
 @Data
 @NoArgsConstructor
 public class ProjectProperties {
+    /**
+     * 是否覆盖
+     */
+    private Boolean cover;
+    private String author;
     private String path;
     private String name;
     private String basePkg;
+    private Boolean domain = true;
     @NestedConfigurationProperty
     private PomProperties pom;
 

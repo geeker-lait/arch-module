@@ -1,16 +1,17 @@
 spring:
   generator:
-    cover: true
-    author: lait
+    source: excel
     template:
       dir: templates
       resource-mode: classpath
-    source: excel
     project:
-      path: /arch-gen
+      cover: true
+      author: lait
+      domain: false
+      path: arch-gen
       basePkg: org.arch.gen
       pom:
-        artifactId: arch-test
+        artifactId: arch-test1
         groupId: org.arch.projects
         version: 0.0.1
         dependencyManagement:
@@ -20,14 +21,13 @@ spring:
             type: pom
             scope: import
         modules:
-          - artifactId: test-core
+          - artifactId: test-core1
             groupId:
             version:
-            packageTypes: yml,entity,dao,application,ddl,docker,mapper,service
+            documentTypes: yml,entity,dao,application,ddl,docker,mapper,service
           - artifactId: arch-gen-common
             groupId:
             version:
-            packageTypes: dao
             dependencies:
               - groupId: org.arch.projects
                 artifactId: arch-gen-core
@@ -36,21 +36,19 @@ spring:
               - artifactId: arch-gen-common-a
                 groupId:
                 version:
-                packageIds: dao
+                documentTypes: dao
               - artifactId: arch-gen-common-b
                 groupId:
                 version:
-                packageTypes: entity,dao,service,mapper
                 modules:
                   - artifactId: arch-gen-common-b-1
                     groupId:
                     version:
-                    packageTypes: entity,dao,service,mapper
+                    documentTypes: entity,dao,service,mapper
                   - artifactId: arch-gen-common-b-2
                     groupId:
                     version:
-                    packageTypes:
-    packages:
+    documents:
       - type: entity
         pkg: aa.entity
         template: entity.ftl
@@ -67,7 +65,7 @@ spring:
       - type: service
         pkg: service
         template: service.ftl
-        suffix:
+        suffix: Service
       - type: controller
         pkg:
         template: controller.ftl
@@ -88,10 +86,10 @@ spring:
         bootstrap:
         suffix:
       - type: ddl
-        pkg:
+        pkg: ddl
         template: ddl.ftl
         ext: .sql
-        suffix:
+        suffix: -schema
       - type: docker
         pkg:
         template: docker.ftl
@@ -117,7 +115,7 @@ spring:
       url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
       username: root
       password: root
-      name: arch_module
+      name: arch_module,arch
       tables:
         - name: user
           comment: 用户表

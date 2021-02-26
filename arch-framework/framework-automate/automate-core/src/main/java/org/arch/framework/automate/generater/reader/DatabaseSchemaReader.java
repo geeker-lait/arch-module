@@ -1,6 +1,7 @@
-package org.arch.framework.automate.generater.core.read;
+package org.arch.framework.automate.generater.reader;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.from.service.DatabaseService;
 import org.arch.framework.automate.generater.core.SchemaReadable;
 import org.arch.framework.automate.generater.core.SourceName;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;

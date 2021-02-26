@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public final class TableSchema implements NameToField {
+public final class TableSchema {
     private Integer row;
     private String table;
     private String column;
@@ -23,14 +23,4 @@ public final class TableSchema implements NameToField {
     private String unique;
     private String forienKey;
     private String comment;
-
-    @Override
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return true;
-    }
 }

@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.core.read;
+package org.arch.framework.automate.generater.reader;
 
 import org.arch.framework.automate.from.service.DatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,5 +12,4 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractSchemaReader {
     @Autowired
-    protected DatabaseService databaseService;
-}
+    protected DatabaseService databaseService;}

@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.core.read;
+package org.arch.framework.automate.generater.reader;
 
 import org.arch.framework.automate.generater.core.SchemaReadable;
 import org.arch.framework.automate.generater.core.SourceName;

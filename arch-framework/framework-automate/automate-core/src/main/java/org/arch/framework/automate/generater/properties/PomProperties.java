@@ -26,8 +26,8 @@ public class PomProperties implements DataProperties {
     private String version;
     // pom 类型 pom/jar
     private String packaging;
-    // 包类型，即该pom模块下有哪些包类型
-    private String packageTypes;
+    // 包类型，即该pom模块下有哪些文档类型
+    private String documentTypes;
     // 父节点
     @NestedConfigurationProperty
     private DependencieProterties parent;

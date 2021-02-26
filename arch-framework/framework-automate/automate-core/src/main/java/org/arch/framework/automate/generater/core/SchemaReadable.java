@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface SchemaReadable<S extends SchemaSource> {
     /**
-     * 获取读取器
+     * 获取读取源
      *
      * @return
      */

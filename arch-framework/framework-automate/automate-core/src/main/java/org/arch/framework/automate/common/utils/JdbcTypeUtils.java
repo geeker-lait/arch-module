@@ -1,5 +1,8 @@
 package org.arch.framework.automate.common.utils;
 
+import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.beans.utils.StringUtils;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +14,7 @@ import java.util.Map;
  * @weixin PN15855012581
  * @date 2/26/2021 6:50 PM
  */
+@Slf4j
 public class JdbcTypeUtils {
     private static final Map<String, Class> sqlFieldTypeMapping = new HashMap<>();
 
@@ -39,6 +43,9 @@ public class JdbcTypeUtils {
     }
 
     public static Class getFieldType(String columnType) {
+        if(StringUtils.isEmpty(columnType)){
+            return null;
+        }
         Class aClass = sqlFieldTypeMapping.get(columnType);
         if (aClass == null) {
             return sqlFieldTypeMapping.get(columnType.toUpperCase());
