@@ -83,6 +83,7 @@ public class IdentifierSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
+        putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_identifier", this.getIdentifier(), map);
         putNoNull("EQ_aid", this.getAid(), map);

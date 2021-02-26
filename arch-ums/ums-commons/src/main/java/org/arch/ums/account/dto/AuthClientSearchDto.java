@@ -78,6 +78,7 @@ public class AuthClientSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
+        putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_client_id", this.getClientId(), map);
         putNoNull("EQ_client_secret", this.getClientSecret(), map);

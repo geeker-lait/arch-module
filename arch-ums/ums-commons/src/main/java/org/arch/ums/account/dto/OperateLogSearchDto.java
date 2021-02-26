@@ -78,6 +78,7 @@ public class OperateLogSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
+        putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_account_id", this.getAccountId(), map);
         putNoNull("EQ_deleted", this.getDeleted(), map);

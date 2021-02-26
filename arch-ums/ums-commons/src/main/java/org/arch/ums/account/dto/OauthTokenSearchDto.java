@@ -154,6 +154,7 @@ public class OauthTokenSearchDto implements BaseSearchDto {
     @Override
     public void buildSearchParams(Map<String, Object> map) {
         map.remove("EQ_deleted");
+        putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_account_identifier_id", this.getAccountIdentifierId(), map);
         putNoNull("EQ_enable_refresh", this.getEnableRefresh(), map);

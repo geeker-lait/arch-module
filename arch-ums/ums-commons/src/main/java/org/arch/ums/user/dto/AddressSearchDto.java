@@ -114,6 +114,7 @@ public class AddressSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
+        putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_user_id", this.getUserId(), map);
         putNoNull("EQ_sorted", this.getSorted(), map);

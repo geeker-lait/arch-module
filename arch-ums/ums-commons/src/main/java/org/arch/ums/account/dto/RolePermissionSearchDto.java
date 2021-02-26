@@ -67,6 +67,7 @@ public class RolePermissionSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
+        putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_role_id", this.getRoleId(), map);
         putNoNull("EQ_permission_id", this.getPermissionId(), map);

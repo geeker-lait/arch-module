@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
  * @date 2021-01-29 21:03:18
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor

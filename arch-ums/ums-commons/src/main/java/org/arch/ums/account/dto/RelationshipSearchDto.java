@@ -108,6 +108,7 @@ public class RelationshipSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
+        putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_pid", this.getPid(), map);
         putNoNull("EQ_seq", this.getSeq(), map);
