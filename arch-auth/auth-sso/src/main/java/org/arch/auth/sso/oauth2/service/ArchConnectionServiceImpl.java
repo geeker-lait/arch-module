@@ -8,9 +8,12 @@ import org.arch.auth.sso.properties.SsoProperties;
 import org.arch.auth.sso.utils.RegisterUtils;
 import org.arch.framework.api.IdKey;
 import org.arch.framework.beans.Response;
+import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.id.IdService;
+import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.ums.userdetails.ArchUser;
+import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.feign.account.client.UmsAccountAuthTokenFeignService;
@@ -72,43 +75,40 @@ public class ArchConnectionServiceImpl implements ConnectionService {
 
         // 更新 OAuthToken
         int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
+        // 1. connectionData 是 ConnectionDataDto 的情况
         if ((connectionData instanceof ConnectionDataDto)) {
             ConnectionDataDto connectionDataDto = (ConnectionDataDto) connectionData;
-            umsAccountAuthTokenFeignService.updateByIdentifier(toOauthToken(authUser,
-                                                                            tenantContextHolder.getTenantId(),
-                                                                            connectionDataDto.getIdentifierId(),
-                                                                            timeout));
-//            return;
+            Response<Boolean> response =
+                    umsAccountAuthTokenFeignService.updateByIdentifierId(toOauthToken(authUser,
+                                                                                      tenantContextHolder.getTenantId(),
+                                                                                      connectionDataDto.getIdentifierId(),
+                                                                                      timeout));
+            isSuccessOfUpdate(connectionDataDto.getIdentifierId(), response);
+            return;
         }
 
-//        String[] usernames = umsUserDetailsService.generateUsernames(authUser);
-//        ArchUser archUser = (ArchUser) umsUserDetailsService.loadUserByUserId(usernames[0]);
-//        ConnectionData connectionData = null;
-//        try
-//        {
-//
-//            // 获取 AuthTokenPo
-//            AuthToken token = authUser.getToken();
-//            AuthTokenPo authToken = JustAuthUtil.getAuthTokenPo(token, data.getProviderId(), timeout);
-//            authToken.setId(data.getTokenId());
-//            // 有效期转时间戳
-//            Auth2DefaultRequest.expireIn2Timestamp(timeout, token.getExpireIn(), authToken);
-//
-//            // 获取最新的 ConnectionData
-//            connectionData = JustAuthUtil.getConnectionData(data.getProviderId(), authUser, data.getUserId(), authToken);
-//            connectionData.setUserId(data.getUserId());
-//            connectionData.setTokenId(data.getTokenId());
-//
-//            // 更新 connectionData
-//            usersConnectionRepository.updateConnection(connectionData);
-//            // 更新 AuthTokenPo
-//            usersConnectionTokenRepository.updateAuthToken(authToken);
-//        }
-//        catch (Exception e)
-//        {
-//            log.error("更新第三方用户信息异常: " + e.getMessage());
-//            throw new UpdateConnectionException(ErrorCodeEnum.UPDATE_CONNECTION_DATA_FAILURE, connectionData, e);
-//        }
+        // 2. connectionData 不是 ConnectionDataDto 的情况
+        try {
+            // 2.1 已登录的情况
+            TokenInfo currentUser = SecurityUtils.getCurrentUser();
+            Response<Boolean> response =
+                    umsAccountAuthTokenFeignService.updateByIdentifierId(toOauthToken(authUser,
+                                                                                      tenantContextHolder.getTenantId(),
+                                                                                      currentUser.getIdentifierId(),
+                                                                                      timeout));
+            isSuccessOfUpdate(currentUser.getIdentifierId(), response);
+        }
+        catch (AuthenticationException e) {
+            // 2.2 未登录的情况
+            String[] usernames = umsUserDetailsService.generateUsernames(authUser);
+            ArchUser archUser = (ArchUser) umsUserDetailsService.loadUserByUserId(usernames[0]);
+            Response<Boolean> response =
+                    umsAccountAuthTokenFeignService.updateByIdentifierId(toOauthToken(authUser,
+                                                                                      tenantContextHolder.getTenantId(),
+                                                                                      archUser.getIdentifierId(),
+                                                                                      timeout));
+            isSuccessOfUpdate(archUser.getIdentifierId(), response);
+        }
 
     }
 
@@ -226,6 +226,13 @@ public class ArchConnectionServiceImpl implements ConnectionService {
                                                           identifierRequest.getId(),
                                                           timeout));
 
+    }
+
+    private void isSuccessOfUpdate(Long identifierId, Response<Boolean> response) throws UpdateConnectionException {
+        Boolean successData = response.getSuccessData();
+        if (isNull(successData) || !successData) {
+            throw new UpdateConnectionException(ErrorCodeEnum.UPDATE_CONNECTION_DATA_FAILURE, identifierId);
+        }
     }
 
 }
