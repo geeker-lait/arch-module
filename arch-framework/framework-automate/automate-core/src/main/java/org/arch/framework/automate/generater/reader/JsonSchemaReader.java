@@ -1,6 +1,7 @@
 package org.arch.framework.automate.generater.reader;
 
 import org.arch.framework.automate.generater.core.SchemaReadable;
+import org.arch.framework.automate.generater.core.SchemaSource;
 import org.arch.framework.automate.generater.core.SourceName;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
 
@@ -18,7 +19,7 @@ public class JsonSchemaReader extends AbstractSchemaReader implements SchemaRead
         return SourceName.JSON_SOURCE;
     }
     @Override
-    public List<DatabaseProperties> read(org.arch.framework.automate.generater.core.SchemaSource source) {
+    public List<DatabaseProperties> read(SchemaSource source) {
         return null;
     }
 }

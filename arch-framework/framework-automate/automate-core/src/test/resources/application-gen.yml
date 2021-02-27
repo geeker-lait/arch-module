@@ -99,6 +99,7 @@ spring:
 
     excel:
       file: classpath:uni-life-ums.xlsx
+      schema-class:
       heads: {
         table: "表名/Table",
         column: "列名/Column",

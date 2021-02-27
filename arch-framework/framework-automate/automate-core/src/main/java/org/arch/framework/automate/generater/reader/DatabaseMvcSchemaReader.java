@@ -1,7 +1,6 @@
 package org.arch.framework.automate.generater.reader;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.from.service.DatabaseService;
 import org.arch.framework.automate.generater.core.SchemaReadable;
 import org.arch.framework.automate.generater.core.SourceName;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
@@ -20,7 +19,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class DatabaseSchemaReader extends AbstractSchemaReader implements SchemaReadable<DatabaseProperties> {
+public class DatabaseMvcSchemaReader extends AbstractSchemaReader implements SchemaReadable<DatabaseProperties> {
     @Override
     public SourceName getSource() {
         return SourceName.DATABASE_SOURCE;

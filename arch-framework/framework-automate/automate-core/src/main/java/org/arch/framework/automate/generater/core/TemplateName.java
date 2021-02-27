@@ -22,7 +22,8 @@ public enum TemplateName {
     DDL("ddl.ftl"),
     YML("yml.ftl"),
     APPLICATION("application.ftl"),
-    DOCKER("docker.ftl")
+    DOCKER("docker.ftl"),
+    API("api.ftl"),
     ;
     @Getter
     private String template;

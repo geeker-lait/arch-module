@@ -12,4 +12,5 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractSchemaReader {
     @Autowired
-    protected DatabaseService databaseService;}
+    protected DatabaseService databaseService;
+}
