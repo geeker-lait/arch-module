@@ -2,6 +2,7 @@ package org.arch.framework.automate.generater.core;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.sun.deploy.net.cookie.DeployCookieSelector;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.properties.*;
@@ -26,29 +27,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Service
 public class MavenGenerator extends AbstractGenerator {
-    //Map<String,DependencieProterties> DEPS = new ConcurrentHashMap<>();
-    ThreadLocal<DependencieProterties> DEPS = new InheritableThreadLocal<>();
+
     public void buildModule(Path path, ProjectProperties projectProperties, PomProperties pomProperties, DatabaseProperties databaseProperties) throws IOException {
         List<PomProperties> modules = pomProperties.getModules();
-        if (modules == null) {
-            // 创建模块src目录,可不创建最后一起创建，这里为了标准化目录创建一下
-            for (String dir : srcDirectorys) {
-                Files.createDirectories(path.resolve(dir));
-            }
-            if (!StringUtils.isEmpty(pomProperties.getDocumentTypes())) {
-                for (String p : Arrays.asList(pomProperties.getDocumentTypes().split(","))) {
-                    PackageProperties packageProperties = packagePropertiesMap.get(p);
-                    // 获取模板
-                    String stemplate = packageProperties.getTemplate();
-                    Buildable buildable = builderMap.get(stemplate);
-                    if (buildable == null) {
-                        throw new CodegenException("buildable is null ,please implements org.arch.framework.automate.generater.core.Buildable and config it as a spring component");
-                    }
-                    buildable.build(path, engine, projectProperties, packageProperties, databaseProperties);
-                }
-            }
-        } else {
+        if (modules != null) {
             for (PomProperties module : modules) {
+                pomProperties.setPackaging("pom");
                 /**
                  * 之前使用pomPropertiesPatent = pomProperties;多增递归时传递一个参数没有必要
                  * 后来使用 module.setParent(pomProperties)方式是比较理想，但递归会报错，层级太深，未有好但解决方案
@@ -67,9 +51,39 @@ public class MavenGenerator extends AbstractGenerator {
                 Path subPath = path.resolve(module.getArtifactId());
                 buildModule(subPath, projectProperties, module, databaseProperties);
             }
+        } else {
+            // 创建模块src目录,可不创建最后一起创建，这里为了标准化目录创建一下
+            for (String dir : srcDirectorys) {
+                Files.createDirectories(path.resolve(dir));
+            }
         }
-        // 创建pom
-        buildPom(cover, path, pomProperties);
+        pomProperties.setPackaging("jar");
+        if (!StringUtils.isEmpty(pomProperties.getDocumentTypes())) {
+            for (String p : Arrays.asList(pomProperties.getDocumentTypes().split(","))) {
+                PackageProperties packageProperties = packagePropertiesMap.get(p);
+                // 获取模板
+                String stemplate = packageProperties.getTemplate();
+                Buildable buildable = builderMap.get(stemplate);
+                if (buildable == null) {
+                    throw new CodegenException("buildable is null ,please implements org.arch.framework.automate.generater.core.Buildable and config it as a spring component");
+                }
+                buildable.build(path, engine, projectProperties, packageProperties, databaseProperties);
+            }
+        }
+        if (null == DEPS.get()) {
+            DEPS.set(new ArrayList<>());
+        }
+        // 收集所有生产的jar类型pom，增加到根pom进行统一版本控制
+        DependencieProterties dependencieProterties = new DependencieProterties();
+        dependencieProterties.setArtifactId(pomProperties.getArtifactId());
+        dependencieProterties.setGroupId(pomProperties.getGroupId());
+        dependencieProterties.setVersion("${project.version}");
+        DEPS.get().add(dependencieProterties);
+        // 创建pom 确保pom 只构建一次
+        if (pomBuildOnce) {
+            buildPom(cover, path, pomProperties);
+        }
+        return;
     }
 
 
@@ -85,22 +99,14 @@ public class MavenGenerator extends AbstractGenerator {
                 Files.delete(pomFilePath);
             }
         }
-
-        if (pomProperties.getModules() != null && pomProperties.getModules().size() > 0) {
-            pomProperties.setPackaging("pom");
-        }/* else {
-            // 收集所有生产的pom 到跟pom进行统一版本控制
-            DependencieProterties dependencieProterties = new DependencieProterties();
-            dependencieProterties.setArtifactId(pomProperties.getArtifactId());
-            dependencieProterties.setGroupId(pomProperties.getGroupId());
-            dependencieProterties.setVersion("${project.version}");
-            DEPS.put(pomProperties.getArtifactId(),dependencieProterties);
-            return;
-        }
         if (pomProperties.isRoot()) {
-            pomProperties.getDependencyManagement().addAll(DEPS.values());
-            DEPS.clear();
-        }*/
+            if (null != pomProperties.getDependencyManagement()) {
+                pomProperties.getDependencyManagement().addAll(DEPS.get());
+            } else {
+                pomProperties.setDependencies(DEPS.get());
+            }
+            //DEPS.remove();
+        }
         JSONObject jsonObject = JSONUtil.parseObj(pomProperties);
         String dt = pomProperties.getDocumentTypes();
         if (!StringUtils.isEmpty(dt)) {
@@ -111,7 +117,7 @@ public class MavenGenerator extends AbstractGenerator {
         }
         // 获取并渲染模板
         engine.getTemplate("pom.ftl").render(jsonObject, new File(pomFilePath.toString()));
-        log.info("create pom file in : {}", pomFilePath);
+        log.info("\n\ncreate pom file in : {}\npom json :{}\n\n", pomFilePath, pomProperties);
     }
 
     @Override

@@ -76,7 +76,7 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
                             String val = tableMap.get(key);
                             if (!StringUtils.isNotBlank(val)) {
                                 tableMap.put(key, table);
-                                log.info("current table name is {}" + key);
+                                log.info("current table name is :{}" + key);
                                 String tc[] = table.split("/");
                                 tableProperties = new TableProperties();
                                 tableProperties.setName(tc[1]);

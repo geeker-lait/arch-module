@@ -43,11 +43,15 @@ public abstract class AbstractBuilder {
         return pkg;
     }
 
-    protected String buildFileName(PackageProperties packageProperties, String defaultFileName) {
+    protected String buildFileName(PackageProperties packageProperties, String defaultFileName, boolean stuffixed) {
         String suffix = (StringUtils.isEmpty(packageProperties.getSuffix()) ? CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, packageProperties.getType()) : packageProperties.getSuffix());
         String bootstrap = packageProperties.getBootstrap();
         defaultFileName = StringUtils.isEmpty(bootstrap) ? defaultFileName : bootstrap;
-        return defaultFileName + suffix;
+        if(stuffixed) {
+            return defaultFileName + suffix;
+        } else {
+            return defaultFileName;
+        }
     }
 
     protected void buildFile(boolean cover, Path filePath) throws IOException {
@@ -99,7 +103,7 @@ public abstract class AbstractBuilder {
         Files.createDirectories(packPath);
         // 写入文件
         for (TableProperties tableProperties : databaseProperties.getTables()) {
-            String fileName = buildFileName(packageProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, tableProperties.getName()));
+            String fileName = buildFileName(packageProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, tableProperties.getName()), true);
             String ext = StringUtils.isEmpty(packageProperties.getExt()) ? "" : packageProperties.getExt();
             Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));
             // 创建文件

@@ -35,7 +35,7 @@ public class YmlBuilder extends AbstractBuilder implements Buildable {
 
     @Override
     public void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) throws IOException {
-        String fileName = buildFileName(packageProperties, "application");
+        String fileName = buildFileName(packageProperties, "application", false);
         String ext = StringUtils.isEmpty(packageProperties.getExt()) ? "" : packageProperties.getExt();
         Path fileDir = path.resolve(Generable.MAIN_RESOURCES);
         Files.createDirectories(fileDir);
