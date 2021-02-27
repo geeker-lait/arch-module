@@ -9,7 +9,6 @@ import org.arch.framework.automate.generater.core.TemplateName;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.PackageProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
-import org.arch.framework.automate.generater.properties.TableProperties;
 import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,7 @@ public class ApplicationBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public void build(boolean cover, Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) throws IOException {
+    public void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) throws IOException {
         String basePkg = null == projectProperties.getBasePkg() ? "" : projectProperties.getBasePkg();
         Path fileDir = path.resolve(Generable.MAIN_JAVA.concat(basePkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
         Files.createDirectories(fileDir);
@@ -44,7 +43,7 @@ public class ApplicationBuilder extends AbstractBuilder implements Buildable {
         // 写入文件
         if (Files.exists(filePath)) {
             // 是否覆盖
-            if (!cover) {
+            if (!projectProperties.getCover()) {
                 log.info("skip {} due to file exists.", fileName);
                 return;
             } else {

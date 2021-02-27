@@ -3,6 +3,7 @@ package org.arch.framework.automate.generater.properties;
 import cn.hutool.extra.template.TemplateEngine;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * @author lait.zhang@gmail.com
@@ -12,10 +13,11 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
+@ToString
 public class TemplateProperties {
     private String dir;
-    private String resourceMode;
+    // 默认从classpath加载
+    private String resourceMode = "classpath";
     // 模板引擎
     private TemplateEngine templateEngine;
-
 }

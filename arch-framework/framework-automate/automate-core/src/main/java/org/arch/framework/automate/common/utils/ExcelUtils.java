@@ -3,16 +3,11 @@ package org.arch.framework.automate.common.utils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -34,6 +29,18 @@ public class ExcelUtils {
     private static final DecimalFormat decimalFormat = new DecimalFormat("#.#");
     private static final Pattern humpPattern = Pattern.compile("[A-Z]");
 
+
+    public static Workbook initWorkBook(String filePath) throws IOException {
+        FileInputStream fileInputStream = new FileInputStream(filePath);
+        if (filePath.endsWith(EXCEL_2003)) {
+            return new HSSFWorkbook(fileInputStream);
+        } else if (filePath.endsWith(EXCEL_2007)) {
+            return new XSSFWorkbook(fileInputStream);
+        } else {
+            //此处只需要这个方法就可以了
+            return WorkbookFactory.create(fileInputStream);
+        }
+    }
 
     public static Workbook initWorkBook(String filePath, InputStream inputStream) throws IOException {
         if (filePath.endsWith(EXCEL_2003)) {

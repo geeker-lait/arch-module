@@ -64,7 +64,7 @@
     </dependencies>
 
     <build>
-        <#if mainClass??>
+        <#if application??>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -89,7 +89,7 @@
         </resources>
         </#if>
         <plugins>
-            <#if mainClass??>
+            <#if application??>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

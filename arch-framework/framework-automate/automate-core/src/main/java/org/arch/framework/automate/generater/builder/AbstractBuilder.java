@@ -43,11 +43,15 @@ public abstract class AbstractBuilder {
         return pkg;
     }
 
-    protected String buildFileName(PackageProperties packageProperties, String fileName) {
-        String suffix = StringUtils.isEmpty(packageProperties.getSuffix()) ? "" : packageProperties.getSuffix();
+    protected String buildFileName(PackageProperties packageProperties, String defaultFileName, boolean stuffixed) {
+        String suffix = (StringUtils.isEmpty(packageProperties.getSuffix()) ? CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, packageProperties.getType()) : packageProperties.getSuffix());
         String bootstrap = packageProperties.getBootstrap();
-        fileName = StringUtils.isEmpty(bootstrap) ? fileName : bootstrap + suffix;
-        return fileName;
+        defaultFileName = StringUtils.isEmpty(bootstrap) ? defaultFileName : bootstrap;
+        if(stuffixed) {
+            return defaultFileName + suffix;
+        } else {
+            return defaultFileName;
+        }
     }
 
     protected void buildFile(boolean cover, Path filePath) throws IOException {
@@ -69,6 +73,8 @@ public abstract class AbstractBuilder {
         dataMap.putAll(JSONUtil.parseObj(projectProperties));
         dataMap.putAll(JSONUtil.parseObj(packageProperties));
         dataMap.putAll(JSONUtil.parseObj(tableProperties));
+        dataMap.put("author", projectProperties.getAuthor());
+        dataMap.put("cover", projectProperties.getCover());
         return dataMap;
     }
 
@@ -84,18 +90,22 @@ public abstract class AbstractBuilder {
      * @throws IOException
      */
     protected void buildPackageFile(boolean cover, Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) throws IOException {
-        String typ = packageProperties.getType();
         // 设置默认包和后缀名
-        String pkg = (null == packageProperties.getPkg() ? typ : packageProperties.getPkg());
-        String suffix = (null == packageProperties.getSuffix() ? CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, typ) : packageProperties.getSuffix());
-        String currentPkg = projectProperties.getBasePkg().concat("." + pkg);
+        String pkg = (null == packageProperties.getPkg() ? packageProperties.getType() : packageProperties.getPkg());
+        String currentPkg;
+        // 领域化
+        if(projectProperties.getDomain()) {
+            currentPkg = projectProperties.getBasePkg().concat("." + databaseProperties.getName().toLowerCase()).concat("." + pkg);
+        } else {
+            currentPkg = projectProperties.getBasePkg().concat("." + pkg).concat("." + databaseProperties.getName().toLowerCase());
+        }
         Path packPath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
         Files.createDirectories(packPath);
         // 写入文件
         for (TableProperties tableProperties : databaseProperties.getTables()) {
-            String fileName = buildFileName(packageProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, tableProperties.getName()));
+            String fileName = buildFileName(packageProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, tableProperties.getName()), true);
             String ext = StringUtils.isEmpty(packageProperties.getExt()) ? "" : packageProperties.getExt();
-            Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(suffix).concat(ext));
+            Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));
             // 创建文件
             buildFile(cover, filePath);
             Map<String, Object> dataMap = buildData(projectProperties, packageProperties, tableProperties);
