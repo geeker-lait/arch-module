@@ -99,12 +99,12 @@ public abstract class AbstractGenerator implements Generable {
         // 创建项目
         for (DatabaseProperties d : databasePropertiesList) {
             // 创建模块
-            buildModule(rootPath, projectProperties, pomProperties, null, d);
+            buildModule(rootPath, projectProperties, pomProperties, d);
         }
     }
 
 
-    public abstract void buildModule(Path path, ProjectProperties projectProperties, PomProperties pomProperties, PomProperties pomPropertiesPatent, DatabaseProperties databaseProperties) throws IOException;
+    public abstract void buildModule(Path path, ProjectProperties projectProperties, PomProperties pomProperties, DatabaseProperties databaseProperties) throws IOException;
 
 
 }

@@ -1,7 +1,9 @@
 package org.arch.framework.automate.generater.properties;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.arch.framework.automate.generater.core.DataProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -19,6 +21,8 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class PomProperties implements DataProperties {
 
     private String groupId;
@@ -30,7 +34,7 @@ public class PomProperties implements DataProperties {
     private String documentTypes;
     // 父节点
     @NestedConfigurationProperty
-    private DependencieProterties parent;
+    private PomProperties parent;
     // 子模块
     @NestedConfigurationProperty
     private List<PomProperties> modules;
@@ -40,4 +44,5 @@ public class PomProperties implements DataProperties {
     // 依赖管理
     @NestedConfigurationProperty
     private List<DependencieProterties> dependencyManagement;
+
 }

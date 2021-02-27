@@ -26,10 +26,10 @@ import java.util.List;
 @Service
 public class MavenGenerator extends AbstractGenerator {
 
-    public void buildModule(Path path, ProjectProperties projectProperties, PomProperties pomProperties, PomProperties pomPropertiesPatent, DatabaseProperties databaseProperties) throws IOException {
+    public void buildModule(Path path, ProjectProperties projectProperties, PomProperties pomProperties, DatabaseProperties databaseProperties) throws IOException {
         List<PomProperties> modules = pomProperties.getModules();
         // 创建pom
-        buildPom(cover, path, pomProperties, pomPropertiesPatent);
+        buildPom(cover, path, pomProperties);
         if (modules == null) {
             // 创建模块src目录,可不创建最后一起创建，这里为了标准化目录创建一下
             for (String dir : srcDirectorys) {
@@ -51,36 +51,37 @@ public class MavenGenerator extends AbstractGenerator {
         }
         for (PomProperties module : modules) {
             Path subPath = path.resolve(module.getArtifactId());
-            pomPropertiesPatent = pomProperties;
-            buildModule(subPath, projectProperties, module, pomPropertiesPatent, databaseProperties);
+            //pomPropertiesPatent = pomProperties;
+            module.setParent(pomProperties);
+            buildModule(subPath, projectProperties, module, databaseProperties);
         }
     }
 
 
-    private void buildPom(boolean cover, Path path, PomProperties pomProperties, PomProperties pomPropertiesPatent) throws IOException {
+    private void buildPom(boolean cover, Path path, PomProperties pomProperties) throws IOException {
         Files.createDirectories(path);
         Path pomFilePath = Paths.get(path.toFile().getAbsolutePath().concat(File.separator).concat("pom.xml"));
         // 写入文件
         if (Files.exists(pomFilePath)) {
             // 是否覆盖
             if (!cover) {
-                log.info("skip {} due to file exists.", "pom.xml");
+                log.info("skip {} due to file exists.", path);
                 return;
             } else {
                 Files.delete(pomFilePath);
             }
         }
 
-        if (pomProperties.getParent() == null && pomPropertiesPatent != null) {
-            DependencieProterties parent = new DependencieProterties();
-            parent.setArtifactId(pomPropertiesPatent.getArtifactId());
-            parent.setGroupId(pomPropertiesPatent.getGroupId());
-            parent.setVersion(pomPropertiesPatent.getVersion());
-
-            pomProperties.setGroupId(pomPropertiesPatent.getGroupId());
-            pomProperties.setVersion(pomPropertiesPatent.getVersion());
-            pomProperties.setParent(parent);
-        }
+//        if (pomProperties.getParent() == null && pomPropertiesPatent != null) {
+//            DependencieProterties parent = new DependencieProterties();
+//            parent.setArtifactId(pomPropertiesPatent.getArtifactId());
+//            parent.setGroupId(pomPropertiesPatent.getGroupId());
+//            parent.setVersion(pomPropertiesPatent.getVersion());
+//
+//            pomProperties.setGroupId(pomPropertiesPatent.getGroupId());
+//            pomProperties.setVersion(pomPropertiesPatent.getVersion());
+//            pomProperties.setParent(parent);
+//        }
         if (pomProperties.getModules() != null && pomProperties.getModules().size() > 0) {
             pomProperties.setPackaging("pom");
         }

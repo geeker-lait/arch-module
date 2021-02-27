@@ -31,7 +31,6 @@ spring:
             dependencies:
               - groupId: org.arch.projects
                 artifactId: arch-gen-core
-                version: 0.0.1
             modules:
               - artifactId: arch-gen-common-a
                 groupId:
