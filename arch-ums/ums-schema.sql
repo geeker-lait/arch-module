@@ -33,8 +33,7 @@ CREATE TABLE `account_category` (
   `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_PID_AND_SORTED` (`pid`,`sorted`),
-  KEY `IDX_TENANT_ID` (`tenant_id`)
+  KEY `IDX_PID_AND_SORTED` (`pid`,`sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-资源类目';
 
 /*Table structure for table `account_group` */
@@ -55,8 +54,7 @@ CREATE TABLE `account_group` (
   `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_GROUP_PID_AND_SORTED` (`group_pid`,`sorted`),
-  KEY `IDX_TENANT_ID` (`tenant_id`)
+  KEY `IDX_GROUP_PID_AND_SORTED` (`group_pid`,`sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-组织机构';
 
 /*Table structure for table `account_identifier` */
@@ -122,8 +120,7 @@ CREATE TABLE `account_menu` (
   `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_PID_AND_SORTED` (`pid`,`sorted`),
-  KEY `IDX_TENANT_ID` (`tenant_id`)
+  KEY `IDX_PID_AND_SORTED` (`pid`,`sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-菜单';
 
 /*Table structure for table `account_name` */
@@ -239,8 +236,7 @@ CREATE TABLE `account_permission` (
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
   `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
-  PRIMARY KEY (`id`),
-  KEY `IDX_TENANT_ID` (`tenant_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-权限';
 
 /*Table structure for table `account_post` */
@@ -260,8 +256,7 @@ CREATE TABLE `account_post` (
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
   `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
-  PRIMARY KEY (`id`),
-  KEY `IDX_TENANT_ID` (`tenant_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-岗位';
 
 /*Table structure for table `account_relationship` */
@@ -287,8 +282,7 @@ CREATE TABLE `account_relationship` (
   `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_PID_AND_SEQ` (`pid`, `seq`),
-  KEY `IDX_TENANT_ID` (`tenant_id`)
+  KEY `IDX_PID_AND_SEQ` (`pid`, `seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-关系';
 
 /*Table structure for table `account_resource` */
@@ -313,8 +307,7 @@ CREATE TABLE `account_resource` (
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
   `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
-  PRIMARY KEY (`id`),
-  KEY `IDX_TENANT_ID` (`tenant_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-资源';
 
 /*Table structure for table `account_role` */
@@ -448,6 +441,8 @@ CREATE TABLE `account_ticket` (
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-券';
+
+/*===================== user ==========================*/
 
 /*Table structure for table `user_address` */
 
@@ -614,4 +609,33 @@ CREATE TABLE `user_relatives` (
   KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户亲朋信息';
 
+/*===================== config ==========================*/
 
+/*Table structure for table `config_file_info` */
+
+DROP TABLE IF EXISTS `conf_file_info`;
+
+CREATE TABLE `conf_file_info` (
+    `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `aid` bigint(19) DEFAULT NULL COMMENT '账号ID/用户ID/会员ID/商户ID',
+    `storage_type` varchar(20) NOT NULL COMMENT '存储类型: aws/aliyun/minio/tencent/qiniu/local/nginx',
+    `original_file_name` varchar(255) DEFAULT NULL COMMENT '原始文件名称',
+    `size` bigint(19) NOT NULL COMMENT '文件大小',
+    `suffix` varchar(20) DEFAULT NULL COMMENT '文件后缀',
+    `width` int(10) DEFAULT NULL COMMENT '图片宽度',
+    `height` int(10) DEFAULT NULL COMMENT '图片高度',
+    `file_path` varchar(255) NOT NULL COMMENT '文件路径(不带域名)',
+    `full_file_path` varchar(255) NOT NULL COMMENT '文件全路径(带域名)',
+    `file_hash` varchar(255) DEFAULT NULL COMMENT '文件hash',
+    `upload_type` varchar(255) NOT NULL COMMENT '上次的类型',
+    `upload_start_time` timestamp NULL DEFAULT NULL COMMENT '文件上传开始的时间',
+    `upload_end_time` timestamp NULL DEFAULT NULL COMMENT '文件上传结束的时间',
+    `tenant_id` int(11) NOT NULL COMMENT '租户 id',
+    `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+    `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+    `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+    `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+    `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `IDX_TENANT_ID_AND_UPLOAD_TYPE_AND_FILE_PATH` (`tenant_id`,`upload_type`,`file_path`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='对象存储文件信息'
