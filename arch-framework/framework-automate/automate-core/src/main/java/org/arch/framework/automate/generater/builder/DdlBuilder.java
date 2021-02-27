@@ -45,7 +45,7 @@ public class DdlBuilder extends AbstractBuilder implements Buildable {
         dataMap.put("database", databaseProperties.getName());
         dataMap.put("tables",databaseProperties.getTables());
         if(projectProperties.getCover()) {
-            String name = buildFileName(packageProperties, databaseProperties.getName());
+            String name = buildFileName(packageProperties, databaseProperties.getName()).toLowerCase();
             File file = new File(fileDir.toString().concat(File.separator).concat(name).concat(ext));
             // 获取模板并渲染
             templateEngine.getTemplate(packageProperties.getTemplate()).render(dataMap, file);

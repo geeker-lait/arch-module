@@ -15,11 +15,14 @@ import java.util.List;
  */
 public interface Generable {
 
+
     String MAIN_JAVA = "src" + File.separator + "main" + File.separator + "java" + File.separator;
     String MAIN_RESOURCES = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
     String TEST_JAVA = "src" + File.separator + "test" + File.separator + "java" + File.separator;
     String TEST_RESOURCES = "src" + File.separator + "test" + File.separator + "resources" + File.separator;
     List<String> srcDirectorys = Arrays.asList(MAIN_JAVA, MAIN_RESOURCES, TEST_JAVA, TEST_RESOURCES);
+
+    BuildToolsName getBuildTools();
     /**
      * 根据GeneratorConfig 构建项目
      *

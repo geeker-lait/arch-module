@@ -1,5 +1,6 @@
 spring:
   generator:
+    buildTool: maven
     source: excel
     template:
       dir: templates
@@ -14,6 +15,7 @@ spring:
         artifactId: arch-test1
         groupId: org.arch.projects
         version: 0.0.1
+        root: true
         dependencyManagement:
           - artifactId: spring-boot-dependencies
             groupId: org.springframework.boot

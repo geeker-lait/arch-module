@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.arch.framework.automate.generater.core.DataProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,9 +33,11 @@ public class PomProperties implements DataProperties {
     private String packaging;
     // 包类型，即该pom模块下有哪些文档类型
     private String documentTypes;
+    // 是否跟节点
+    private boolean root;
     // 父节点
     @NestedConfigurationProperty
-    private PomProperties parent;
+    private DependencieProterties parent;
     // 子模块
     @NestedConfigurationProperty
     private List<PomProperties> modules;
@@ -43,6 +46,6 @@ public class PomProperties implements DataProperties {
     private List<DependencieProterties> dependencies;
     // 依赖管理
     @NestedConfigurationProperty
-    private List<DependencieProterties> dependencyManagement;
+    private List<DependencieProterties> dependencyManagement ;
 
 }

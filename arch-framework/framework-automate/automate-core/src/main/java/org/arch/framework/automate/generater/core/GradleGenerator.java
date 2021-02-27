@@ -23,4 +23,9 @@ public class GradleGenerator extends AbstractGenerator {
     public void buildModule(Path path, ProjectProperties projectProperties, PomProperties pomProperties, DatabaseProperties databaseProperties) throws IOException {
         log.info("gradle is  null implementor");
     }
+
+    @Override
+    public BuildToolsName getBuildTools() {
+        return BuildToolsName.GRADLE;
+    }
 }

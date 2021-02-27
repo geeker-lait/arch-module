@@ -32,6 +32,7 @@ public abstract class AbstractGenerator implements Generable {
     protected final static Map<String, PackageProperties> packagePropertiesMap = new HashMap<>();
     protected final static Map<String, Buildable> builderMap = new HashMap<>();
     protected final static Map<String, SchemaReadable> schemaReaderMap = new HashMap<>();
+    protected final static Map<String, Generable> buildToolMap = new HashMap<>();
     protected TemplateEngine engine;
     protected Boolean cover;
     @Autowired
