@@ -15,7 +15,7 @@
     </resultMap>
 
     <sql id="tableName">
-        `id`
+        `account_role_menu`
     </sql>
 
     <sql id="baseColumn">

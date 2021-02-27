@@ -32,7 +32,7 @@
     </resultMap>
 
     <sql id="tableName">
-        `id`
+        `account_oauth_token`
     </sql>
 
     <sql id="baseColumn">

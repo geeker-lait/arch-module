@@ -17,7 +17,7 @@
     </resultMap>
 
     <sql id="tableName">
-        `id`
+        `account_auth_client`
     </sql>
 
     <sql id="baseColumn">

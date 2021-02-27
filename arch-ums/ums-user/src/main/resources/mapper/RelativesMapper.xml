@@ -19,7 +19,7 @@
     </resultMap>
 
     <sql id="tableName">
-        `id`
+        `user_relatives`
     </sql>
 
     <sql id="baseColumn">

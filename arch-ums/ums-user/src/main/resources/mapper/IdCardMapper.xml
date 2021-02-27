@@ -22,7 +22,7 @@
     </resultMap>
 
     <sql id="tableName">
-        `id`
+        `user_id_card`
     </sql>
 
     <sql id="baseColumn">

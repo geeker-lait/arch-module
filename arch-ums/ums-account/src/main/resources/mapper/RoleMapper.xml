@@ -16,7 +16,7 @@
     </resultMap>
 
     <sql id="tableName">
-        `id`
+        `account_role`
     </sql>
 
     <sql id="baseColumn">
