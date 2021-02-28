@@ -1,6 +1,5 @@
 package org.arch.ums.account.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
@@ -11,13 +10,10 @@ import org.arch.ums.account.entity.Category;
 import org.arch.ums.account.service.CategoryService;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
-
-import java.util.List;
 
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
@@ -83,38 +79,4 @@ public class CategoryController implements CrudController<Category, Long, Catego
         }
     }
 
-    /**
-     * 根据 entity 条件查询对象列表.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     * @param t         实体类
-     * @param token     token info
-     * @return  {@link Response}
-     */
-    @Override
-    @GetMapping("/find")
-    public Response<List<Category>> find(@RequestBody Category t, TokenInfo token) {
-        resolver(token, t);
-        CategorySearchDto searchDto = convertSearchDto(t);
-        return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
-    }
-
-    /**
-     * 分页查询.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     * @param entity        实体类
-     * @param pageNumber    第几页
-     * @param pageSize      页大小
-     * @param token         token info
-     * @return  {@link Response}
-     */
-    @Override
-    @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    public Response<IPage<Category>> page(@RequestBody Category entity,
-                                            @PathVariable(value = "pageNumber") Integer pageNumber,
-                                            @PathVariable(value = "pageSize") Integer pageSize,
-                                            TokenInfo token) {
-        resolver(token, entity);
-        CategorySearchDto searchDto = convertSearchDto(entity);
-        return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
-    }
 }
