@@ -5,7 +5,7 @@ package org.arch.auth.sso.exception;
  * @weixin z56133
  * @since 2021.2.27 12:26
  */
-public class LocalUploadFileException extends RuntimeException {
+public class LocalUploadFileException extends GlobalFileException {
     private static final long serialVersionUID = -1928296864775113488L;
 
     public LocalUploadFileException(String message) {

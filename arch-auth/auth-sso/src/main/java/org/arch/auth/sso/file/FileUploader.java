@@ -1,5 +1,6 @@
 package org.arch.auth.sso.file;
 
+import org.arch.auth.sso.exception.GlobalFileException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,7 @@ public interface FileUploader {
      * @param pathOrUrl  文件路径或 url
      * @param save       是否保存
      * @return 上传后的文件信息
+     * @throws GlobalFileException 上次异常
      */
     @NonNull
     FileInfoDto upload(@NonNull InputStream file, @NonNull String uploadType, @NonNull String pathOrUrl, boolean save);
@@ -33,6 +35,7 @@ public interface FileUploader {
      * @param uploadType 文件上传类型，用来区分文件
      * @param save       是否保存
      * @return 上传后的文件信息
+     * @throws GlobalFileException 上次异常
      */
     @NonNull
     FileInfoDto upload(@NonNull File file, @NonNull String uploadType, boolean save);
@@ -44,6 +47,7 @@ public interface FileUploader {
      * @param uploadType 文件上传类型，用来区分文件
      * @param save       是否保存
      * @return 上传后的文件信息
+     * @throws GlobalFileException 上次异常
      */
     @NonNull
     FileInfoDto upload(@NonNull MultipartFile file, @NonNull String uploadType, boolean save);
@@ -54,6 +58,7 @@ public interface FileUploader {
      * @param filePath   文件路径
      * @param uploadType 文件类型
      * @return 返回 true 表示删除成功
+     * @throws GlobalFileException 删除异常
      */
     boolean delete(@NonNull String filePath, @NonNull String uploadType);
 }
