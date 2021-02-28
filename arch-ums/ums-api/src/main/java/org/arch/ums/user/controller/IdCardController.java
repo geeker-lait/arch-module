@@ -1,14 +1,13 @@
 package org.arch.ums.user.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.beans.Response;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.ums.user.dto.IdCardSearchDto;
 import org.arch.ums.user.entity.IdCard;
 import org.arch.ums.user.service.IdCardService;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.beans.Response;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import javax.validation.Valid;
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -27,7 +29,7 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
  * 用户身份证表(IdCard) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-02-26 23:19:52
+ * @date 2021-03-01 00:21:10
  * @since 1.0.0
  */
 @Slf4j
@@ -41,6 +43,9 @@ public class IdCardController implements CrudController<IdCard, java.lang.Long, 
 
     @Override
     public IdCard resolver(TokenInfo token, IdCard idCard) {
+        if (isNull(idCard)) {
+            idCard = new IdCard();
+        }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             idCard.setTenantId(token.getTenantId());
         }

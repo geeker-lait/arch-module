@@ -19,6 +19,7 @@ import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -40,6 +41,9 @@ public class NameController implements CrudController<Name, Long, NameSearchDto,
 
     @Override
     public Name resolver(TokenInfo token, Name name) {
+        if (isNull(name)) {
+            name =  new Name();
+        }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             name.setTenantId(token.getTenantId());
         }

@@ -144,8 +144,9 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
      */
     @GetMapping("/list")
     default Response<List<T>> list(TokenInfo token) {
-        resolver(token,null);
-        return Response.success(getCrudService().findAll());
+        T t = resolver(token, null);
+        S searchDto = convertSearchDto(t);
+        return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
     }
 
     /**

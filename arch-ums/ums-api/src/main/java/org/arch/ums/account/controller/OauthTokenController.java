@@ -22,6 +22,7 @@ import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import javax.validation.Valid;
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -43,6 +44,9 @@ public class OauthTokenController implements CrudController<OauthToken, Long, Oa
 
     @Override
     public OauthToken resolver(TokenInfo token, OauthToken oauthToken) {
+        if (isNull(oauthToken)) {
+            oauthToken =  new OauthToken();
+        }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             oauthToken.setTenantId(token.getTenantId());
         }

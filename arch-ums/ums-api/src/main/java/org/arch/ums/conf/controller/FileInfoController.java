@@ -45,6 +45,9 @@ public class FileInfoController implements CrudController<FileInfo, java.lang.Lo
 
     @Override
     public FileInfo resolver(TokenInfo token, FileInfo fileInfo) {
+        if (isNull(fileInfo)) {
+            fileInfo =  new FileInfo();
+        }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             fileInfo.setTenantId(token.getTenantId());
         }

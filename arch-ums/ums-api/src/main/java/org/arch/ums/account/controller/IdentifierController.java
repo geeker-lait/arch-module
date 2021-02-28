@@ -52,6 +52,9 @@ public class IdentifierController implements CrudController<Identifier, java.lan
 
     @Override
     public Identifier resolver(TokenInfo token, Identifier identifier) {
+        if (isNull(identifier)) {
+            identifier =  new Identifier();
+        }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             identifier.setTenantId(token.getTenantId());
         }

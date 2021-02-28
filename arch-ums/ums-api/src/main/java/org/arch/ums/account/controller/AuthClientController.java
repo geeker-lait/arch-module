@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -46,6 +47,9 @@ public class AuthClientController implements CrudController<AuthClient, java.lan
 
     @Override
     public AuthClient resolver(TokenInfo token, AuthClient authClient) {
+        if (isNull(authClient)) {
+            authClient =  new AuthClient();
+        }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             authClient.setTenantId(token.getTenantId());
         }

@@ -20,6 +20,7 @@ import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -27,7 +28,7 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
  * 账号-角色菜单(RoleMenu) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-02-26 23:16:08
+ * @date 2021-03-01 00:22:30
  * @since 1.0.0
  */
 @Slf4j
@@ -41,6 +42,9 @@ public class RoleMenuController implements CrudController<RoleMenu, java.lang.Lo
 
     @Override
     public RoleMenu resolver(TokenInfo token, RoleMenu roleMenu) {
+        if (isNull(roleMenu)) {
+            roleMenu = new RoleMenu();
+        }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             roleMenu.setTenantId(token.getTenantId());
         }

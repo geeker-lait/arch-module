@@ -20,6 +20,7 @@ import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -27,7 +28,7 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
  * 用户工作信息(Job) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-02-26 23:19:52
+ * @date 2021-03-01 00:21:10
  * @since 1.0.0
  */
 @Slf4j
@@ -41,6 +42,9 @@ public class JobController implements CrudController<Job, java.lang.Long, JobSea
 
     @Override
     public Job resolver(TokenInfo token, Job job) {
+        if (isNull(job)) {
+            job = new Job();
+        }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             job.setTenantId(token.getTenantId());
         }
