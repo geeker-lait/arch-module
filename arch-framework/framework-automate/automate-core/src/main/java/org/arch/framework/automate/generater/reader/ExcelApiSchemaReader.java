@@ -18,7 +18,7 @@ import java.util.List;
  * @date :
  */
 @Slf4j
-@Component
+//@Component
 public class ExcelApiSchemaReader extends AbstractSchemaReader implements SchemaReadable<ExcelProperties> {
     @Override
     public SourceName getSource() {
