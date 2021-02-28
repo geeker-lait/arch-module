@@ -85,12 +85,14 @@ public class FileUtil extends org.arch.framework.beans.utils.FileUtil {
     public static void mkdirs(@NonNull String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
+            boolean mkdirs;
             if (file.isDirectory()) {
-                //noinspection ResultOfMethodCallIgnored
-                file.mkdirs();
+                mkdirs = file.mkdirs();
             } else {
-                //noinspection ResultOfMethodCallIgnored
-                file.getParentFile().mkdirs();
+                mkdirs = file.getParentFile().mkdirs();
+            }
+            if (!mkdirs) {
+                throw new GlobalFileException("创建目录失败！");
             }
         }
     }
@@ -105,8 +107,10 @@ public class FileUtil extends org.arch.framework.beans.utils.FileUtil {
         }
         File parentDir = new File(realFilePath).getParentFile();
         if (!parentDir.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            parentDir.mkdirs();
+            boolean mkdirs = parentDir.mkdirs();
+            if (!mkdirs) {
+                throw new GlobalFileException("创建目录失败！");
+            }
         }
     }
 
