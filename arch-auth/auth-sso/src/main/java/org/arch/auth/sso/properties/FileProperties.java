@@ -25,7 +25,7 @@ public class FileProperties {
      */
     private String rootPath = "/image/account/";
     /**
-     * 上传的类型, 即目录名称. 默认: avatar
+     * 上传文件的分类, 即目录名称. 默认: avatar
      */
     private String uploadType = "avatar";
 
