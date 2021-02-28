@@ -6,6 +6,11 @@ package org.arch.framework.ums.jwt.claim;
  * @since 2021.1.3 16:08
  */
 public enum JwtArchClaimNames {
+
+    /**
+     * 账号标识 id
+     */
+    IDENTIFIER_ID("identifierId", "账号标识 ID"),
     /**
      * 账号 ID
      */

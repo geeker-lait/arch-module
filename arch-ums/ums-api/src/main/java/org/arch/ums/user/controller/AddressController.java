@@ -17,21 +17,20 @@ import static java.util.Objects.nonNull;
  * 用户地址表(Address) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-01-30 11:31:40
+ * @date 2021-02-26 23:19:11
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user/address")
-public class AddressController implements CrudController<Address, Long, AddressSearchDto, AddressService> {
+public class AddressController implements CrudController<Address, java.lang.Long, AddressSearchDto, AddressService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final AddressService addressService;
 
     @Override
     public Address resolver(TokenInfo token, Address address) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 address 后返回 address, 如: tenantId 的处理等.
         if (nonNull(token) && nonNull(token.getTenantId())) {
             address.setTenantId(token.getTenantId());
         }

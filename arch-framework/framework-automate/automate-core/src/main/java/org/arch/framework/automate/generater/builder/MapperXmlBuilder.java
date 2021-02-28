@@ -31,7 +31,7 @@ public class MapperXmlBuilder extends AbstractBuilder implements Buildable {
     @Override
     public void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) throws IOException {
 
-        String fileName = buildFileName(packageProperties, "Mapper");
+        String fileName = buildFileName(packageProperties, "Mapper", true);
         String ext = StringUtils.isEmpty(packageProperties.getExt()) ? "" : packageProperties.getExt();
         Path filePath = Paths.get(path.resolve(Generable.MAIN_RESOURCES).toString().concat(File.separator).concat(fileName).concat(ext));
         buildFile(projectProperties.getCover(),filePath);

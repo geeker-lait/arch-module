@@ -1,11 +1,8 @@
 package org.arch.ums.feign.account.config;
 
-import feign.codec.Encoder;
 import org.arch.framework.feign.config.FeignGlobalConfig;
 import org.arch.framework.ums.properties.AppProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 /**
@@ -21,12 +18,5 @@ public class UmsAccountDeFaultFeignConfig extends FeignGlobalConfig {
                                         AppProperties appProperties) {
         super(tenantContextHolder, appProperties.getTenantHeaderName());
     }
-
-    @Bean
-    @Primary
-    public Encoder multipartFormEncoder() {
-        return new ArchSpringFormEncoder();
-    }
-
 
 }

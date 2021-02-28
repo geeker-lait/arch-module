@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public final class TableSchema {
+public final class MvcSchema implements DataSchema {
     private Integer row;
     private String table;
     private String column;

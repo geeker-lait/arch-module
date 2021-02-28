@@ -1,5 +1,6 @@
 package org.arch.ums.account.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -29,7 +30,7 @@ public class Group extends CrudEntity<Group> {
     /**
      * 账号-权限ID
      */
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**

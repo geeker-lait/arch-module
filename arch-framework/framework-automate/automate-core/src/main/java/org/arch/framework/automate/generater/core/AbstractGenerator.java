@@ -1,5 +1,6 @@
 package org.arch.framework.automate.generater.core;
 
+import cn.hutool.core.thread.threadlocal.NamedThreadLocal;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
@@ -32,8 +33,12 @@ public abstract class AbstractGenerator implements Generable {
     protected final static Map<String, PackageProperties> packagePropertiesMap = new HashMap<>();
     protected final static Map<String, Buildable> builderMap = new HashMap<>();
     protected final static Map<String, SchemaReadable> schemaReaderMap = new HashMap<>();
+    protected final static Map<String, Generable> buildToolMap = new HashMap<>();
+    protected final static ThreadLocal<List<DependencieProterties>> DEPS = new ThreadLocal<>();
     protected TemplateEngine engine;
     protected Boolean cover;
+    protected boolean pomBuildOnce = true;
+    protected String buildTool;
     @Autowired
     private List<Buildable> builders;
     @Autowired
@@ -51,6 +56,7 @@ public abstract class AbstractGenerator implements Generable {
         builderMap.putAll(builders.stream().collect(Collectors.toMap(b -> b.getTemplateName().getTemplate(), Function.identity())));
         schemaReaderMap.putAll(schemaReadables.stream().collect(Collectors.toMap(s -> s.getSource().getSource(), Function.identity())));
         cover = generatorConfig.getProject().getCover();
+        buildTool = generatorConfig.getBuildTool();
     }
 
 
@@ -99,12 +105,14 @@ public abstract class AbstractGenerator implements Generable {
         // 创建项目
         for (DatabaseProperties d : databasePropertiesList) {
             // 创建模块
-            buildModule(rootPath, projectProperties, pomProperties, null, d);
+            buildModule(rootPath, projectProperties, pomProperties, d);
+            pomBuildOnce = false;
         }
+        DEPS.remove();
     }
 
 
-    public abstract void buildModule(Path path, ProjectProperties projectProperties, PomProperties pomProperties, PomProperties pomPropertiesPatent, DatabaseProperties databaseProperties) throws IOException;
+    public abstract void buildModule(Path path, ProjectProperties projectProperties, PomProperties pomProperties, DatabaseProperties databaseProperties) throws IOException;
 
 
 }

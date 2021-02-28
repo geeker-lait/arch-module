@@ -23,7 +23,7 @@
     </resultMap>
 
     <sql id="tableName">
-        `id`
+        `account_relationship`
     </sql>
 
     <sql id="baseColumn">

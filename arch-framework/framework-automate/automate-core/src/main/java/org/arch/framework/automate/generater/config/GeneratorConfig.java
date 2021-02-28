@@ -175,6 +175,10 @@ public class GeneratorConfig {
      * database : {"name":"arch","driver":"com.mysql.cj.jdbc.Driver","url":"jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai","username":"root","password":"root","tables":[{"name":"user","comment":"用户表","columns":[{"name":"id","typ":"bigint","length":19,"comment":"主键id"},{"name":"name","typ":"varchar","length":32,"comment":"用户名"},{"name":"age","typ":"int","length":2,"comment":"年龄"}]}]}
      */
     /**
+     * 构建工具，maven gradle node....
+     */
+    private String buildTool;
+    /**
      * 源，指定是database/excel/json生成项目，默认数据库
      */
     private String source = "database";

@@ -1,5 +1,6 @@
 package org.arch.ums.user.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -30,7 +31,7 @@ public class BankCard extends CrudEntity<BankCard> {
     /**
      * 用户银行卡信息表ID
      */
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**

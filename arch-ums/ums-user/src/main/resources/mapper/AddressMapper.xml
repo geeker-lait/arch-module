@@ -24,7 +24,7 @@
     </resultMap>
 
     <sql id="tableName">
-        `id`
+        `user_address`
     </sql>
 
     <sql id="baseColumn">

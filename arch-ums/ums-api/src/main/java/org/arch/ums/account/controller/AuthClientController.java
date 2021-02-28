@@ -101,6 +101,4 @@ public class AuthClientController implements CrudController<AuthClient, java.lan
         return Response.success(allScopes);
     }
 
-
-
 }

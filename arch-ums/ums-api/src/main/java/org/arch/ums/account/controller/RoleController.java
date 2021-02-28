@@ -17,21 +17,20 @@ import static java.util.Objects.nonNull;
  * 账号-角色(Role) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-01-30 11:40:19
+ * @date 2021-02-26 23:16:08
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/role")
-public class RoleController implements CrudController<Role, Long, RoleSearchDto, RoleService> {
+public class RoleController implements CrudController<Role, java.lang.Long, RoleSearchDto, RoleService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final RoleService roleService;
 
     @Override
     public Role resolver(TokenInfo token, Role role) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 role 后返回 role, 如: tenantId 的处理等.
         if (nonNull(token) && nonNull(token.getTenantId())) {
             role.setTenantId(token.getTenantId());
         }

@@ -17,21 +17,20 @@ import static java.util.Objects.nonNull;
  * 账号-会员账号(Member) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-01-30 11:38:07
+ * @date 2021-02-26 23:12:57
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/member")
-public class MemberController implements CrudController<Member, Long, MemberSearchDto, MemberService> {
+public class MemberController implements CrudController<Member, java.lang.Long, MemberSearchDto, MemberService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final MemberService memberService;
 
     @Override
     public Member resolver(TokenInfo token, Member member) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 member 后返回 member, 如: tenantId 的处理等.
         if (nonNull(token) && nonNull(token.getTenantId())) {
             member.setTenantId(token.getTenantId());
         }

@@ -21,7 +21,7 @@
     </resultMap>
 
     <sql id="tableName">
-        `id`
+        `user_job`
     </sql>
 
     <sql id="baseColumn">

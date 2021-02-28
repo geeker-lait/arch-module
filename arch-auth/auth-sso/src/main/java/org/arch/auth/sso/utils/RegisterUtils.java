@@ -1,8 +1,14 @@
 package org.arch.auth.sso.utils;
 
+import com.xkcoding.http.config.HttpConfig;
+import me.zhyd.oauth.model.AuthToken;
+import me.zhyd.oauth.model.AuthUser;
 import org.arch.auth.sso.properties.SsoProperties;
 import org.arch.framework.ums.enums.AccountType;
 import org.arch.framework.ums.userdetails.ArchUser;
+import org.arch.ums.account.entity.Identifier;
+import org.arch.ums.account.entity.OauthToken;
+import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -10,9 +16,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import top.dcenter.ums.security.core.api.oauth.justauth.request.Auth2DefaultRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 import static java.util.Objects.isNull;
 import static org.arch.framework.ums.consts.RoleConstants.AUTHORITY_SEPARATOR;
@@ -135,6 +143,33 @@ public class RegisterUtils {
 
     }
 
+    /**
+     * 转换为第三方用户的 OauthToken 信息
+     *
+     * @param authUser     第三方用户信息
+     * @param tenantId     租户 ID
+     * @param identifierId {@link Identifier#getId()}
+     * @param timeout      {@link HttpConfig#getTimeout()}
+     */
+    @NonNull
+    public static OauthToken toOauthToken(@NonNull AuthUser authUser, @NonNull String tenantId,
+                                          @NonNull Long identifierId, int timeout) {
 
+        // 添加到 account_auth_token 表
+        // 获取 AuthTokenPo
+        AuthToken token = authUser.getToken();
+        OauthToken oauthToken = new OauthToken();
+        BeanUtils.copyProperties(token, oauthToken);
+        oauthToken.setProviderId(authUser.getSource())
+                  .setAccountIdentifierId(identifierId)
+                  .setTenantId(Integer.valueOf(tenantId))
+                  .setEnableRefresh(true)
+                  .setSt(LocalDateTime.now());
+
+        // 有效期转时间戳
+        oauthToken.setExpireTime(Auth2DefaultRequest.expireIn2Timestamp(timeout, token.getExpireIn()));
+
+        return oauthToken;
+    }
 
 }

@@ -2,14 +2,20 @@ package org.arch.ums.account.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.beans.Response;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.ums.account.dto.OauthTokenSearchDto;
 import org.arch.ums.account.entity.OauthToken;
 import org.arch.ums.account.service.OauthTokenService;
+import org.springframework.lang.NonNull;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
+
+import javax.validation.Valid;
 
 import static java.util.Objects.nonNull;
 
@@ -31,7 +37,6 @@ public class OauthTokenController implements CrudController<OauthToken, Long, Oa
 
     @Override
     public OauthToken resolver(TokenInfo token, OauthToken oauthToken) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 oauthToken 后返回 oauthToken, 如: tenantId 的处理等.
         if (nonNull(token) && nonNull(token.getTenantId())) {
             oauthToken.setTenantId(token.getTenantId());
         }
@@ -49,6 +54,23 @@ public class OauthTokenController implements CrudController<OauthToken, Long, Oa
     @Override
     public OauthTokenSearchDto getSearchDto() {
         return new OauthTokenSearchDto();
+    }
+
+    /**
+     * 根据 identifierId 更新 oauthToken
+     * @param oauthToken     实体类
+     * @return  {@link Response}
+     */
+    @NonNull
+    @PostMapping(value = "/updateByIdentifierId")
+    public Response<Boolean> updateByIdentifierId(@RequestBody @Valid OauthToken oauthToken) {
+        try {
+            return Response.success(oauthTokenService.updateByIdentifierId(oauthToken));
+        }
+        catch (Exception e) {
+            log.error(String.format("更新 oauthToken 失败: identifierId: %s",oauthToken.getAccountIdentifierId()), e);
+            return Response.success(Boolean.FALSE, "更新 oauthToken 失败");
+        }
     }
 
 }

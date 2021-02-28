@@ -26,6 +26,8 @@ import top.dcenter.ums.security.jwt.claims.service.GenerateClaimsSetService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.regex.Pattern;
+
 import static java.util.Objects.nonNull;
 import static org.arch.auth.sso.userdetails.service.ArchUserDetailsServiceImpl.REG_REQUEST_PARAMETER_NAME;
 import static org.springframework.util.StringUtils.hasText;
@@ -40,6 +42,7 @@ import static org.springframework.util.StringUtils.hasText;
 @RequestMapping("/reg")
 public class RegisterController {
 
+    private static final String EMAIL_REGEX = "^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$";
     private final UmsUserDetailsService umsUserDetailsService;
     private final UsernameKeywordFilteringService usernameKeywordFilteringService;
     private final RememberMeServices rememberMeServices;
@@ -103,7 +106,8 @@ public class RegisterController {
      */
     @Nullable
     private String getNickNameAndCheck(@NonNull RegRequest regRequest) {
-        if (!usernameKeywordFilteringService.isValid(regRequest.getUsername())) {
+        String username = regRequest.getUsername();
+        if (!usernameKeywordFilteringService.isValid(username)) {
             return null;
         }
 
@@ -114,7 +118,13 @@ public class RegisterController {
             }
         }
         else {
-            nickName = regRequest.getUsername();
+            boolean matches = Pattern.matches(EMAIL_REGEX, username);
+            if (matches) {
+                nickName = username.substring(0, username.indexOf("@")).replaceAll("_", "");
+            }
+            else {
+                nickName = username;
+            }
         }
         return nickName;
     }

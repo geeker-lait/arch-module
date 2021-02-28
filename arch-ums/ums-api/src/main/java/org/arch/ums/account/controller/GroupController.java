@@ -31,7 +31,6 @@ public class GroupController implements CrudController<Group, Long, GroupSearchD
 
     @Override
     public Group resolver(TokenInfo token, Group group) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 group 后返回 group, 如: tenantId 的处理等.
         if (nonNull(token) && nonNull(token.getTenantId())) {
             group.setTenantId(token.getTenantId());
         }

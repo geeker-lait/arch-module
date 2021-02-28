@@ -8,7 +8,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.arch.framework.automate.common.utils.ExcelUtils;
-import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.properties.ColumnsProperties;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
@@ -30,7 +29,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaReadable<ExcelProperties> {
+public class ExcelMvcSchemaReader extends AbstractSchemaReader implements SchemaReadable<ExcelProperties> {
 
     @Override
     public SourceName getSource() {
@@ -76,7 +75,7 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
                             String val = tableMap.get(key);
                             if (!StringUtils.isNotBlank(val)) {
                                 tableMap.put(key, table);
-                                log.info("current table name is {}" + key);
+                                log.info("current table name is :{}",key);
                                 String tc[] = table.split("/");
                                 tableProperties = new TableProperties();
                                 tableProperties.setName(tc[1]);
@@ -97,17 +96,17 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
                 }
                 // 对每一行信息转换为对象
                 if (map.size() > 0) {
-                    TableSchema tableSchema = BeanUtil.toBean(map, TableSchema.class);
+                    MvcSchema mvcSchema = BeanUtil.toBean(map, MvcSchema.class);
                     /*Class c = JdbcTypeUtils.getFieldType(tableSchema.getType());
                     if(c == null){
                         log.info("jdbc type convert to java type is error {}",tableSchema);
                         continue;
                     }*/
                     ColumnsProperties columnsProperties = new ColumnsProperties();
-                    columnsProperties.setName(tableSchema.getColumn());
-                    columnsProperties.setComment(tableSchema.getComment());
-                    columnsProperties.setLength(tableSchema.getLength());
-                    columnsProperties.setTyp(tableSchema.getType());
+                    columnsProperties.setName(mvcSchema.getColumn());
+                    columnsProperties.setComment(mvcSchema.getComment());
+                    columnsProperties.setLength(mvcSchema.getLength());
+                    columnsProperties.setTyp(mvcSchema.getType());
                     columns.add(columnsProperties);
                 }
             }

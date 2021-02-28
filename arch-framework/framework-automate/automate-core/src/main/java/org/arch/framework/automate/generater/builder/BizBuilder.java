@@ -9,11 +9,12 @@ import org.arch.framework.automate.generater.properties.PackageProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 @Slf4j
 @Service
-public class BizBuilder implements Buildable {
+public class BizBuilder extends AbstractBuilder implements Buildable {
 
 
     @Override
@@ -22,8 +23,9 @@ public class BizBuilder implements Buildable {
     }
 
     @Override
-    public void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) {
+    public void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) throws IOException {
         log.info("BizBuilder start");
+        buildPackageFile(projectProperties.getCover(), path, templateEngine, projectProperties, packageProperties, databaseProperties);
     }
 
 }

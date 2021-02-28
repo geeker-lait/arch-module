@@ -13,7 +13,7 @@
         <java.version>1.8</java.version>
         <spring-security.version>5.4.2</spring-security.version>
         <spring.version>5.2.9.RELEASE</spring.version>
-        <dcenter-ums.version>2.2.19</dcenter-ums.version>
+        <dcenter-ums.version>2.2.23</dcenter-ums.version>
     </properties>
 
 
@@ -165,6 +165,11 @@
                 <artifactId>ums-user</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>ums-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
 
             <!-- auth -->
@@ -312,7 +317,7 @@
                 <artifactId>feign-core</artifactId>
                 <version>10.10.1</version>
             </dependency>
-            <!--Feign上传文件-->
+            <!--Feign-->
             <dependency>
                 <groupId>io.github.openfeign.form</groupId>
                 <artifactId>feign-form</artifactId>
@@ -328,6 +333,17 @@
                 <artifactId>commons-fileupload</artifactId>
                 <version>1.4</version>
             </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-httpclient</artifactId>
+                <version>11.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+            </dependency>
+
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-boot-starter</artifactId>

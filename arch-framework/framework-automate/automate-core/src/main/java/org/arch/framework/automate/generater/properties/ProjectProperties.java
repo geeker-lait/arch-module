@@ -2,6 +2,7 @@ package org.arch.framework.automate.generater.properties;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.io.File;
@@ -30,6 +31,7 @@ import java.nio.file.Paths;
  */
 @Data
 @NoArgsConstructor
+@ToString
 public class ProjectProperties {
     /**
      * 是否覆盖

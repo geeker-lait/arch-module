@@ -17,21 +17,20 @@ import static java.util.Objects.nonNull;
  * 账号-角色菜单(RoleMenu) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-01-30 11:40:52
+ * @date 2021-02-26 23:16:08
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/role/menu")
-public class RoleMenuController implements CrudController<RoleMenu, Long, RoleMenuSearchDto, RoleMenuService> {
+public class RoleMenuController implements CrudController<RoleMenu, java.lang.Long, RoleMenuSearchDto, RoleMenuService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final RoleMenuService roleMenuService;
 
     @Override
     public RoleMenu resolver(TokenInfo token, RoleMenu roleMenu) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 roleMenu 后返回 roleMenu, 如: tenantId 的处理等.
         if (nonNull(token) && nonNull(token.getTenantId())) {
             roleMenu.setTenantId(token.getTenantId());
         }

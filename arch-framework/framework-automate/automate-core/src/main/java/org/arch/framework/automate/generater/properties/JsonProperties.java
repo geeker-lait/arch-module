@@ -1,6 +1,7 @@
 package org.arch.framework.automate.generater.properties;
 
 import lombok.Data;
+import lombok.ToString;
 import org.arch.framework.automate.generater.core.SchemaSource;
 
 /**
@@ -10,6 +11,7 @@ import org.arch.framework.automate.generater.core.SchemaSource;
  * @date :
  */
 @Data
+@ToString
 public class JsonProperties  implements SchemaSource {
     private String content;
 }

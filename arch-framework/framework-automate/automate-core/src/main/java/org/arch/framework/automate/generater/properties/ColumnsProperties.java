@@ -2,6 +2,7 @@ package org.arch.framework.automate.generater.properties;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * @author lait.zhang@gmail.com
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
+@ToString
 public class ColumnsProperties {
     private String name;
     private String typ;

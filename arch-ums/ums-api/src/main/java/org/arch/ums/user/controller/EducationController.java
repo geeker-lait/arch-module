@@ -17,21 +17,20 @@ import static java.util.Objects.nonNull;
  * 用户学历信息(Education) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-01-30 11:31:25
+ * @date 2021-02-26 23:19:52
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user/education")
-public class EducationController implements CrudController<Education, Long, EducationSearchDto, EducationService> {
+public class EducationController implements CrudController<Education, java.lang.Long, EducationSearchDto, EducationService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final EducationService educationService;
 
     @Override
     public Education resolver(TokenInfo token, Education education) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 education 后返回 education, 如: tenantId 的处理等.
         if (nonNull(token) && nonNull(token.getTenantId())) {
             education.setTenantId(token.getTenantId());
         }

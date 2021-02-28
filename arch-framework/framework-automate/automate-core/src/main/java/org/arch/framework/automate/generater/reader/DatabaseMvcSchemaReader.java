@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class DatabaseSchemaReader extends AbstractSchemaReader implements SchemaReadable<DatabaseProperties> {
+public class DatabaseMvcSchemaReader extends AbstractSchemaReader implements SchemaReadable<DatabaseProperties> {
     @Override
     public SourceName getSource() {
         return SourceName.DATABASE_SOURCE;
