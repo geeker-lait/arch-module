@@ -89,13 +89,16 @@ public class FileInfoService extends CrudService<FileInfo, java.lang.Long> {
      * @return  删除的文件信息
      */
     @Nullable
-    public FileInfo findByFilePathAndUploadType(@NonNull Integer tenantId, @NonNull String filePath,
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
+    public FileInfo deleteByFilePathAndUploadType(@NonNull Integer tenantId, @NonNull String filePath,
                                                 @NonNull String uploadType) {
         LambdaQueryWrapper<FileInfo> queryWrapper =
                 Wrappers.<FileInfo>lambdaQuery()
                         .eq(FileInfo::getTenantId, tenantId)
                         .and(w -> w.eq(FileInfo::getUploadType, uploadType))
                         .and(w -> w.eq(FileInfo::getFilePath, filePath));
-        return fileInfoDao.getOne(queryWrapper);
+        FileInfo fileInfo = fileInfoDao.getOne(queryWrapper);
+        deleteById(fileInfo.getId());
+        return fileInfo;
     }
 }

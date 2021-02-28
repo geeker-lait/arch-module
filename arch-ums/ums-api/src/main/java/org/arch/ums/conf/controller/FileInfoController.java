@@ -66,26 +66,29 @@ public class FileInfoController implements CrudController<FileInfo, java.lang.Lo
 
     /**
      * 根据 filePath 与 uploadType 删除 文件信息
-     * @param filePath      文件路径
-     * @param uploadType    上传类型
-     * @return  删除的文件信息
+     *
+     * @param filePath   文件路径
+     * @param uploadType 上传类型
+     * @return 删除的文件信息
      */
     @NonNull
-    @DeleteMapping(value = "/deleteByPathAndUploadType", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    Response<FileInfo> deleteByPathAndUploadType(@RequestParam(value = "filePath") String filePath,
-                                                 @RequestParam(value = "uploadType") String uploadType) {
+    @DeleteMapping(value = "/deleteByFilePathAndUploadType", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    Response<FileInfo> deleteByFilePathAndUploadType(@RequestParam(value = "filePath") String filePath,
+                                                     @RequestParam(value = "uploadType") String uploadType) {
+
         try {
             Integer tenantId = Integer.valueOf(this.tenantContextHolder.getTenantId());
-            FileInfo fileInfo = this.fileInfoService.findByFilePathAndUploadType(tenantId, filePath, uploadType);
+            FileInfo fileInfo = this.fileInfoService.deleteByFilePathAndUploadType(tenantId, filePath, uploadType);
             if (isNull(fileInfo)) {
                 return Response.success(null);
             }
             this.fileInfoService.deleteById(fileInfo.getId());
+            fileInfo.setDeleted(Boolean.TRUE);
             return Response.success(fileInfo);
         }
         catch (Exception e) {
             log.error(String.format("删除文件信息失败: filePath: %s, uploadType: %s", filePath, uploadType), e);
-            return Response.error(FAILED.getCode(), e.getMessage());
+            return Response.error(FAILED.getCode(), "删除文件信息失败");
         }
     }
 

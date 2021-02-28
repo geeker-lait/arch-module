@@ -67,7 +67,7 @@ public abstract class BaseImageFileUploader implements FileUploader {
      * @return  返回 true 表示删除成功
      */
     protected boolean removeFile(@NonNull String filePath, @NonNull String uploadType) {
-        Response<FileInfo> response = this.umsConfFileInfoFeignService.deleteByPathAndUploadType(filePath, uploadType);
+        Response<FileInfo> response = this.umsConfFileInfoFeignService.deleteByFilePathAndUploadType(filePath, uploadType);
         FileInfo fileInfo = response.getSuccessData();
 
         String fileKey = filePath;

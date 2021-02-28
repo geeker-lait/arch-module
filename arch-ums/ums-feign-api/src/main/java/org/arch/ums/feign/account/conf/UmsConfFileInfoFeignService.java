@@ -24,12 +24,13 @@ public interface UmsConfFileInfoFeignService extends BaseFeignService<FileInfo, 
 
     /**
      * 根据 filePath 与 uploadType 删除 文件信息
-     * @param filePath      文件路径
-     * @param uploadType    上传类型
-     * @return  删除的文件信息
+     *
+     * @param filePath   文件路径
+     * @param uploadType 上传类型
+     * @return 删除的文件信息
      */
     @NonNull
-    @DeleteMapping(value = "/deleteByPathAndUploadType", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    Response<FileInfo> deleteByPathAndUploadType(@RequestParam(value = "filePath") String filePath,
-                                                 @RequestParam(value = "uploadType") String uploadType);
+    @DeleteMapping(value = "/deleteByFilePathAndUploadType", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    Response<FileInfo> deleteByFilePathAndUploadType(@RequestParam(value = "filePath") String filePath,
+                                                     @RequestParam(value = "uploadType") String uploadType);
 }
