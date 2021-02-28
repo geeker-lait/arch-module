@@ -17,7 +17,7 @@
         <module>framework-beans</module>
         <module>framework-core</module>
         <module>framework-utils</module>
-        <module>framework-watchdog</module>
+        <module>framework-msg</module>
     </modules>
 
 </project>
