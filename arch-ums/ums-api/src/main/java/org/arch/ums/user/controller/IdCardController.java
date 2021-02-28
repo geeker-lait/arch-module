@@ -60,4 +60,84 @@ public class IdCardController implements CrudController<IdCard, java.lang.Long, 
         return new IdCardSearchDto();
     }
 
+    /**
+     * 根据 entity 条件查询对象.
+     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
+     *
+     * @param entity 实体类
+     * @param token  token info
+     * @return {@link Response}
+     */
+    @Override
+    @NonNull
+    @GetMapping("/single")
+    public Response<IdCard> findOne(@RequestBody IdCard entity, TokenInfo token) {
+        try {
+            resolver(token, entity);
+            IdCardSearchDto searchDto = convertSearchDto(entity);
+            IdCard t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            return Response.success(t);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            if (e instanceof IncorrectResultSizeDataAccessException) {
+                return Response.error(FAILED.getCode(), "查询到多个结果");
+            }
+            else {
+                return Response.error(FAILED.getCode(), e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * 根据 entity 条件查询对象列表.
+     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
+     *
+     * @param t     实体类
+     * @param token token info
+     * @return {@link Response}
+     */
+    @Override
+    @NonNull
+    @GetMapping("/find")
+    public Response<List<IdCard>> find(@RequestBody IdCard t, TokenInfo token) {
+        resolver(token, t);
+        IdCardSearchDto searchDto = convertSearchDto(t);
+        try {
+            return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 分页查询.
+     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
+     *
+     * @param entity     实体类
+     * @param pageNumber 第几页
+     * @param pageSize   页大小
+     * @param token      token info
+     * @return {@link Response}
+     */
+    @Override
+    @NonNull
+    @GetMapping(value = "/page/{pageNumber}/{pageSize}")
+    public Response<IPage<IdCard>> page(@RequestBody IdCard entity,
+                                        @PathVariable(value = "pageNumber") Integer pageNumber,
+                                        @PathVariable(value = "pageSize") Integer pageSize,
+                                        TokenInfo token) {
+        resolver(token, entity);
+        IdCardSearchDto searchDto = convertSearchDto(entity);
+        try {
+            return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
 }

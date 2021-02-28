@@ -59,4 +59,62 @@ public class NameController implements CrudController<Name, Long, NameSearchDto,
         return new NameSearchDto();
     }
 
+    /**
+     * 根据 entity 条件查询对象.
+     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
+     * @param entity    实体类
+     * @param token     token info
+     * @return  {@link Response}
+     */
+    @Override
+    @GetMapping("/single")
+    public Response<Name> findOne(@RequestBody Name entity, TokenInfo token) {
+        try {
+            resolver(token, entity);
+            NameSearchDto searchDto = convertSearchDto(entity);
+            Name t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            return Response.success(t);
+        } catch (Exception e) {
+            if (e instanceof IncorrectResultSizeDataAccessException) {
+                return Response.error(FAILED.getCode(),"查询到多个结果");
+            } else {
+                return Response.error(FAILED.getCode(), e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * 根据 entity 条件查询对象列表.
+     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
+     * @param t         实体类
+     * @param token     token info
+     * @return  {@link Response}
+     */
+    @Override
+    @GetMapping("/find")
+    public Response<List<Name>> find(@RequestBody Name t, TokenInfo token) {
+        resolver(token, t);
+        NameSearchDto searchDto = convertSearchDto(t);
+        return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+    }
+
+    /**
+     * 分页查询.
+     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
+     * @param entity        实体类
+     * @param pageNumber    第几页
+     * @param pageSize      页大小
+     * @param token         token info
+     * @return  {@link Response}
+     */
+    @Override
+    @GetMapping(value = "/page/{pageNumber}/{pageSize}")
+    public Response<IPage<Name>> page(@RequestBody Name entity,
+                                       @PathVariable(value = "pageNumber") Integer pageNumber,
+                                       @PathVariable(value = "pageSize") Integer pageSize,
+                                       TokenInfo token) {
+        resolver(token, entity);
+        NameSearchDto searchDto = convertSearchDto(entity);
+        return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+    }
 }

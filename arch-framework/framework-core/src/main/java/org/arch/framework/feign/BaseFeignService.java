@@ -52,7 +52,7 @@ public interface BaseFeignService<T extends Model<T>, ID extends Serializable> {
      * @return  {@link Response}
      */
     @GetMapping("/single")
-    Response<T> findOne(T entity);
+    Response<T> findOne(@RequestBody T entity);
 
     /**
      * 根据 entity 条件查询对象列表
@@ -60,7 +60,7 @@ public interface BaseFeignService<T extends Model<T>, ID extends Serializable> {
      * @return  {@link Response}
      */
     @GetMapping("/find")
-    Response<List<T>> find(T t);
+    Response<List<T>> find(@RequestBody T t);
 
     /**
      * 查询所有列表
@@ -77,7 +77,7 @@ public interface BaseFeignService<T extends Model<T>, ID extends Serializable> {
      * @return  {@link Response}
      */
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    Response<Page<T>> page(T entity,
+    Response<Page<T>> page(@RequestBody T entity,
                            @PathVariable(value = "pageNumber") Integer pageNumber,
                            @PathVariable(value = "pageSize") Integer pageSize);
 
