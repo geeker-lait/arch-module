@@ -4,13 +4,13 @@
     <select id="existDatabase" resultType="Integer">
         SELECT count(*)
         FROM information_schema.SCHEMATA
-        WHERE LCASE(SCHEMA_NAME) = #{database}
+        WHERE LCASE(SCHEMA_NAME) = #{database};
     </select>
     <update id="createDatabase">
-        CREATE DATABASE IF NOT EXISTS ${database} Character Set utf8mb4 collate utf8mb4_general_ci;
+        CREATE DATABASE IF NOT EXISTS `${database}` Character Set utf8mb4 collate utf8mb4_general_ci;
     </update>
     <update id="dropDatabase">
-         DROP DATABASE IF EXISTS ${database};
+         DROP DATABASE IF EXISTS `${database}`;
     </update>
     <select id="existTable" resultType="Integer">
         SELECT count(*)
@@ -19,11 +19,11 @@
         AND LCASE(TABLE_SCHEMA) = #{database}
     </select>
     <update id="dropTable">
-        DROP TABLE IF EXISTS ${database}.${tableName}
+        DROP TABLE IF EXISTS `${database}`.`${tableName}`
     </update>
 
     <update id="createTable">
-        CREATE TABLE IF NOT EXISTS ${record.databaseName}.${record.tableName} (
+        CREATE TABLE IF NOT EXISTS `${record.databaseName}`.`${record.tableName}` (
         <trim suffixOverrides=",">
             <if test="record.pk == null or record.pk == ''">
                 id bigint(19) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
@@ -76,7 +76,7 @@
                     PRIMARY KEY (`id`),
                 </when>
                 <otherwise>
-                    PRIMARY KEY (${record.pk}),
+                    PRIMARY KEY (`${record.pk}`),
                 </otherwise>
             </choose>
         </trim>

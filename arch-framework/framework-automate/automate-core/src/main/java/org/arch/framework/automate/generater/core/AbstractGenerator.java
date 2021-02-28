@@ -39,6 +39,7 @@ public abstract class AbstractGenerator implements Generable {
     protected Boolean cover;
     protected boolean pomBuildOnce = true;
     protected String buildTool;
+    protected String source;
     @Autowired
     private List<Buildable> builders;
     @Autowired
@@ -57,6 +58,7 @@ public abstract class AbstractGenerator implements Generable {
         schemaReaderMap.putAll(schemaReadables.stream().collect(Collectors.toMap(s -> s.getSource().getSource(), Function.identity())));
         cover = generatorConfig.getProject().getCover();
         buildTool = generatorConfig.getBuildTool();
+        source = generatorConfig.getSource();
     }
 
 
@@ -76,11 +78,13 @@ public abstract class AbstractGenerator implements Generable {
         ProjectProperties projectProperties = generatorConfig.getProject();
         PomProperties pomProperties = projectProperties.getPom();
         List<DatabaseProperties> databasePropertiesList;
-        String source = generatorConfig.getSource();
+        //String source = generatorConfig.getSource();
         // 确定生成源
         if (StringUtils.isEmpty(source)) {
             throw new CodegenException("must assign a source name,it can be database or excel or json");
         }
+        // 多schema 读取
+        // schemaReaderMap.get(source).read(this,generatorConfig);
         // 默认支持database,如果是excel 转换为database
         if (source.equalsIgnoreCase("database")) {
             String databaseName = generatorConfig.getDatabase().getName();
@@ -89,6 +93,10 @@ public abstract class AbstractGenerator implements Generable {
             }
             databasePropertiesList = schemaReaderMap.get(source).read(generatorConfig.getDatabase());
         } else if (source.equalsIgnoreCase("excel")) {
+            List<ExcelProperties> excelPropertiesLists = generatorConfig.getExcels();
+            excelPropertiesLists.forEach(e->{
+                log.info(" 处理不同类型的Excel {}",e.getSchemaReader());
+            });
             ExcelProperties excelProperties = generatorConfig.getExcel();
             if (StringUtils.isEmpty(excelProperties.getFile())) {
                 throw new CodegenException("excel file is null");

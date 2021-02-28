@@ -3,7 +3,7 @@ package org.arch.framework.automate.generater.properties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.arch.framework.automate.generater.core.SchemaSource;
+import org.arch.framework.automate.generater.core.SchemaProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @ToString
-public class DatabaseProperties implements SchemaSource {
+public class DatabaseProperties implements SchemaProperties {
     private String driver;
     private String dialect;
     private String host;

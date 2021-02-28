@@ -18,6 +18,10 @@ public class BaseException extends RuntimeException {
      */
     protected Object[] args;
 
+    public BaseException(String msg) {
+        super(msg);
+    }
+
     public BaseException(StatusCode responseCode) {
         super(responseCode.getDescr());
         this.responseCode = responseCode;
@@ -49,6 +53,8 @@ public class BaseException extends RuntimeException {
         this.responseCode = responseCode;
         this.args = args;
     }
+
+
 
     public static long getSerialversionuid() {
         return serialVersionUID;

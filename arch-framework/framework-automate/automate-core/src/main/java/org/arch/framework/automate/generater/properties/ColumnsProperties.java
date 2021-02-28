@@ -3,6 +3,7 @@ package org.arch.framework.automate.generater.properties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.arch.framework.automate.generater.core.SchemaProperties;
 
 /**
  * @author lait.zhang@gmail.com
@@ -17,7 +18,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString
-public class ColumnsProperties {
+public class ColumnsProperties implements SchemaProperties {
     private String name;
     private String typ;
     private String length;

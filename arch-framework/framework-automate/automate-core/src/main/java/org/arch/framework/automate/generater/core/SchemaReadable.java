@@ -1,5 +1,6 @@
 package org.arch.framework.automate.generater.core;
 
+import org.arch.framework.automate.generater.config.GeneratorConfig;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * @weixin PN15855012581
  * @date 2/26/2021 11:07 AM
  */
-public interface SchemaReadable<S extends SchemaSource> {
+public interface SchemaReadable<S extends SchemaProperties> {
     /**
      * 获取读取源
      *
@@ -19,10 +20,18 @@ public interface SchemaReadable<S extends SchemaSource> {
     SourceName getSource();
 
     /**
+     * 获取读取器到名称
+     * @return
+     */
+    String getReaderName();
+
+    /**
      * 读取
      *
      * @param source
      * @return
      */
     List<DatabaseProperties> read(S source) throws Exception;
+
+    void read(AbstractGenerator abstractGenerator, GeneratorConfig generatorConfig);
 }

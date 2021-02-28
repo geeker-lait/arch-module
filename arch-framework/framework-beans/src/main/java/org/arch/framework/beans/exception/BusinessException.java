@@ -10,6 +10,9 @@ public class BusinessException extends BaseException {
 
     private static final long serialVersionUID = 1L;
 
+    public BusinessException(String message) {
+        super(message);
+    }
     public BusinessException(StatusCode responseCode) {
         super(responseCode);
     }

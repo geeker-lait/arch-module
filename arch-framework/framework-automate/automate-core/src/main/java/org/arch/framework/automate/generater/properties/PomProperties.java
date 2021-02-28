@@ -4,10 +4,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.arch.framework.automate.generater.core.DataProperties;
+import org.arch.framework.automate.generater.core.SchemaProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class PomProperties implements DataProperties {
+public class PomProperties implements SchemaProperties {
 
     private String groupId;
     private String artifactId;

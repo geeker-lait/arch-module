@@ -207,6 +207,8 @@ public class GeneratorConfig {
      */
     @NestedConfigurationProperty
     private ExcelProperties excel;
+    @NestedConfigurationProperty
+    private List<ExcelProperties> excels;
     /**
      * Db数据源 生产项目
      */

@@ -1,6 +1,8 @@
 package org.arch.framework.automate.generater.reader;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.generater.config.GeneratorConfig;
+import org.arch.framework.automate.generater.core.AbstractGenerator;
 import org.arch.framework.automate.generater.core.SchemaReadable;
 import org.arch.framework.automate.generater.core.SourceName;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
@@ -26,11 +28,16 @@ public class DatabaseMvcSchemaReader extends AbstractSchemaReader implements Sch
     }
 
     @Override
+    public String getReaderName() {
+        return this.getClass().getSimpleName();
+    }
+
+    @Override
     public List<DatabaseProperties> read(DatabaseProperties source) {
         List<DatabaseProperties> databasePropertiesList = new ArrayList<>();
         Arrays.asList(source.getName().split(",")).forEach(dbname -> {
             // 获取数据库的table
-            List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(dbname);
+            List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(source, dbname);
             if (null == tableProperties) {
                 tableProperties = new ArrayList<>();
             }
@@ -44,5 +51,12 @@ public class DatabaseMvcSchemaReader extends AbstractSchemaReader implements Sch
             databasePropertiesList.add(databaseProperties);
         });
         return databasePropertiesList;
+    }
+
+
+    @Override
+    public void read(AbstractGenerator abstractGenerator, GeneratorConfig generatorConfig) {
+        //read(generatorConfig.getDatabase());
+        //abstractGenerator.buildModule();
     }
 }

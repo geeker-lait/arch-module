@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.arch.framework.automate.api.dto.DirectiveRequestDto;
 import org.arch.framework.automate.api.response.AlterTableResponse;
+import org.arch.framework.automate.from.ddl.DDLOperate;
 import org.arch.framework.automate.from.directive.SqlDirective;
 import org.arch.framework.automate.from.directive.SqlDirectiveCode;
 import org.arch.framework.automate.from.mapper.DDLMapper;
 import org.arch.framework.automate.from.utils.DefinitionTableUtil;
+import org.arch.framework.automate.generater.properties.DatabaseProperties;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,7 +29,13 @@ public class DdlDropDirective extends AbstractDirective implements SqlDirective<
         if (StringUtils.isBlank(directiveRequest.getTableName()) || StringUtils.isBlank(directiveRequest.getDatabaseName())) {
             return null;
         }
-        ddlMapper.dropTable(DefinitionTableUtil.camelToUnderscore(directiveRequest.getDatabaseName()), DefinitionTableUtil.camelToUnderscore(directiveRequest.getTableName()));
+        DatabaseProperties properties = null;
+        if (directiveRequest.getDataSource() != null) {
+            properties = new DatabaseProperties();
+            BeanUtils.copyProperties(directiveRequest.getDataSource(), properties);
+        }
+        DDLOperate ddlOperate = DDLOperate.selectDDLOperate(properties);
+        ddlOperate.dropTable(properties, DefinitionTableUtil.camelToUnderscore(directiveRequest.getDatabaseName()), DefinitionTableUtil.camelToUnderscore(directiveRequest.getTableName()));
         return null;
     }
 
