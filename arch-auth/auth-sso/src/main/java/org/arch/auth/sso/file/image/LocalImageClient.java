@@ -81,7 +81,7 @@ public class LocalImageClient extends BaseImageClient {
                     .setUploadEndTime(LocalDateTime.now())
                     .setFilePath(this.newFileName)
                     .setFileHash(fileHash)
-                    .setFullFilePath(this.url + this.newFileName)
+                    .setFullFilePath(this.url + this.rootPath + this.newFileName)
                     .setSize(imageInfo.getSize())
                     .setWidth(imageInfo.getWidth())
                     .setHeight(imageInfo.getHeight());
