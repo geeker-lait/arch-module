@@ -44,7 +44,9 @@ management:
 
 logging:
   config: classpath:logback-spring.xml
-
+  level:
+    # feign 日志配置
+    org.arch.ums.feign.account.client: warn
 
 
 ---
@@ -73,7 +75,6 @@ logging:
   config: classpath:logback-spring-dev.xml
   level:
     # feign 日志配置
-    org.arch.auth.ums.feign.client.UmsAccountClient: debug
-    org.arch.auth.ums.feign.client.UmsAccountAuthClient: debug
+    org.arch.ums.feign.account.client: debug
 
 debug: true
