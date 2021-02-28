@@ -30,6 +30,6 @@ public interface UmsAccountAuthTokenFeignService extends BaseFeignService<OauthT
      * @return  {@link Response}
      */
     @NonNull
-    @PostMapping(value = "/update/by/identifier/id", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/updateByIdentifierId", consumes = MediaType.APPLICATION_JSON_VALUE)
     Response<Boolean> updateByIdentifierId(@RequestBody @Valid OauthToken oauthToken);
 }
