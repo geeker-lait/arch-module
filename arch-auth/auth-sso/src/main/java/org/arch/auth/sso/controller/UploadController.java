@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.auth.sso.file.FileInfoDto;
 import org.arch.auth.sso.file.FileUploader;
-import org.arch.auth.sso.properties.SsoProperties;
+import org.arch.auth.sso.properties.FileProperties;
 import org.arch.framework.beans.Response;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
@@ -33,7 +33,7 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
 public class UploadController {
 
     private final FileUploader fileUploader;
-    private final SsoProperties ssoProperties;
+    private final FileProperties fileProperties;
 
     /**
      * 上传图片
@@ -43,7 +43,7 @@ public class UploadController {
     @NonNull
     @PostMapping(value = "/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Response<List<String>> uploadImage(@RequestParam("files") MultipartFile[] files) {
-        String uploadType = ssoProperties.getUploadType();
+        String uploadType = fileProperties.getUploadType();
         List<String> imageUrlList = new ArrayList<>(files.length);
         try {
             // 待优化
@@ -67,7 +67,7 @@ public class UploadController {
     @NonNull
     @PostMapping(value = "/image/avatar", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Response<List<String>> uploadAvatar(@RequestParam("file") MultipartFile file) {
-        String uploadType = ssoProperties.getUploadType();
+        String uploadType = fileProperties.getUploadType();
         try {
             FileInfoDto upload = fileUploader.upload(file, uploadType, true);
             return Response.success(Collections.singletonList(upload.getFullFilePath()));

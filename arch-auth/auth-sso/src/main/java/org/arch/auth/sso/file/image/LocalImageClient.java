@@ -8,7 +8,6 @@ import org.arch.framework.ums.enums.StorageType;
 import org.springframework.lang.NonNull;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -16,6 +15,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * 本地图片操作客户端
@@ -25,7 +26,7 @@ import java.time.LocalDateTime;
  */
 public class LocalImageClient extends BaseImageClient {
 
-    private static final String DEFAULT_PREFIX = "arch-sso/";
+    private static final String DEFAULT_PREFIX = "image/";
 
     private String url;
     private String rootPath;
@@ -39,8 +40,11 @@ public class LocalImageClient extends BaseImageClient {
     public LocalImageClient init(@NonNull String url, @NonNull String rootPath,
                                  @NonNull String uploadType, @NonNull Integer imageMaxSize) {
         this.url = url;
+        if (!hasText(url)) {
+            this.url = "";
+        }
         this.rootPath = rootPath;
-        this.pathPrefix = !StringUtils.hasText(uploadType) ? DEFAULT_PREFIX : uploadType.endsWith("/") ? uploadType : uploadType + "/";
+        this.pathPrefix = !hasText(uploadType) ? DEFAULT_PREFIX : uploadType.endsWith("/") ? uploadType : uploadType + "/";
         this.imageMaxSize = imageMaxSize;
         return this;
     }
@@ -54,7 +58,7 @@ public class LocalImageClient extends BaseImageClient {
         this.createNewFileName(oriFileName, this.pathPrefix);
         LocalDateTime startTime = LocalDateTime.now();
 
-        String realFilePath = this.rootPath + this.newFileName;
+        String realFilePath = this.url + this.rootPath + this.newFileName;
         FileUtil.checkFilePath(realFilePath);
         try (ByteArrayInputStream uploadIs = (ByteArrayInputStream) FileUtil.clone(is);
              FileOutputStream fos = new FileOutputStream(realFilePath)) {
@@ -95,7 +99,7 @@ public class LocalImageClient extends BaseImageClient {
     @Override
     public boolean removeFile(@NonNull String pathOrUrl) {
         this.check();
-        if (!StringUtils.hasText(pathOrUrl)) {
+        if (!hasText(pathOrUrl)) {
             throw new LocalUploadFileException("[" + this.storageType.name() + "]删除文件失败：文件key为空");
         }
         File file = new File(this.rootPath + pathOrUrl);
@@ -111,7 +115,7 @@ public class LocalImageClient extends BaseImageClient {
 
     @Override
     public void check() {
-        if (!StringUtils.hasText(url) || !StringUtils.hasText(rootPath)) {
+        if (!hasText(url) || !hasText(rootPath)) {
             throw new LocalUploadFileException("[" + this.storageType.name() + "]尚未配置文件服务器，文件上传功能暂时不可用！");
         }
     }

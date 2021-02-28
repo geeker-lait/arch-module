@@ -3,7 +3,7 @@ package org.arch.auth.sso.file;
 import cn.hutool.core.bean.BeanUtil;
 import org.arch.auth.sso.file.image.ImageClient;
 import org.arch.auth.sso.file.image.ImageClientAdapter;
-import org.arch.auth.sso.properties.SsoProperties;
+import org.arch.auth.sso.properties.FileProperties;
 import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.ums.bean.TokenInfo;
@@ -26,10 +26,10 @@ public abstract class BaseImageFileUploader implements FileUploader {
     protected BaseImageFileUploader(UmsConfFileInfoFeignService umsConfFileInfoFeignService,
                                     TenantContextHolder tenantContextHolder,
                                     ImageClient imageClient,
-                                    SsoProperties ssoProperties) {
+                                    FileProperties fileProperties) {
         this.umsConfFileInfoFeignService = umsConfFileInfoFeignService;
         this.tenantContextHolder = tenantContextHolder;
-        this.imageClient = new ImageClientAdapter(ssoProperties, imageClient);
+        this.imageClient = new ImageClientAdapter(fileProperties, imageClient);
     }
 
     /**

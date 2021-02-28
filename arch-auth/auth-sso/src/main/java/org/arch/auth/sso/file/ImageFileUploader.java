@@ -2,7 +2,7 @@ package org.arch.auth.sso.file;
 
 import org.arch.auth.sso.exception.GlobalFileException;
 import org.arch.auth.sso.file.image.ImageClient;
-import org.arch.auth.sso.properties.SsoProperties;
+import org.arch.auth.sso.properties.FileProperties;
 import org.arch.ums.feign.account.conf.UmsConfFileInfoFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -27,8 +27,8 @@ public class ImageFileUploader extends BaseImageFileUploader implements FileUplo
     public ImageFileUploader(UmsConfFileInfoFeignService umsConfFileInfoFeignService,
                              TenantContextHolder tenantContextHolder,
                              @Autowired(required = false) ImageClient imageClient,
-                             SsoProperties ssoProperties) {
-        super(umsConfFileInfoFeignService, tenantContextHolder, imageClient, ssoProperties);
+                             FileProperties fileProperties) {
+        super(umsConfFileInfoFeignService, tenantContextHolder, imageClient, fileProperties);
     }
 
     @Override

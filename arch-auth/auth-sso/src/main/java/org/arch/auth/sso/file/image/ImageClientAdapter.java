@@ -1,7 +1,7 @@
 package org.arch.auth.sso.file.image;
 
 import org.arch.auth.sso.file.FileInfoDto;
-import org.arch.auth.sso.properties.SsoProperties;
+import org.arch.auth.sso.properties.FileProperties;
 import org.arch.framework.ums.enums.StorageType;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -22,15 +22,15 @@ public class ImageClientAdapter implements ImageClient {
 
     private final ImageClient imageClient;
 
-    public ImageClientAdapter(SsoProperties ssoProperties) {
-        this(ssoProperties,null);
+    public ImageClientAdapter(FileProperties fileProperties) {
+        this(fileProperties,null);
     }
 
-    public ImageClientAdapter(SsoProperties ssoProperties, @Nullable ImageClient imageClient) {
+    public ImageClientAdapter(FileProperties fileProperties, @Nullable ImageClient imageClient) {
         if (isNull(imageClient)) {
             LocalImageClient localFileClient = new LocalImageClient();
-            this.imageClient = localFileClient.init(ssoProperties.getUrl(), ssoProperties.getRootPath(),
-                                                    ssoProperties.getUploadType(), ssoProperties.getImageMaxSize());
+            this.imageClient = localFileClient.init(fileProperties.getUrl(), fileProperties.getRootPath(),
+                                                    fileProperties.getUploadType(), fileProperties.getImageMaxSize());
             return;
         }
         this.imageClient = imageClient;
