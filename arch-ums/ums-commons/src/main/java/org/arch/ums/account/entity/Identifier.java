@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
  * @date 2021-01-29 21:03:18
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -35,7 +36,7 @@ public class Identifier extends CrudEntity<Identifier> {
     private Long id;
 
     /**
-     * 账号名ID
+     * 账号ID/用户ID/会员ID/商户ID
      */
     private Long aid;
 

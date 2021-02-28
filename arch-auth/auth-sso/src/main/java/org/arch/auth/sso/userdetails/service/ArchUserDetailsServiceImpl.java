@@ -14,7 +14,8 @@ import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
-import org.arch.ums.feign.account.client.UmsAccountClient;
+import org.arch.ums.feign.account.client.UmsAccountAuthTokenFeignService;
+import org.arch.ums.feign.account.client.UmsAccountIdentifierFeignService;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -31,6 +32,7 @@ import top.dcenter.ums.security.core.api.service.UmsUserDetailsService;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.exception.RegisterUserFailureException;
 import top.dcenter.ums.security.core.exception.UserNotExistException;
+import top.dcenter.ums.security.core.oauth.properties.Auth2Properties;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -55,7 +58,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     /**
      * 用于用户名密码注册时在 request 中传递 {@link RegRequest} 参数的参数名称.
      */
-    public static final String REG_REQUEST_PARAMETER_NAME = "regRequest";
+    public static final String REG_REQUEST_PARAMETER_NAME = "UNPW_regRequest";
 
     /**
      * 用于密码加解密
@@ -64,7 +67,9 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     private final IdService idService;
     private final SsoProperties ssoProperties;
     private final TenantContextHolder tenantContextHolder;
-    private final UmsAccountClient umsAccountClient;
+    private final UmsAccountIdentifierFeignService umsAccountIdentifierFeignService;
+    private final Auth2Properties auth2Properties;
+    private final UmsAccountAuthTokenFeignService umsAccountAuthTokenFeignService;
 
     @NonNull
     @Override
@@ -78,7 +83,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         try {
             // 根据用户名获取用户信息
             AuthLoginDto authLoginDto;
-            final Response<AuthLoginDto> response = umsAccountClient.loadAccountByIdentifier(userId);
+            final Response<AuthLoginDto> response = umsAccountIdentifierFeignService.loadAccountByIdentifier(userId);
             authLoginDto = response.getSuccessData();
 
             if (isNull(authLoginDto)) {
@@ -87,6 +92,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
             return new ArchUser(authLoginDto.getIdentifier(),
                                 authLoginDto.getCredential(),
+                                authLoginDto.getId(),
                                 authLoginDto.getAid(),
                                 authLoginDto.getTenantId(),
                                 authLoginDto.getChannelType(),
@@ -199,8 +205,17 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
         // 第三方授权登录用户注册
         AuthRegRequest authRegRequest = getOauth2RegRequest(authUser, username, defaultAuthority, accountType);
+        AuthLoginDto authLoginDto = registerUserAndGetAuthLoginDto(authRegRequest);
+        ArchUser archUser = getArchUser(authRegRequest, authLoginDto);
 
-        return registerUser(authRegRequest);
+        // 保存第三方用户的 OauthToken 信息
+        int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
+        umsAccountAuthTokenFeignService.save(toOauthToken(authUser,
+                                                          tenantContextHolder.getTenantId(),
+                                                          authLoginDto.getId(),
+                                                          timeout));
+        return archUser;
+
 
     }
 
@@ -218,7 +233,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
          用户名: authUser.getUsername()
         */
         return new String[]{
-                RegisterUtils.getIdentifierForOauth2(authUser.getSource(),authUser.getUuid())
+                RegisterUtils.getIdentifierForOauth2(authUser.getSource(), authUser.getUuid())
         };
     }
 
@@ -236,7 +251,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         List<String> usernameList = Arrays.stream(usernames).collect(Collectors.toList());
         Response<List<Boolean>> response;
         try {
-            response = umsAccountClient.exists(usernameList);
+            response = umsAccountIdentifierFeignService.exists(usernameList);
         }
         catch (Exception e) {
             throw new IOException("查询用户名是否存在时 IO 异常");
@@ -250,24 +265,16 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
 
     @NonNull
     private ArchUser registerUser(@NonNull AuthRegRequest authRegRequest) {
-        Response<AuthLoginDto> response;
-        try {
-            response = umsAccountClient.register(authRegRequest);
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new RegisterUserFailureException(ErrorCodeEnum.SERVER_ERROR, e, null);
-        }
+        AuthLoginDto authLoginDto = registerUserAndGetAuthLoginDto(authRegRequest);
+        return getArchUser(authRegRequest, authLoginDto);
+    }
 
-        AuthLoginDto authLoginDto = response.getSuccessData();
-        if (isNull(authLoginDto)) {
-            log.warn("用户注册失败: {}", response.getMsg());
-            throw new RegisterUserFailureException(ErrorCodeEnum.USERNAME_USED, authRegRequest.getIdentifier());
-        }
-
+    @NonNull
+    private ArchUser getArchUser(@NonNull AuthRegRequest authRegRequest, @NonNull AuthLoginDto authLoginDto) {
         // 用户注册成功转换为 UserDetails
         final ArchUser archUser = new ArchUser(authLoginDto.getIdentifier(),
                                                authLoginDto.getCredential(),
+                                               authLoginDto.getId(),
                                                authLoginDto.getAid(),
                                                authLoginDto.getTenantId(),
                                                authLoginDto.getChannelType(),
@@ -285,6 +292,25 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                      archUser.getChannelType().name(), authRegRequest.getSource());
         }
         return archUser;
+    }
+
+    @NonNull
+    private AuthLoginDto registerUserAndGetAuthLoginDto(@NonNull AuthRegRequest authRegRequest) {
+        Response<AuthLoginDto> response;
+        try {
+            response = umsAccountIdentifierFeignService.register(authRegRequest);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new RegisterUserFailureException(ErrorCodeEnum.SERVER_ERROR, e, null);
+        }
+
+        AuthLoginDto authLoginDto = response.getSuccessData();
+        if (isNull(authLoginDto)) {
+            log.warn("用户注册失败: {}", response.getMsg());
+            throw new RegisterUserFailureException(ErrorCodeEnum.USERNAME_USED, authRegRequest.getIdentifier());
+        }
+        return authLoginDto;
     }
 
     @NonNull

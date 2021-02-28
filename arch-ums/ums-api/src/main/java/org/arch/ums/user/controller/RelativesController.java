@@ -17,21 +17,20 @@ import static java.util.Objects.nonNull;
  * 用户亲朋信息(Relatives) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-01-30 11:31:22
+ * @date 2021-02-26 23:19:53
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user/relatives")
-public class RelativesController implements CrudController<Relatives, Long, RelativesSearchDto, RelativesService> {
+public class RelativesController implements CrudController<Relatives, java.lang.Long, RelativesSearchDto, RelativesService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final RelativesService relativesService;
 
     @Override
     public Relatives resolver(TokenInfo token, Relatives relatives) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 relatives 后返回 relatives, 如: tenantId 的处理等.
         if (nonNull(token) && nonNull(token.getTenantId())) {
             relatives.setTenantId(token.getTenantId());
         }

@@ -22,6 +22,16 @@ arch:
     app-id: "001"
     app-code: "001"
 
+  file:
+    # 图片文件存放的 url. 默认: ""
+    url: "http://localhost:9090/sso"
+    # 图片文件存放的根目录. 默认: /image/account/
+    root-path: "/image/account/"
+    # 上传的类型, 即目录名称. 默认: avatar
+    upload-type: "avatar"
+    # 允许最大的上传图片大小, 默认: 2 * 1024 * 1024
+    image-max-size: 2097152
+
 
 ---
 spring:
@@ -32,3 +42,12 @@ spring:
 arch:
   sso:
     default-avatar: http://static.dcenter.top/static/img/random/user/14.jpg
+  file:
+    # 图片文件存放的 url. 默认: ""
+    url: "D:/Workspaces-Idea/proc/arch-module/arch-auth/auth-sso/target"
+    # 图片文件存放的根目录. 默认: /image/account/
+    root-path: "/image/account/"
+    # 上传文件的分类, 即目录名称. 默认: avatar
+    upload-type: "avatar"
+    # 允许最大的上传图片大小, 默认: 2 * 1024 * 1024
+    image-max-size: 2097152

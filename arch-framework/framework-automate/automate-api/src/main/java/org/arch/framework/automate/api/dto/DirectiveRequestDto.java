@@ -25,4 +25,10 @@ public class DirectiveRequestDto implements DirectiveRequest {
      */
     private String databaseName;
 
+    /**
+     * 数据源
+     *  类属性 复制于 {@link org.arch.framework.automate.generater.properties.DatabaseProperties}
+     */
+    DatabasePropertiesDto dataSource;
+
 }

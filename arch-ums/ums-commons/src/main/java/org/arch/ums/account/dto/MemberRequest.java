@@ -24,7 +24,7 @@ public class MemberRequest {
     private Long id;
 
     /**
-     * 用户id
+     * 会员id
      */
     private Long accountId;
 

@@ -20,7 +20,8 @@
     </resultMap>
 
     <sql id="tableName">
-        `id`
+        `user_education`
+
     </sql>
 
     <sql id="baseColumn">

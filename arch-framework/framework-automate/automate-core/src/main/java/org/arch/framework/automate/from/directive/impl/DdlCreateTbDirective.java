@@ -9,13 +9,15 @@ import org.arch.framework.automate.api.dto.DefinitionTableDto;
 import org.arch.framework.automate.api.dto.DirectiveRequestDto;
 import org.arch.framework.automate.api.dto.FormDefinitionJsonDto;
 import org.arch.framework.automate.api.response.CreateTableResponse;
+import org.arch.framework.automate.from.ddl.DDLOperate;
 import org.arch.framework.automate.from.directive.SqlDirective;
 import org.arch.framework.automate.from.directive.SqlDirectiveCode;
 import org.arch.framework.automate.from.entity.FormDefinition;
-import org.arch.framework.automate.from.mapper.DDLMapper;
 import org.arch.framework.automate.from.service.FormDefinitionService;
 import org.arch.framework.automate.from.utils.DefinitionTableUtil;
+import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.crud.Direction;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -32,7 +34,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DdlCreateTbDirective extends AbstractDirective implements SqlDirective<DirectiveRequestDto> {
 
-    private final DDLMapper ddlMapper;
     private final FormDefinitionService formDefinitionService;
 
     @Override
@@ -42,11 +43,12 @@ public class DdlCreateTbDirective extends AbstractDirective implements SqlDirect
         if (StringUtils.isBlank(databaseName) || StringUtils.isBlank(tableName)) {
             return null;
         }
-        // 指定 database 下的 table 已经存在直接返回
-        if (ddlMapper.existTable(databaseName, tableName) > 0) {
-            log.info("table exist dbName:{} tableName:{}", databaseName, tableName);
-            return null;
+        DatabaseProperties properties = null;
+        if (directiveRequest.getDataSource() != null) {
+            properties = new DatabaseProperties();
+            BeanUtils.copyProperties(directiveRequest.getDataSource(), properties);
         }
+        DDLOperate ddlOperate = DDLOperate.selectDDLOperate(properties);
         FormDefinition formDefinition = new FormDefinition();
         formDefinition.setTableName(tableName);
         // 根据table 查询 数据
@@ -64,7 +66,7 @@ public class DdlCreateTbDirective extends AbstractDirective implements SqlDirect
         if (definitionTableDto == null) {
             return null;
         }
-        ddlMapper.createTable(definitionTableDto);
+        ddlOperate.createTable(properties, definitionTableDto);
         return null;
     }
 

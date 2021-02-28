@@ -17,21 +17,20 @@ import static java.util.Objects.nonNull;
  * 账号-关系(Relationship) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-01-30 11:39:48
+ * @date 2021-02-26 23:16:07
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/relationship")
-public class RelationshipController implements CrudController<Relationship, Long, RelationshipSearchDto, RelationshipService> {
+public class RelationshipController implements CrudController<Relationship, java.lang.Long, RelationshipSearchDto, RelationshipService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final RelationshipService relationshipService;
 
     @Override
     public Relationship resolver(TokenInfo token, Relationship relationship) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 relationship 后返回 relationship, 如: tenantId 的处理等.
         if (nonNull(token) && nonNull(token.getTenantId())) {
             relationship.setTenantId(token.getTenantId());
         }

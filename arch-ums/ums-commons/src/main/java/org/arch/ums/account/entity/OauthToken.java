@@ -1,5 +1,6 @@
 package org.arch.ums.account.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
  * @date 2021-01-29 20:54:54
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -29,7 +31,7 @@ public class OauthToken extends CrudEntity<OauthToken> {
     /**
      * account_oauth_token id
      */
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**

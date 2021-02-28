@@ -17,21 +17,20 @@ import static java.util.Objects.nonNull;
  * 账号操作记录(OperateLog) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-01-30 11:39:03
+ * @date 2021-02-26 23:16:06
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/operate/log")
-public class OperateLogController implements CrudController<OperateLog, Long, OperateLogSearchDto, OperateLogService> {
+public class OperateLogController implements CrudController<OperateLog, java.lang.Long, OperateLogSearchDto, OperateLogService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final OperateLogService operateLogService;
 
     @Override
     public OperateLog resolver(TokenInfo token, OperateLog operateLog) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 operateLog 后返回 operateLog, 如: tenantId 的处理等.
         if (nonNull(token) && nonNull(token.getTenantId())) {
             operateLog.setTenantId(token.getTenantId());
         }

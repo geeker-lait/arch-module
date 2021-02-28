@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudService;
+import org.arch.ums.account.dao.NameDao;
 import org.arch.ums.account.entity.Name;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class NameService extends CrudService<Name, java.lang.Long> {
+
+    private final NameDao nameDao;
+
     /**
      * 逻辑删除
      *
@@ -35,8 +39,9 @@ public class NameService extends CrudService<Name, java.lang.Long> {
     public boolean deleteById(@NonNull Long id) {
         Name name = new Name();
         name.setId(id);
+        name.setDeleted(Boolean.FALSE);
         LambdaUpdateWrapper<Name> updateWrapper = Wrappers.lambdaUpdate(name).set(Name::getDeleted, 1);
-        return crudDao.update(updateWrapper);
+        return nameDao.update(updateWrapper);
     }
 
     /**
@@ -47,9 +52,10 @@ public class NameService extends CrudService<Name, java.lang.Long> {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean deleteById(Name name) {
+        name.setDeleted(Boolean.FALSE);
         LambdaUpdateWrapper<Name> updateWrapper = Wrappers.lambdaUpdate(name).set(Name::getDeleted, 1);
         // 逻辑删除
-        return crudDao.update(updateWrapper);
+        return nameDao.update(updateWrapper);
     }
 
     /**
@@ -62,10 +68,11 @@ public class NameService extends CrudService<Name, java.lang.Long> {
     public boolean deleteAllById(@NonNull List<Long> ids) {
 
         LambdaUpdateWrapper<Name> updateWrapper = Wrappers.<Name>lambdaUpdate()
-                .in(Name::getId, ids)
-                .set(Name::getDeleted, 1);
+                                                          .eq(Name::getDeleted, 0)
+                                                          .and(w -> w.in(Name::getId, ids))
+                                                          .set(Name::getDeleted, 1);
 
         // 逻辑删除
-        return crudDao.update(updateWrapper);
+        return nameDao.update(updateWrapper);
     }
 }

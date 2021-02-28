@@ -103,12 +103,12 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
     }
 
     /**
-     * 根据 entity 条件查询对象
+     * 根据 entity 条件查询对象.
      * @param entity    实体类
      * @param token     token info
      * @return  {@link Response}
      */
-    @GetMapping("single")
+    @GetMapping("/single")
     default Response<T> findOne(T entity, TokenInfo token) {
         try {
             resolver(token, entity);
@@ -125,12 +125,12 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
     }
 
     /**
-     * 根据 entity 条件查询对象列表
+     * 根据 entity 条件查询对象列表.
      * @param t         实体类
      * @param token     token info
      * @return  {@link Response}
      */
-    @GetMapping("find")
+    @GetMapping("/find")
     default Response<List<T>> find(T t, TokenInfo token) {
         resolver(token, t);
         S searchDto = convertSearchDto(t);
@@ -142,22 +142,25 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
      * @param token     token info
      * @return  {@link Response}
      */
-    @GetMapping("list")
+    @GetMapping("/list")
     default Response<List<T>> list(TokenInfo token) {
         resolver(token,null);
         return Response.success(getCrudService().findAll());
     }
 
     /**
-     * 分页查询
+     * 分页查询.
      * @param entity        实体类
      * @param pageNumber    第几页
      * @param pageSize      页大小
      * @param token         token info
      * @return  {@link Response}
      */
-    @GetMapping("page")
-    default Response<IPage<T>> page(T entity, Integer pageNumber, Integer pageSize, TokenInfo token) {
+    @GetMapping(value = "/page/{pageNumber}/{pageSize}")
+    default Response<IPage<T>> page(T entity,
+                                    @PathVariable(value = "pageNumber") Integer pageNumber,
+                                    @PathVariable(value = "pageSize") Integer pageSize,
+                                    TokenInfo token) {
         resolver(token, entity);
         S searchDto = convertSearchDto(entity);
         return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
@@ -173,74 +176,5 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
         getCrudService().deleteById(id);
         return Response.success(true);
     }
-
-//public interface CrudController<T extends CrudService> {
-
-
-//    CrudService getCrudService();
-//
-//    default E resolver(TokenInfo token, E e) {
-//        return e;
-//    }
-//
-//    @PostMapping
-//    default Response save(@Valid @RequestBody E e, TokenInfo token) {
-//        resolver(token, e);
-//        getCrudService().save(e);
-//        return Response.ok(e);
-//    }
-//
-//    @Transactional
-//    @PostMapping("/saves")
-//    default Response saveAll(@Valid @RequestBody List<E> es) {
-//        getCrudService().saveAll(es);
-//        return Response.ok(es);
-//    }
-//
-//    @GetMapping(path = "/{id:.+}")
-//    default Response findById(@PathVariable Long id) {
-//        return Response.success(getCrudService().findById(id));
-//    }
-//
-//    @GetMapping("single")
-//    default Response findOne(E entity,TokenInfo token) {
-//        try {
-//            resolver(token, entity);
-//            Object o = getCrudService().findOne(entity);
-//            return Response.ok(o);
-//        } catch (Exception e) {
-//            if (e instanceof IncorrectResultSizeDataAccessException) {
-//                return Response.error("查询到多个结果");
-//            } else {
-//                return Response.error(e.getMessage());
-//            }
-//        }
-//    }
-//
-//    @GetMapping("find")
-//    default Response find(E e,TokenInfo token) {
-//        resolver(token, e);
-//        return Response.ok(getCrudService().find(e));
-//    }
-//
-//    @GetMapping("list")
-//    default Response list(Token token) {
-//        //resolver(token,null);
-//        return Response.ok(getCrudService().findAll());
-//    }
-//
-//    @GetMapping("page")
-//    default Response page(QueryRequest<E> queryRequest,TokenInfo token) {
-//        resolver(token, queryRequest.getParam());
-//        return Response.ok(getCrudService().findBypage(queryRequest));
-//    }
-//
-//
-//    @DeleteMapping(path = "/{id:.+}")
-//    default Response deleteById(@PathVariable Long id) {
-//        getCrudService().deleteById(id);
-//        return Response.ok(true);
-//    }
-
 
 }

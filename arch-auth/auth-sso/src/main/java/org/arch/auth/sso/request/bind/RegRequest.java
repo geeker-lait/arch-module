@@ -31,13 +31,13 @@ public class RegRequest implements Serializable {
     /**
      * 账户名,邮箱,手机号,第三方用户ID, 对应账号-标识 identifier
      */
-    @Pattern(regexp = "[A-Za-z0-9]{3,}", message = "用户名称长度必须大于 3 位, 且只能是A-Za-z0-9字符")
+    @Pattern(regexp = "[A-Za-z0-9]{3,32}", message = "用户名称长度必须大于 3 位, 小于 32 位, 且只能是A-Za-z0-9字符")
     private String username;
     /**
      * 站内账号是密码, 第三方是 accessToken, 手机登录是空字符串或指定字符串. 对应账号-标识 credential<br>
      * 注意: {@link #channelType} 为 {@link ChannelType#PHONE} 时有后端赋值 "空字符串或指定字符串"
      */
-    @Pattern(regexp = "\\w{8,}", message = "密码长度必须大于等于 8 位")
+    @Pattern(regexp = "\\w{8,32}", message = "密码长度必须大于等于 8 位")
     private String password;
 
     /**

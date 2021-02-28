@@ -15,6 +15,7 @@ import java.util.Map;
  * @date 2021-01-29 21:20:39
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
@@ -107,22 +108,22 @@ public class RelationshipSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
-        // TODO 需要根据实际业务对条件进行增减(对应的字段也需要增减), 包括条件的顺序问题, 需要对应相应的多索引顺序, 使索引生效.
+        putNoNull("EQ_id", this.getId(), map);
+        putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_pid", this.getPid(), map);
-        putNoNull("EQ_org", this.getOrg(), map);
-        putNoNull("EQ_deep", this.getDeep(), map);
         putNoNull("EQ_seq", this.getSeq(), map);
+        putNoNull("EQ_deep", this.getDeep(), map);
+        putNoNull("EQ_deleted", this.getDeleted(), map);
+        putNoNull("EQ_app_id", this.getAppId(), map);
+        putNoNull("EQ_store_id", this.getStoreId(), map);
+        putNoNull("EQ_org", this.getOrg(), map);
         putNoNull("EQ_from_user_id", this.getFromUserId(), map);
         putNoNull("EQ_from_user_name", this.getFromUserName(), map);
         putNoNull("EQ_from_user_phone", this.getFromUserPhone(), map);
         putNoNull("EQ_to_user_id", this.getToUserId(), map);
         putNoNull("EQ_to_user_name", this.getToUserName(), map);
         putNoNull("EQ_to_user_phone", this.getToUserPhone(), map);
-        putNoNull("EQ_tenant_id", this.getTenantId(), map);
-        putNoNull("EQ_app_id", this.getAppId(), map);
-        putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_rev", this.getRev(), map);
         putNoNull("EQ_st", this.getSt(), map);
-        putNoNull("EQ_deleted", this.getDeleted(), map);
     }
 }

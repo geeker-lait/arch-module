@@ -28,6 +28,11 @@ public class TokenInfoHandlerMethodArgumentResolver implements HandlerMethodArgu
                                   @NonNull NativeWebRequest webRequest,
                                   @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
-        return SecurityUtils.getCurrentUser();
+        try {
+            return SecurityUtils.getCurrentUser();
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 }

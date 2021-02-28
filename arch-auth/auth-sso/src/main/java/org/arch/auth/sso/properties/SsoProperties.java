@@ -16,6 +16,7 @@ import java.time.Duration;
  * @weixin z56133
  * @since 2021.1.6 23:15
  */
+@SuppressWarnings("jol")
 @ConfigurationProperties(prefix = "arch.sso")
 @Getter
 @Setter

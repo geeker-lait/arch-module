@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  * @date 2021-01-29 20:55:50
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)

@@ -23,6 +23,9 @@ public class AuthLoginDto implements Serializable {
     public AuthLoginDto() {
     }
 
+    /**
+     * identifierId
+     */
     private Long id;
     /**
      * 账号ID/用户ID/会员ID/商户ID

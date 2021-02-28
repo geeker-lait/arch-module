@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arch.framework.automate.api.DirectiveResponse;
 import org.arch.framework.automate.api.dto.DirectiveRequestDto;
+import org.arch.framework.automate.from.ddl.DDLOperate;
 import org.arch.framework.automate.from.directive.SqlDirective;
 import org.arch.framework.automate.from.directive.SqlDirectiveCode;
-import org.arch.framework.automate.from.mapper.DDLMapper;
 import org.arch.framework.automate.from.utils.DefinitionTableUtil;
+import org.arch.framework.automate.generater.properties.DatabaseProperties;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,8 +23,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class DdlCreateDbDirective extends AbstractDirective implements SqlDirective<DirectiveRequestDto> {
-    private final DDLMapper ddlMapper;
-
 
     @Override
     public <R extends DirectiveResponse> R exec(DirectiveRequestDto directiveRequest) {
@@ -31,11 +31,13 @@ public class DdlCreateDbDirective extends AbstractDirective implements SqlDirect
             log.info("database name is null");
             return null;
         }
-        if (ddlMapper.existDatabase(databaseName) > 0) {
-            log.info("database exist dbName:{}", databaseName);
-            return null;
+        DatabaseProperties properties = null;
+        if (directiveRequest.getDataSource() != null) {
+            properties = new DatabaseProperties();
+            BeanUtils.copyProperties(directiveRequest.getDataSource(), properties);
         }
-        ddlMapper.createDatabase(databaseName);
+        DDLOperate ddlOperate = DDLOperate.selectDDLOperate(properties);
+        ddlOperate.createDatabase(properties, databaseName);
         return null;
     }
 

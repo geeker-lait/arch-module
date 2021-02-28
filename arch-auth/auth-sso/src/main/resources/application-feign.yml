@@ -9,3 +9,4 @@ spring:
 feign:
   httpclient:
     connection-timeout: 200000
+    enabled: true

@@ -30,7 +30,7 @@ public class DatabaseMvcSchemaReader extends AbstractSchemaReader implements Sch
         List<DatabaseProperties> databasePropertiesList = new ArrayList<>();
         Arrays.asList(source.getName().split(",")).forEach(dbname -> {
             // 获取数据库的table
-            List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(dbname);
+            List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(source, dbname);
             if (null == tableProperties) {
                 tableProperties = new ArrayList<>();
             }
