@@ -68,7 +68,7 @@ public class OauthTokenController implements CrudController<OauthToken, Long, Oa
      * @return  {@link Response}
      */
     @NonNull
-    @PostMapping(value = "/update/by/identifier/id")
+    @PostMapping(value = "/updateByIdentifierId")
     public Response<Boolean> updateByIdentifierId(@RequestBody @Valid OauthToken oauthToken) {
         try {
             return Response.success(oauthTokenService.updateByIdentifierId(oauthToken));
