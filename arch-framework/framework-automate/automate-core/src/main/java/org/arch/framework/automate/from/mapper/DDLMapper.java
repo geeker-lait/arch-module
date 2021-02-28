@@ -46,7 +46,7 @@ public interface DDLMapper {
      * @param tableName
      * @return
      */
-    Integer existTable(@Param("database") String database, @Param("tableName") String tableName);
+    int existTable(@Param("database") String database, @Param("tableName") String tableName);
 
 
 
@@ -63,7 +63,7 @@ public interface DDLMapper {
      * @param record
      * @return
      */
-    Integer createTable(@Param("record") DefinitionTableDto record);
+    int createTable(@Param("record") DefinitionTableDto record);
 
     /**
      * 获取指定库下所有的表

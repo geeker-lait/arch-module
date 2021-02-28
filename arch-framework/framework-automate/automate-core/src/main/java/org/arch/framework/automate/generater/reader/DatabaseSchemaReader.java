@@ -1,7 +1,6 @@
 package org.arch.framework.automate.generater.reader;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.from.service.DatabaseService;
 import org.arch.framework.automate.generater.core.SchemaReadable;
 import org.arch.framework.automate.generater.core.SourceName;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
@@ -31,7 +30,7 @@ public class DatabaseSchemaReader extends AbstractSchemaReader implements Schema
         List<DatabaseProperties> databasePropertiesList = new ArrayList<>();
         Arrays.asList(source.getName().split(",")).forEach(dbname -> {
             // 获取数据库的table
-            List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(dbname);
+            List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(source, dbname);
             if (null == tableProperties) {
                 tableProperties = new ArrayList<>();
             }
