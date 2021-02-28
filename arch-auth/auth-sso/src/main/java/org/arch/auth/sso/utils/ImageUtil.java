@@ -56,11 +56,12 @@ public class ImageUtil {
         }
         try {
             String originalFilename = multipartFile.getOriginalFilename();
+            long size = multipartFile.getSize();
             if (!hasText(originalFilename)) {
                 throw new GlobalFileException("获取图片信息失败！");
             }
             return getInfo(multipartFile.getInputStream())
-                    .setSize(multipartFile.getSize())
+                    .setSize(size)
                     .setOriginalFileName(originalFilename)
                     .setSuffix(FileUtil.getSuffix(originalFilename));
         } catch (Exception e) {
@@ -78,6 +79,7 @@ public class ImageUtil {
     @NonNull
     public static FileInfoDto getInfo(@NonNull InputStream inputStream) {
         try (BufferedInputStream in = new BufferedInputStream(inputStream)) {
+            int size = inputStream.available();
             //字节流转图片对象
             Image bi = ImageIO.read(in);
             if (null == bi) {
@@ -87,7 +89,7 @@ public class ImageUtil {
             return new FileInfoDto()
                     .setWidth(bi.getWidth(null))
                     .setHeight(bi.getHeight(null))
-                    .setSize(inputStream.available());
+                    .setSize(size);
         } catch (Exception e) {
             throw new GlobalFileException("获取图片信息发生异常！", e);
         }
