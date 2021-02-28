@@ -6,5 +6,5 @@ package org.arch.framework.automate.generater.reader;
  * @weixin PN15855012581
  * @date :
  */
-public class ApiExcelSchemaReader {
+public class DatabaseApiSchemaReader {
 }

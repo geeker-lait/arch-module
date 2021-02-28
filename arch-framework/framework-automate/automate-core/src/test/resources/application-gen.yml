@@ -97,9 +97,31 @@ spring:
         ext:
         suffix:
 
+    excels:
+      - file: classpath:uni-life-ums.xlsx
+        schema-reader: mvc
+        heads: {
+          table: "表名/Table",
+          column: "列名/Column",
+          type: "数据类型/Type",
+          length: "长度/Length",
+          isnull: "是否为空/Null",
+          defaultValue: "默认值/Default",
+          pk: "是否主键/Primary(Y,N)",
+          fks: "外键/Forigen(可空)",
+          uniques: "是否唯一/Unique(Y,N)",
+          comment: "备注/Comment"
+        }
+      - file: classpath:uni-life-api.xlsx
+        schema-reader: api
+        heads: {
+          name: "结构名称/interface",
+          returnTyp: "返回值类型/returnTyp",
+          comment: "备注/Comment"
+        }
     excel:
       file: classpath:uni-life-ums.xlsx
-      schema-class:
+      schema-reader:
       heads: {
         table: "表名/Table",
         column: "列名/Column",
@@ -112,6 +134,7 @@ spring:
         uniques: "是否唯一/Unique(Y,N)",
         comment: "备注/Comment"
       }
+
     database:
       driver: com.mysql.cj.jdbc.Driver
       url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"

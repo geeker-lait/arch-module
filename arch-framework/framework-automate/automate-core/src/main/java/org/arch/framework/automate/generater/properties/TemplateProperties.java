@@ -4,6 +4,7 @@ import cn.hutool.extra.template.TemplateEngine;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.arch.framework.automate.generater.core.SchemaProperties;
 
 /**
  * @author lait.zhang@gmail.com
@@ -14,7 +15,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString
-public class TemplateProperties {
+public class TemplateProperties implements SchemaProperties {
     private String dir;
     // 默认从classpath加载
     private String resourceMode = "classpath";

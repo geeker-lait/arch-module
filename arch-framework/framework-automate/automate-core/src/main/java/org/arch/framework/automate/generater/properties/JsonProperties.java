@@ -2,7 +2,7 @@ package org.arch.framework.automate.generater.properties;
 
 import lombok.Data;
 import lombok.ToString;
-import org.arch.framework.automate.generater.core.SchemaSource;
+import org.arch.framework.automate.generater.core.SchemaProperties;
 
 /**
  * @author lait.zhang@gmail.com
@@ -12,6 +12,6 @@ import org.arch.framework.automate.generater.core.SchemaSource;
  */
 @Data
 @ToString
-public class JsonProperties  implements SchemaSource {
+public class JsonProperties  implements SchemaProperties {
     private String content;
 }

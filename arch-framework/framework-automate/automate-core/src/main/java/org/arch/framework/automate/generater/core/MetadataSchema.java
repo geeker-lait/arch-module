@@ -6,5 +6,5 @@ package org.arch.framework.automate.generater.core;
  * @weixin PN15855012581
  * @date :
  */
-public interface DataSchema {
+public interface MetadataSchema {
 }

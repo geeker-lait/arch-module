@@ -3,6 +3,7 @@ package org.arch.framework.automate.generater.properties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.arch.framework.automate.generater.core.SchemaProperties;
 
 /**
  * @author lait.zhang@gmail.com
@@ -17,7 +18,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString
-public class PackageProperties {
+public class PackageProperties implements SchemaProperties {
     // 包类型（entity,dao,service.....）
     private String type;
     // 自定义子包，如果没有集成basePack

@@ -1,7 +1,7 @@
 package org.arch.framework.automate.generater.properties;
 
 import lombok.Data;
-import org.arch.framework.automate.generater.core.SchemaSource;
+import org.arch.framework.automate.generater.core.SchemaProperties;
 
 import java.util.Set;
 
@@ -12,7 +12,7 @@ import java.util.Set;
  * @date :
  */
 @Data
-public class TypeProperties implements SchemaSource {
+public class TypeProperties implements SchemaProperties {
     /**
      * 修饰符
      */

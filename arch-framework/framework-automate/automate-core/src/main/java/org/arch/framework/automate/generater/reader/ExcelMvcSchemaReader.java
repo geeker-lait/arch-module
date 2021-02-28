@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.arch.framework.automate.common.utils.ExcelUtils;
+import org.arch.framework.automate.generater.config.GeneratorConfig;
 import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.properties.ColumnsProperties;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
@@ -35,10 +36,18 @@ public class ExcelMvcSchemaReader extends AbstractSchemaReader implements Schema
     public SourceName getSource() {
         return SourceName.EXCEl_SOURCE;
     }
-
+    @Override
+    public String getReaderName() {
+        return this.getClass().getSimpleName();
+    }
     @Override
     public List<DatabaseProperties> read(ExcelProperties source) throws Exception {
         return doRead(source.getFile(),source.getHeads());
+    }
+
+    @Override
+    public void read(AbstractGenerator abstractGenerator, GeneratorConfig generatorConfig) {
+
     }
 
     public List<DatabaseProperties> doRead(String excel,Map<String,String> heads) throws Exception {
