@@ -55,7 +55,7 @@ public class UploadController {
         }
         catch (Exception e) {
             log.error("上传图片失败", e);
-            return Response.error(FAILED.getCode(), e.getMessage());
+            return Response.error(FAILED.getCode(), "上传图片失败");
         }
     }
 
@@ -74,7 +74,7 @@ public class UploadController {
         }
         catch (Exception e) {
             log.error("上传图片失败", e);
-            return Response.error(FAILED.getCode(), e.getMessage());
+            return Response.error(FAILED.getCode(), "上传图片失败");
         }
     }
 
