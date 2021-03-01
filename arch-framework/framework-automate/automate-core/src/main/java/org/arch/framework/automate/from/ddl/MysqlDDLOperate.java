@@ -11,6 +11,7 @@ import org.arch.framework.automate.from.utils.DefinitionTableUtil;
 import org.arch.framework.automate.generater.properties.ColumnsProperties;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
+import org.arch.framework.beans.exception.BusinessException;
 import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
@@ -52,12 +53,13 @@ public class MysqlDDLOperate extends DDLOperate implements InitializingBean {
             }
             // 库不存在 执行创建库
             try (PreparedStatement statement = connection.prepareStatement(MysqlDDLSqlBuilder.getCreateDatabaseSql(database))) {
-                return statement.executeUpdate();
+                statement.executeUpdate();
             } catch (SQLException sqlException) {
-                sqlException.printStackTrace();
+                log.info("createDatabase error DatabaseProperties:{} database:{}", properties, database, sqlException);
+                throw new BusinessException("连接操作失败请检查 jdbc 信息是否正确或者账号是否拥有相关权限");
             }
-            return 0;
-        } ;
+            return 1;
+        };
         return execute(properties, function);
     }
 
@@ -67,7 +69,8 @@ public class MysqlDDLOperate extends DDLOperate implements InitializingBean {
             try (PreparedStatement statement = connection.prepareStatement(MysqlDDLSqlBuilder.getDropDatabaseSql(database))) {
                 statement.executeUpdate();
             } catch (SQLException sqlException) {
-                sqlException.printStackTrace();
+                log.info("dropDatabase error DatabaseProperties:{} database:{}", properties, database, sqlException);
+                throw new BusinessException("连接操作失败请检查 jdbc 信息是否正确或者账号是否拥有相关权限");
             }
             return 1;
         };
@@ -80,7 +83,8 @@ public class MysqlDDLOperate extends DDLOperate implements InitializingBean {
             try (PreparedStatement statement = connection.prepareStatement(MysqlDDLSqlBuilder.getDropTableSql(database, tableName))) {
                 statement.executeUpdate();
             } catch (SQLException sqlException) {
-                sqlException.printStackTrace();
+                log.info("dropTable error DatabaseProperties:{} database:{}", properties, database, sqlException);
+                throw new BusinessException("连接操作失败请检查 jdbc 信息是否正确或者账号是否拥有相关权限");
             }
             return 1;
         };
@@ -97,7 +101,8 @@ public class MysqlDDLOperate extends DDLOperate implements InitializingBean {
             try (PreparedStatement statement = connection.prepareStatement(MysqlDDLSqlBuilder.getCreateTableSql(record))) {
                 statement.executeUpdate();
             } catch (SQLException sqlException) {
-                sqlException.printStackTrace();
+                log.info("createTable error DatabaseProperties:{} DefinitionTableDto:{}", properties, record, sqlException);
+                throw new BusinessException("连接操作失败请检查 jdbc 信息是否正确或者账号是否拥有相关权限");
             }
             return 1;
         };
@@ -131,10 +136,11 @@ public class MysqlDDLOperate extends DDLOperate implements InitializingBean {
                 // 2.根据表查询所有字段
                 buildColumnsProperties(getTableDetailStatement, tablePropertiesList, databaseNameStr);
             } catch (SQLException sqlException) {
-                sqlException.printStackTrace();
+                log.info("getDatabaseProperties error DatabaseProperties:{} database:{}", properties, database, sqlException);
+                throw new BusinessException("连接操作失败请检查 jdbc 信息是否正确或者账号是否拥有相关权限");
             }
             return tablePropertiesList;
-        } ;
+        };
         return execute(properties, function);
     }
 
@@ -190,9 +196,9 @@ public class MysqlDDLOperate extends DDLOperate implements InitializingBean {
             if (resultSet.next()) {
                 existCount = resultSet.getInt(1);
             }
-            return existCount;
         } catch (SQLException sqlException) {
-            log.warn("execute sql error sql:{}", MysqlDDLSqlBuilder.getExistDatabaseSql(database), sqlException);
+            log.info("existDatabaseOrTable error database:{} tableName:{}", database, tableName, sqlException);
+            throw new BusinessException("连接操作失败请检查 jdbc 信息是否正确或者账号是否拥有相关权限");
         }
         return existCount;
     }

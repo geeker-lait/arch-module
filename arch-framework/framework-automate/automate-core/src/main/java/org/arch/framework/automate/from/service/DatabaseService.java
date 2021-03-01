@@ -23,7 +23,7 @@ public class DatabaseService {
     /**
      * 根据数据库名称获取数 及 表相关属性数据
      * @param source 数据源
-     * @param database 只支持单个数据，多个外层 for循环调用
+     * @param database 数据库名称，只支持单个库获取，多个库在调用外城循环
      * @return
      */
     public List<TableProperties> getDatabaseTablesInfo(DatabaseProperties source, String database) {
