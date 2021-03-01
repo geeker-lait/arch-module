@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
+import java.time.Duration;
+
 /**
  * feign 客户端全局配置
  *
@@ -17,11 +19,16 @@ public class FeignGlobalConfig {
 
     private final TenantContextHolder tenantContextHolder;
     private final String tenantHeaderName;
+    /**
+     * 授权服务器的时钟与资源服务器的时钟可能存在偏差, 设置时钟偏移量以消除不同服务器间的时钟偏差的影响, 通过属性 ums.jwt.clockSkew 设置.
+     */
+    private final Duration clockSkew;
 
     public FeignGlobalConfig(TenantContextHolder tenantContextHolder,
-                             String tenantHeaderName) {
+                             String tenantHeaderName, Duration clockSkew) {
         this.tenantContextHolder = tenantContextHolder;
         this.tenantHeaderName = tenantHeaderName;
+        this.clockSkew = clockSkew;
     }
 
     @Profile("dev")
@@ -38,6 +45,6 @@ public class FeignGlobalConfig {
 
     @Bean
     public FeignGlobalRequestInterceptor tokenRequestInterceptor() {
-        return new FeignGlobalRequestInterceptor(tenantContextHolder, tenantHeaderName);
+        return new FeignGlobalRequestInterceptor(tenantContextHolder, tenantHeaderName, clockSkew);
     }
 }

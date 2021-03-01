@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
+import top.dcenter.ums.security.jwt.properties.JwtProperties;
 
 /**
  * 账号模块默认的 feign 配置
@@ -21,8 +22,8 @@ import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 public class UmsAccountDeFaultFeignConfig extends FeignGlobalConfig {
 
     public UmsAccountDeFaultFeignConfig(TenantContextHolder tenantContextHolder,
-                                        AppProperties appProperties) {
-        super(tenantContextHolder, appProperties.getTenantHeaderName());
+                                        AppProperties appProperties, JwtProperties jwtProperties) {
+        super(tenantContextHolder, appProperties.getTenantHeaderName(), jwtProperties.getClockSkew());
     }
 
     @Bean
