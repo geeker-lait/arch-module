@@ -6,8 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.arch.framework.automate.api.dto.DefinitionTableDto;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
-import org.arch.framework.beans.enums.StatusCode;
-import org.arch.framework.beans.exception.BaseException;
+import org.arch.framework.beans.exception.BusinessException;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.sql.Connection;
@@ -44,21 +43,8 @@ public abstract class DDLOperate implements InitializingBean {
             return function.apply(connection);
         } catch (SQLException  | ClassNotFoundException e) {
             log.warn("The database connection failed or the operation failed, business config exception please check jdbcProperties, databaseProperties:{}", properties, e);
-            // 错误信息可以调整,暂时先这么写
-            throw new BaseException(new StatusCode() {
-                @Override
-                public int getCode() {
-                    return -1;
-                }
-                @Override
-                public String getDescr() {
-                    return "连接数据失败请检查 jdbc 信息";
-                }
-            });
-        } catch (Exception e) {
-            log.warn("The database connection failed or the operation failed, Exception databaseProperties:{}", properties, e);
+            throw new BusinessException("连接数据失败请检查 jdbc 信息是否正确或者账号是否拥有相关权限");
         }
-        return null;
     }
 
     /**
@@ -80,17 +66,7 @@ public abstract class DDLOperate implements InitializingBean {
             }
         }
         log.warn("match ddlOperate error, return null properties:{}", properties);
-        throw new BaseException(new StatusCode() {
-            @Override
-            public int getCode() {
-                return -1;
-            }
-
-            @Override
-            public String getDescr() {
-                return "暂时不支持当前指定的数据库类型";
-            }
-        });
+        throw new BusinessException("暂时不支持当前指定的数据库类型");
     }
 
     /**
