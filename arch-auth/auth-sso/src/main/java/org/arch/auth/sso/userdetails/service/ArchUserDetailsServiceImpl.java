@@ -29,6 +29,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.ServletWebRequest;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
+import top.dcenter.ums.security.core.api.oauth.state.service.Auth2StateCoder;
 import top.dcenter.ums.security.core.api.service.UmsUserDetailsService;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.exception.RegisterUserFailureException;
@@ -71,6 +72,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     private final UmsAccountIdentifierFeignService umsAccountIdentifierFeignService;
     private final Auth2Properties auth2Properties;
     private final UmsAccountAuthTokenFeignService umsAccountAuthTokenFeignService;
+    private final Auth2StateCoder auth2StateCoder;
 
     @NonNull
     @Override
@@ -209,8 +211,14 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                                     @NonNull String username,
                                     @NonNull String defaultAuthority,
                                     @Nullable String decodeState) throws RegisterUserFailureException {
+        AccountType accountType;
         // 获取注册的账户类型
-        AccountType accountType = RegisterUtils.getAccountType(ssoProperties.getAccountTypeParameterName());
+        if (nonNull(decodeState)) {
+            accountType = AccountType.getAccountType(auth2StateCoder.decode(decodeState));
+        }
+        else {
+            accountType = RegisterUtils.getAccountType(ssoProperties.getAccountTypeParameterName());
+        }
         if (isNull(accountType)) {
             log.warn("用户注册失败, accountType 没有传递 或 格式错误");
             throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, username);
