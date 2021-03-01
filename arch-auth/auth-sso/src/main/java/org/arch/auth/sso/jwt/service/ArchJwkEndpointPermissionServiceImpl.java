@@ -1,12 +1,15 @@
 package org.arch.auth.sso.jwt.service;
 
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
+import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 import org.arch.framework.beans.utils.IpUtils;
 import org.arch.framework.ums.enums.ScopesType;
 import org.arch.framework.ums.properties.AuthClientScopesCacheProperties;
 import org.arch.ums.account.vo.AuthClientVo;
 import org.arch.ums.feign.account.client.UmsAccountAuthClientFeignService;
+import org.arch.ums.feign.exception.FeignCallException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -161,11 +164,17 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
     }
 
     private void syncToLocalCache() {
-        // 对 scopes 进行本地缓存.
-        final Response<Map<Integer, Map<String, AuthClientVo>>> response = umsAccountAuthClientFeignService.getAllScopes();
-        Map<Integer, Map<String, AuthClientVo>> allScopeMap = response.getSuccessData();
-        if (nonNull(allScopeMap)) {
-        	this.allScopeMap = allScopeMap;
+        try {
+            // 对 scopes 进行本地缓存.
+            final Response<Map<Integer, Map<String, AuthClientVo>>> response = umsAccountAuthClientFeignService.getAllScopes();
+            Map<Integer, Map<String, AuthClientVo>> allScopeMap = response.getSuccessData();
+            if (nonNull(allScopeMap)) {
+                this.allScopeMap = allScopeMap;
+            }
+        }
+        catch (FeignException e) {
+            String msg = "scopes 本地缓存失败";
+            throw new FeignCallException(ResponseStatusCode.FAILED, null, msg, e);
         }
     }
 }

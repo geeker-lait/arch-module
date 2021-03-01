@@ -1,15 +1,18 @@
 package org.arch.auth.sso.file;
 
 import cn.hutool.core.bean.BeanUtil;
+import feign.FeignException;
 import org.arch.auth.sso.file.image.ImageClient;
 import org.arch.auth.sso.file.image.ImageClientAdapter;
 import org.arch.auth.sso.properties.FileProperties;
 import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.AuthenticationException;
+import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.conf.entity.FileInfo;
 import org.arch.ums.feign.account.conf.UmsConfFileInfoFeignService;
+import org.arch.ums.feign.exception.FeignCallException;
 import org.springframework.lang.NonNull;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
@@ -33,7 +36,7 @@ public abstract class BaseImageFileUploader implements FileUploader {
     }
 
     /**
-     * 保持云存储信息到数据库
+     * 保持对象存储信息到数据库
      * @param fileInfoDto   云存储信息
      * @param uploadType    上传类型
      * @param save          是否保存
@@ -55,19 +58,32 @@ public abstract class BaseImageFileUploader implements FileUploader {
             fileInfo.setStorageType(this.imageClient.getStorageType());
             fileInfo.setTenantId(Integer.valueOf(this.tenantContextHolder.getTenantId()));
             fileInfo.setDeleted(Boolean.FALSE);
-            this.umsConfFileInfoFeignService.save(fileInfo);
+            try {
+                this.umsConfFileInfoFeignService.save(fileInfo);
+            }
+            catch (FeignException e) {
+                String msg = "保持对象存储信息到数据库失败";
+                throw new FeignCallException(ResponseStatusCode.FAILED, null, msg, e);
+            }
         }
         return fileInfoDto;
     }
 
     /**
-     * 删除云存储文件与相关的数据库记录
+     * 删除对象存储文件与相关的数据库记录
      * @param filePath      文件路径
      * @param uploadType    上传类型
      * @return  返回 true 表示删除成功
      */
     protected boolean removeFile(@NonNull String filePath, @NonNull String uploadType) {
-        Response<FileInfo> response = this.umsConfFileInfoFeignService.deleteByFilePathAndUploadType(filePath, uploadType);
+        Response<FileInfo> response;
+        try {
+            response = this.umsConfFileInfoFeignService.deleteByFilePathAndUploadType(filePath, uploadType);
+        }
+        catch (FeignException e) {
+            String msg = "删除对象存储文件与相关的数据库记录失败";
+            throw new FeignCallException(ResponseStatusCode.FAILED, null, msg, e);
+        }
         FileInfo fileInfo = response.getSuccessData();
 
         String fileKey = filePath;

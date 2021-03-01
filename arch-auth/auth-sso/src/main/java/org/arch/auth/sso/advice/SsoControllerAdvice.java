@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.arch.framework.beans.Response;
+import org.arch.framework.beans.exception.BusinessException;
+import org.arch.ums.feign.exception.FeignCallException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -48,6 +50,22 @@ public class SsoControllerAdvice {
     public Response<String> mybatisPlusException(MybatisPlusException e){
         log.error(e.getMessage(),e);
         return Response.error(FAILED);
+    }
+
+    @ExceptionHandler(FeignCallException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response<String> feignCallException(FeignCallException e){
+        log.error(e.getMessage(),e);
+        return Response.error(e.getResponseCode().getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response<String> businessException(BusinessException e){
+        log.error(e.getMessage(),e);
+        return Response.error(e.getResponseCode().getCode(), e.getMessage());
     }
 
 }
