@@ -1,6 +1,8 @@
 package org.arch.framework.crud;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import org.arch.framework.api.crud.BaseSearchDto;
 import org.arch.framework.beans.Response;
@@ -11,13 +13,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
+import static org.arch.framework.crud.utils.TenantUtils.removeTenantIdValue;
 
 
 /**
@@ -176,6 +181,27 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
     default Response<Boolean> deleteById(@PathVariable("id") ID id) {
         getCrudService().deleteById(id);
         return Response.success(true);
+    }
+
+    /**
+     * 根据 id 更新实体, 对实体未进行校验, 直接更新 不为 null 的值.
+     * @param entity    实体
+     * @param token     token info
+     * @return  true 表示更新成功
+     */
+    @PutMapping
+    default Response<Boolean> updateById(@RequestBody T entity, TokenInfo token) {
+        // 检查 id 是否为 null
+        Object idValue = ReflectionKit.getFieldValue(entity,
+                                                     TableInfoHelper.getTableInfo(entity.getClass()).getKeyProperty());
+        if (isNull(idValue)) {
+            return Response.failed("id 不能为 null");
+        }
+        resolver(token, entity);
+        // id 具有唯一性, 不需要租户 id 来区分, 对于用户来说租户 id 不会变, 不必要更新;
+        // 如果更新租户 id, 对于行级租户同时会更新有租户字段的索引, 影响 sql 执行性能
+        removeTenantIdValue(entity);
+        return Response.success(getCrudService().updateById(entity));
     }
 
 }
