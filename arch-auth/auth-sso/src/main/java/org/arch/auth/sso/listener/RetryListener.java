@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import top.dcenter.ums.security.common.executor.DefaultThreadFactory;
-import top.dcenter.ums.security.common.executor.MdcScheduledThreadPoolTaskExecutor;
+import top.dcenter.ums.security.common.executor.MdcScheduledThreadPoolExecutor;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.ScheduledFuture;
@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import static java.util.Objects.isNull;
 import static org.springframework.util.StringUtils.hasText;
-import static top.dcenter.ums.security.core.mdc.filter.MdcLogFilter.MDC_KEY;
+import static top.dcenter.ums.security.common.consts.MdcConstants.MDC_KEY;
 
 /**
  * 重试事件监听器
@@ -30,12 +30,12 @@ import static top.dcenter.ums.security.core.mdc.filter.MdcLogFilter.MDC_KEY;
 public class RetryListener implements ApplicationListener<RetryEvent> {
 
     private final ApplicationEventPublisher publisher;
-    private final MdcScheduledThreadPoolTaskExecutor scheduledThreadPoolExecutor;
+    private final MdcScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
 
     public RetryListener(ApplicationEventPublisher publisher) {
         this.publisher = publisher;
         scheduledThreadPoolExecutor =
-                new MdcScheduledThreadPoolTaskExecutor(Runtime.getRuntime().availableProcessors(),
+                new MdcScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
                                                        new DefaultThreadFactory("sso-retry-listener"),
                                                        new ThreadPoolExecutor.AbortPolicy());
     }

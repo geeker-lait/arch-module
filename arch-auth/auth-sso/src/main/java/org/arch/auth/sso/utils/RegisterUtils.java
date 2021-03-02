@@ -29,7 +29,7 @@ import static java.util.Objects.isNull;
 import static org.arch.framework.ums.consts.RoleConstants.AUTHORITY_SEPARATOR;
 import static org.arch.framework.ums.consts.RoleConstants.TENANT_PREFIX;
 import static org.springframework.util.StringUtils.hasText;
-import static top.dcenter.ums.security.core.mdc.filter.MdcLogFilter.MDC_KEY;
+import static top.dcenter.ums.security.common.consts.MdcConstants.MDC_KEY;
 
 /**
  * 注册工具
