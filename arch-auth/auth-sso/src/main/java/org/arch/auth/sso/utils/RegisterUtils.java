@@ -8,6 +8,7 @@ import org.arch.framework.ums.enums.AccountType;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.entity.OauthToken;
+import org.slf4j.MDC;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -17,6 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import top.dcenter.ums.security.core.api.oauth.justauth.request.Auth2DefaultRequest;
+import top.dcenter.ums.security.core.mdc.MdcIdType;
+import top.dcenter.ums.security.core.mdc.utils.MdcUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
@@ -26,6 +29,7 @@ import static java.util.Objects.isNull;
 import static org.arch.framework.ums.consts.RoleConstants.AUTHORITY_SEPARATOR;
 import static org.arch.framework.ums.consts.RoleConstants.TENANT_PREFIX;
 import static org.springframework.util.StringUtils.hasText;
+import static top.dcenter.ums.security.core.mdc.filter.MdcLogFilter.MDC_KEY;
 
 /**
  * 注册工具
@@ -170,6 +174,19 @@ public class RegisterUtils {
         oauthToken.setExpireTime(Auth2DefaultRequest.expireIn2Timestamp(timeout, token.getExpireIn()));
 
         return oauthToken;
+    }
+
+    /**
+     * 获取 MDC 调用链路追踪 ID
+     * @return  MDC 调用链路追踪 ID
+     */
+    @NonNull
+    public static String getTraceId() {
+        String id = MDC.get(MDC_KEY);
+        if (hasText(id)) {
+            return id;
+        }
+        return MdcUtil.getMdcId(MdcIdType.UUID, null);
     }
 
 }

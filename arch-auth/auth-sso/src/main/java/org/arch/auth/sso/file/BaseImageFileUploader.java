@@ -13,23 +13,19 @@ import org.arch.ums.conf.entity.FileInfo;
 import org.arch.ums.feign.account.conf.UmsConfFileInfoFeignService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 import org.springframework.web.multipart.MultipartFile;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
-import top.dcenter.ums.security.core.mdc.MdcIdType;
-import top.dcenter.ums.security.core.mdc.utils.MdcUtil;
 
 import java.io.File;
 import java.io.InputStream;
 
 import static java.util.Objects.isNull;
+import static org.arch.auth.sso.utils.RegisterUtils.getTraceId;
 import static org.arch.framework.beans.utils.RetryUtils.publishRetryEvent;
-import static org.springframework.util.StringUtils.hasText;
-import static top.dcenter.ums.security.core.mdc.filter.MdcLogFilter.MDC_KEY;
 
 /**
  * 通用图片上传器.
@@ -188,12 +184,4 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
         this.applicationContext = applicationContext;
     }
 
-    @NonNull
-    private String getTraceId() {
-        String id = MDC.get(MDC_KEY);
-        if (hasText(id)) {
-            return id;
-        }
-        return MdcUtil.getMdcId(MdcIdType.UUID, null);
-    }
 }
