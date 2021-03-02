@@ -85,8 +85,6 @@ public class FileInfoController implements CrudController<FileInfo, java.lang.Lo
             if (isNull(fileInfo)) {
                 return Response.success(null);
             }
-            this.fileInfoService.deleteById(fileInfo.getId());
-            fileInfo.setDeleted(Boolean.TRUE);
             return Response.success(fileInfo);
         }
         catch (Exception e) {
