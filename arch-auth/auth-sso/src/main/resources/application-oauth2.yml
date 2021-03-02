@@ -36,7 +36,7 @@ ums:
     redirect-url-prefix: /auth2/login
     # 第三方登录回调的域名, 例如：http://localhost:9090 默认为 "http://127.0.0.1"，
     # redirectUrl 直接由 {domain}/{servletContextPath}/{redirectUrlPrefix}/{providerId}(ums.oauth.[qq/gitee/weibo])组成
-    domain: http://localhost:9401
+    domain: http://localhost:9090
     # 第三方授权登录成功后的默认权限, 多个权限用逗号分开, 默认为: "ROLE_USER"
     default-authorities: ROLE_USER
 
@@ -71,7 +71,7 @@ ums:
       # 注意: 这是为了测试打断点时用的, 生产环境自己设置为合适数组或默认
       timeout: PT1800S
       # JustAuth state 缓存类型, 默认 session
-      cacheType: session
+      cacheType: redis
       # JustAuth state 缓存 key 前缀
       cacheKeyPrefix: 'JUST_AUTH:'
 

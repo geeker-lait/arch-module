@@ -102,7 +102,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
             String tenantId = tenantContextHolder.getTenantId();
             String defaultAuthorities = RegisterUtils.getDefaultAuthorities(ssoProperties, tenantId);
             ArchUser archUser = (ArchUser) umsUserDetailsService.registerUser(authUser, username,
-                                                                              defaultAuthorities, null);
+                                                                              defaultAuthorities, encodeState);
 
             // 4. 保存第三方用户的 OauthToken 信息
             int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
