@@ -34,22 +34,19 @@ public class ImageFileUploader extends BaseImageFileUploader implements FileUplo
     @Override
     @NonNull
     public FileInfoDto upload(@NonNull InputStream file, @NonNull String uploadType, @NonNull String imageUrl, boolean save) {
-        FileInfoDto fileInfo = this.imageClient.uploadImg(file, imageUrl);
-        return this.saveFile(fileInfo, uploadType, save);
+        return this.saveFile(file, uploadType, imageUrl, save);
     }
 
     @Override
     @NonNull
     public FileInfoDto upload(@NonNull File file, @NonNull String uploadType, boolean save) {
-        FileInfoDto fileInfo = this.imageClient.uploadImg(file);
-        return this.saveFile(fileInfo, uploadType, save);
+        return this.saveFile(file, uploadType, save);
     }
 
     @Override
     @NonNull
     public FileInfoDto upload(@NonNull MultipartFile file, @NonNull String uploadType, boolean save) {
-        FileInfoDto fileInfo = this.imageClient.uploadImg(file);
-        return this.saveFile(fileInfo, uploadType, save);
+        return this.saveFile(file, uploadType, save);
     }
 
     @Override
