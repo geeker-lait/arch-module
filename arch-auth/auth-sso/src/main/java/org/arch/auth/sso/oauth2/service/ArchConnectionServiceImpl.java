@@ -22,6 +22,9 @@ import org.arch.ums.account.entity.OauthToken;
 import org.arch.ums.feign.account.client.UmsAccountAuthTokenFeignService;
 import org.arch.ums.feign.account.client.UmsAccountIdentifierFeignService;
 import org.arch.ums.feign.exception.FeignCallException;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,7 +48,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Objects.isNull;
+import static org.arch.auth.sso.utils.RegisterUtils.getTraceId;
 import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
+import static org.arch.framework.beans.utils.RetryUtils.publishRetryEvent;
 
 /**
  * arch 第三方登录时, 自动注册, 更新第三方用户信息, 绑定第三方用户到本地的服务实现..
@@ -56,7 +61,7 @@ import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ArchConnectionServiceImpl implements ConnectionService {
+public class ArchConnectionServiceImpl implements ConnectionService, ApplicationContextAware {
 
     private final UmsAccountIdentifierFeignService umsAccountIdentifierFeignService;
     private final UmsUserDetailsService umsUserDetailsService;
@@ -66,6 +71,7 @@ public class ArchConnectionServiceImpl implements ConnectionService {
     private final IdService idService;
     private final Auth2Properties auth2Properties;
     private final UmsAccountAuthTokenFeignService umsAccountAuthTokenFeignService;
+    private ApplicationContext applicationContext;
 
     @NonNull
     @Override
@@ -100,8 +106,15 @@ public class ArchConnectionServiceImpl implements ConnectionService {
 
             // 4. 保存第三方用户的 OauthToken 信息
             int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
-            umsAccountAuthTokenFeignService.save(toOauthToken(authUser, tenantId,
-                                                              archUser.getIdentifierId(), timeout));
+            OauthToken oauthToken = toOauthToken(authUser, tenantId,
+                                        archUser.getIdentifierId(), timeout);
+            try {
+                umsAccountAuthTokenFeignService.save(oauthToken);
+            }
+            catch (Exception e) {
+                log.error(e.getMessage(),e);
+                saveOrUpdateOauthToken(oauthToken, "保存第三方授权登录用户信息失败, 发布重试事件", "save");
+            }
             return archUser;
         }
         catch (Exception e) {
@@ -127,8 +140,7 @@ public class ArchConnectionServiceImpl implements ConnectionService {
                                                      tenantContextHolder.getTenantId(),
                                                      connectionDataDto.getIdentifierId(),
                                                      timeout);
-                Response<Boolean> response = umsAccountAuthTokenFeignService.updateByIdentifierId(oauthToken);
-                isSuccessOfUpdate(connectionDataDto.getIdentifierId(), response);
+                updateByIdentifierId(oauthToken);
                 return;
             }
 
@@ -140,8 +152,7 @@ public class ArchConnectionServiceImpl implements ConnectionService {
                                                      tenantContextHolder.getTenantId(),
                                                      currentUser.getIdentifierId(),
                                                      timeout);
-                Response<Boolean> response = umsAccountAuthTokenFeignService.updateByIdentifierId(oauthToken);
-                isSuccessOfUpdate(currentUser.getIdentifierId(), response);
+                updateByIdentifierId(oauthToken);
             }
             catch (AuthenticationException e) {
                 // 2.2 未登录的情况
@@ -151,9 +162,9 @@ public class ArchConnectionServiceImpl implements ConnectionService {
                                                      tenantContextHolder.getTenantId(),
                                                      archUser.getIdentifierId(),
                                                      timeout);
-                Response<Boolean> response = umsAccountAuthTokenFeignService.updateByIdentifierId(oauthToken);
-                isSuccessOfUpdate(archUser.getIdentifierId(), response);
+                updateByIdentifierId(oauthToken);
             }
+
         }
         catch (FeignException e) {
             String source = authUser.getSource();
@@ -288,10 +299,18 @@ public class ArchConnectionServiceImpl implements ConnectionService {
 
             // 4. 保存第三方用户的 OauthToken 信息
             int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
-            umsAccountAuthTokenFeignService.save(toOauthToken(authUser,
-                                                              tenantContextHolder.getTenantId(),
-                                                              identifierRequest.getId(),
-                                                              timeout));
+            OauthToken oauthToken = toOauthToken(authUser,
+                                                 tenantContextHolder.getTenantId(),
+                                                 identifierRequest.getId(),
+                                                 timeout);
+            try {
+                umsAccountAuthTokenFeignService.save(oauthToken);
+            }
+            catch (Exception e) {
+                log.error(e.getMessage(),e);
+                saveOrUpdateOauthToken(oauthToken, "保存第三方授权登录用户信息失败, 发布重试事件", "save");
+            }
+
         }
         catch (FeignException e) {
             String msg = String.format("用户绑定失败: userId=%s, providerId=%s, providerUserId=%s",
@@ -301,11 +320,33 @@ public class ArchConnectionServiceImpl implements ConnectionService {
 
     }
 
-    private void isSuccessOfUpdate(Long identifierId, Response<Boolean> response) throws UpdateConnectionException {
-        Boolean successData = response.getSuccessData();
-        if (isNull(successData) || !successData) {
-            throw new UpdateConnectionException(ErrorCodeEnum.UPDATE_CONNECTION_DATA_FAILURE, identifierId);
+    @Override
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    private void updateByIdentifierId(@NonNull OauthToken oauthToken) {
+        try {
+            Response<Boolean> response = umsAccountAuthTokenFeignService.updateByIdentifierId(oauthToken);
+            Boolean successData = response.getSuccessData();
+            if (isNull(successData) || !successData) {
+                saveOrUpdateOauthToken(oauthToken, "更新第三方授权登录用户信息失败, 发布重试事件", "updateByIdentifierId");
+            }
         }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            saveOrUpdateOauthToken(oauthToken, "更新第三方授权登录用户信息失败, 发布重试事件", "updateByIdentifierId");
+        }
+    }
+
+    private void saveOrUpdateOauthToken(@NonNull OauthToken oauthToken, @NonNull String errorMsg, @NonNull String methodName) {
+        log.warn(errorMsg);
+        publishRetryEvent(this.applicationContext, getTraceId(),
+                          this.umsAccountAuthTokenFeignService,
+                          UmsAccountAuthTokenFeignService.class,
+                          methodName,
+                          new Class[]{OauthToken.class},
+                          oauthToken);
     }
 
 }
