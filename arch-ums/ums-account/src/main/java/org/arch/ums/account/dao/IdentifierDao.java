@@ -86,7 +86,7 @@ public class IdentifierDao extends ServiceImpl<IdentifierMapper, Identifier> imp
      * @param identifierSuffix  _DELETED_0, _DELETED_0(防止用户重新通过此第三方注册时触发唯一索引问题), 0(防止多次删除同一个第三方账号时触发唯一索引问题).
      * @return  是否删除成功
      */
-    public boolean logicDeleted(Long id, String identifierSuffix) {
+    public boolean logicDeleted(@NonNull Long id, @NonNull String identifierSuffix) {
         return SqlHelper.retBool(identifierMapper.logicDeleted(id, identifierSuffix));
     }
 }

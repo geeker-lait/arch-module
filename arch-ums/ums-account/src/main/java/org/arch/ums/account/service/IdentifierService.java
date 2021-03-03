@@ -1,6 +1,7 @@
 package org.arch.ums.account.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -394,6 +396,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
      * @return  true 表示逻辑删除成功, false 表示逻辑删除失败
      */
     private boolean logicDeleted(@NonNull Integer tenantId, @NonNull Identifier identifier) {
+
         // 查询是否有最近的历史删除记录
         Identifier deletedIdentifier =
                 identifierDao.selectLogicDeleted(tenantId,
@@ -408,7 +411,23 @@ public class IdentifierService extends CrudService<Identifier, Long> {
             seq = 0;
         }
 
-        // 逻辑删除, likeIdentifierPrefix(防止用户重新通过此第三方注册时触发唯一索引问题), seq(防止多次删除同一个第三方账号时触发唯一索引问题)
+        // 逻辑删除, IDENTIFIER_DELETED_SUFFIX(防止用户重新通过此第三方注册时触发唯一索引问题), seq(防止多次删除同一个第三方账号时触发唯一索引问题)
         return identifierDao.logicDeleted(identifier.getId(), IDENTIFIER_DELETED_SUFFIX + seq);
+    }
+
+    /**
+     * 删除账号
+     * @param accountId 账号ID/用户ID/会员ID/商户ID
+     * @param tenantId  租户ID
+     * @return  true 表示成功, false 表示失败
+     */
+    @NonNull
+    public Boolean deleteByAccountId(@NonNull Long accountId, @NonNull Integer tenantId) {
+        LambdaQueryWrapper<Identifier> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Identifier::getTenantId, tenantId)
+                     .and(w -> w.eq(Identifier::getAid, accountId));
+        List<Identifier> identifierList = identifierDao.list(queryWrapper);
+        List<Long> ids = identifierList.stream().map(Identifier::getId).collect(Collectors.toList());
+        return deleteAllById(ids);
     }
 }

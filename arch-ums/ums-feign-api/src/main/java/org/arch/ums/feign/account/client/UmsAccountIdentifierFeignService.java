@@ -98,4 +98,13 @@ public interface UmsAccountIdentifierFeignService extends BaseFeignService<Ident
     @DeleteMapping(value = "/unbinding/{aid}/{identifier}")
     @NonNull
     Response<Boolean> unbinding(@PathVariable(value = "aid") Long aid, @PathVariable(value = "identifier") String identifier);
+
+    /**
+     * 删除账号
+     * @param accountId 账号ID/用户ID/会员ID/商户ID
+     * @return  true 表示成功, false 表示失败
+     */
+    @DeleteMapping(value = "/del/{accountId}")
+    @NonNull
+    Response<Boolean> deleteByAccountId(@PathVariable(value = "accountId") Long accountId);
 }

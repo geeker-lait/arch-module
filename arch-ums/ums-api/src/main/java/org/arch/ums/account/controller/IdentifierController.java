@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
+import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.utils.SecurityUtils;
@@ -166,14 +167,19 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     @DeleteMapping(value = "/{id:[0-9]+}")
     @Override
     public Response<Boolean> deleteById(@PathVariable(value = "id") Long id) {
-        Long identifierId = SecurityUtils.getCurrentUser().getIdentifierId();
-        if (!identifierId.equals(id)) {
-            log.error("删除用户 id 与 当前用户 id 不匹配: tenantId: {}, id: {}, currentUserId: {}",
-                      tenantContextHolder.getTenantId(), id, identifierId);
-            return Response.success(Boolean.FALSE);
-        }
 
         try {
+            TokenInfo currentUser = SecurityUtils.getCurrentUser();
+            if (!currentUser.getIdentifierId().equals(id)) {
+                return Response.failed("只能删除已登录的账号");
+            }
+
+            Long identifierId = currentUser.getIdentifierId();
+            if (!identifierId.equals(id)) {
+                log.error("删除用户 id 与 当前用户 id 不匹配: tenantId: {}, id: {}, currentUserId: {}",
+                          tenantContextHolder.getTenantId(), id, identifierId);
+                return Response.success(Boolean.FALSE);
+            }
             // 逻辑删除
             boolean deleteByIdResult = identifierService.deleteById(id);
             Response<Boolean> success = Response.success(deleteByIdResult);
@@ -182,6 +188,9 @@ public class IdentifierController implements CrudController<Identifier, java.lan
                 SecurityContextHolder.clearContext();
             }
             return success;
+        }
+        catch (AuthenticationException e) {
+            return Response.failed("未登录");
         }
         catch (Exception e) {
             log.error(String.format("删除用户失败: tenantId: %s, id: %d",
@@ -204,7 +213,14 @@ public class IdentifierController implements CrudController<Identifier, java.lan
      */
     @DeleteMapping(value = "/username/{identifier}")
     @NonNull
-    public Response<Boolean> logicDeleteByIdentifier(@PathVariable(value = "identifier") String identifier) {
+    public Response<Boolean> logicDeleteByIdentifier(@PathVariable(value = "identifier") String identifier,
+                                                     TokenInfo token) {
+        if (isNull(token)) {
+            return Response.failed("未登录");
+        }
+        if (!token.getAccountName().equals(identifier)) {
+            return Response.failed("只能删除已登录的账号");
+        }
         Integer tenantId = Integer.valueOf(tenantContextHolder.getTenantId());
         try {
             // 逻辑删除
@@ -238,7 +254,13 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     @DeleteMapping(value = "/unbinding/{aid}/{identifier}")
     @NonNull
     public Response<Boolean> unbinding(@PathVariable(value = "aid") Long aid,
-                                @PathVariable(value = "identifier") String identifier) {
+                                @PathVariable(value = "identifier") String identifier, TokenInfo token) {
+        if (isNull(token)) {
+            return Response.failed("未登录");
+        }
+        if (!token.getAccountId().equals(aid)) {
+            return Response.failed("只能解绑自己的账号");
+        }
         try {
             // 解绑
             return Response.success(identifierService.unbinding(identifier, aid));
@@ -246,6 +268,31 @@ public class IdentifierController implements CrudController<Identifier, java.lan
         catch (Exception e) {
             log.error(String.format("解绑失败: aid: %s, tenantId: %s, identifier: %s",
                                     aid, tenantContextHolder.getTenantId(), identifier), e);
+            return Response.success(Boolean.FALSE);
+        }
+    }
+
+    /**
+     * 删除账号
+     * @param accountId 账号ID/用户ID/会员ID/商户ID
+     * @return  true 表示成功, false 表示失败
+     */
+    @DeleteMapping(value = "/del/{accountId}")
+    @NonNull
+    public Response<Boolean> deleteByAccountId(@PathVariable(value = "accountId") Long accountId, TokenInfo token) {
+
+        if (isNull(token)) {
+        	return Response.failed("未登录");
+        }
+        if (!token.getAccountId().equals(accountId)) {
+            return Response.failed("只能删除自己的账号");
+        }
+        try {
+            return Response.success(identifierService.deleteByAccountId(accountId, token.getTenantId()));
+        }
+        catch (Exception e) {
+            log.error(String.format("删除账号失败: aid: %s, tenantId: %s",
+                                    accountId, token.getTenantId()), e);
             return Response.success(Boolean.FALSE);
         }
     }
