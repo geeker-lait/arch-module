@@ -1,6 +1,8 @@
 package org.arch.auth.sso.controller;
 
 import org.arch.auth.sso.properties.SsoProperties;
+import org.arch.framework.beans.Response;
+import org.arch.framework.beans.exception.constant.AuthStatusCode;
 import org.arch.framework.utils.SecurityUtils;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -12,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
-import top.dcenter.ums.security.common.vo.ResponseResult;
 import top.dcenter.ums.security.core.vo.AuthTokenVo;
 import top.dcenter.ums.security.jwt.JwtContext;
 
@@ -92,16 +92,16 @@ public class LoginController {
      */
     @RequestMapping(value = "/oauth2Callback", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
-    public ResponseResult oAuth2LoginSuccessCallback(@RequestParam("tk") String tk,
-                                                     @RequestParam("username") String username,
-                                                     @RequestParam("id") String id) {
+    public Response<AuthTokenVo> oAuth2LoginSuccessCallback(@RequestParam("tk") String tk,
+                                                            @RequestParam("username") String username,
+                                                            @RequestParam("id") String id) {
         if (hasText(tk)) {
             byte[] bytes = getConnection().get((tempOauth2TokenPrefix + tk).getBytes(StandardCharsets.UTF_8));
             if (nonNull(bytes)) {
                 // tokenInfo = jwtToken#@#refreshToken#@#url 或 tokenInfo = jwtToken#@#url
                 String tokenInfo = new String(bytes, StandardCharsets.UTF_8);
                 if (!hasText(tokenInfo)) {
-                    return ResponseResult.fail(ErrorCodeEnum.NOT_FOUND);
+                    return Response.failed(AuthStatusCode.UNAUTHORIZED);
                 }
                 String[] split = tokenInfo.split(delimiterOfTokenAndRefreshToken);
                 int length = split.length;
@@ -113,10 +113,10 @@ public class LoginController {
                 if (length - 1 != 1) {
                     authTokenVo.setRefreshToken(split[1]);
                 }
-                return ResponseResult.success("成功获取 token", authTokenVo);
+                return Response.success(authTokenVo, "成功获取 token");
             }
         }
-        return ResponseResult.fail(ErrorCodeEnum.NOT_FOUND);
+        return Response.failed(AuthStatusCode.UNAUTHORIZED);
     }
 
     @NonNull

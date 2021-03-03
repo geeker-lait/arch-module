@@ -28,6 +28,7 @@
                 console.log("--------> 获取 /oauth2Callback 数据 成功")
                 console.log("--------> 获取 token 数据")
                 console.log(data)
+                window.location.href = data.data.targetUrl;
             },
             error: function (data) {
                 console.log("........> 获取 /oauth2Callback 数据 错误")
