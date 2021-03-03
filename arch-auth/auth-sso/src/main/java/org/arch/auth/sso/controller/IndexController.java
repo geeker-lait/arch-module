@@ -23,10 +23,14 @@ public class IndexController {
 
     @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
     public String index(Model model) {
-        // todo
         try {
             TokenInfo currentUser = SecurityUtils.getCurrentUser();
+            model.addAttribute("id", currentUser.getIdentifierId());
             model.addAttribute("username", currentUser.getAccountName());
+            model.addAttribute("accountId", currentUser.getAccountId());
+            model.addAttribute("nickName", currentUser.getNickName());
+            model.addAttribute("avatar", currentUser.getAvatar());
+            model.addAttribute("channelType", currentUser.getChannelType());
             model.addAttribute("roles", StringUtils.join(currentUser.getAuthorities(), ","));
         }
         catch (Exception e) {
