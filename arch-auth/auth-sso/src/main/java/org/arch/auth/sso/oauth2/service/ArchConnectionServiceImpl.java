@@ -13,7 +13,6 @@ import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 import org.arch.framework.id.IdService;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.dto.AuthLoginDto;
@@ -46,11 +45,14 @@ import top.dcenter.ums.security.core.oauth.properties.Auth2Properties;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Objects.isNull;
 import static org.arch.auth.sso.utils.RegisterUtils.getTraceId;
 import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
 import static org.arch.framework.beans.utils.RetryUtils.publishRetryEvent;
+import static org.arch.framework.ums.enums.ChannelType.OAUTH2;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * arch 第三方登录时, 自动注册, 更新第三方用户信息, 绑定第三方用户到本地的服务实现..
@@ -206,7 +208,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
 
     /**
      * 解除绑定(第三方)
-     * @param userId            用户 Id, 即 {@link Identifier#getIdentifier()}
+     * @param userId            解绑的用户 Id, 即 {@link Identifier#getIdentifier()}
      * @param providerId        第三方服务商 Id
      * @param providerUserId    第三方用户 Id
      */
@@ -214,18 +216,50 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
     public void unbinding(@NonNull String userId, @NonNull String providerId, @NonNull String providerUserId) {
 
         try {
-            // 1. 获取 userId 对应的 Identifier 相关信息.
-            Response<AuthLoginDto> authLoginDtoResponse = umsAccountIdentifierFeignService.loadAccountByIdentifier(userId);
-            AuthLoginDto authLoginDto = authLoginDtoResponse.getSuccessData();
-            if (isNull(authLoginDto)) {
-                log.warn("用户 {} 进行解绑操作时, 获取用户信息失败; providerId: {}, providerUserId: {}",
+            // 1. 获取并检查 userId 对应的 Identifier 相关信息.
+            TokenInfo currentUser = SecurityUtils.getCurrentUser();
+            if (currentUser.getAccountName().equals(userId)) {
+                log.debug("用户 {} 进行解绑操作时, 不能解绑的已登录的账号; providerId: {}, providerUserId: {}",
+                          userId, providerId, providerUserId);
+                throw new UnBindingException(ErrorCodeEnum.UN_BINDING_LOGGED_ERROR, userId);
+            }
+            Identifier identifierRequest = new Identifier();
+            identifierRequest.setAid(currentUser.getAccountId());
+            identifierRequest.setTenantId(currentUser.getTenantId());
+            Response<List<Identifier>> listResponse = umsAccountIdentifierFeignService.find(identifierRequest);
+            List<Identifier> identifierList = listResponse.getSuccessData();
+            if (isEmpty(identifierList)) {
+                log.debug("用户 {} 进行解绑操作时, 获取用户信息失败; providerId: {}, providerUserId: {}",
                          userId, providerId, providerUserId);
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_ERROR, userId);
             }
+            // 检查 userId 是否在 identifierList 中
+            Identifier unbindingIdentifier = null;
+            for (Identifier identifier : identifierList) {
+                if (identifier.getIdentifier().equals(userId)) {
+                    unbindingIdentifier = identifier;
+                    break;
+                }
+            }
+            if (isNull(unbindingIdentifier)) {
+                log.debug("用户 {} 进行解绑操作时, 不能解绑的不属于自己的第三方账号; providerId: {}, providerUserId: {}",
+                          userId, providerId, providerUserId);
+                throw new UnBindingException(ErrorCodeEnum.UN_BINDING_ILLEGAL, userId);
+            }
+            if (Objects.equals(unbindingIdentifier.getChannelType(), OAUTH2)) {
+                log.debug("用户 {} 进行解绑操作时, 只能解绑第三方的账号; providerId: {}, providerUserId: {}",
+                          userId, providerId, providerUserId);
+                throw new UnBindingException(ErrorCodeEnum.UN_BINDING_NOT_OAUTH2, userId);
+            }
+            if (identifierList.size() == 1) {
+                log.debug("用户 {} 进行解绑操作时, 不支持解绑自己; providerId: {}, providerUserId: {}",
+                          userId, providerId, providerUserId);
+                throw new UnBindingException(ErrorCodeEnum.UN_BINDING_YOURSELF_ERROR, userId);
+            }
 
             // 2. 解绑
-            String identifier = RegisterUtils.getIdentifierForOauth2(providerId, providerUserId);
-            Response<Boolean> response = umsAccountIdentifierFeignService.unbinding(authLoginDto.getAid(), identifier);
+            Response<Boolean> response = umsAccountIdentifierFeignService.unbinding(unbindingIdentifier.getAid(),
+                                                                                    unbindingIdentifier.getIdentifier());
             Boolean successData = response.getSuccessData();
             if (isNull(successData) || !successData) {
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_ERROR, userId);
@@ -287,7 +321,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
                     .setIdentifier(identifier)
                     .setCredential(passwordEncoder.encode(ssoProperties.getDefaultPassword()))
                     .setAuthorities(authorities)
-                    .setChannelType(ChannelType.OAUTH2);
+                    .setChannelType(OAUTH2);
             // 绑定
             try {
                 umsAccountIdentifierFeignService.save(identifierRequest);
