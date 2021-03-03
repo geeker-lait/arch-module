@@ -15,6 +15,7 @@ import org.arch.framework.id.IdService;
 import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.dao.IdentifierDao;
+import org.arch.ums.account.dto.Auth2ConnectionDto;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static org.arch.framework.ums.consts.AccountConstants.OAUTH_IDENTIFIER_SEPARATOR;
 
 /**
  * 用户-标识(Identifier) 表服务层
@@ -429,5 +431,36 @@ public class IdentifierService extends CrudService<Identifier, Long> {
         List<Identifier> identifierList = identifierDao.list(queryWrapper);
         List<Long> ids = identifierList.stream().map(Identifier::getId).collect(Collectors.toList());
         return deleteAllById(ids);
+    }
+
+    /**
+     * 查询 accountId 下所有的第三方绑定账号
+     *
+     * @param accountId 账号ID/用户ID/会员ID/商户ID
+     * @param tenantId  租户ID
+     * @return 绑定账号集合
+     */
+    @NonNull
+    public Map<String, List<Auth2ConnectionDto>> listAllConnections(@NonNull Long accountId,
+                                                                        @NonNull Integer tenantId) {
+        LambdaQueryWrapper<Identifier> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Identifier::getTenantId, tenantId)
+                    .and(w -> w.eq(Identifier::getAid, accountId))
+                    .and(w -> w.eq(Identifier::getChannelType,ChannelType.OAUTH2))
+                    .select(Identifier::getId, Identifier::getAid, Identifier::getIdentifier);
+        List<Identifier> identifierList = identifierDao.list(queryWrapper);
+
+
+        return identifierList.stream()
+                     .map(identifier -> Auth2ConnectionDto.builder()
+                                                           .id(identifier.getId())
+                                                           .aid(identifier.getAid())
+                                                           .identifier(identifier.getIdentifier())
+                                                           .build())
+                     .collect(Collectors.groupingBy(dto -> {
+                          String identifier = dto.getIdentifier();
+                          int indexOf = identifier.indexOf(OAUTH_IDENTIFIER_SEPARATOR);
+                          return identifier.substring(0, indexOf);
+                      }));
     }
 }

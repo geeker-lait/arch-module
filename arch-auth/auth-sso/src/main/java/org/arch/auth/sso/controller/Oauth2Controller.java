@@ -4,10 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.auth.sso.utils.RegisterUtils;
 import org.arch.framework.beans.Response;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.oauth.dto.ConnectionDto;
 import top.dcenter.ums.security.core.api.oauth.signup.ConnectionService;
 
 import static java.util.Objects.isNull;
@@ -44,6 +48,29 @@ public class Oauth2Controller {
         catch (Exception e) {
             log.error(e.getMessage(),e);
             return Response.failed("解绑失败");
+        }
+    }
+
+    /**
+     * 查询当前账号下的所有绑定的第三方账号
+     * @param accountId 账号ID/用户ID/会员ID/商户ID
+     * @return 绑定账号集合
+     */
+    @GetMapping("/connected/{accountId:[0-9]+}")
+    public Response<MultiValueMap<String, ConnectionDto>> findAllConnections(@PathVariable("accountId") Long accountId,
+                                                                             TokenInfo token) {
+        if (isNull(token)) {
+            return Response.failed("未登录");
+        }
+        if (!token.getAccountId().equals(accountId)) {
+            return Response.failed("只能查询自己的账号信息");
+        }
+        try {
+            return Response.success(this.connectionService.listAllConnections(accountId.toString()));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.failed("查询第三方绑定谢谢失败");
         }
     }
 }

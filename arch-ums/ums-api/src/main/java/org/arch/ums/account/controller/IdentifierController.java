@@ -8,6 +8,7 @@ import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.utils.SecurityUtils;
+import org.arch.ums.account.dto.Auth2ConnectionDto;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.dto.IdentifierSearchDto;
@@ -30,6 +31,7 @@ import top.dcenter.ums.security.jwt.JwtContext;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -298,6 +300,33 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     }
 
     /**
+     * 查询 accountId 下所有的第三方绑定账号
+     *
+     * @param accountId 账号ID/用户ID/会员ID/商户ID
+     * @return 绑定账号集合
+     */
+    @GetMapping(value = "/listAllConnections/{accountId:[0-9]+}")
+    @NonNull
+    public Response<Map<String, List<Auth2ConnectionDto>>> listAllConnections(
+            @PathVariable("accountId") Long accountId, TokenInfo token){
+
+        if (isNull(token)) {
+            return Response.failed("未登录");
+        }
+        if (!token.getAccountId().equals(accountId)) {
+            return Response.failed("只能查询自己的账号信息");
+        }
+        try {
+            return Response.success(this.identifierService.listAllConnections(accountId, token.getTenantId()));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.failed("查询第三方绑定谢谢失败");
+        }
+
+    }
+
+    /**
      * 根据 entity 条件查询对象.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      * @param entity    实体类
@@ -355,4 +384,5 @@ public class IdentifierController implements CrudController<Identifier, java.lan
         IdentifierSearchDto searchDto = convertSearchDto(entity);
         return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
     }
+
 }

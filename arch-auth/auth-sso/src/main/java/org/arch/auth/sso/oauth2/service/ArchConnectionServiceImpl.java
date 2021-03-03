@@ -15,6 +15,7 @@ import org.arch.framework.id.IdService;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.framework.utils.SecurityUtils;
+import org.arch.ums.account.dto.Auth2ConnectionDto;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.entity.OauthToken;
@@ -30,8 +31,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
 import top.dcenter.ums.security.common.utils.JsonUtil;
+import top.dcenter.ums.security.core.api.oauth.dto.ConnectionDto;
 import top.dcenter.ums.security.core.api.oauth.entity.ConnectionData;
 import top.dcenter.ums.security.core.api.oauth.repository.exception.UpdateConnectionException;
 import top.dcenter.ums.security.core.api.oauth.signup.ConnectionService;
@@ -45,9 +49,13 @@ import top.dcenter.ums.security.core.oauth.properties.Auth2Properties;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static org.arch.auth.sso.utils.RegisterUtils.getTraceId;
 import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
 import static org.arch.framework.beans.utils.RetryUtils.publishRetryEvent;
@@ -204,6 +212,43 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
                                           providerId, providerUserId);
             throw new FeignCallException(ResponseStatusCode.FAILED, null, msg, e);
         }
+    }
+
+    @NonNull
+    @Override
+    public MultiValueMap<String, ConnectionDto> listAllConnections(@NonNull String userId) {
+        Response<Map<String, List<Auth2ConnectionDto>>> response =
+                umsAccountIdentifierFeignService.listAllConnections(Long.valueOf(userId));
+        Map<String, List<Auth2ConnectionDto>> allConnections = response.getSuccessData();
+        if (isNull(allConnections)) {
+        	return new LinkedMultiValueMap<>(0);
+        }
+        Set<Map.Entry<String, List<Auth2ConnectionDto>>> entries = allConnections.entrySet();
+        MultiValueMap<String, ConnectionDto> connectionMap = new LinkedMultiValueMap<>(allConnections.size());
+        for (Map.Entry<String, List<Auth2ConnectionDto>> entry : entries) {
+            List<ConnectionDto> connectionDtoList =
+                    entry.getValue()
+                         .stream()
+                         .map(dto -> {
+                             String identifier = dto.getIdentifier();
+                             String[] providers = RegisterUtils.getProvideIdAndProviderUserIdByIdentifierForOauth2(identifier);
+                             String providerId = null;
+                             String providerUserId = null;
+                             if (nonNull(providers)) {
+                                 providerId = providers[0];
+                                 providerUserId = providers[1];
+                             }
+                             return ConnectionDto.builder()
+                                                 .id(dto.getId().toString())
+                                                 .userId(identifier)
+                                                 .providerId(providerId)
+                                                 .providerUserId(providerUserId)
+                                                 .build();
+                         })
+                         .collect(Collectors.toList());
+            connectionMap.put(entry.getKey(), connectionDtoList);
+        }
+        return connectionMap;
     }
 
     /**

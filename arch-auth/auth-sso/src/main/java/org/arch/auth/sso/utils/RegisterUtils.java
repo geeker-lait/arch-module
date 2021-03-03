@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static java.util.Objects.isNull;
+import static org.arch.framework.ums.consts.AccountConstants.OAUTH_IDENTIFIER_SEPARATOR;
 import static org.arch.framework.ums.consts.RoleConstants.AUTHORITY_SEPARATOR;
 import static org.arch.framework.ums.consts.RoleConstants.TENANT_PREFIX;
 import static org.springframework.util.StringUtils.hasText;
@@ -43,11 +44,6 @@ public class RegisterUtils {
      * 如果用户 ID 为 001, 则-用户的推荐类型为: user_001
      */
     public static final String USER_RECOMMEND_SOURCE_PREFIX = "user_";
-
-    /**
-     * 第三方用户 identifier(账号-标识) 分隔符
-     */
-    public static final String OAUTH_IDENTIFIER_SEPARATOR = "_";
 
     /**
      * 生成第三方用户 identifier(账号-标识)
