@@ -61,6 +61,20 @@ public class RegisterUtils {
     }
 
     /**
+     * 根据 identifier(账号-标识) 返回 new String[] {providerId, providerUserId}
+     * @param identifier         账号-标识
+     * @return  返回 new String[] {providerId, providerUserId}, 当 identifier(账号-标识) 不是 OAUTH2 格式时返回 null.
+     */
+    @Nullable
+    public static String[] getProvideIdAndProviderUserIdByIdentifierForOauth2(@NonNull String identifier) {
+        int indexOf = identifier.indexOf(OAUTH_IDENTIFIER_SEPARATOR);
+        if (indexOf == -1) {
+            return null;
+        }
+        return new String[]{identifier.substring(0, indexOf), identifier.substring(indexOf + OAUTH_IDENTIFIER_SEPARATOR.length())};
+    }
+
+    /**
      * 从 request 中 获取账号类型.
      * @param accountTypeName 账号类型参数名
      * @return  返回 {@link AccountType} , 不存在则返回 null.

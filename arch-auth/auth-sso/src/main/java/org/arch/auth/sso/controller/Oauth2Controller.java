@@ -13,6 +13,7 @@ import top.dcenter.ums.security.core.api.oauth.signup.ConnectionService;
 import static java.util.Objects.isNull;
 
 /**
+ * 第三方账号控制器
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.3 14:26
