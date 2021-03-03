@@ -6,8 +6,7 @@ import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.LongAdder;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 重试事件, 适用不关心返回值情况.
@@ -26,15 +25,7 @@ public class RetryEvent extends ApplicationEvent {
     /**
      * 重试次数
      */
-    private final LongAdder retryNo;
-    /**
-     * 重试间隔.
-     */
-    private int retryInterval = 1500;
-    /**
-     * 重试间隔单位.
-     */
-    private TimeUnit retryTimeUnit = TimeUnit.MILLISECONDS;
+    private final AtomicInteger retryNo;
 
     /**
      *
@@ -52,7 +43,7 @@ public class RetryEvent extends ApplicationEvent {
         this.retryClz = retryClz;
         this.retryMethod = retryMethod;
         this.retryArgs = retryArgs;
-        this.retryNo = new LongAdder();
+        this.retryNo = new AtomicInteger();
     }
 
     public Class<?> getRetryClz() {
@@ -72,27 +63,11 @@ public class RetryEvent extends ApplicationEvent {
     }
 
     public void addRetryNo() {
-        retryNo.increment();
-    }
-
-    public int getRetryInterval() {
-        return retryInterval;
-    }
-
-    public void setRetryInterval(int retryInterval) {
-        this.retryInterval = retryInterval;
+        retryNo.incrementAndGet();
     }
 
     public int getRetryNo() {
         return retryNo.intValue();
-    }
-
-    public TimeUnit getRetryTimeUnit() {
-        return retryTimeUnit;
-    }
-
-    public void setRetryTimeUnit(TimeUnit retryTimeUnit) {
-        this.retryTimeUnit = retryTimeUnit;
     }
 
     @Override
@@ -103,7 +78,6 @@ public class RetryEvent extends ApplicationEvent {
                 ", retryArgs=" + Arrays.toString(retryArgs) +
                 ", traceId='" + traceId + '\'' +
                 ", retryNo=" + retryNo +
-                ", retryInterval=" + retryInterval +
                 '}';
     }
 }

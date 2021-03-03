@@ -1,6 +1,7 @@
 package org.arch.auth.sso.listener;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arch.auth.sso.properties.RetryProperties;
 import org.arch.framework.beans.Response;
 import org.arch.framework.beans.event.RetryEvent;
 import org.slf4j.MDC;
@@ -12,8 +13,10 @@ import top.dcenter.ums.security.common.executor.DefaultThreadFactory;
 import top.dcenter.ums.security.common.executor.MdcScheduledThreadPoolExecutor;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.isNull;
 import static org.springframework.util.StringUtils.hasText;
@@ -31,9 +34,15 @@ public class RetryListener implements ApplicationListener<RetryEvent> {
 
     private final ApplicationEventPublisher publisher;
     private final MdcScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
+    private final TimeUnit timeUnit;
+    private final Integer delay;
+    private final Integer maxAttempts;
 
-    public RetryListener(ApplicationEventPublisher publisher) {
+    public RetryListener(ApplicationEventPublisher publisher, RetryProperties retryProperties) {
         this.publisher = publisher;
+        this.timeUnit = retryProperties.getTimeUnit();
+        this.delay = retryProperties.getDelay();
+        this.maxAttempts = retryProperties.getMaxAttempts();
         scheduledThreadPoolExecutor =
                 new MdcScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
                                                        new DefaultThreadFactory("sso-retry-listener"),
@@ -44,8 +53,9 @@ public class RetryListener implements ApplicationListener<RetryEvent> {
     public void onApplicationEvent(@NonNull RetryEvent event) {
         int retryNo = event.getRetryNo();
         // 重试失败, 记录日志, 定时任务 或 人工处理
-        if (retryNo > 1) {
-            log.error("重试 {} 次失败: {}",retryNo, event.toString());
+        if (retryNo >= maxAttempts) {
+            log.error("重试 {} 次失败: {}", retryNo, event.toString());
+            return;
         }
 
         try {
@@ -60,8 +70,8 @@ public class RetryListener implements ApplicationListener<RetryEvent> {
                         }
                         return retryMethod.invoke(event.getSource(), event.getRetryArgs());
                     },
-                    event.getRetryInterval(),
-                    event.getRetryTimeUnit()
+                    delay * (1L + retryNo),
+                    timeUnit
             );
 
             // 检查是否重试成功
@@ -90,7 +100,7 @@ public class RetryListener implements ApplicationListener<RetryEvent> {
     }
 
     private static boolean isNotVoidOfReturnType(@NonNull Method method) {
-        return !"void".equals(method.getReturnType().getName());
+        return !Objects.equals("void",method.getReturnType().getName());
     }
 
     private static boolean isResponseOfReturnType(@NonNull Method method) {

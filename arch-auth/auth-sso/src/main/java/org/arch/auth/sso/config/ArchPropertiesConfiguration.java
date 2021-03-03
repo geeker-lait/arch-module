@@ -1,6 +1,7 @@
 package org.arch.auth.sso.config;
 
 import org.arch.auth.sso.properties.FileProperties;
+import org.arch.auth.sso.properties.RetryProperties;
 import org.arch.auth.sso.properties.SsoProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,6 @@ import org.springframework.core.annotation.Order;
  */
 @Configuration
 @Order(98)
-@EnableConfigurationProperties({SsoProperties.class, FileProperties.class})
+@EnableConfigurationProperties({SsoProperties.class, FileProperties.class, RetryProperties.class})
 public class ArchPropertiesConfiguration {
 }
