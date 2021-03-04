@@ -8,6 +8,7 @@ import org.arch.framework.ums.enums.AccountType;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.entity.OauthToken;
+import org.slf4j.MDC;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -17,15 +18,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import top.dcenter.ums.security.core.api.oauth.justauth.request.Auth2DefaultRequest;
+import top.dcenter.ums.security.core.mdc.MdcIdType;
+import top.dcenter.ums.security.core.mdc.utils.MdcUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static java.util.Objects.isNull;
+import static org.arch.framework.ums.consts.AccountConstants.OAUTH_IDENTIFIER_SEPARATOR;
 import static org.arch.framework.ums.consts.RoleConstants.AUTHORITY_SEPARATOR;
 import static org.arch.framework.ums.consts.RoleConstants.TENANT_PREFIX;
 import static org.springframework.util.StringUtils.hasText;
+import static top.dcenter.ums.security.common.consts.MdcConstants.MDC_KEY;
 
 /**
  * 注册工具
@@ -41,11 +46,6 @@ public class RegisterUtils {
     public static final String USER_RECOMMEND_SOURCE_PREFIX = "user_";
 
     /**
-     * 第三方用户 identifier(账号-标识) 分隔符
-     */
-    public static final String OAUTH_IDENTIFIER_SEPARATOR = "_";
-
-    /**
      * 生成第三方用户 identifier(账号-标识)
      * @param provider          第三方服务商
      * @param providerUserId    用户在第三方服务商的用户 ID
@@ -54,6 +54,20 @@ public class RegisterUtils {
     @NonNull
     public static String getIdentifierForOauth2(@NonNull String provider, @NonNull String providerUserId) {
         return provider + OAUTH_IDENTIFIER_SEPARATOR + providerUserId;
+    }
+
+    /**
+     * 根据 identifier(账号-标识) 返回 new String[] {providerId, providerUserId}
+     * @param identifier         账号-标识
+     * @return  返回 new String[] {providerId, providerUserId}, 当 identifier(账号-标识) 不是 OAUTH2 格式时返回 null.
+     */
+    @Nullable
+    public static String[] getProvideIdAndProviderUserIdByIdentifierForOauth2(@NonNull String identifier) {
+        int indexOf = identifier.indexOf(OAUTH_IDENTIFIER_SEPARATOR);
+        if (indexOf == -1) {
+            return null;
+        }
+        return new String[]{identifier.substring(0, indexOf), identifier.substring(indexOf + OAUTH_IDENTIFIER_SEPARATOR.length())};
     }
 
     /**
@@ -170,6 +184,19 @@ public class RegisterUtils {
         oauthToken.setExpireTime(Auth2DefaultRequest.expireIn2Timestamp(timeout, token.getExpireIn()));
 
         return oauthToken;
+    }
+
+    /**
+     * 获取 MDC 调用链路追踪 ID
+     * @return  MDC 调用链路追踪 ID
+     */
+    @NonNull
+    public static String getTraceId() {
+        String id = MDC.get(MDC_KEY);
+        if (hasText(id)) {
+            return id;
+        }
+        return MdcUtil.getMdcId(MdcIdType.UUID, null);
     }
 
 }

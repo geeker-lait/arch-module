@@ -79,7 +79,7 @@ public class OauthTokenController implements CrudController<OauthToken, Long, Oa
         }
         catch (Exception e) {
             log.error(String.format("更新 oauthToken 失败: identifierId: %s",oauthToken.getAccountIdentifierId()), e);
-            return Response.success(Boolean.FALSE, "更新 oauthToken 失败");
+            return Response.error(FAILED.getCode(), "更新 oauthToken 失败");
         }
     }
 

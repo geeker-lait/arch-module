@@ -1,6 +1,7 @@
 package org.arch.ums.account.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.arch.framework.id.IdService;
 import org.arch.framework.ums.enums.ChannelType;
 import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.dao.IdentifierDao;
+import org.arch.ums.account.dto.Auth2ConnectionDto;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
@@ -32,9 +34,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static org.arch.framework.ums.consts.AccountConstants.OAUTH_IDENTIFIER_SEPARATOR;
 
 /**
  * 用户-标识(Identifier) 表服务层
@@ -394,6 +398,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
      * @return  true 表示逻辑删除成功, false 表示逻辑删除失败
      */
     private boolean logicDeleted(@NonNull Integer tenantId, @NonNull Identifier identifier) {
+
         // 查询是否有最近的历史删除记录
         Identifier deletedIdentifier =
                 identifierDao.selectLogicDeleted(tenantId,
@@ -408,7 +413,54 @@ public class IdentifierService extends CrudService<Identifier, Long> {
             seq = 0;
         }
 
-        // 逻辑删除, likeIdentifierPrefix(防止用户重新通过此第三方注册时触发唯一索引问题), seq(防止多次删除同一个第三方账号时触发唯一索引问题)
+        // 逻辑删除, IDENTIFIER_DELETED_SUFFIX(防止用户重新通过此第三方注册时触发唯一索引问题), seq(防止多次删除同一个第三方账号时触发唯一索引问题)
         return identifierDao.logicDeleted(identifier.getId(), IDENTIFIER_DELETED_SUFFIX + seq);
+    }
+
+    /**
+     * 删除账号
+     * @param accountId 账号ID/用户ID/会员ID/商户ID
+     * @param tenantId  租户ID
+     * @return  true 表示成功, false 表示失败
+     */
+    @NonNull
+    public Boolean deleteByAccountId(@NonNull Long accountId, @NonNull Integer tenantId) {
+        LambdaQueryWrapper<Identifier> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Identifier::getTenantId, tenantId)
+                     .and(w -> w.eq(Identifier::getAid, accountId));
+        List<Identifier> identifierList = identifierDao.list(queryWrapper);
+        List<Long> ids = identifierList.stream().map(Identifier::getId).collect(Collectors.toList());
+        return deleteAllById(ids);
+    }
+
+    /**
+     * 查询 accountId 下所有的第三方绑定账号
+     *
+     * @param accountId 账号ID/用户ID/会员ID/商户ID
+     * @param tenantId  租户ID
+     * @return 绑定账号集合
+     */
+    @NonNull
+    public Map<String, List<Auth2ConnectionDto>> listAllConnections(@NonNull Long accountId,
+                                                                        @NonNull Integer tenantId) {
+        LambdaQueryWrapper<Identifier> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Identifier::getTenantId, tenantId)
+                    .and(w -> w.eq(Identifier::getAid, accountId))
+                    .and(w -> w.eq(Identifier::getChannelType,ChannelType.OAUTH2))
+                    .select(Identifier::getId, Identifier::getAid, Identifier::getIdentifier);
+        List<Identifier> identifierList = identifierDao.list(queryWrapper);
+
+
+        return identifierList.stream()
+                     .map(identifier -> Auth2ConnectionDto.builder()
+                                                           .id(identifier.getId())
+                                                           .aid(identifier.getAid())
+                                                           .identifier(identifier.getIdentifier())
+                                                           .build())
+                     .collect(Collectors.groupingBy(dto -> {
+                          String identifier = dto.getIdentifier();
+                          int indexOf = identifier.indexOf(OAUTH_IDENTIFIER_SEPARATOR);
+                          return identifier.substring(0, indexOf);
+                      }));
     }
 }

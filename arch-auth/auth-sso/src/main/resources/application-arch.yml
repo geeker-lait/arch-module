@@ -19,8 +19,8 @@ arch:
     # 第三方登录成功后, 临时存储在 redis 的 token 值的 TTL, 默认: 30 秒
     temp-oauth-2-token-timeout: PT30S
   app:
-    app-id: "001"
-    app-code: "001"
+    client-id: "001"
+    client-secret: "001"
 
   file:
     # 图片文件存放的 url. 默认: ""
@@ -32,6 +32,11 @@ arch:
     # 允许最大的上传图片大小, 默认: 2 * 1024 * 1024
     image-max-size: 2097152
 
+  retry:
+    delay: 1500
+    max-attempts: 2
+    time-unit: milliseconds
+
 
 ---
 spring:
@@ -42,6 +47,7 @@ spring:
 arch:
   sso:
     default-avatar: http://static.dcenter.top/static/img/random/user/14.jpg
+    temp-oauth-2-token-timeout: PT300S
   file:
     # 图片文件存放的 url. 默认: ""
     url: "D:/Workspaces-Idea/proc/arch-module/arch-auth/auth-sso/target"

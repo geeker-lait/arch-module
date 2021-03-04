@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
@@ -88,4 +89,12 @@ public interface BaseFeignService<T extends Model<T>, ID extends Serializable> {
      */
     @DeleteMapping(path = "/{id}")
     Response<Boolean> deleteById(@PathVariable("id") ID id);
+
+    /**
+     * 根据 id 更新实体
+     * @param entity    实体
+     * @return  true 表示更新成功
+     */
+    @PutMapping
+    Response<Boolean> updateById(@RequestBody T entity);
 }

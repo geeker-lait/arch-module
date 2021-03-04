@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.auth.sso.properties.SsoProperties;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
 import org.arch.framework.utils.SecurityUtils;
 import org.springframework.core.log.LogMessage;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -28,6 +29,7 @@ import top.dcenter.ums.security.core.auth.properties.ClientProperties;
 import top.dcenter.ums.security.core.oauth.properties.Auth2Properties;
 import top.dcenter.ums.security.core.vo.AuthTokenVo;
 import top.dcenter.ums.security.jwt.JwtContext;
+import top.dcenter.ums.security.jwt.properties.JwtProperties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -61,14 +63,20 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
 
     private final RedisConnectionFactory redisConnectionFactory;
 
+    private final String domain;
+
     private final SsoProperties ssoProperties;
+
+    private final JwtProperties jwtProperties;
 
     public ArchAuthenticationSuccessHandler(@NonNull ClientProperties clientProperties,
                                             @NonNull Auth2Properties auth2Properties,
-                                            RedisConnectionFactory redisConnectionFactory, SsoProperties ssoProperties) {
+                                            RedisConnectionFactory redisConnectionFactory, SsoProperties ssoProperties, JwtProperties jwtProperties) {
         this.redisConnectionFactory = redisConnectionFactory;
         this.ssoProperties = ssoProperties;
+        this.jwtProperties = jwtProperties;
         this.auth2RedirectUrl = auth2Properties.getRedirectUrlPrefix();
+        this.domain = auth2Properties.getDomain();
         this.requestCache = new HttpSessionRequestCache();
         this.loginProcessType = clientProperties.getLoginProcessType();
 
@@ -106,24 +114,7 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
                 //noinspection unchecked
                 AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token> jwtAuthentication =
                         (AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token>) authentication;
-                String uuid = UuidUtils.getUUID();
-                request.getSession().setAttribute(ssoProperties.getOauth2TokenParamName(), uuid);
-                String tkValue = jwtAuthentication.getToken().getTokenValue();
-                if (JwtContext.isRefreshJwtByRefreshToken()) {
-                    String jwtRefreshTokenFromSession = JwtContext.getJwtRefreshTokenFromSession();
-                    if (hasText(jwtRefreshTokenFromSession)) {
-                        tkValue = tkValue.concat(ssoProperties.getDelimiterOfTokenAndRefreshToken())
-                                         .concat(jwtRefreshTokenFromSession);
-                    }
-                    tkValue = tkValue.concat(ssoProperties.getDelimiterOfTokenAndRefreshToken())
-                                     .concat(targetUrl);
-                    getConnection().setEx((ssoProperties.getTempOauth2TokenPrefix() + uuid).getBytes(StandardCharsets.UTF_8),
-                                          ssoProperties.getTempOauth2TokenTimeout().getSeconds(),
-                                          tkValue.getBytes(StandardCharsets.UTF_8));
-                }
-
-                clearAuthenticationAttributes(request);
-                request.getRequestDispatcher(ssoProperties.getAutoGetTokenUri()).forward(request, response);
+                oauth2CallbackUrl(request, response, targetUrl, jwtAuthentication);
                 return ;
             }
 
@@ -244,6 +235,48 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
     public void setUseReferer(boolean useReferer) {
         super.setUseReferer(useReferer);
         this.useReferer = useReferer;
+    }
+
+    private void oauth2CallbackUrl(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+                                   @NonNull String targetUrl,
+                                   @NonNull AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token> jwtAuthentication) throws IOException {
+        String uuid = UuidUtils.getUUID();
+        String tkValue = jwtAuthentication.getToken().getTokenValue();
+
+        String jwtRefreshTokenFromSession = JwtContext.getJwtRefreshTokenFromSession();
+        if (hasText(jwtRefreshTokenFromSession)) {
+            tkValue = tkValue.concat(ssoProperties.getDelimiterOfTokenAndRefreshToken())
+                             .concat(jwtRefreshTokenFromSession);
+        }
+        else {
+            String refreshTokenFromHeader = response.getHeader(jwtProperties.bearer.getRefreshTokenHeaderName());
+            if (hasText(refreshTokenFromHeader)) {
+                tkValue = tkValue.concat(ssoProperties.getDelimiterOfTokenAndRefreshToken())
+                                 .concat(refreshTokenFromHeader);
+            }
+        }
+        //noinspection AlibabaUndefineMagicConstant
+        if ((domain + "/").equals(targetUrl) || domain.equals(targetUrl)) {
+            targetUrl = domain + request.getContextPath();
+        }
+        tkValue = tkValue.concat(ssoProperties.getDelimiterOfTokenAndRefreshToken())
+                         .concat(targetUrl);
+        getConnection().setEx((ssoProperties.getTempOauth2TokenPrefix() + uuid).getBytes(StandardCharsets.UTF_8),
+                              ssoProperties.getTempOauth2TokenTimeout().getSeconds(),
+                              tkValue.getBytes(StandardCharsets.UTF_8));
+
+        clearAuthenticationAttributes(request);
+        //noinspection StringBufferReplaceableByString
+        StringBuilder url = new StringBuilder(request.getContextPath() + ssoProperties.getAutoGetTokenUri());
+        url.append("?")
+           .append(ssoProperties.getOauth2TokenParamName())
+           .append("=")
+           .append(uuid)
+           .append("&username=")
+           .append(jwtAuthentication.getName())
+           .append("&id=")
+           .append(jwtAuthentication.getTokenAttributes().get(JwtArchClaimNames.IDENTIFIER_ID.getClaimName()));
+        response.sendRedirect(url.toString());
     }
 
     /**

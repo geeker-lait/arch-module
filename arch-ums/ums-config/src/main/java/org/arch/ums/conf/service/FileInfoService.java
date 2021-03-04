@@ -99,6 +99,7 @@ public class FileInfoService extends CrudService<FileInfo, java.lang.Long> {
                         .and(w -> w.eq(FileInfo::getFilePath, filePath));
         FileInfo fileInfo = fileInfoDao.getOne(queryWrapper);
         deleteById(fileInfo.getId());
+        fileInfo.setDeleted(Boolean.TRUE);
         return fileInfo;
     }
 }

@@ -49,7 +49,7 @@ public class ArchUsernamePasswordAuthenticationProvider extends UsernamePassword
         }
 
         ArchUser archUser = ((ArchUser) userDetails);
-        if (!isValidChannelType(archUser) && !getPasswordEncoder().matches(presentedPassword,
+        if (!isValidChannelType(archUser) || !getPasswordEncoder().matches(presentedPassword,
                                                                          userDetails.getPassword())) {
             logger.debug("Authentication failed: password does not match stored value");
 

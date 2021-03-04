@@ -102,7 +102,7 @@ public class LocalImageClient extends BaseImageClient {
         if (!hasText(pathOrUrl)) {
             throw new LocalUploadFileException("[" + this.storageType.name() + "]删除文件失败：文件key为空");
         }
-        File file = new File(this.rootPath + pathOrUrl);
+        File file = new File(this.url + this.rootPath + pathOrUrl);
         if (!file.exists()) {
             throw new LocalUploadFileException("[" + this.storageType.name() + "]删除文件失败：文件不存在[" + this.rootPath + pathOrUrl + "]");
         }

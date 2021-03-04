@@ -105,6 +105,16 @@ public abstract class CrudService<T, ID extends Serializable> {
     }
 
     /**
+     * 根据 id 更新实体
+     * @param entity    实体
+     * @return  返回更新后的实体
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean updateById(T entity) {
+        return crudDao.updateById(entity);
+    }
+
+    /**
      * 统计实体总数
      *
      * @return 实体总数

@@ -35,6 +35,11 @@
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-commons</artifactId>
         </dependency>
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-jwt</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

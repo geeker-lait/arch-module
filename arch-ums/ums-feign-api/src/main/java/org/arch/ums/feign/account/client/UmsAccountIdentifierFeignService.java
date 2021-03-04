@@ -2,6 +2,7 @@ package org.arch.ums.feign.account.client;
 
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
+import org.arch.ums.account.dto.Auth2ConnectionDto;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户登录与注册服务的 feign 客户端.
@@ -98,4 +100,23 @@ public interface UmsAccountIdentifierFeignService extends BaseFeignService<Ident
     @DeleteMapping(value = "/unbinding/{aid}/{identifier}")
     @NonNull
     Response<Boolean> unbinding(@PathVariable(value = "aid") Long aid, @PathVariable(value = "identifier") String identifier);
+
+    /**
+     * 删除账号
+     * @param accountId 账号ID/用户ID/会员ID/商户ID
+     * @return  true 表示成功, false 表示失败
+     */
+    @DeleteMapping(value = "/del/{accountId:[0-9]+}")
+    @NonNull
+    Response<Boolean> deleteByAccountId(@PathVariable(value = "accountId") Long accountId);
+
+    /**
+     * 查询 accountId 下所有的第三方绑定账号
+     *
+     * @param accountId 账号ID/用户ID/会员ID/商户ID
+     * @return 绑定账号集合
+     */
+    @GetMapping(value = "/listAllConnections/{accountId:[0-9]+}")
+    @NonNull
+    Response<Map<String, List<Auth2ConnectionDto>>> listAllConnections(@PathVariable("accountId") Long accountId);
 }

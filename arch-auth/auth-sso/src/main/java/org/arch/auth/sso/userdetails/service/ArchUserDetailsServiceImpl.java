@@ -1,5 +1,6 @@
 package org.arch.auth.sso.userdetails.service;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthUser;
@@ -28,6 +29,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.ServletWebRequest;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
+import top.dcenter.ums.security.core.api.oauth.state.service.Auth2StateCoder;
 import top.dcenter.ums.security.core.api.service.UmsUserDetailsService;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.exception.RegisterUserFailureException;
@@ -70,6 +72,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     private final UmsAccountIdentifierFeignService umsAccountIdentifierFeignService;
     private final Auth2Properties auth2Properties;
     private final UmsAccountAuthTokenFeignService umsAccountAuthTokenFeignService;
+    private final Auth2StateCoder auth2StateCoder;
 
     @NonNull
     @Override
@@ -108,7 +111,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         catch (UsernameNotFoundException e) {
             throw e;
         }
-        catch (Exception e) {
+        catch (FeignException e) {
             String msg = String.format("登录失败: 登录用户名：%s, 失败信息: %s", userId, e.getMessage());
             log.error(msg);
             throw new UserNotExistException(ErrorCodeEnum.QUERY_USER_INFO_ERROR, e, userId);
@@ -136,9 +139,15 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
             throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, mobile);
         }
 
-        // 注册
-        AuthRegRequest authRegRequest = getMobileRegRequest(mobile, accountType);
-        return registerUser(authRegRequest);
+        try {
+            // 注册
+            AuthRegRequest authRegRequest = getMobileRegRequest(mobile, accountType);
+            return registerUser(authRegRequest);
+        }
+        catch (Exception e) {
+            log.error("手机登录用户注册失败: " + e.getMessage(), e);
+            throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, mobile);
+        }
     }
 
     /**
@@ -176,9 +185,15 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
             throw new RegisterUserFailureException(ErrorCodeEnum.USERNAME_USED, regRequest.getUsername());
         }
 
-        // 用户注册
-        AuthRegRequest authRegRequest = getUsernamePasswordRegRequest(regRequest, accountType);
-        return registerUser(authRegRequest);
+        try {
+            // 用户注册
+            AuthRegRequest authRegRequest = getUsernamePasswordRegRequest(regRequest, accountType);
+            return registerUser(authRegRequest);
+        }
+        catch (FeignException e) {
+            log.error("用户注册失败: " + e.getMessage(), e);
+            throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, regRequest.getUsername());
+        }
     }
 
     /**
@@ -196,25 +211,38 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                                     @NonNull String username,
                                     @NonNull String defaultAuthority,
                                     @Nullable String decodeState) throws RegisterUserFailureException {
+        AccountType accountType;
         // 获取注册的账户类型
-        AccountType accountType = RegisterUtils.getAccountType(ssoProperties.getAccountTypeParameterName());
+        if (nonNull(decodeState)) {
+            accountType = AccountType.getAccountType(auth2StateCoder.decode(decodeState));
+        }
+        else {
+            accountType = RegisterUtils.getAccountType(ssoProperties.getAccountTypeParameterName());
+        }
         if (isNull(accountType)) {
             log.warn("用户注册失败, accountType 没有传递 或 格式错误");
             throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, username);
         }
 
-        // 第三方授权登录用户注册
-        AuthRegRequest authRegRequest = getOauth2RegRequest(authUser, username, defaultAuthority, accountType);
-        AuthLoginDto authLoginDto = registerUserAndGetAuthLoginDto(authRegRequest);
-        ArchUser archUser = getArchUser(authRegRequest, authLoginDto);
+        try {
+            // 第三方授权登录用户注册
+            AuthRegRequest authRegRequest = getOauth2RegRequest(authUser, username, defaultAuthority, accountType);
+            AuthLoginDto authLoginDto = registerUserAndGetAuthLoginDto(authRegRequest);
+            ArchUser archUser = getArchUser(authRegRequest, authLoginDto);
 
-        // 保存第三方用户的 OauthToken 信息
-        int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
-        umsAccountAuthTokenFeignService.save(toOauthToken(authUser,
-                                                          tenantContextHolder.getTenantId(),
-                                                          authLoginDto.getId(),
-                                                          timeout));
-        return archUser;
+            // 保存第三方用户的 OauthToken 信息
+            int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
+            umsAccountAuthTokenFeignService.save(toOauthToken(authUser,
+                                                              tenantContextHolder.getTenantId(),
+                                                              authLoginDto.getId(),
+                                                              timeout));
+            return archUser;
+
+        }
+        catch (FeignException e) {
+            log.error("第三方登录用户注册失败: " + e.getMessage(), e);
+            throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, username);
+        }
 
 
     }
@@ -253,7 +281,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         try {
             response = umsAccountIdentifierFeignService.exists(usernameList);
         }
-        catch (Exception e) {
+        catch (FeignException e) {
             throw new IOException("查询用户名是否存在时 IO 异常");
         }
         List<Boolean> successData = response.getSuccessData();
@@ -300,7 +328,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         try {
             response = umsAccountIdentifierFeignService.register(authRegRequest);
         }
-        catch (Exception e) {
+        catch (FeignException e) {
             log.error(e.getMessage(), e);
             throw new RegisterUserFailureException(ErrorCodeEnum.SERVER_ERROR, e, null);
         }
