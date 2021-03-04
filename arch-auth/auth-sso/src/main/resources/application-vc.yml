@@ -98,5 +98,6 @@ ums:
       auth-urls:
     # 滑块验证码
     slider:
+      code-image-directory: "D:/Workspaces-Idea/proc/arch-module/arch-auth/auth-sso/target/image/slider/code"
       # 开发模式关闭滑块验证码
-      auth-urls:
+      #auth-urls:

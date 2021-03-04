@@ -106,7 +106,7 @@
         </tr>
         <tr>
             <td>密码：</td>
-            <td><input type="password" name="password" value="admin"></td>
+            <td><input type="password" name="password" value="12345678"></td>
         </tr>
         <tr>
             <td>滑块验证码：</td>
@@ -478,7 +478,7 @@
                     // window.location.href = targetUrl;
 
                     $.ajax({
-                        url: '/sso/',
+                        url: targetUrl,
                         type: "GET",
                         //data: ajaxData,
                         // dataType: "json",
@@ -498,12 +498,12 @@
                             }
                         },
                         success: function (data) {
-                            console.log("--------> 获取 /me 数据 成功")
+                            console.log("--------> 登录成功后 获取 数据 成功")
                             console.log(data)
                             console.log()
                         },
                         error: function (data) {
-                            console.log("........> 获取 /me 数据 错误")
+                            console.log("........> 登录成功后 获取 数据 错误")
                             console.log(data)
                             console.log()
                         },
@@ -631,12 +631,12 @@
             dataType:'json',
             type: "POST",
             success:function (data) {
-                if(data.code === 0){
+                if(data.code === 200){
                     console.log(data);
                     $(".hkinnerWrap").addClass("green").removeClass("red");
                     $(".hkinnerWrap input[name='sliderToken']").val(data.data);
                 }
-                else if (data.code === 606) {
+                else if (data.code >= 606 || data.code < 700) {
                     console.log("不刷新, 用户重新操作: " + data);
                     $(".hkinnerWrap").addClass("red").removeClass("green");
                     $(".v_rightBtn").css("left", 0);
@@ -669,15 +669,18 @@
             success:function (data) {
                 console.log(data);
                 $(".huakuai").html("向右滑动滑块填充拼图");
-                $(".imgBg").css("background",'#fff url("data:image/jpg;base64,'+data.sourceImage+'")');
+                $(".imgBg").css("background",'#fff url("data:image/png;base64,'+data.sourceImage+'")');
                 $(".imgBtn").css('top',data.locationY+'px');
-                $(".imgBtn").find("img").attr("src","data:image/png;base64,"+data.newImage);
+                $(".imgBtn").find("img").attr("src","data:image/png;base64,"+data.markImage);
                 tokenId=data.token;
                 y=data.locationY;
                 $(".hkinnerWrap").removeClass("red green");
                 $(".v_rightBtn").css("left",0);
                 $(".imgBtn").css("left",0);
                 $(".hkinnerWrap input[name='sliderToken']").val(tokenId);
+
+                // 注意: 这里可以直接提交表单的动作, 为了演示这里需要用户点击提交表单的按钮
+
             },error:function(err){
                 console.log(err)
             }
