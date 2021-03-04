@@ -13,7 +13,7 @@
         <java.version>1.8</java.version>
         <spring-security.version>5.4.2</spring-security.version>
         <spring.version>5.2.9.RELEASE</spring.version>
-        <dcenter-ums.version>2.2.25</dcenter-ums.version>
+        <dcenter-ums.version>2.2.26</dcenter-ums.version>
     </properties>
 
 
