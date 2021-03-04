@@ -93,10 +93,10 @@ public abstract class AbstractGenerator implements Generable {
             }
             databasePropertiesList = schemaReaderMap.get(source).read(generatorConfig.getDatabase());
         } else if (source.equalsIgnoreCase("excel")) {
-            List<ExcelProperties> excelPropertiesLists = generatorConfig.getExcels();
+            /*List<ExcelProperties> excelPropertiesLists = generatorConfig.getExcels();
             excelPropertiesLists.forEach(e->{
                 log.info(" 处理不同类型的Excel {}",e.getSchemaReader());
-            });
+            });*/
             ExcelProperties excelProperties = generatorConfig.getExcel();
             if (StringUtils.isEmpty(excelProperties.getFile())) {
                 throw new CodegenException("excel file is null");
