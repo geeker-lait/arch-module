@@ -18,12 +18,16 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 public class XMind {
-
+    // title的内容
     private String title;
-
+    // topic的id
+    private String id;
+    // 父节点topic的id
+    private String pid;
+    private List<XMindNode> topics;
     private File file;
 
-    private List<XMindNode> topics;
+
 
     public XMind(String title) {
         this.title = title;

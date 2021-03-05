@@ -89,6 +89,13 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/libs/org.xmind.core_3.7.8.201807240049.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!--<dependency>
             <groupId>com.github.eljah</groupId>
             <artifactId>xmindjbehaveplugin</artifactId>
