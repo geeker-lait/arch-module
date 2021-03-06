@@ -1,4 +1,4 @@
-package org.arch.framework.beans.event;
+package org.arch.framework.event;
 
 import org.springframework.context.ApplicationEvent;
 import org.springframework.lang.NonNull;

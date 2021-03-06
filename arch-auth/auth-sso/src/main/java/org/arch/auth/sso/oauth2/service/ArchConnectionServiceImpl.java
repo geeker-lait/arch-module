@@ -58,7 +58,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.auth.sso.utils.RegisterUtils.getTraceId;
 import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
-import static org.arch.framework.beans.utils.RetryUtils.publishRetryEvent;
+import static org.arch.framework.utils.RetryUtils.publishRetryEvent;
 import static org.arch.framework.ums.enums.ChannelType.OAUTH2;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
