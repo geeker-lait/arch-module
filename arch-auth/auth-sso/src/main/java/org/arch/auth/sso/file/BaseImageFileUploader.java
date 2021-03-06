@@ -10,7 +10,7 @@ import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.conf.entity.FileInfo;
-import org.arch.ums.feign.account.conf.UmsConfFileInfoFeignService;
+import org.arch.ums.feign.conf.client.UmsConfFileInfoFeignService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;

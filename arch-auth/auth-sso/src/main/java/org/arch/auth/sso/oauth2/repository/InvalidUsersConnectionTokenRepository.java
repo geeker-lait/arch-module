@@ -1,6 +1,6 @@
 package org.arch.auth.sso.oauth2.repository;
 
-import org.arch.ums.feign.account.client.UmsAccountAuthTokenFeignService;
+import org.arch.ums.feign.account.client.UmsAccountOauthTokenFeignService;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import top.dcenter.ums.security.core.api.oauth.entity.AuthTokenPo;
@@ -11,7 +11,7 @@ import top.dcenter.ums.security.core.oauth.repository.jdbc.Auth2JdbcUsersConnect
 import java.util.List;
 
 /**
- * 空实现, 目的替换 {@link Auth2JdbcUsersConnectionTokenRepository}, 相关功能通过 {@link UmsAccountAuthTokenFeignService} 实现.
+ * 空实现, 目的替换 {@link Auth2JdbcUsersConnectionTokenRepository}, 相关功能通过 {@link UmsAccountOauthTokenFeignService} 实现.
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.3 20:03

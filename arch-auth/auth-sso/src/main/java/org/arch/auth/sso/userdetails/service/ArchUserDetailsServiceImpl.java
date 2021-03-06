@@ -16,7 +16,7 @@ import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
-import org.arch.ums.feign.account.client.UmsAccountAuthTokenFeignService;
+import org.arch.ums.feign.account.client.UmsAccountOauthTokenFeignService;
 import org.arch.ums.feign.account.client.UmsAccountIdentifierFeignService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -75,7 +75,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
     private final TenantContextHolder tenantContextHolder;
     private final UmsAccountIdentifierFeignService umsAccountIdentifierFeignService;
     private final Auth2Properties auth2Properties;
-    private final UmsAccountAuthTokenFeignService umsAccountAuthTokenFeignService;
+    private final UmsAccountOauthTokenFeignService umsAccountAuthTokenFeignService;
     private final Auth2StateCoder auth2StateCoder;
 
     private ApplicationContext applicationContext;

@@ -6,7 +6,7 @@ import org.arch.ums.account.dto.Auth2ConnectionDto;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
-import org.arch.ums.feign.account.config.UmsAccountDeFaultFeignConfig;
+import org.arch.ums.feign.config.UmsAccountDeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;

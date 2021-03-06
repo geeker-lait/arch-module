@@ -1,4 +1,4 @@
-package org.arch.ums.feign.account.config;
+package org.arch.ums.feign.config;
 
 import feign.codec.Encoder;
 import feign.form.spring.SpringFormEncoder;
