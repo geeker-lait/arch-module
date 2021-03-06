@@ -19,10 +19,10 @@ import top.dcenter.ums.security.jwt.properties.JwtProperties;
  * @since 2021.1.12 13:46
  */
 @Configuration
-public class UmsAccountDeFaultFeignConfig extends FeignGlobalConfig {
+public class UmsDeFaultFeignConfig extends FeignGlobalConfig {
 
-    public UmsAccountDeFaultFeignConfig(TenantContextHolder tenantContextHolder,
-                                        AppProperties appProperties, JwtProperties jwtProperties) {
+    public UmsDeFaultFeignConfig(TenantContextHolder tenantContextHolder,
+                                 AppProperties appProperties, JwtProperties jwtProperties) {
         super(tenantContextHolder, appProperties.getTenantHeaderName(), jwtProperties.getClockSkew());
     }
 
