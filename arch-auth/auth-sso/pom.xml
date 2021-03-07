@@ -6,7 +6,6 @@
         <artifactId>arch-auth</artifactId>
         <groupId>org.arch.projects</groupId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>auth-sso</artifactId>
@@ -15,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>top.dcenter</groupId>
-            <artifactId>ums-core-spring-boot-starter</artifactId>
+            <artifactId>ums-core</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>top.dcenter</groupId>
@@ -36,7 +35,6 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-jwt</artifactId>
-            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>nimbus-jose-jwt</artifactId>
@@ -54,25 +52,21 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-rbac</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-commons</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-feign-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
