@@ -18,7 +18,6 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-jwt</artifactId>
-            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>nimbus-jose-jwt</artifactId>
@@ -33,20 +32,17 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-rbac</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-core</artifactId>
-            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-commons</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>

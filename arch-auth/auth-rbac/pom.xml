@@ -9,7 +9,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>auth-rbac</artifactId>
     <description>RBAC 权限模块</description>
-
     <dependencies>
 
         <dependency>
@@ -19,15 +18,18 @@
 
         <dependency>
             <groupId>org.arch.projects</groupId>
+            <artifactId>ums-feign-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.arch.projects</groupId>
             <artifactId>framework-core</artifactId>
-            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-commons</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>

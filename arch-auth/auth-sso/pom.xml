@@ -15,38 +15,15 @@
         <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>top.dcenter</groupId>
-                    <artifactId>ums-jwt</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-oauth</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>top.dcenter</groupId>
-                    <artifactId>ums-jwt</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>auth-jwt</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>nimbus-jose-jwt</artifactId>
-                    <groupId>com.nimbusds</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
-            <artifactId>nimbus-jose-jwt</artifactId>
             <groupId>com.nimbusds</groupId>
-            <scope>compile</scope>
+            <artifactId>nimbus-jose-jwt</artifactId>
         </dependency>
 
         <dependency>
