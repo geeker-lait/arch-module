@@ -360,9 +360,9 @@ public class IdentifierService extends CrudService<Identifier, Long> {
         // 获取 Identifier
         Wrapper<Identifier> queryWrapper =
                 Wrappers.<Identifier>lambdaQuery()
+                        .eq(Identifier::getTenantId, tenantId)
                         .in(Identifier::getId, ids)
-                        .and(i -> i.eq(Identifier::getTenantId, tenantId))
-                        .and(i -> i.eq(Identifier::getDeleted, 0));
+                        .eq(Identifier::getDeleted, Boolean.FALSE);
         List<Identifier> identifierList = findAllBySpec(queryWrapper);
         if (isNull(identifierList) || identifierList.size() == 0) {
             return false;
@@ -384,8 +384,8 @@ public class IdentifierService extends CrudService<Identifier, Long> {
     public Boolean deleteByAccountId(@NonNull Long accountId, @NonNull Integer tenantId) {
         LambdaQueryWrapper<Identifier> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(Identifier::getTenantId, tenantId)
-                    .and(w -> w.eq(Identifier::getAid, accountId))
-                    .and(w -> w.eq(Identifier::getDeleted, Boolean.FALSE));
+                    .eq(Identifier::getAid, accountId)
+                    .eq(Identifier::getDeleted, Boolean.FALSE);
         List<Identifier> identifierList = identifierDao.list(queryWrapper);
         List<Long> ids = identifierList.stream().map(Identifier::getId).collect(Collectors.toList());
         return deleteAllById(ids);
@@ -403,9 +403,9 @@ public class IdentifierService extends CrudService<Identifier, Long> {
                                                                     @NonNull Integer tenantId) {
         LambdaQueryWrapper<Identifier> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(Identifier::getTenantId, tenantId)
-                    .and(w -> w.eq(Identifier::getAid, accountId))
-                    .and(w -> w.eq(Identifier::getChannelType,ChannelType.OAUTH2))
-                    .and(w -> w.eq(Identifier::getDeleted, Boolean.FALSE))
+                    .eq(Identifier::getAid, accountId)
+                    .eq(Identifier::getChannelType,ChannelType.OAUTH2)
+                    .eq(Identifier::getDeleted, Boolean.FALSE)
                     .select(Identifier::getId, Identifier::getAid, Identifier::getIdentifier);
         List<Identifier> identifierList = identifierDao.list(queryWrapper);
 

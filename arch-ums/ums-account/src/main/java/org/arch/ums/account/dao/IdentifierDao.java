@@ -46,10 +46,11 @@ public class IdentifierDao extends ServiceImpl<IdentifierMapper, Identifier> imp
         if (size == 1) {
             LambdaQueryWrapper<Identifier> wrapper = Wrappers.lambdaQuery();
             wrapper = wrapper.eq(Identifier::getTenantId, tenantId)
-                             .eq(Identifier::getIdentifier, identifiers.get(0));
-
+                             .eq(Identifier::getIdentifier, identifiers.get(0))
+                             .eq(Identifier::getDeleted, Boolean.FALSE);
             Integer count = identifierMapper.selectCount(wrapper);
             return Collections.singletonList(count > 0);
+
         }
         else {
             return identifierMapper.exists(identifiers, tenantId);
