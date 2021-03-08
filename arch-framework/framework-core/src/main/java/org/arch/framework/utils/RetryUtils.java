@@ -1,6 +1,6 @@
-package org.arch.framework.beans.utils;
+package org.arch.framework.utils;
 
-import org.arch.framework.beans.event.RetryEvent;
+import org.arch.framework.event.RetryEvent;
 import org.arch.framework.beans.exception.ArgumentException;
 import org.arch.framework.beans.exception.constant.ArgumentStatuesCode;
 import org.springframework.context.ApplicationContext;

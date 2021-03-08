@@ -13,7 +13,7 @@
         <java.version>1.8</java.version>
         <spring-security.version>5.4.2</spring-security.version>
         <spring.version>5.2.9.RELEASE</spring.version>
-        <dcenter-ums.version>2.2.25</dcenter-ums.version>
+        <dcenter-ums.version>2.2.29</dcenter-ums.version>
     </properties>
 
 
@@ -127,6 +127,26 @@
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>auth-sdk</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>auth-jwt</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>auth-rbac</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>auth-sso</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>auth-oauth</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

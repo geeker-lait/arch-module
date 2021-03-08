@@ -10,7 +10,7 @@ import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.conf.entity.FileInfo;
-import org.arch.ums.feign.account.conf.UmsConfFileInfoFeignService;
+import org.arch.ums.feign.conf.client.UmsConfFileInfoFeignService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -25,7 +25,7 @@ import java.io.InputStream;
 
 import static java.util.Objects.isNull;
 import static org.arch.auth.sso.utils.RegisterUtils.getTraceId;
-import static org.arch.framework.beans.utils.RetryUtils.publishRetryEvent;
+import static org.arch.framework.utils.RetryUtils.publishRetryEvent;
 
 /**
  * 通用图片上传器.

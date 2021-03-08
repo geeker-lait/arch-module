@@ -19,7 +19,7 @@ import org.arch.ums.account.dto.Auth2ConnectionDto;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.entity.OauthToken;
-import org.arch.ums.feign.account.client.UmsAccountAuthTokenFeignService;
+import org.arch.ums.feign.account.client.UmsAccountOauthTokenFeignService;
 import org.arch.ums.feign.account.client.UmsAccountIdentifierFeignService;
 import org.arch.ums.feign.exception.FeignCallException;
 import org.springframework.beans.BeansException;
@@ -58,7 +58,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.auth.sso.utils.RegisterUtils.getTraceId;
 import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
-import static org.arch.framework.beans.utils.RetryUtils.publishRetryEvent;
+import static org.arch.framework.utils.RetryUtils.publishRetryEvent;
 import static org.arch.framework.ums.enums.ChannelType.OAUTH2;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -80,7 +80,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
     private final PasswordEncoder passwordEncoder;
     private final IdService idService;
     private final Auth2Properties auth2Properties;
-    private final UmsAccountAuthTokenFeignService umsAccountAuthTokenFeignService;
+    private final UmsAccountOauthTokenFeignService umsAccountAuthTokenFeignService;
     private ApplicationContext applicationContext;
 
     @NonNull
@@ -422,7 +422,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
         log.warn(errorMsg);
         publishRetryEvent(this.applicationContext, getTraceId(),
                           this.umsAccountAuthTokenFeignService,
-                          UmsAccountAuthTokenFeignService.class,
+                          UmsAccountOauthTokenFeignService.class,
                           methodName,
                           new Class[]{OauthToken.class},
                           oauthToken);

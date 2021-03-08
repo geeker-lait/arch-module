@@ -10,7 +10,12 @@
 </head>
 <body>
 登陆中...
+<br>
+从浏览器控制台查看获取的token
+<br>
+<a href="#" onclick="index()">目标页</a>
 <script>
+    var targetUrl;
     window.onload = function () {
         // 弹窗的方式
         // window.opener.postMessage("bearer {'token':'[[${token}]]','refreshToken':'[[${refreshToken}]]'}", "[[${domain}]]");
@@ -28,7 +33,7 @@
                 console.log("--------> 获取 /oauth2Callback 数据 成功")
                 console.log("--------> 获取 token 数据")
                 console.log(data)
-                window.location.href = data.data.targetUrl;
+                targetUrl = data.data.targetUrl;
             },
             error: function (data) {
                 console.log("........> 获取 /oauth2Callback 数据 错误")
@@ -36,7 +41,10 @@
                 console.log()
             }
         });
+    }
 
+    index = function () {
+        window.location.href = targetUrl;
     }
 </script>
 </body>

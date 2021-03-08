@@ -360,9 +360,9 @@ public class IdentifierService extends CrudService<Identifier, Long> {
         // 获取 Identifier
         Wrapper<Identifier> queryWrapper =
                 Wrappers.<Identifier>lambdaQuery()
+                        .eq(Identifier::getTenantId, tenantId)
                         .in(Identifier::getId, ids)
-                        .and(i -> i.eq(Identifier::getTenantId, tenantId))
-                        .and(i -> i.eq(Identifier::getDeleted, 0));
+                        .eq(Identifier::getDeleted, Boolean.FALSE);
         List<Identifier> identifierList = findAllBySpec(queryWrapper);
         if (isNull(identifierList) || identifierList.size() == 0) {
             return false;
@@ -372,6 +372,55 @@ public class IdentifierService extends CrudService<Identifier, Long> {
             logicDeletedByIdentifier(tenantId, identifier);
         }
         return true;
+    }
+
+    /**
+     * 删除账号
+     * @param accountId 账号ID/用户ID/会员ID/商户ID
+     * @param tenantId  租户ID
+     * @return  true 表示成功, false 表示失败
+     */
+    @NonNull
+    public Boolean deleteByAccountId(@NonNull Long accountId, @NonNull Integer tenantId) {
+        LambdaQueryWrapper<Identifier> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Identifier::getTenantId, tenantId)
+                    .eq(Identifier::getAid, accountId)
+                    .eq(Identifier::getDeleted, Boolean.FALSE);
+        List<Identifier> identifierList = identifierDao.list(queryWrapper);
+        List<Long> ids = identifierList.stream().map(Identifier::getId).collect(Collectors.toList());
+        return deleteAllById(ids);
+    }
+
+    /**
+     * 查询 accountId 下所有的第三方绑定账号
+     *
+     * @param accountId 账号ID/用户ID/会员ID/商户ID
+     * @param tenantId  租户ID
+     * @return 绑定账号集合
+     */
+    @NonNull
+    public Map<String, List<Auth2ConnectionDto>> listAllConnections(@NonNull Long accountId,
+                                                                    @NonNull Integer tenantId) {
+        LambdaQueryWrapper<Identifier> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Identifier::getTenantId, tenantId)
+                    .eq(Identifier::getAid, accountId)
+                    .eq(Identifier::getChannelType,ChannelType.OAUTH2)
+                    .eq(Identifier::getDeleted, Boolean.FALSE)
+                    .select(Identifier::getId, Identifier::getAid, Identifier::getIdentifier);
+        List<Identifier> identifierList = identifierDao.list(queryWrapper);
+
+
+        return identifierList.stream()
+                             .map(identifier -> Auth2ConnectionDto.builder()
+                                                                  .id(identifier.getId())
+                                                                  .aid(identifier.getAid())
+                                                                  .identifier(identifier.getIdentifier())
+                                                                  .build())
+                             .collect(Collectors.groupingBy(dto -> {
+                                 String identifier = dto.getIdentifier();
+                                 int indexOf = identifier.indexOf(OAUTH_IDENTIFIER_SEPARATOR);
+                                 return identifier.substring(0, indexOf);
+                             }));
     }
 
     /**
@@ -415,52 +464,5 @@ public class IdentifierService extends CrudService<Identifier, Long> {
 
         // 逻辑删除, IDENTIFIER_DELETED_SUFFIX(防止用户重新通过此第三方注册时触发唯一索引问题), seq(防止多次删除同一个第三方账号时触发唯一索引问题)
         return identifierDao.logicDeleted(identifier.getId(), IDENTIFIER_DELETED_SUFFIX + seq);
-    }
-
-    /**
-     * 删除账号
-     * @param accountId 账号ID/用户ID/会员ID/商户ID
-     * @param tenantId  租户ID
-     * @return  true 表示成功, false 表示失败
-     */
-    @NonNull
-    public Boolean deleteByAccountId(@NonNull Long accountId, @NonNull Integer tenantId) {
-        LambdaQueryWrapper<Identifier> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Identifier::getTenantId, tenantId)
-                     .and(w -> w.eq(Identifier::getAid, accountId));
-        List<Identifier> identifierList = identifierDao.list(queryWrapper);
-        List<Long> ids = identifierList.stream().map(Identifier::getId).collect(Collectors.toList());
-        return deleteAllById(ids);
-    }
-
-    /**
-     * 查询 accountId 下所有的第三方绑定账号
-     *
-     * @param accountId 账号ID/用户ID/会员ID/商户ID
-     * @param tenantId  租户ID
-     * @return 绑定账号集合
-     */
-    @NonNull
-    public Map<String, List<Auth2ConnectionDto>> listAllConnections(@NonNull Long accountId,
-                                                                        @NonNull Integer tenantId) {
-        LambdaQueryWrapper<Identifier> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Identifier::getTenantId, tenantId)
-                    .and(w -> w.eq(Identifier::getAid, accountId))
-                    .and(w -> w.eq(Identifier::getChannelType,ChannelType.OAUTH2))
-                    .select(Identifier::getId, Identifier::getAid, Identifier::getIdentifier);
-        List<Identifier> identifierList = identifierDao.list(queryWrapper);
-
-
-        return identifierList.stream()
-                     .map(identifier -> Auth2ConnectionDto.builder()
-                                                           .id(identifier.getId())
-                                                           .aid(identifier.getAid())
-                                                           .identifier(identifier.getIdentifier())
-                                                           .build())
-                     .collect(Collectors.groupingBy(dto -> {
-                          String identifier = dto.getIdentifier();
-                          int indexOf = identifier.indexOf(OAUTH_IDENTIFIER_SEPARATOR);
-                          return identifier.substring(0, indexOf);
-                      }));
     }
 }

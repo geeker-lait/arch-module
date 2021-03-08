@@ -3,7 +3,7 @@ package org.arch.auth.sso.listener;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.auth.sso.properties.RetryProperties;
 import org.arch.framework.beans.Response;
-import org.arch.framework.beans.event.RetryEvent;
+import org.arch.framework.event.RetryEvent;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;

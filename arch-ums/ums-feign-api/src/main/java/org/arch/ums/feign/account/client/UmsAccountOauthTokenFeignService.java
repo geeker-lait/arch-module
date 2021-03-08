@@ -3,7 +3,7 @@ package org.arch.ums.feign.account.client;
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
 import org.arch.ums.account.entity.OauthToken;
-import org.arch.ums.feign.account.config.UmsAccountDeFaultFeignConfig;
+import org.arch.ums.feign.config.UmsDeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
@@ -21,8 +21,8 @@ import javax.validation.Valid;
  */
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-oauthToken", path = "/ums/account/oauth/token",
-        configuration = UmsAccountDeFaultFeignConfig.class)
-public interface UmsAccountAuthTokenFeignService extends BaseFeignService<OauthToken, Long> {
+        configuration = UmsDeFaultFeignConfig.class)
+public interface UmsAccountOauthTokenFeignService extends BaseFeignService<OauthToken, Long> {
 
     /**
      * 根据 identifierId 更新 oauthToken

@@ -8,6 +8,7 @@ import org.arch.auth.sso.properties.SsoProperties;
 import org.arch.auth.sso.request.bind.RegRequest;
 import org.arch.auth.sso.utils.RegisterUtils;
 import org.arch.framework.beans.Response;
+import org.arch.framework.event.RegisterEvent;
 import org.arch.framework.id.IdService;
 import org.arch.framework.ums.enums.AccountType;
 import org.arch.framework.ums.enums.ChannelType;
@@ -15,8 +16,11 @@ import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
-import org.arch.ums.feign.account.client.UmsAccountAuthTokenFeignService;
+import org.arch.ums.feign.account.client.UmsAccountOauthTokenFeignService;
 import org.arch.ums.feign.account.client.UmsAccountIdentifierFeignService;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -55,7 +59,7 @@ import static org.springframework.util.StringUtils.hasText;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
+public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, ApplicationContextAware {
 
     /**
      * 用于用户名密码注册时在 request 中传递 {@link RegRequest} 参数的参数名称.
@@ -71,8 +75,10 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
     private final TenantContextHolder tenantContextHolder;
     private final UmsAccountIdentifierFeignService umsAccountIdentifierFeignService;
     private final Auth2Properties auth2Properties;
-    private final UmsAccountAuthTokenFeignService umsAccountAuthTokenFeignService;
+    private final UmsAccountOauthTokenFeignService umsAccountAuthTokenFeignService;
     private final Auth2StateCoder auth2StateCoder;
+
+    private ApplicationContext applicationContext;
 
     @NonNull
     @Override
@@ -107,9 +113,6 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                                 true,
                                 AuthorityUtils.commaSeparatedStringToAuthorityList(authLoginDto.getAuthorities()));
 
-        }
-        catch (UsernameNotFoundException e) {
-            throw e;
         }
         catch (FeignException e) {
             String msg = String.format("登录失败: 登录用户名：%s, 失败信息: %s", userId, e.getMessage());
@@ -227,14 +230,13 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         try {
             // 第三方授权登录用户注册
             AuthRegRequest authRegRequest = getOauth2RegRequest(authUser, username, defaultAuthority, accountType);
-            AuthLoginDto authLoginDto = registerUserAndGetAuthLoginDto(authRegRequest);
-            ArchUser archUser = getArchUser(authRegRequest, authLoginDto);
+            ArchUser archUser = registerUser(authRegRequest);
 
             // 保存第三方用户的 OauthToken 信息
             int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
             umsAccountAuthTokenFeignService.save(toOauthToken(authUser,
                                                               tenantContextHolder.getTenantId(),
-                                                              authLoginDto.getId(),
+                                                              archUser.getIdentifierId(),
                                                               timeout));
             return archUser;
 
@@ -291,34 +293,29 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
         throw new IOException("查询用户名是否存在时无结果异常");
     }
 
-    @NonNull
-    private ArchUser registerUser(@NonNull AuthRegRequest authRegRequest) {
-        AuthLoginDto authLoginDto = registerUserAndGetAuthLoginDto(authRegRequest);
-        return getArchUser(authRegRequest, authLoginDto);
+    @Override
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 
     @NonNull
-    private ArchUser getArchUser(@NonNull AuthRegRequest authRegRequest, @NonNull AuthLoginDto authLoginDto) {
-        // 用户注册成功转换为 UserDetails
-        final ArchUser archUser = new ArchUser(authLoginDto.getIdentifier(),
-                                               authLoginDto.getCredential(),
-                                               authLoginDto.getId(),
-                                               authLoginDto.getAid(),
-                                               authLoginDto.getTenantId(),
-                                               authLoginDto.getChannelType(),
-                                               authLoginDto.getNickName(),
-                                               authLoginDto.getAvatar(),
-                                               true,
-                                               true,
-                                               true,
-                                               true,
-                                               AuthorityUtils.commaSeparatedStringToAuthorityList(
-                                                       authLoginDto.getAuthorities()));
-        if (log.isInfoEnabled()) {
-            log.info("用户注册成功: 租户: {}, 注册用户名: {}, aid: {}, channelType: {}, source: {}",
-                     archUser.getTenantId(), archUser.getUsername(), archUser.getAccountId(),
-                     archUser.getChannelType().name(), authRegRequest.getSource());
-        }
+    private ArchUser registerUser(@NonNull AuthRegRequest authRegRequest) {
+        AuthLoginDto authLoginDto = registerUserAndGetAuthLoginDto(authRegRequest);
+        ArchUser archUser = new ArchUser(authLoginDto.getIdentifier(),
+                                         authLoginDto.getCredential(),
+                                         authLoginDto.getId(),
+                                         authLoginDto.getAid(),
+                                         authLoginDto.getTenantId(),
+                                         authLoginDto.getChannelType(),
+                                         authLoginDto.getNickName(),
+                                         authLoginDto.getAvatar(),
+                                         true,
+                                         true,
+                                         true,
+                                         true,
+                                         AuthorityUtils.commaSeparatedStringToAuthorityList(
+                                                 authLoginDto.getAuthorities()));
+        this.applicationContext.publishEvent(new RegisterEvent(archUser,authRegRequest.getSource()));
         return archUser;
     }
 
@@ -419,6 +416,5 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService {
                              .source(source)
                              .build();
     }
-
 
 }
