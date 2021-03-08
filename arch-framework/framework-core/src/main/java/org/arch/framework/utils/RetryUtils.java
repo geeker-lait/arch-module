@@ -27,7 +27,7 @@ public class RetryUtils {
      * @param traceId               调用链路追踪 id
      * @param retryObj              retry object
      * @param retryClz              retry class
-     * @param methodName            method name
+     * @param methodName            method name, 方法必须幂等性
      * @param methodArgs            method args
      * @param retryArgs             retry args
      */
