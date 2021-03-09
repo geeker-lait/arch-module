@@ -12,13 +12,25 @@ public enum SourceType {
      */
     BAIDU,
     /**
+     *  百度小程序
+     */
+    BAIDU_MINI,
+    /**
      * 抖音
      */
     DOUYIN,
     /**
+     * 抖音小程序
+     */
+    DOUYIN_MINI,
+    /**
      * 头条
      */
     TOUTIAO,
+    /**
+     * 头条小程序
+     */
+    TOUTIAO_MINI,
     /**
      * 微信
      */
@@ -36,9 +48,25 @@ public enum SourceType {
      */
     WEIBO,
     /**
+     * 微博小程序
+     */
+    WEIBO_MINI,
+    /**
+     * 快手
+     */
+    KUAISHOU,
+    /**
+     * 快手小程序
+     */
+    KUAISHOU_MINI,
+    /**
      * 用户推荐, 存储使用 user_userId
      */
-    USER
+    USER,
+    /**
+     * 其他
+     */
+    OTHER,
 
 
 }

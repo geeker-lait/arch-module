@@ -409,7 +409,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
             Response<Boolean> response = umsAccountAuthTokenFeignService.updateByIdentifierId(oauthToken);
             Boolean successData = response.getSuccessData();
             if (isNull(successData) || !successData) {
-                saveOrUpdateOauthToken(oauthToken, "更新第三方授权登录用户信息失败, 发布重试事件", "updateByIdentifierId");
+                saveOrUpdateOauthToken(oauthToken, "更新第三方授权登录用户信息失败, 发布重试事件: ", "updateByIdentifierId");
             }
         }
         catch (Exception e) {
@@ -419,8 +419,9 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
     }
 
     private void saveOrUpdateOauthToken(@NonNull OauthToken oauthToken, @NonNull String errorMsg, @NonNull String methodName) {
-        log.warn(errorMsg);
-        publishRetryEvent(this.applicationContext, getTraceId(),
+        String traceId = getTraceId();
+        log.warn(errorMsg + "traceId={}", traceId);
+        publishRetryEvent(this.applicationContext, traceId,
                           this.umsAccountAuthTokenFeignService,
                           UmsAccountOauthTokenFeignService.class,
                           methodName,

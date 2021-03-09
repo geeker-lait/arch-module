@@ -22,8 +22,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>auth-jwt</artifactId>
         </dependency>
 
         <dependency>
