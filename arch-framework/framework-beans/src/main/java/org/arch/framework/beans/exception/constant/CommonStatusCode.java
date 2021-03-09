@@ -25,6 +25,8 @@ public enum CommonStatusCode implements CommonExceptionAssert {
     SUCCESS(200, "操作成功"),
     FAILED(500, "操作失败"),
 
+    // retry
+    DUPLICATE_KEY(7001, "主键或唯一索引重复"),
 
 
     // Time
@@ -59,10 +61,12 @@ public enum CommonStatusCode implements CommonExceptionAssert {
         }
     }
 
+    @Override
     public int getCode() {
         return code;
     }
 
+    @Override
     public String getDescr() {
         return message;
     }

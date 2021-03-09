@@ -25,6 +25,7 @@ import java.io.InputStream;
 
 import static java.util.Objects.isNull;
 import static org.arch.auth.sso.utils.RegisterUtils.getTraceId;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.DUPLICATE_KEY;
 import static org.arch.framework.utils.RetryUtils.publishRetryEvent;
 
 /**
@@ -117,18 +118,27 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
                 Response<FileInfo> response = this.umsConfFileInfoFeignService.save(fileInfo);
                 successData = response.getSuccessData();
                 if (isNull(successData)) {
-                    publishRetryEvent(this.applicationContext, getTraceId(),
-                                      this.umsConfFileInfoFeignService,
-                                      UmsConfFileInfoFeignService.class,
-                                      "save",
-                                      new Class[] {FileInfo.class},
-                                      fileInfo);
+                    if (DUPLICATE_KEY.getCode() == response.getCode()) {
+                        log.warn("{}, event: {}", response.getMsg(), fileInfo.toString());
+                    }
+                    else {
+                        String traceId = getTraceId();
+                        log.warn("保持对象存储信息到数据库失败, 发布重试事件, traceId={}", traceId);
+                        publishRetryEvent(this.applicationContext, traceId,
+                                          this.umsConfFileInfoFeignService,
+                                          UmsConfFileInfoFeignService.class,
+                                          "save",
+                                          new Class[] {FileInfo.class},
+                                          fileInfo);
+                    }
                     successData = fileInfo;
                 }
 
             }
             catch (FeignException e) {
                 log.error(e.getMessage(), e);
+                String traceId = getTraceId();
+                log.warn("保持对象存储信息到数据库失败, 发布重试事件, traceId={}", traceId);
                 publishRetryEvent(this.applicationContext, getTraceId(),
                                   this.umsConfFileInfoFeignService,
                                   UmsConfFileInfoFeignService.class,
@@ -158,7 +168,9 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
                                                                                                              uploadType);
                 successData = response.getSuccessData();
                 if (isNull(successData)) {
-                    publishRetryEvent(this.applicationContext, getTraceId(),
+                    String traceId = getTraceId();
+                    log.warn("删除对象存储文件的数据库记录失败, 发布重试事件, traceId={}", traceId);
+                    publishRetryEvent(this.applicationContext, traceId,
                                       this.umsConfFileInfoFeignService,
                                       UmsConfFileInfoFeignService.class,
                                       "deleteByFilePathAndUploadType",
@@ -167,8 +179,10 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
                 }
             }
             catch (FeignException e) {
+                String traceId = getTraceId();
                 log.error(e.getMessage(), e);
-                publishRetryEvent(this.applicationContext, getTraceId(),
+                log.warn("删除对象存储文件的数据库记录失败, 发布重试事件, traceId={}", traceId);
+                publishRetryEvent(this.applicationContext, traceId,
                                   this.umsConfFileInfoFeignService,
                                   UmsConfFileInfoFeignService.class,
                                   "deleteByFilePathAndUploadType",
