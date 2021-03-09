@@ -12,8 +12,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <spring-security.version>5.4.2</spring-security.version>
-        <spring.version>5.2.9.RELEASE</spring.version>
-        <dcenter-ums.version>2.2.29</dcenter-ums.version>
+        <dcenter-ums.version>2.2.31</dcenter-ums.version>
     </properties>
 
 
