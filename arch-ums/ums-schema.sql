@@ -271,7 +271,7 @@ CREATE TABLE `account_relationship` (
   `deep` int(11) NOT NULL COMMENT '深度',
   `seq` int(11) NOT NULL COMMENT '顺序',
   `pseq` int(11) NOT NULL DEFAULT '-1' COMMENT '父节点顺序, 没有父节点则为 -1',
-  `from_user_id` bigint(19) NULL COMMENT '推荐人ID',
+  `from_user_id` bigint(19) NOT NULL DEFAULT '-1'  COMMENT '推荐人ID, 没有推荐人则为 -1',
   `from_user_name` varchar(32) NULL COMMENT '推荐人姓名',
   `from_user_phone` varchar(11) NULL COMMENT '推荐人手机',
   `to_user_id` bigint(19) NOT NULL COMMENT '账号ID',

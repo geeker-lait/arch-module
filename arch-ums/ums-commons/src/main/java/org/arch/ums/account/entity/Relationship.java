@@ -60,7 +60,7 @@ public class Relationship extends CrudEntity<Relationship> {
     private Integer seq;
 
     /**
-     * 推荐人ID
+     * 推荐人ID, 没有推荐人则为 -1
      */
     private Long fromUserId;
 
