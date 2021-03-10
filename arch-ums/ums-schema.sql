@@ -30,7 +30,7 @@ CREATE TABLE `account_category` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_PID_AND_SORTED` (`pid`,`sorted`)
@@ -51,7 +51,7 @@ CREATE TABLE `account_group` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_GROUP_PID_AND_SORTED` (`group_pid`,`sorted`)
@@ -67,12 +67,12 @@ CREATE TABLE `account_identifier` (
   `identifier` varchar(32) NOT NULL COMMENT '识别标识:身份唯一标识，如：登录账号、邮箱地址、手机号码、QQ号码、微信号、微博号；',
   `credential` varchar(520) NOT NULL COMMENT '授权凭证【CREDENTIAL】：站内账号是密码、第三方登录是Token；',
   `authorities` varchar(255) DEFAULT NULL COMMENT '用户角色:ROLE_xxx 与 租户id: TENANT_XXX',
-  `login_type` varchar(32) NOT NULL COMMENT '登录类型：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；',
+  `login_type` varchar(32) NOT NULL COMMENT '登录类型【IDENTITYTYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；',
   `tenant_id` int NOT NULL COMMENT '租户 id',
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `IDX_TENANT_ID_AND_IDENTIFIER` (`tenant_id`, `identifier`),
@@ -93,7 +93,7 @@ CREATE TABLE `account_member` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
@@ -117,7 +117,7 @@ CREATE TABLE `account_menu` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_PID_AND_SORTED` (`pid`,`sorted`)
@@ -137,7 +137,7 @@ CREATE TABLE `account_name` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
@@ -157,7 +157,7 @@ CREATE TABLE `account_auth_client` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `IDX_TENANT_ID_AND_CLIENT_ID_AND_SECRET_TYP` (`tenant_id`, `client_id`, `client_secret`)
@@ -193,7 +193,7 @@ CREATE TABLE `account_oauth_token` (
   `screen_name` varchar(64) DEFAULT NULL COMMENT 'Twitter附带属性',
   `oauth_callback_confirmed` varchar(64) DEFAULT NULL COMMENT 'Twitter附带属性',
   `expire_time` bigint(20) DEFAULT '-1' COMMENT '过期时间, 基于 1970-01-01T00:00:00Z, 无过期时间默认为 -1',
-  `st` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳',
+  `dt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_ACCOUNT_IDENTIFIER_ID` (`tenant_id`, `account_identifier_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='第三方账号授权';
@@ -212,7 +212,7 @@ CREATE TABLE `account_operate_log` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
@@ -234,7 +234,7 @@ CREATE TABLE `account_permission` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-权限';
@@ -254,7 +254,7 @@ CREATE TABLE `account_post` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-岗位';
@@ -279,7 +279,7 @@ CREATE TABLE `account_relationship` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_PID_AND_SEQ` (`pid`, `seq`)
@@ -305,7 +305,7 @@ CREATE TABLE `account_resource` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-资源';
@@ -323,7 +323,7 @@ CREATE TABLE `account_role` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_SORTED` (`tenant_id`, `sorted`)
@@ -341,7 +341,7 @@ CREATE TABLE `account_role_group` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `IDX_tenantId_roleId_groupId` (`tenant_id`, `role_id`,`group_id`)
@@ -359,7 +359,7 @@ CREATE TABLE `account_role_menu` (
  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
- `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+ `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
  PRIMARY KEY (`id`),
  UNIQUE KEY `IDX_tenantId_roleId_menuId` (`tenant_id`, `role_id`,`menu_id`)
@@ -377,7 +377,7 @@ CREATE TABLE `account_role_permission` (
    `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
    `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
    `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-   `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+   `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
    `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
    PRIMARY KEY (`id`),
    UNIQUE KEY `IDX_tenantId_roleId_permissionId` (`tenant_id`, `role_id`,`permission_id`)
@@ -395,7 +395,7 @@ CREATE TABLE `account_role_resource` (
  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
- `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+ `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
  PRIMARY KEY (`id`),
  UNIQUE KEY `IDX_tenantId_roleId_resourceId` (`tenant_id`, `role_id`,`resource_id` )
@@ -416,7 +416,7 @@ CREATE TABLE `account_tag` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
@@ -436,7 +436,7 @@ CREATE TABLE `account_ticket` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
@@ -463,7 +463,7 @@ CREATE TABLE `user_address` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
@@ -487,7 +487,7 @@ CREATE TABLE `user_bank_card` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
@@ -510,7 +510,7 @@ CREATE TABLE `user_education` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
@@ -535,7 +535,7 @@ CREATE TABLE `user_id_card` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `IDX_TENANT_ID_AND_ID_CARD` (`tenant_id`, `id_card`),
@@ -560,7 +560,7 @@ CREATE TABLE `user_job` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
@@ -581,7 +581,7 @@ CREATE TABLE `user_phone` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
@@ -603,7 +603,7 @@ CREATE TABLE `user_relatives` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
   `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-  `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
@@ -634,7 +634,7 @@ CREATE TABLE `conf_file_info` (
     `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
     `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
     `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
-    `st` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+    `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
     `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
     PRIMARY KEY (`id`),
     UNIQUE KEY `IDX_TENANT_ID_AND_UPLOAD_TYPE_AND_FILE_PATH` (`tenant_id`,`upload_type`,`file_path`)

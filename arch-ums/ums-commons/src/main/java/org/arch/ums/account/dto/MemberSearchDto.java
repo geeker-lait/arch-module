@@ -68,7 +68,7 @@ public class MemberSearchDto implements BaseSearchDto {
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
@@ -87,6 +87,6 @@ public class MemberSearchDto implements BaseSearchDto {
         putNoNull("EQ_start_time", this.getStartTime(), map);
         putNoNull("EQ_end_time", this.getEndTime(), map);
         putNoNull("EQ_rev", this.getRev(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
     }
 }

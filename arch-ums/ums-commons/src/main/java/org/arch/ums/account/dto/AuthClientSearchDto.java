@@ -69,7 +69,7 @@ public class AuthClientSearchDto implements BaseSearchDto {
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
@@ -87,7 +87,7 @@ public class AuthClientSearchDto implements BaseSearchDto {
         putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_client_type", this.getClientType(), map);
         putNoNull("EQ_rev", this.getRev(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
         putNoNull("EQ_scopes", this.getScopes(), map);
     }
 }

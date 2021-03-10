@@ -157,7 +157,7 @@ public class OauthToken extends CrudEntity<OauthToken> {
     /**
      * 时间戳
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
 
     /**

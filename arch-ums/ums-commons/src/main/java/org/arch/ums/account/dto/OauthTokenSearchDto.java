@@ -149,7 +149,7 @@ public class OauthTokenSearchDto implements BaseSearchDto {
     /**
      * 时间戳
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
@@ -159,7 +159,7 @@ public class OauthTokenSearchDto implements BaseSearchDto {
         putNoNull("EQ_account_identifier_id", this.getAccountIdentifierId(), map);
         putNoNull("EQ_enable_refresh", this.getEnableRefresh(), map);
         putNoNull("EQ_expire_time", this.getExpireTime(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
         putNoNull("EQ_provider_id", this.getProviderId(), map);
         putNoNull("EQ_access_token", this.getAccessToken(), map);
         putNoNull("EQ_expire_in", this.getExpireIn(), map);

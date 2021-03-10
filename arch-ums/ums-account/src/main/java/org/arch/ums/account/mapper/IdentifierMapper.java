@@ -55,7 +55,7 @@ public interface IdentifierMapper extends BaseMapper<Identifier> {
      */
     @Nullable
     @Select(value = "SELECT * FROM account_identifier " +
-            " WHERE tenant_id = #{tenantId} AND identifier like #{identifier} AND deleted = 1 ORDER BY st DESC LIMIT 1")
+            " WHERE tenant_id = #{tenantId} AND identifier like #{identifier} AND deleted = 1 ORDER BY dt DESC LIMIT 1")
     Identifier selectLogicDeleted(@NonNull @Param("tenantId") Integer tenantId,
                                   @NonNull @Param("identifier") String likeIdentifier);
 

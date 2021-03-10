@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `form_schema`(
     `schema_name`  varchar(32) COMMENT '库名称/项目名称',
     `schema_code`  varchar(32) COMMENT '库名称/项目名称的code',
     `descr`  varchar(32) COMMENT '描述',
-    `st` datetime COMMENT '时间戳',
+    `dt` datetime COMMENT '时间戳',
     `tenant_id` bigint(19) COMMENT '租户id',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表单schema';

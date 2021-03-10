@@ -43,7 +43,7 @@ public class FormSchemaSearchDto implements BaseSearchDto {
     /**
      * 时间戳
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
@@ -51,6 +51,6 @@ public class FormSchemaSearchDto implements BaseSearchDto {
         putNoNull("EQ_schema_name", this.getSchemaName(), map);
         putNoNull("EQ_schema_code", this.getSchemaCode(), map);
         putNoNull("EQ_descr", this.getDescr(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
     }
 }

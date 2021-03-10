@@ -73,7 +73,7 @@ public class GroupSearchDto implements BaseSearchDto {
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
@@ -93,6 +93,6 @@ public class GroupSearchDto implements BaseSearchDto {
         putNoNull("EQ_group_code", this.getGroupCode(), map);
         putNoNull("EQ_group_name", this.getGroupName(), map);
         putNoNull("EQ_group_icon", this.getGroupIcon(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
     }
 }

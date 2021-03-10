@@ -43,7 +43,7 @@ public abstract class CrudEntity<T extends Model<?>> extends Model<T> implements
 //    /**
 //     * 时间戳/创建时间
 //     */
-//    protected LocalDateTime st;
+//    protected LocalDateTime dt;
 //    /**
 //     * 是否逻辑删除: 0 未删除, 1 已删除; 默认: 0
 //     */

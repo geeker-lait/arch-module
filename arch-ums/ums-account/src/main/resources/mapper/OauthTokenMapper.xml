@@ -28,7 +28,7 @@
         <result property="screenName" column="screen_name" jdbcType="VARCHAR"/>
         <result property="oauthCallbackConfirmed" column="oauth_callback_confirmed" jdbcType="VARCHAR"/>
         <result property="expireTime" column="expire_time" jdbcType="INTEGER"/>
-        <result property="st" column="st" jdbcType="TIMESTAMP"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="tableName">
@@ -36,7 +36,7 @@
     </sql>
 
     <sql id="baseColumn">
-        `id`, `account_identifier_id`, `tenant_id`, `enable_refresh`, `provider_id`, `access_token`, `expire_in`, `refresh_token_expire_in`, `refresh_token`, `uid`, `open_id`, `access_code`, `union_id`, `scope`, `token_type`, `id_token`, `mac_algorithm`, `mac_key`, `code`, `oauth_token`, `oauth_token_secret`, `user_id`, `screen_name`, `oauth_callback_confirmed`, `expire_time`, `st`
+        `id`, `account_identifier_id`, `tenant_id`, `enable_refresh`, `provider_id`, `access_token`, `expire_in`, `refresh_token_expire_in`, `refresh_token`, `uid`, `open_id`, `access_code`, `union_id`, `scope`, `token_type`, `id_token`, `mac_algorithm`, `mac_key`, `code`, `oauth_token`, `oauth_token_secret`, `user_id`, `screen_name`, `oauth_callback_confirmed`, `expire_time`, `dt`
     </sql>
 
 </mapper>
