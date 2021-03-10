@@ -80,12 +80,12 @@ public class NameSearchDto implements BaseSearchDto {
         putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_account_id", this.getAccountId(), map);
+        putNoNull("EQ_source", this.getSource(), map);
         putNoNull("EQ_deleted", this.getDeleted(), map);
         putNoNull("EQ_app_id", this.getAppId(), map);
         putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_nick_name", this.getNickName(), map);
         putNoNull("EQ_avatar", this.getAvatar(), map);
-        putNoNull("EQ_source", this.getSource(), map);
         putNoNull("EQ_rev", this.getRev(), map);
         putNoNull("EQ_dt", this.getDt(), map);
     }

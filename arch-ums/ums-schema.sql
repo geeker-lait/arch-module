@@ -75,7 +75,7 @@ CREATE TABLE `account_identifier` (
   `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_TENANT_ID_AND_IDENTIFIER` (`tenant_id`, `identifier`),
+  UNIQUE KEY `UNQ_TENANT_ID_AND_IDENTIFIER` (`tenant_id`, `identifier`),
   KEY `IDX_AID` (`aid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-标识';
 
@@ -140,7 +140,8 @@ CREATE TABLE `account_name` (
   `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
+  UNIQUE KEY `UNQ_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`),
+  KEY `IDX_TENANT_ID_AND_SOURCE` (`tenant_id`, `source`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号名';
 
 /*Table structure for table `account_auth_client` */
@@ -160,7 +161,7 @@ CREATE TABLE `account_auth_client` (
   `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_TENANT_ID_AND_CLIENT_ID_AND_SECRET_TYP` (`tenant_id`, `client_id`, `client_secret`)
+  UNIQUE KEY `UNQ_TENANT_ID_AND_CLIENT_ID_AND_SECRET_TYP` (`tenant_id`, `client_id`, `client_secret`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='授权客户端';
 
 /*Table structure for table `account_oauth_token` */
@@ -265,14 +266,15 @@ DROP TABLE IF EXISTS `account_relationship`;
 
 CREATE TABLE `account_relationship` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `pid` bigint(19) NOT NULL COMMENT '父节点ID（数据库自增）',
+  `pid` bigint(19) NOT NULL DEFAULT '0' COMMENT '父节点ID（数据库自增）, 没有父节点则为 0',
   `org` int(11) NOT NULL COMMENT '组',
   `deep` int(11) NOT NULL COMMENT '深度',
   `seq` int(11) NOT NULL COMMENT '顺序',
-  `from_user_id` bigint(19) NOT NULL COMMENT '推荐人ID',
-  `from_user_name` varchar(32) NOT NULL COMMENT '推荐人姓名',
-  `from_user_phone` varchar(11) NOT NULL COMMENT '推荐人手机',
-  `to_user_id` varchar(19) NOT NULL COMMENT '账号ID',
+  `pseq` int(11) NOT NULL DEFAULT '-1' COMMENT '父节点顺序, 没有父节点则为 -1',
+  `from_user_id` bigint(19) NULL COMMENT '推荐人ID',
+  `from_user_name` varchar(32) NULL COMMENT '推荐人姓名',
+  `from_user_phone` varchar(11) NULL COMMENT '推荐人手机',
+  `to_user_id` bigint(19) NOT NULL COMMENT '账号ID',
   `to_user_name` varchar(32) NOT NULL COMMENT '用户名',
   `to_user_phone` varchar(11) NOT NULL COMMENT '用户手机',
   `tenant_id` int NOT NULL COMMENT '租户 id',
@@ -282,8 +284,9 @@ CREATE TABLE `account_relationship` (
   `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_PID_AND_SEQ` (`pid`, `seq`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-关系';
+  UNIQUE KEY `UNQ_TENANTID_PID_AND_ORG_AND_DEEP_AND_SEQ` (`tenant_id`,`pid`,`org`,`deep`,`seq`),
+  UNIQUE KEY `UNQ_TENANTID_TOUSERID_FROMUSERID` (`tenant_id`,`to_user_id`, `from_user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='账号-关系';
 
 /*Table structure for table `account_resource` */
 
@@ -344,7 +347,7 @@ CREATE TABLE `account_role_group` (
   `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_tenantId_roleId_groupId` (`tenant_id`, `role_id`,`group_id`)
+  UNIQUE KEY `UNQ_tenantId_roleId_groupId` (`tenant_id`, `role_id`,`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色组织或机构';
 
 /*Table structure for table `account_role_menu` */
@@ -362,7 +365,7 @@ CREATE TABLE `account_role_menu` (
  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
  PRIMARY KEY (`id`),
- UNIQUE KEY `IDX_tenantId_roleId_menuId` (`tenant_id`, `role_id`,`menu_id`)
+ UNIQUE KEY `UNQ_tenantId_roleId_menuId` (`tenant_id`, `role_id`,`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色菜单';
 
 /*Table structure for table `account_role_permission` */
@@ -380,7 +383,7 @@ CREATE TABLE `account_role_permission` (
    `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
    `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
    PRIMARY KEY (`id`),
-   UNIQUE KEY `IDX_tenantId_roleId_permissionId` (`tenant_id`, `role_id`,`permission_id`)
+   UNIQUE KEY `UNQ_tenantId_roleId_permissionId` (`tenant_id`, `role_id`,`permission_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色权限表';
 
 /*Table structure for table `account_role_resource` */
@@ -398,7 +401,7 @@ CREATE TABLE `account_role_resource` (
  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
  PRIMARY KEY (`id`),
- UNIQUE KEY `IDX_tenantId_roleId_resourceId` (`tenant_id`, `role_id`,`resource_id` )
+ UNIQUE KEY `UNQ_tenantId_roleId_resourceId` (`tenant_id`, `role_id`,`resource_id` )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色资源表';
 
 
@@ -538,8 +541,8 @@ CREATE TABLE `user_id_card` (
   `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_TENANT_ID_AND_ID_CARD` (`tenant_id`, `id_card`),
-  UNIQUE KEY `IDX_TENANT_ID_AND_USER_ID` (`tenant_id`, `user_id`)
+  UNIQUE KEY `UNQ_TENANT_ID_AND_ID_CARD` (`tenant_id`, `id_card`),
+  UNIQUE KEY `UNQ_TENANT_ID_AND_USER_ID` (`tenant_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户身份证表';
 
 /*Table structure for table `user_job` */
@@ -637,5 +640,5 @@ CREATE TABLE `conf_file_info` (
     `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
     `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `IDX_TENANT_ID_AND_UPLOAD_TYPE_AND_FILE_PATH` (`tenant_id`,`upload_type`,`file_path`)
+    UNIQUE KEY `UNQ_TENANT_ID_AND_UPLOAD_TYPE_AND_FILE_PATH` (`tenant_id`,`upload_type`,`file_path`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='对象存储文件信息'

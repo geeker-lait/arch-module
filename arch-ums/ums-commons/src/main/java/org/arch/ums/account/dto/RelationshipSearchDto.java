@@ -27,7 +27,7 @@ public class RelationshipSearchDto implements BaseSearchDto {
     private Long id;
 
     /**
-     * 父节点ID（数据库自增）
+     * 父节点ID（数据库自增）, 没有父节点则为 0
      */
     private Long pid;
 
@@ -47,6 +47,11 @@ public class RelationshipSearchDto implements BaseSearchDto {
     private Integer seq;
 
     /**
+     * 父节点顺序, 没有父节点则为 -1
+     */
+    private Integer pseq;
+
+    /**
      * 推荐人ID
      */
     private Long fromUserId;
@@ -64,7 +69,7 @@ public class RelationshipSearchDto implements BaseSearchDto {
     /**
      * 账号ID
      */
-    private String toUserId;
+    private Long toUserId;
 
     /**
      * 用户名
@@ -110,17 +115,18 @@ public class RelationshipSearchDto implements BaseSearchDto {
     public void buildSearchParams(Map<String, Object> map) {
         putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
+        putNoNull("EQ_org", this.getOrg(), map);
         putNoNull("EQ_pid", this.getPid(), map);
-        putNoNull("EQ_seq", this.getSeq(), map);
         putNoNull("EQ_deep", this.getDeep(), map);
+        putNoNull("EQ_seq", this.getSeq(), map);
+        putNoNull("EQ_to_user_id", this.getToUserId(), map);
         putNoNull("EQ_deleted", this.getDeleted(), map);
+        putNoNull("EQ_pseq", this.getSeq(), map);
         putNoNull("EQ_app_id", this.getAppId(), map);
         putNoNull("EQ_store_id", this.getStoreId(), map);
-        putNoNull("EQ_org", this.getOrg(), map);
         putNoNull("EQ_from_user_id", this.getFromUserId(), map);
         putNoNull("EQ_from_user_name", this.getFromUserName(), map);
         putNoNull("EQ_from_user_phone", this.getFromUserPhone(), map);
-        putNoNull("EQ_to_user_id", this.getToUserId(), map);
         putNoNull("EQ_to_user_name", this.getToUserName(), map);
         putNoNull("EQ_to_user_phone", this.getToUserPhone(), map);
         putNoNull("EQ_rev", this.getRev(), map);

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  * @date 2021-01-29 21:20:39
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
@@ -24,7 +25,7 @@ public class RelationshipRequest {
     private Long id;
 
     /**
-     * 父节点ID（数据库自增）
+     * 父节点ID（数据库自增）, 没有父节点则为 0
      */
     private Long pid;
 
@@ -37,6 +38,11 @@ public class RelationshipRequest {
      * 深度
      */
     private Integer deep;
+
+    /**
+     * 父节点顺序, 没有父节点则为 -1
+     */
+    private Integer pseq;
 
     /**
      * 顺序
@@ -61,7 +67,7 @@ public class RelationshipRequest {
     /**
      * 账号ID
      */
-    private String toUserId;
+    private Long toUserId;
 
     /**
      * 用户名
