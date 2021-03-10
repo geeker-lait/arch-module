@@ -8,7 +8,7 @@
         <result property="identifier" column="identifier" jdbcType="VARCHAR"/>
         <result property="credential" column="credential" jdbcType="VARCHAR"/>
         <result property="authorities" column="authorities" jdbcType="VARCHAR"/>
-        <result property="channelType" column="channel_type" jdbcType="VARCHAR"/>
+        <result property="loginType" column="login_type" jdbcType="VARCHAR"/>
         <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
         <result property="appId" column="app_id" jdbcType="INTEGER"/>
         <result property="storeId" column="store_id" jdbcType="INTEGER"/>
@@ -22,7 +22,7 @@
     </sql>
 
     <sql id="baseColumn">
-        `id`, `aid`, `identifier`, `credential`, `authorities`, `channel_type`, `tenant_id`, `app_id`, `store_id`, `rev`, `st`, `deleted`
+        `id`, `aid`, `identifier`, `credential`, `authorities`, `login_type`, `tenant_id`, `app_id`, `store_id`, `rev`, `st`, `deleted`
     </sql>
 
 </mapper>

@@ -30,7 +30,7 @@ public class IndexController {
             model.addAttribute("accountId", currentUser.getAccountId());
             model.addAttribute("nickName", currentUser.getNickName());
             model.addAttribute("avatar", currentUser.getAvatar());
-            model.addAttribute("channelType", currentUser.getChannelType());
+            model.addAttribute("loginType", currentUser.getLoginType());
             model.addAttribute("roles", StringUtils.join(currentUser.getAuthorities(), ","));
         }
         catch (Exception e) {

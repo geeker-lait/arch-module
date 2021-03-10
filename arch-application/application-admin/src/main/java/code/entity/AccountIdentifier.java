@@ -1,13 +1,14 @@
 package code.entity;
 
-import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 账号-标识(account_identifier)实体类
@@ -41,9 +42,9 @@ public class AccountIdentifier extends Model<AccountIdentifier> implements Seria
      */
     private String credential;
     /**
-     * 登录类型【IDENTITYTYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
+     * 登录类型：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
      */
-    private String channelType;
+    private String loginType;
     /**
      * 关联的用户Id
      */

@@ -1,7 +1,7 @@
 package org.arch.ums.account.vo;
 
 import lombok.Data;
-import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.ums.enums.LoginType;
 
 import java.io.Serializable;
 
@@ -43,7 +43,7 @@ public class JwtUserVo implements Serializable {
     /**
      * 登录类型
      */
-    private ChannelType channelType;
+    private LoginType loginType;
     /**
      * 会员ID
      */

@@ -59,7 +59,7 @@ import static java.util.Objects.nonNull;
 import static org.arch.auth.sso.utils.RegisterUtils.getTraceId;
 import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
 import static org.arch.framework.utils.RetryUtils.publishRetryEvent;
-import static org.arch.framework.ums.enums.ChannelType.OAUTH2;
+import static org.arch.framework.ums.enums.LoginType.OAUTH2;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
@@ -291,7 +291,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
                           userId, providerId, providerUserId);
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_ILLEGAL, userId);
             }
-            if (!Objects.equals(unbindingIdentifier.getChannelType(), OAUTH2)) {
+            if (!Objects.equals(unbindingIdentifier.getLoginType(), OAUTH2)) {
                 log.debug("用户 {} 进行解绑操作时, 只能解绑第三方的账号; providerId: {}, providerUserId: {}",
                           userId, providerId, providerUserId);
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_NOT_OAUTH2, userId);
@@ -366,7 +366,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
                     .setIdentifier(identifier)
                     .setCredential(passwordEncoder.encode(ssoProperties.getDefaultPassword()))
                     .setAuthorities(authorities)
-                    .setChannelType(OAUTH2);
+                    .setLoginType(OAUTH2);
             // 绑定
             try {
                 umsAccountIdentifierFeignService.save(identifierRequest);

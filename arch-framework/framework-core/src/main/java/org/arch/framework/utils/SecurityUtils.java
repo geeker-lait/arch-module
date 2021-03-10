@@ -2,7 +2,7 @@ package org.arch.framework.utils;
 
 import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.ums.enums.LoginType;
 import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.http.HttpStatus;
@@ -71,14 +71,14 @@ public class SecurityUtils {
         Long accountId = Long.valueOf(jwt.getClaimAsString(JwtArchClaimNames.ACCOUNT_ID.getClaimName()));
         Long identifierId = Long.valueOf(jwt.getClaimAsString(JwtArchClaimNames.IDENTIFIER_ID.getClaimName()));
         Integer tenantId = Integer.valueOf(jwt.getClaimAsString(JwtArchClaimNames.TENANT_ID.getClaimName()));
-        ChannelType channelType = ChannelType.valueOf(jwt.getClaimAsString(JwtArchClaimNames.CHANNEL_TYPE.getClaimName()));
+        LoginType loginType = LoginType.valueOf(jwt.getClaimAsString(JwtArchClaimNames.LOGIN_TYPE.getClaimName()));
         return TokenInfo.builder()
                         .identifierId(identifierId)
                         .accountId(accountId)
                         .tenantId(tenantId)
                         // 这里的 ClaimName 必须与属性 ums.jwt.principalClaimName 值相同.
                         .accountName(jwt.getClaimAsString(JwtClaimNames.SUB))
-                        .channelType(channelType)
+                        .loginType(loginType)
                         .nickName(jwt.getClaimAsString(JwtArchClaimNames.NICK_NAME.getClaimName()))
                         .avatar(jwt.getClaimAsString(JwtArchClaimNames.AVATAR.getClaimName()))
                         .authorities(authentication.getAuthorities())

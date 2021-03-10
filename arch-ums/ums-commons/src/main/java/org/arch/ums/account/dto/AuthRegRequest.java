@@ -3,7 +3,7 @@ package org.arch.ums.account.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.ums.enums.LoginType;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -42,7 +42,7 @@ public class AuthRegRequest implements Serializable {
     private String identifier;
     /**
      * 站内账号是密码, 第三方是 accessToken, 手机登录是空字符串或指定字符串. 对应账号-标识 credential<br>
-     * 注意: {@link #channelType} 为 {@link ChannelType#PHONE} 时有后端赋值 "空字符串或指定字符串"
+     * 注意: {@link #loginType} 为 {@link LoginType#PHONE} 时有后端赋值 "空字符串或指定字符串"
      */
     @NotNull(message = "密码不能为空")
     private String credential;
@@ -57,7 +57,7 @@ public class AuthRegRequest implements Serializable {
      * 由后端赋值
      */
     @NotNull(message = "登录类型不能为空")
-    private ChannelType channelType;
+    private LoginType loginType;
     /**
      * 头像
      */

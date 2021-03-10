@@ -26,7 +26,7 @@ public enum JwtArchClaimNames {
     /**
      * 登录类型
      */
-    CHANNEL_TYPE("channelType", "登录类型"),
+    LOGIN_TYPE("loginType", "登录类型"),
     /**
      * 用户 ID
      */

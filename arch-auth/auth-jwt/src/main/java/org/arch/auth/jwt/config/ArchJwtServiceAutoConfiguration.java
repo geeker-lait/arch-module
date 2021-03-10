@@ -41,7 +41,6 @@ import top.dcenter.ums.security.jwt.properties.JwtProperties;
 @AutoConfigureBefore({JwtAutoConfiguration.class, JwtAutoConfigurerAware.class, JwtServiceAutoConfiguration.class})
 public class ArchJwtServiceAutoConfiguration {
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     public JwkSetUriConfig jwkSetUriConfig(AppProperties appProperties) {
         return new ArchJwkSetUriConfig(appProperties);

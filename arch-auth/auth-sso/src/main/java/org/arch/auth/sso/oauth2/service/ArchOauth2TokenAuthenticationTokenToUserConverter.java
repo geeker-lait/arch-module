@@ -27,7 +27,7 @@ public class ArchOauth2TokenAuthenticationTokenToUserConverter implements Authen
                                          currentUser.getIdentifierId(),
                                          currentUser.getAccountId(),
                                          currentUser.getTenantId(),
-                                         currentUser.getChannelType(),
+                                         currentUser.getLoginType(),
                                          currentUser.getNickName(),
                                          currentUser.getAvatar(),
                                          currentUser.getAuthorities());

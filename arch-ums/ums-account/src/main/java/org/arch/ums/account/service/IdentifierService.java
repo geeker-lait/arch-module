@@ -12,7 +12,7 @@ import org.arch.framework.beans.exception.BusinessException;
 import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 import org.arch.framework.crud.CrudService;
 import org.arch.framework.id.IdService;
-import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.ums.enums.LoginType;
 import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.dao.IdentifierDao;
 import org.arch.ums.account.dto.Auth2ConnectionDto;
@@ -112,7 +112,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
                   .setIdentifier(authRegRequest.getIdentifier())
                   .setCredential(authRegRequest.getCredential())
                   .setAuthorities(authRegRequest.getAuthorities())
-                  .setChannelType(authRegRequest.getChannelType())
+                  .setLoginType(authRegRequest.getLoginType())
                   .setTenantId(authRegRequest.getTenantId())
                   .setAppId(null)
                   .setStoreId(null)
@@ -142,7 +142,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
                                .tenantId(authRegRequest.getTenantId())
                                .identifier(authRegRequest.getIdentifier())
                                .credential(authRegRequest.getCredential())
-                               .channelType(authRegRequest.getChannelType())
+                               .loginType(authRegRequest.getLoginType())
                                .authorities(authRegRequest.getAuthorities())
                                .nickName(authRegRequest.getNickName())
                                .avatar(authRegRequest.getAvatar())
@@ -207,7 +207,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
         Map<String, Object> params = new LinkedHashMap<>(3, 1.F);
         params.put("tenant_id", tenantId);
         params.put("identifier", identifier);
-        params.put("channel_type", ChannelType.OAUTH2);
+        params.put("login_type", LoginType.OAUTH2);
         params.put("deleted", 0);
 
         Wrapper<Identifier> queryWrapper = Wrappers.<Identifier>query().allEq(params);
@@ -274,7 +274,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
         params.put("tenant_id", tenantId);
         params.put("identifier", identifier);
         params.put("aid", aid);
-        params.put("channel_type", ChannelType.OAUTH2);
+        params.put("login_type", LoginType.OAUTH2);
         params.put("deleted", 0);
         Wrapper<Identifier> queryWrapper = Wrappers.<Identifier>query().allEq(params);
         Identifier accountIdentifier = findOneBySpec(queryWrapper);
@@ -404,7 +404,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
         LambdaQueryWrapper<Identifier> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(Identifier::getTenantId, tenantId)
                     .eq(Identifier::getAid, accountId)
-                    .eq(Identifier::getChannelType,ChannelType.OAUTH2)
+                    .eq(Identifier::getLoginType, LoginType.OAUTH2)
                     .eq(Identifier::getDeleted, Boolean.FALSE)
                     .select(Identifier::getId, Identifier::getAid, Identifier::getIdentifier);
         List<Identifier> identifierList = identifierDao.list(queryWrapper);

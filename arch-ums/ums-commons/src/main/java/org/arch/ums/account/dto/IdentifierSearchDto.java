@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
-import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.ums.enums.LoginType;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -47,9 +47,9 @@ public class IdentifierSearchDto implements BaseSearchDto {
     private String authorities;
 
     /**
-     * 登录类型【IDENTITYTYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
+     * 登录类型：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
      */
-    private ChannelType channelType;
+    private LoginType loginType;
 
     /**
      * 租户 id
@@ -88,7 +88,7 @@ public class IdentifierSearchDto implements BaseSearchDto {
         putNoNull("EQ_identifier", this.getIdentifier(), map);
         putNoNull("EQ_aid", this.getAid(), map);
         putNoNull("EQ_deleted", this.getDeleted(), map);
-        putNoNull("EQ_channel_type", this.getChannelType(), map);
+        putNoNull("EQ_login_type", this.getLoginType(), map);
         putNoNull("EQ_app_id", this.getAppId(), map);
         putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_credential", this.getCredential(), map);

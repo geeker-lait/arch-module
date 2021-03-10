@@ -11,7 +11,7 @@ import org.arch.framework.beans.Response;
 import org.arch.framework.event.RegisterEvent;
 import org.arch.framework.id.IdService;
 import org.arch.framework.ums.enums.AccountType;
-import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.ums.enums.LoginType;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
@@ -104,7 +104,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                                 authLoginDto.getId(),
                                 authLoginDto.getAid(),
                                 authLoginDto.getTenantId(),
-                                authLoginDto.getChannelType(),
+                                authLoginDto.getLoginType(),
                                 authLoginDto.getNickName(),
                                 authLoginDto.getAvatar(),
                                 true,
@@ -306,7 +306,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                                          authLoginDto.getId(),
                                          authLoginDto.getAid(),
                                          authLoginDto.getTenantId(),
-                                         authLoginDto.getChannelType(),
+                                         authLoginDto.getLoginType(),
                                          authLoginDto.getNickName(),
                                          authLoginDto.getAvatar(),
                                          true,
@@ -357,7 +357,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                              .credential(passwordEncoder.encode(ssoProperties.getDefaultPassword()))
                              .authorities(authorities)
                              .avatar(authUser.getAvatar())
-                             .channelType(ChannelType.OAUTH2)
+                             .loginType(LoginType.OAUTH2)
                              .nickName(authUser.getUsername())
                              .source(source)
                              .build();
@@ -381,7 +381,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                              .credential(passwordEncoder.encode(ssoProperties.getDefaultPassword()))
                              .authorities(authorities)
                              .avatar(ssoProperties.getDefaultAvatar())
-                             .channelType(ChannelType.PHONE)
+                             .loginType(LoginType.PHONE)
                              .nickName(mobile)
                              .source(source)
                              .build();
@@ -411,7 +411,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                              .credential(passwordEncoder.encode(regRequest.getPassword()))
                              .authorities(authorities)
                              .avatar(avatar)
-                             .channelType(ChannelType.ACCOUNT)
+                             .loginType(LoginType.ACCOUNT)
                              .nickName(regRequest.getNickName())
                              .source(source)
                              .build();

@@ -35,9 +35,9 @@ public class RegisterListener implements ApplicationListener<RegisterEvent>, App
     public void onApplicationEvent(@NonNull RegisterEvent event) {
         ArchUser archUser = event.getArchUser();
         // 记录日志
-        log.info("用户注册成功: 租户: {}, identifier: {}, aid: {}, channelType: {}, source: {}",
+        log.info("用户注册成功: 租户: {}, identifier: {}, aid: {}, loginType: {}, source: {}",
                  archUser.getTenantId(), archUser.getUsername(), archUser.getAccountId(),
-                 archUser.getChannelType().name(), event.getSource());
+                 archUser.getLoginType().name(), event.getSource());
 
         // 用户推荐 或 推广统计
         userRecommendationOrPromotion(event.getSource());

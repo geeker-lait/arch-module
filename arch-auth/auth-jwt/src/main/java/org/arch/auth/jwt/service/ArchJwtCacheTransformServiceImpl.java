@@ -1,7 +1,7 @@
 package org.arch.auth.jwt.service;
 
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.ums.enums.LoginType;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
@@ -21,7 +21,7 @@ import static java.util.Objects.nonNull;
 import static org.arch.framework.ums.jwt.claim.JwtArchClaimNames.ACCOUNT_ID;
 import static org.arch.framework.ums.jwt.claim.JwtArchClaimNames.AUTHORITIES;
 import static org.arch.framework.ums.jwt.claim.JwtArchClaimNames.AVATAR;
-import static org.arch.framework.ums.jwt.claim.JwtArchClaimNames.CHANNEL_TYPE;
+import static org.arch.framework.ums.jwt.claim.JwtArchClaimNames.LOGIN_TYPE;
 import static org.arch.framework.ums.jwt.claim.JwtArchClaimNames.IDENTIFIER_ID;
 import static org.arch.framework.ums.jwt.claim.JwtArchClaimNames.NICK_NAME;
 import static org.arch.framework.ums.jwt.claim.JwtArchClaimNames.TENANT_ID;
@@ -87,7 +87,7 @@ public class ArchJwtCacheTransformServiceImpl implements JwtCacheTransformServic
                             .accountId(Long.valueOf(jwt.getClaimAsString(ACCOUNT_ID.getClaimName())))
                             .tenantId(Integer.valueOf(jwt.getClaimAsString(TENANT_ID.getClaimName())))
                             .accountName(jwt.getClaimAsString(principalClaimName))
-                            .channelType(ChannelType.valueOf(jwt.getClaimAsString(CHANNEL_TYPE.getClaimName())))
+                            .loginType(LoginType.valueOf(jwt.getClaimAsString(LOGIN_TYPE.getClaimName())))
                             .nickName(jwt.getClaimAsString(NICK_NAME.getClaimName()))
                             .avatar(jwt.getClaimAsString(AVATAR.getClaimName()))
                             .authorities(authorities)
