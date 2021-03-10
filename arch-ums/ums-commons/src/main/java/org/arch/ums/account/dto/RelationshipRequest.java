@@ -39,6 +39,11 @@ public class RelationshipRequest {
     private Integer deep;
 
     /**
+     * 父节点顺序
+     */
+    private Integer pseq;
+
+    /**
      * 顺序
      */
     private Integer seq;

@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
  * @date 2021-01-29 21:20:26
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -47,6 +48,11 @@ public class Relationship extends CrudEntity<Relationship> {
      * 深度
      */
     private Integer deep;
+
+    /**
+     * 父节点顺序
+     */
+    private Integer pseq;
 
     /**
      * 顺序
