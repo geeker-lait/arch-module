@@ -1,117 +1,160 @@
-package ${packageName};
+package ${package!""};
+<#if pk??>
+    <#if columns?? && (columns?size > 0)>
+        <#list columns as column>
+            <#if column!"" == pk>
+                // TODO 不能获取数据库类型对应的 JavaType
+                <#assign _pkType = column.typ>
+            </#if>
+        </#list>
+    </#if>
+</#if>
+<#if _pkType??>
+<#else>
+    <#assign _pkType = "java.lang.Long">
+</#if>
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.hateoas.PagedModel;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import ${basePkg!""}.dto.${(name?cap_first)!""}SearchDto;
+import ${basePkg!""}.entity.${(name?cap_first)!""};
+import ${basePkg!""}.service.${(name?cap_first)!""}Service;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.beans.Response;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
-
-import ${lastRenderResponse.dto.packageName}.${lastRenderResponse.dto.className};
-import ${lastRenderResponse.response.packageName}.${lastRenderResponse.response.className};
-import ${lastRenderResponse.service.packageName}.${lastRenderResponse.service.className};
+import javax.validation.Valid;
+import java.util.List;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
+<#if _pkType??>
+import ${_pkType}
+</#if>
 
 /**
- * controller for ${entity.className}
- * ${comments}
+ * ${comment!""}(${(name?cap_first)!""}) 表服务控制器
  *
- * @author ${author}
- * @since ${date}.
+ * @author $!author
+ * @date   $!time.currTime()
+ * @since  1.0.0
  */
+@Slf4j
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("/${entity.className?uncap_first}")
-public class ${className} extends BaseEndpoint {
+@RequestMapping("/${(name?uncap_first)!""}")
+public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(name?cap_first)!""}, ${_pkType!""}, ${
+(name?cap_first)!""}SearchDto, ${(name?cap_first)!""}Service> {
 
-    @Autowired
-    private ${lastRenderResponse.service.className} ${lastRenderResponse.service.className?uncap_first};
+    private final TenantContextHolder tenantContextHolder;
+    private final ${(name?cap_first)!""}${suffix!""} ${(name?uncap_first)!""}${suffix!""};
 
-    /**
-     * 新增
-     * 
-     * @param ${lastRenderResponse.dto.className?uncap_first} 请求参数
-     */
-    @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody ${lastRenderResponse.dto.className} ${lastRenderResponse.dto.className?uncap_first}) {
-        ${lastRenderResponse.response.className} ${entity.className?uncap_first}Resp = ${lastRenderResponse.service.className?uncap_first}.create(${lastRenderResponse.dto.className?uncap_first});
-        return super.doResource(${entity.className?uncap_first}Resp, this.getClass());
-    }
-
-    /**
-     * 根据主键删除，支持批量主键删除
-     * 
-     * @param ids 删除的主键集合
-     */
-    @DeleteMapping("/{ids}")
-    public ResponseDto<?> delete(@PathVariable List<${entity.id.className}> ids) {
-        ${lastRenderResponse.service.className?uncap_first}.deleteByIds(ids);
-        return ResponseDto.success(null);
-    }
-
-    /**
-     * 更新
-     * 
-     * @param ${lastRenderResponse.dto.className?uncap_first} 请求参数
-     * @param id 主键id
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable ${entity.id.className} id,@RequestBody ${lastRenderResponse.dto.className} ${lastRenderResponse.dto.className?uncap_first}) {
-        ${lastRenderResponse.response.className} ${entity.className?uncap_first}Resp = ${lastRenderResponse.service.className?uncap_first}.update(id,${lastRenderResponse.dto.className?uncap_first});
-        return super.doResource(${entity.className?uncap_first}Resp, this.getClass());
-    }
-
-    /**
-     * 详情
-     * 
-     * @param id 主键id
-     */
     @Override
-    @GetMapping("/{id}")
-    public ResponseEntity<?> details(@PathVariable ${entity.id.className} id) {
-        ${lastRenderResponse.response.className} ${entity.className?uncap_first}Resp = ${lastRenderResponse.service.className?uncap_first}.details(id);
-        return super.doResource(${entity.className?uncap_first}Resp, this.getClass());
+    public ${(name?cap_first)!""} resolver(TokenInfo token, ${(name?cap_first)!""} ${(name?uncap_first)!""}) {
+        if (isNull(${(name?uncap_first)!""}) {
+            ${(name?uncap_first)!""} =  new ${(name?cap_first)!""}();
+        }
+        if (nonNull(token) && nonNull(token.getTenantId())) {
+            ${(name?uncap_first)!""}.setTenantId(token.getTenantId());
+        }
+        else {
+            ${(name?uncap_first)!""}.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+        }
+        return ${(name?uncap_first)!""};
     }
 
     @Override
-    @GetMapping("")
-    public HttpEntity<PagedModel<?>> getPageData(
-            @RequestParam(value = IConstants.DEFAULT_PAGE_NUM_FIELD, defaultValue = IConstants.DEFAULT_PAGE_NUM_VAL) int pageNumber,
-            @RequestParam(value = IConstants.DEFAULT_PAGE_SIZE_FIELD, defaultValue = IConstants.DEFAULT_PAGE_SIZE_VAL) int pageSize,
-            @RequestParam(value = IConstants.DEFAULT_SORT_TYPES_FIELD, defaultValue = IConstants.DEFAULT_SORT_TYPE_VAL) String sortTypes,
-            ServletRequest request) {
-        // 获取搜索参数
-        Map<String, Object> searchParams = super.getSearchParamStartWith(request, IConstants.EMPTY_SEARCH_PREFIX);
-        PageInfo pageInfo = new PageInfo(pageNumber, pageSize, sortTypes);
-        Page<${lastRenderResponse.response.className}> page = ${lastRenderResponse.service.className?uncap_first}.getPageList(searchParams, pageInfo);
-        return super.doPage(pageNumber, pageSize, sortTypes, request, this.getClass(), page);
+    public ${(name?cap_first)!""}${suffix!""} getCrudService() {
+        return ${(name?uncap_first)!""}${suffix!""};
+    }
+
+    @Override
+    public ${(name?cap_first)!""}SearchDto getSearchDto() {
+        return new ${(name?uncap_first)!""}SearchDto();
     }
 
     /**
-     * 条件搜索，返回不分页的列表
-     * 
-     * @param request 请求参数
-     */
-    @GetMapping("/find/params")
-    public ResponseEntity<?> findByParams(
-            @RequestParam(value = IConstants.DEFAULT_SORT_TYPES_FIELD, defaultValue = IConstants.DEFAULT_SORT_TYPE_VAL) String sortTypes,
-            ServletRequest request) {
-        // 1.获取搜索参数
-        Map<String, Object> searchParams = super.getSearchParamStartWith(request, IConstants.EMPTY_SEARCH_PREFIX);
-        // 2.获取数据
-        List<${lastRenderResponse.response.className}> dataList = ${lastRenderResponse.service.className?uncap_first}.findByParams(searchParams,sortTypes);
-        return super.doListResources(dataList, this.getClass());
+    * 根据 entity 条件查询对象.
+    * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
+    * @param entity    实体类
+    * @param token     token info
+    * @return  {@link Response}
+    */
+    @Override
+    @NonNull
+    @GetMapping("/single")
+    public Response<${(name?cap_first)!""}> findOne(@RequestBody ${(name?cap_first)!""} entity, TokenInfo token) {
+        try {
+            resolver(token, entity);
+            ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(entity);
+            ${(name?cap_first)!""} t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            return Response.success(t);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            if (e instanceof IncorrectResultSizeDataAccessException) {
+                return Response.error(FAILED.getCode(),"查询到多个结果");
+            } else {
+                return Response.error(FAILED.getCode(), e.getMessage());
+            }
+        }
     }
+
+    /**
+    * 根据 entity 条件查询对象列表.
+    * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
+    * @param t         实体类
+    * @param token     token info
+    * @return  {@link Response}
+    */
+    @Override
+    @NonNull
+    @GetMapping("/find")
+    public Response<List<${(name?cap_first)!""}>> find(@RequestBody ${(name?cap_first)!""} t, TokenInfo token) {
+        resolver(token, t);
+        ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(t);
+        try {
+            return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+    * 分页查询.
+    * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
+    * @param entity        实体类
+    * @param pageNumber    第几页
+    * @param pageSize      页大小
+    * @param token         token info
+    * @return  {@link Response}
+    */
+    @Override
+    @NonNull
+    @GetMapping(value = "/page/{pageNumber}/{pageSize}")
+    public Response<IPage<${(name?cap_first)!""}>> page(@RequestBody ${(name?cap_first)!""} entity,
+                                                    @PathVariable(value = "pageNumber") Integer pageNumber,
+                                                    @PathVariable(value = "pageSize") Integer pageSize,
+                                                    TokenInfo token) {
+        resolver(token, entity);
+        ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(entity);
+        try {
+            return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
 }

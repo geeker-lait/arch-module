@@ -51,9 +51,9 @@ spring:
                     version:
     documents:
       - type: entity
-        pkg: aa.entity
+        pkg: entity
         template: entity.ftl
-        suffix: Entity
+        suffix:
       - type: mapper
         pkg: mapper
         template: mapper.ftl
@@ -68,13 +68,13 @@ spring:
         template: service.ftl
         suffix: Service
       - type: controller
-        pkg:
+        pkg: controller
         template: controller.ftl
-        suffix:
+        suffix: Controller
       - type: dto
-        pkg:
+        pkg: dto
         template: dto.ftl
-        suffix:
+        suffix: Dto
       - type: application
         pkg:
         template: application.ftl
