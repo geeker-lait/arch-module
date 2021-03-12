@@ -72,7 +72,7 @@ public class AddressService extends CrudService<Address, java.lang.Long> {
 
         LambdaUpdateWrapper<Address> updateWrapper = Wrappers.<Address>lambdaUpdate()
                 .eq(Address::getDeleted, 0)
-                .and(w -> w.in(Address::getId, ids))
+                .in(Address::getId, ids)
                 .set(Address::getDeleted, 1);
 
         // 逻辑删除

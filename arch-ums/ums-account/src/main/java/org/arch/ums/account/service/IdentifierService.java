@@ -117,7 +117,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
                   .setAppId(null)
                   .setStoreId(null)
                   .setRev(0)
-                  .setSt(now)
+                  .setDt(now)
                   .setDeleted(false);
         // 构建 name
         Name name = new Name();
@@ -130,7 +130,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
             .setAppId(null)
             .setStoreId(null)
             .setRev(0)
-            .setSt(now)
+            .setDt(now)
             .setDeleted(false);
 
         boolean saveIdentifierResult = identifierDao.save(identifier);

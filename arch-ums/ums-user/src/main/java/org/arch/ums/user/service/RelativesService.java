@@ -72,7 +72,7 @@ public class RelativesService extends CrudService<Relatives, java.lang.Long> {
 
         LambdaUpdateWrapper<Relatives> updateWrapper = Wrappers.<Relatives>lambdaUpdate()
                 .eq(Relatives::getDeleted, 0)
-                .and(w -> w.in(Relatives::getId, ids))
+                .in(Relatives::getId, ids)
                 .set(Relatives::getDeleted, 1);
 
         // 逻辑删除

@@ -72,7 +72,7 @@ public class RelationshipService extends CrudService<Relationship, java.lang.Lon
 
         LambdaUpdateWrapper<Relationship> updateWrapper = Wrappers.<Relationship>lambdaUpdate()
                 .eq(Relationship::getDeleted, 0)
-                .and(w -> w.in(Relationship::getId, ids))
+                .in(Relationship::getId, ids)
                 .set(Relationship::getDeleted, 1);
 
         // 逻辑删除

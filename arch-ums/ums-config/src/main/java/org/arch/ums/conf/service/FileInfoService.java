@@ -75,7 +75,7 @@ public class FileInfoService extends CrudService<FileInfo, java.lang.Long> {
 
         LambdaUpdateWrapper<FileInfo> updateWrapper = Wrappers.<FileInfo>lambdaUpdate()
                 .eq(FileInfo::getDeleted, 0)
-                .and(w -> w.in(FileInfo::getId, ids))
+                .in(FileInfo::getId, ids)
                 .set(FileInfo::getDeleted, 1);
 
         // 逻辑删除
@@ -95,8 +95,8 @@ public class FileInfoService extends CrudService<FileInfo, java.lang.Long> {
         LambdaQueryWrapper<FileInfo> queryWrapper =
                 Wrappers.<FileInfo>lambdaQuery()
                         .eq(FileInfo::getTenantId, tenantId)
-                        .and(w -> w.eq(FileInfo::getUploadType, uploadType))
-                        .and(w -> w.eq(FileInfo::getFilePath, filePath));
+                        .eq(FileInfo::getUploadType, uploadType)
+                        .eq(FileInfo::getFilePath, filePath);
         FileInfo fileInfo = fileInfoDao.getOne(queryWrapper);
         deleteById(fileInfo.getId());
         fileInfo.setDeleted(Boolean.TRUE);

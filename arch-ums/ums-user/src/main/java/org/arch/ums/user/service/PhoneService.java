@@ -72,7 +72,7 @@ public class PhoneService extends CrudService<Phone, java.lang.Long> {
 
         LambdaUpdateWrapper<Phone> updateWrapper = Wrappers.<Phone>lambdaUpdate()
                 .eq(Phone::getDeleted, 0)
-                .and(w -> w.in(Phone::getId, ids))
+                .in(Phone::getId, ids)
                 .set(Phone::getDeleted, 1);
 
         // 逻辑删除

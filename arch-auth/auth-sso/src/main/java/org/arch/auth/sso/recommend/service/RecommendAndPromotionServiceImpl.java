@@ -125,8 +125,7 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
         /*
             org: 是针对全局的组计数, 还是针对个人的组计数
             deep: 深度针对全局深度.
-            pseq: 是否为上上节点的 seq, 这样就可以点位上上级, 因为 上级可以通过 pid 定位.
-                  (或者可以在增加一个 ppseq(上上级顺序)字段, 这样可以减少查询频率.)
+            pseq: 上节点的 seq, (或者可以在增加一个 ppseq(上上级seq)字段, 这样可以减少查询频率.)
          */
         /*
             唯一索引: tenantId + org + deep + seq
@@ -149,11 +148,11 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
         /*
             seq 与 org 递增问题: 用 max(seq/org) 获取最大值, 插入时还需要并发校验, 锁表或乐观锁.
             Relationship 表本身读写压力大,
-            是否可以通过 IdService 那样, 通过 redis 获取自增的 seq 与 org. 来提高 mysql 的性能.
+            是否可以通过 IdService 那样, 通过 redis 获取自增的 seq 与 org. 来提高 Relationship 表的读写性能.
          */
         /*
             用户推广时: 怎么获取自己的推广记录:
-                    前提: Relationship toUserId 必须记录唯一
+                    前提: Relationship toUserId fromUserId 必须记录唯一
                     唯一索引: UNQ_TENANTID_TOUSERID_FROMUSERID
          */
         return false;

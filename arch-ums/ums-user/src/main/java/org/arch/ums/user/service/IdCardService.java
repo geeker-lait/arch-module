@@ -75,7 +75,7 @@ public class IdCardService extends CrudService<IdCard, java.lang.Long> {
 
         LambdaUpdateWrapper<IdCard> updateWrapper = Wrappers.<IdCard>lambdaUpdate()
                 .eq(IdCard::getDeleted, 0)
-                .and(w -> w.in(IdCard::getId, ids))
+                .in(IdCard::getId, ids)
                 .set(IdCard::getDeleted, 1);
 
         // 逻辑删除

@@ -72,7 +72,7 @@ public class RoleMenuService extends CrudService<RoleMenu, java.lang.Long> {
 
         LambdaUpdateWrapper<RoleMenu> updateWrapper = Wrappers.<RoleMenu>lambdaUpdate()
                 .eq(RoleMenu::getDeleted, 0)
-                .and(w -> w.in(RoleMenu::getId, ids))
+                .in(RoleMenu::getId, ids)
                 .set(RoleMenu::getDeleted, 1);
 
         // 逻辑删除

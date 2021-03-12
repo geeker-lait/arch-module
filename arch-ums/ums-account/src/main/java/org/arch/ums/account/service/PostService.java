@@ -72,7 +72,7 @@ public class PostService extends CrudService<Post, java.lang.Long> {
 
         LambdaUpdateWrapper<Post> updateWrapper = Wrappers.<Post>lambdaUpdate()
                 .eq(Post::getDeleted, 0)
-                .and(w -> w.in(Post::getId, ids))
+                .in(Post::getId, ids)
                 .set(Post::getDeleted, 1);
 
         // 逻辑删除

@@ -72,7 +72,7 @@ public class RolePermissionService extends CrudService<RolePermission, java.lang
 
         LambdaUpdateWrapper<RolePermission> updateWrapper = Wrappers.<RolePermission>lambdaUpdate()
                 .eq(RolePermission::getDeleted, 0)
-                .and(w -> w.in(RolePermission::getId, ids))
+                .in(RolePermission::getId, ids)
                 .set(RolePermission::getDeleted, 1);
 
         // 逻辑删除

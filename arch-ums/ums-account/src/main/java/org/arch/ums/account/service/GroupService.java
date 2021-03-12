@@ -72,7 +72,7 @@ public class GroupService extends CrudService<Group, java.lang.Long> {
 
         LambdaUpdateWrapper<Group> updateWrapper = Wrappers.<Group>lambdaUpdate()
                 .eq(Group::getDeleted, 0)
-                .and(w -> w.in(Group::getId, ids))
+                .in(Group::getId, ids)
                 .set(Group::getDeleted, 1);
 
         // 逻辑删除

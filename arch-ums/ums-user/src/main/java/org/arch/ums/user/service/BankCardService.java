@@ -72,7 +72,7 @@ public class BankCardService extends CrudService<BankCard, java.lang.Long> {
 
         LambdaUpdateWrapper<BankCard> updateWrapper = Wrappers.<BankCard>lambdaUpdate()
                 .eq(BankCard::getDeleted, 0)
-                .and(w -> w.in(BankCard::getId, ids))
+                .in(BankCard::getId, ids)
                 .set(BankCard::getDeleted, 1);
 
         // 逻辑删除

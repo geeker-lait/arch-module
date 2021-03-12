@@ -72,7 +72,7 @@ public class MenuService extends CrudService<Menu, java.lang.Long> {
 
         LambdaUpdateWrapper<Menu> updateWrapper = Wrappers.<Menu>lambdaUpdate()
                 .eq(Menu::getDeleted, 0)
-                .and(w -> w.in(Menu::getId, ids))
+                .in(Menu::getId, ids)
                 .set(Menu::getDeleted, 1);
 
         // 逻辑删除

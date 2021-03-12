@@ -72,7 +72,7 @@ public class RoleGroupService extends CrudService<RoleGroup, java.lang.Long> {
 
         LambdaUpdateWrapper<RoleGroup> updateWrapper = Wrappers.<RoleGroup>lambdaUpdate()
                 .eq(RoleGroup::getDeleted, 0)
-                .and(w -> w.in(RoleGroup::getId, ids))
+                .in(RoleGroup::getId, ids)
                 .set(RoleGroup::getDeleted, 1);
 
         // 逻辑删除

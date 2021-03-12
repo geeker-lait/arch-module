@@ -72,7 +72,7 @@ public class RoleResourceService extends CrudService<RoleResource, java.lang.Lon
 
         LambdaUpdateWrapper<RoleResource> updateWrapper = Wrappers.<RoleResource>lambdaUpdate()
                 .eq(RoleResource::getDeleted, 0)
-                .and(w -> w.in(RoleResource::getId, ids))
+                .in(RoleResource::getId, ids)
                 .set(RoleResource::getDeleted, 1);
 
         // 逻辑删除

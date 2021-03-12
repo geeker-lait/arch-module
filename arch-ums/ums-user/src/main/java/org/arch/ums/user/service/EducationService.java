@@ -72,7 +72,7 @@ public class EducationService extends CrudService<Education, java.lang.Long> {
 
         LambdaUpdateWrapper<Education> updateWrapper = Wrappers.<Education>lambdaUpdate()
                 .eq(Education::getDeleted, 0)
-                .and(w -> w.in(Education::getId, ids))
+                .in(Education::getId, ids)
                 .set(Education::getDeleted, 1);
 
         // 逻辑删除

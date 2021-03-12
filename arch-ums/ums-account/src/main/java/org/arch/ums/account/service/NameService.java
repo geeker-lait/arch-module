@@ -69,7 +69,7 @@ public class NameService extends CrudService<Name, java.lang.Long> {
 
         LambdaUpdateWrapper<Name> updateWrapper = Wrappers.<Name>lambdaUpdate()
                                                           .eq(Name::getDeleted, 0)
-                                                          .and(w -> w.in(Name::getId, ids))
+                                                          .in(Name::getId, ids)
                                                           .set(Name::getDeleted, 1);
 
         // 逻辑删除

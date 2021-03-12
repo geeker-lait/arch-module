@@ -150,7 +150,7 @@ public class RegisterUtils {
                   .setAccountIdentifierId(identifierId)
                   .setTenantId(Integer.valueOf(tenantId))
                   .setEnableRefresh(true)
-                  .setSt(LocalDateTime.now());
+                  .setDt(LocalDateTime.now());
 
         // 有效期转时间戳
         oauthToken.setExpireTime(Auth2DefaultRequest.expireIn2Timestamp(timeout, token.getExpireIn()));

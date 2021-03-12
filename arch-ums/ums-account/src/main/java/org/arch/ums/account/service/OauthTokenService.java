@@ -63,7 +63,7 @@ public class OauthTokenService extends CrudService<OauthToken, java.lang.Long> {
                      .set(nonNull(oauthToken.getUserId()), OauthToken::getUserId, oauthToken.getUserId())
                      .set(nonNull(oauthToken.getScreenName()), OauthToken::getScreenName, oauthToken.getScreenName())
                      .set(nonNull(oauthToken.getExpireTime()), OauthToken::getExpireTime, oauthToken.getExpireTime())
-                     .set(OauthToken::getSt, LocalDateTime.now());
+                     .set(OauthToken::getDt, LocalDateTime.now());
 
         return oauthTokenDao.update(updateWrapper);
     }

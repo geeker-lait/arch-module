@@ -158,7 +158,7 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
     public boolean deleteAllById(List<Long> ids) {
         LambdaUpdateWrapper<AuthClient> updateWrapper = Wrappers.<AuthClient>lambdaUpdate()
                                                                 .eq(AuthClient::getDeleted, 0)
-                                                                .and(w -> w.in(AuthClient::getId, ids))
+                                                                .in(AuthClient::getId, ids)
                                                                 .set(AuthClient::getDeleted, 1);
 
         // 逻辑删除
