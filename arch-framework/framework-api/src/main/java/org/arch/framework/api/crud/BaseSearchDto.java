@@ -49,9 +49,9 @@ public interface BaseSearchDto {
     default void putNoNull(String key, Object value, Map<String, Object> map) {
         boolean isCanSearch;
         if (value instanceof String) {
-            isCanSearch = !value.toString().equals("");
+            isCanSearch = !"".equals(value.toString());
         } else if (value instanceof Collection) {
-            isCanSearch = !(value == null || ((Collection<?>) value).isEmpty());
+            isCanSearch = !((Collection<?>) value).isEmpty();
         } else {
             isCanSearch = (value != null);
         }
