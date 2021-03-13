@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class DatabaseMvcSchemaReader extends AbstractSchemaReader implements SchemaReadable<DatabaseProperties> {
+public class DatabaseSchemaReader extends AbstractSchemaReader implements SchemaReadable<DatabaseProperties> {
     @Override
     public SourceName getSource() {
         return SourceName.DATABASE_SOURCE;
@@ -58,5 +58,10 @@ public class DatabaseMvcSchemaReader extends AbstractSchemaReader implements Sch
     public void read(AbstractGenerator abstractGenerator, GeneratorConfig generatorConfig) {
         //read(generatorConfig.getDatabase());
         //abstractGenerator.buildModule();
+    }
+
+    @Override
+    public void read(AbstractGenerator abstractGenerator) {
+
     }
 }

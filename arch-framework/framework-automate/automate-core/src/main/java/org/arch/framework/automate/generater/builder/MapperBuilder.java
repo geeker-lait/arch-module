@@ -5,8 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.Buildable;
 import org.arch.framework.automate.generater.core.TemplateName;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
-import org.arch.framework.automate.generater.properties.PackageProperties;
+import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
+import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -23,7 +24,12 @@ public class MapperBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) throws IOException {
-        buildPackageFile(projectProperties.getCover(), path, templateEngine, projectProperties, packageProperties, databaseProperties);
+    public void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) throws IOException {
+        buildPackageFile(projectProperties.getCover(), path, templateEngine, projectProperties, documentProperties, databaseProperties);
+    }
+
+    @Override
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaProperties schemaProperties) {
+
     }
 }

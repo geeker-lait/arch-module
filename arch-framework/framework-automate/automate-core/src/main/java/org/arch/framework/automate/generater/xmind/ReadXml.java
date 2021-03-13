@@ -13,11 +13,6 @@ import java.util.List;
 
 public class ReadXml {
 
-	/**
-	 * 解析xml文件
-	 *
-	 * @author XU_SUN
-	 */
 	public static List<List<String>> readXml(String xmlPath) {
 
 		// 所有用例集合
@@ -64,8 +59,6 @@ public class ReadXml {
 	 * 获取所有title节点，并转换为NodeObj
 	 * 递归获取所有title节点 xml节点关系为：topic → title/children →
 	 * topics → topic → title/children → .....
-	 *
-	 * @author XU_SUN
 	 */
 	public static void getAllObj(Element centerTopicNode, List<XMind> allObjList) {
 
@@ -151,7 +144,6 @@ public class ReadXml {
 	 * @param leafObj    叶子对象
 	 * @param allObjList 所有对象集合
 	 * @param caseList   测试用例集合（已在toCase方法中创建）
-	 * @author XU_SUN
 	 */
 	public static void getItParent(XMind leafObj, List<XMind> allObjList, List<String> caseList) {
 

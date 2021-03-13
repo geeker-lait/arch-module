@@ -16,6 +16,9 @@ import org.arch.framework.automate.generater.properties.ExcelProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +33,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class ExcelMvcSchemaReader extends AbstractSchemaReader implements SchemaReadable<ExcelProperties> {
+public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaReadable<ExcelProperties> {
 
     @Override
     public SourceName getSource() {
@@ -42,15 +45,30 @@ public class ExcelMvcSchemaReader extends AbstractSchemaReader implements Schema
     }
     @Override
     public List<DatabaseProperties> read(ExcelProperties source) throws Exception {
-        return doRead(source.getFile(),source.getHeads());
+        return readMvc(source.getFile(),source.getHeads());
     }
 
     @Override
-    public void read(AbstractGenerator abstractGenerator, GeneratorConfig generatorConfig) {
-
+    public void read(AbstractGenerator abstractGenerator, GeneratorConfig generatorConfig) throws IOException {
+        Path rootPath = generatorConfig.getProject().getProjectRootPath();
+        Files.createDirectories(rootPath);
+        // to do read
+        abstractGenerator.buildModule(rootPath,generatorConfig.getProject().getPom());
     }
 
-    public List<DatabaseProperties> doRead(String excel,Map<String,String> heads) throws Exception {
+    @Override
+    public void read(AbstractGenerator abstractGenerator) {
+
+//        abstractGenerator.buildModule();
+        //doRead();
+    }
+
+    public List<DatabaseProperties> readApi(String excel,Map<String,String> heads) throws Exception{
+
+        return null;
+    }
+
+    public List<DatabaseProperties> readMvc(String excel,Map<String,String> heads) throws Exception {
         Map<String, String> swapHeads = heads.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, e -> e.getKey()));
         List<DatabaseProperties> databasePropertiesList= new ArrayList<>();
         Map<String, String> tableMap = new HashMap<>();

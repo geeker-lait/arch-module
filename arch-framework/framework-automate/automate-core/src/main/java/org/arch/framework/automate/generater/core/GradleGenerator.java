@@ -19,7 +19,7 @@ import java.nio.file.Path;
 @Service
 public class GradleGenerator extends AbstractGenerator {
 
-    @Override
+    //@Override
     public void buildModule(Path path, ProjectProperties projectProperties, PomProperties pomProperties, DatabaseProperties databaseProperties) throws IOException {
         log.info("gradle is  null implementor");
     }
@@ -27,5 +27,10 @@ public class GradleGenerator extends AbstractGenerator {
     @Override
     public BuildToolsName getBuildTools() {
         return BuildToolsName.GRADLE;
+    }
+
+    @Override
+    public void buildModule(Path path, PomProperties pomProperties) throws IOException {
+
     }
 }

@@ -1,6 +1,7 @@
 spring:
   generator:
     buildTool: maven
+    source: excel,xmind
     template:
       dir: templates
       resource-mode: classpath
@@ -106,33 +107,95 @@ spring:
         suffix: Client
 
     schemas:
-      - typ: xmind
-        reader: api
-        resources: classpath:api.xmind
-      - typ: excel
-        reader: mvc
-        resources: classpath:uni-life-ums.xlsx
-        configuration: {
-          table: "表名/Table",
-          column: "列名/Column",
-          type: "数据类型/Type",
-          length: "长度/Length",
-          isnull: "是否为空/Null",
-          defaultValue: "默认值/Default",
-          pk: "是否主键/Primary(Y,N)",
-          fks: "外键/Forigen(可空)",
-          uniques: "是否唯一/Unique(Y,N)",
-          comment: "备注/Comment"
-        }
-      - typ: database
-        reader: mvc
-        resources: arch_module
-        configuration: {
-          driver: com.mysql.cj.jdbc.Driver
-          url: "jdbc:mysql://localhost:3306?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
-          username: root
-          password: root
-        }
+      xminds:
+        - file: classpath:api.xmind
+          shcema-reader: api
+      excels:
+        - file: classpath:uni-life-ums.xlsx
+          schema-reader: mvc
+          heads: {
+            table: "表名/Table",
+            column: "列名/Column",
+            type: "数据类型/Type",
+            length: "长度/Length",
+            isnull: "是否为空/Null",
+            defaultValue: "默认值/Default",
+            pk: "是否主键/Primary(Y,N)",
+            fks: "外键/Forigen(可空)",
+            uniques: "是否唯一/Unique(Y,N)",
+            comment: "备注/Comment"
+          }
+      database:
+        schema-reader: mvc
+        driver: com.mysql.cj.jdbc.Driver
+        url: "jdbc:mysql://localhost:3306?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
+        username: root
+        password: root
+        name: arch_module
 
+
+
+
+
+
+
+
+    excel:
+      file: classpath:uni-life-ums.xlsx
+      schema-reader:
+      heads: {
+        table: "表名/Table",
+        column: "列名/Column",
+        type: "数据类型/Type",
+        length: "长度/Length",
+        isnull: "是否为空/Null",
+        defaultValue: "默认值/Default",
+        pk: "是否主键/Primary(Y,N)",
+        fks: "外键/Forigen(可空)",
+        uniques: "是否唯一/Unique(Y,N)",
+        comment: "备注/Comment"
+      }
+
+    database:
+      driver: com.mysql.cj.jdbc.Driver
+      url: "jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
+      username: root
+      password: root
+      name: arch_module,arch
+      tables:
+        - name: user
+          comment: 用户表
+          pk:
+          fks: name,age
+          uniques:
+          indexs:
+          columns:
+            - name: id
+              typ: bigint
+              length: 19
+              comment: 主键id
+            - name: name
+              typ: varchar
+              length: 32
+              comment: 用户名
+            - name: age
+              typ: int
+              length: 2
+              comment: 年龄
+        - name: account
+          comment: 账号表
+          pk:
+          fks: name,age
+          uniques:
+          indexs:
+          columns:
+            - name: id
+              typ: bigint
+              length: 19
+              comment: 主键id
+            - name: name
+              typ: varchar
+              length: 32
+              comment: 账号名
 
 

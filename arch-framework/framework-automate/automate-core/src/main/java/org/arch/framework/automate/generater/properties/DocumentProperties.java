@@ -3,7 +3,7 @@ package org.arch.framework.automate.generater.properties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.arch.framework.automate.generater.core.SchemaProperties;
+import org.arch.framework.automate.generater.core.ConfigProperties;
 
 /**
  * @author lait.zhang@gmail.com
@@ -18,7 +18,10 @@ import org.arch.framework.automate.generater.core.SchemaProperties;
 @Data
 @NoArgsConstructor
 @ToString
-public class PackageProperties implements SchemaProperties {
+public class DocumentProperties implements ConfigProperties {
+    private Long id;
+    // 项目id
+    private Long projectId;
     // 包类型（entity,dao,service.....）
     private String type;
     // 自定义子包，如果没有集成basePack
@@ -31,5 +34,7 @@ public class PackageProperties implements SchemaProperties {
     private String bootstrap;
     // 文件扩展名，默认为java ,用户可以自定义
     private String ext = ".java";
+    // 生成该文档的schema
+    private String schemaFile;
 
 }

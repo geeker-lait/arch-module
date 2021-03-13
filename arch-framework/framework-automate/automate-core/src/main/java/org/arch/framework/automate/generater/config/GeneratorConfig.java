@@ -181,7 +181,8 @@ public class GeneratorConfig {
     /**
      * 源，指定是database/excel/json生成项目，默认数据库
      */
-    private String source = "database";
+//    @Deprecated
+//    private String source = "database";
     /**
      * 模版配置
      */
@@ -196,23 +197,30 @@ public class GeneratorConfig {
      * 包集合
      */
     @NestedConfigurationProperty
-    private List<PackageProperties> documents;
-    /**
-     * json 数据源
-     */
+    private List<DocumentProperties> documents;
+//    /**
+//     * json 数据源
+//     */
+//    @Deprecated
+//    @NestedConfigurationProperty
+//    private JsonProperties json;
+//    /**
+//     * Excel数据源 生产项目
+//     */
+//    @Deprecated
+//    @NestedConfigurationProperty
+//    private ExcelProperties excel;
+//    @Deprecated
+//    @NestedConfigurationProperty
+//    private List<ExcelProperties> excels;
+//    /**
+//     * Db数据源 生产项目
+//     */
+//    @Deprecated
+//    @NestedConfigurationProperty
+//    private DatabaseProperties database;
+
     @NestedConfigurationProperty
-    private JsonProperties json;
-    /**
-     * Excel数据源 生产项目
-     */
-    @NestedConfigurationProperty
-    private ExcelProperties excel;
-    @NestedConfigurationProperty
-    private List<ExcelProperties> excels;
-    /**
-     * Db数据源 生产项目
-     */
-    @NestedConfigurationProperty
-    private DatabaseProperties database;
+    private List<SchemaProperties> schemas;
 
 }

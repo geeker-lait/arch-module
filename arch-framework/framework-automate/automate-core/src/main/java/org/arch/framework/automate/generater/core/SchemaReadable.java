@@ -3,6 +3,7 @@ package org.arch.framework.automate.generater.core;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  * @weixin PN15855012581
  * @date 2/26/2021 11:07 AM
  */
-public interface SchemaReadable<S extends SchemaProperties> {
+public interface SchemaReadable<S extends ConfigProperties> {
     /**
      * 获取读取源
      *
@@ -33,5 +34,7 @@ public interface SchemaReadable<S extends SchemaProperties> {
      */
     List<DatabaseProperties> read(S source) throws Exception;
 
-    void read(AbstractGenerator abstractGenerator, GeneratorConfig generatorConfig);
+    void read(AbstractGenerator abstractGenerator, GeneratorConfig generatorConfig) throws IOException;
+
+    void read(AbstractGenerator abstractGenerator);
 }

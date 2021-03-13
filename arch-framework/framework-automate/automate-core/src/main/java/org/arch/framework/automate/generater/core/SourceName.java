@@ -12,6 +12,7 @@ public enum SourceName {
     DATABASE_SOURCE("database"),
     EXCEl_SOURCE("excel"),
     JSON_SOURCE("json"),
+    XMIND_SOURCE("xmind"),
     ;
     @Getter
     private String source;

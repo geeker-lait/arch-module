@@ -1,8 +1,6 @@
 package org.arch.framework.automate.generater.core;
 
 import lombok.Getter;
-import org.arch.framework.automate.generater.reader.ExcelApiSchemaReader;
-import org.arch.framework.automate.generater.reader.ExcelMvcSchemaReader;
 
 /**
  * @author lait.zhang@gmail.com
@@ -12,12 +10,13 @@ import org.arch.framework.automate.generater.reader.ExcelMvcSchemaReader;
  */
 public enum SchemaReader {
 
-    API(ExcelApiSchemaReader.class.getSimpleName()),
-    MVC(ExcelMvcSchemaReader.class.getSimpleName()),
+    API("api"),
+    MVC("mvc"),
     ;
     @Getter
-    private String beanName;
-    SchemaReader(String readerName) {
-        this.beanName = readerName;
+    private String reader;
+
+    SchemaReader(String reader) {
+        this.reader = reader;
     }
 }

@@ -3,11 +3,10 @@ package org.arch.framework.automate.generater.properties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.arch.framework.automate.generater.core.SchemaProperties;
+import org.arch.framework.automate.generater.core.ConfigProperties;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author lait.zhang@gmail.com
@@ -18,7 +17,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @ToString
-public class ExcelProperties implements SchemaProperties {
+public class ExcelProperties implements ConfigProperties {
     // schema类型名称 mvc/api
     private String schemaReader;
     // excel 文件

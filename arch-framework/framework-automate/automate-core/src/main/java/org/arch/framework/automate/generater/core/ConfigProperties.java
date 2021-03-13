@@ -8,7 +8,7 @@ import java.util.Map;
  * @weixin PN15855012581
  * @date 2/26/2021 11:20 AM
  */
-public interface SchemaProperties {
+public interface ConfigProperties {
     default Map<String,Object> toDatamap(){
         //this.
         return null;
