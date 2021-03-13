@@ -6,6 +6,9 @@
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="accountId" column="account_id" jdbcType="INTEGER"/>
         <result property="memberLevelId" column="member_level_id" jdbcType="INTEGER"/>
+        <result property="brokerage" column="brokerage" jdbcType="OTHER"/>
+        <result property="referrerBrokerage" column="referrer_brokerage" jdbcType="OTHER"/>
+        <result property="proposedBrokerage" column="proposed_brokerage" jdbcType="OTHER"/>
         <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
         <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
         <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
@@ -21,7 +24,7 @@
     </sql>
 
     <sql id="baseColumn">
-        `id`, `account_id`, `member_level_id`, `start_time`, `end_time`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
+        `id`, `account_id`, `member_level_id`, `brokerage`, `referrer_brokerage`, `proposed_brokerage`, `start_time`, `end_time`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
     </sql>
 
 </mapper>

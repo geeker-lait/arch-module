@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * 账号-关系(Relationship) request
  *
  * @author YongWu zheng
- * @date 2021-01-29 21:20:39
+ * @date 2021-03-13 13:03:05
  * @since 1.0.0
  */
 @SuppressWarnings("jol")
@@ -32,22 +32,22 @@ public class RelationshipRequest {
     /**
      * 组
      */
-    private Integer org;
+    private Long org;
 
     /**
      * 深度
      */
-    private Integer deep;
+    private Long deep;
 
     /**
-     * 父节点顺序, 没有父节点则为 -1
+     * 父节点顺序, 没有父节点则为 0
      */
-    private Integer pseq;
+    private Long pseq;
 
     /**
      * 顺序
      */
-    private Integer seq;
+    private Long seq;
 
     /**
      * 推荐人ID, 没有推荐人则为 -1

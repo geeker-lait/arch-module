@@ -10,15 +10,17 @@ import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * 账号-会员账号(Member) 实体类
  *
  * @author YongWu zheng
- * @date 2021-01-29 21:11:16
+ * @date 2021-03-13 12:33:29
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -34,7 +36,7 @@ public class Member extends CrudEntity<Member> {
     private Long id;
 
     /**
-     * 会员ID
+     * 会员id
      */
     private Long accountId;
 
@@ -42,6 +44,21 @@ public class Member extends CrudEntity<Member> {
      * 会员级别ID
      */
     private Integer memberLevelId;
+
+    /**
+     * 总佣金
+     */
+    private BigDecimal brokerage;
+
+    /**
+     * 推荐佣金
+     */
+    private BigDecimal referrerBrokerage;
+
+    /**
+     * 被推荐佣金
+     */
+    private BigDecimal proposedBrokerage;
 
     /**
      * 开始时间

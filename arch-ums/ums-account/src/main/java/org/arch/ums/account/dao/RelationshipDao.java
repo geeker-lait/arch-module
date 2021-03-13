@@ -1,8 +1,9 @@
 package org.arch.ums.account.dao;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudDao;
+import org.arch.framework.crud.CrudServiceImpl;
 import org.arch.ums.account.entity.Relationship;
 import org.arch.ums.account.mapper.RelationshipMapper;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Repository;
  * @since 1.0.0
  */
 @Slf4j
+@RequiredArgsConstructor
 @Repository
-public class RelationshipDao extends ServiceImpl<RelationshipMapper, Relationship> implements CrudDao<Relationship> {
-
+public class RelationshipDao extends CrudServiceImpl<RelationshipMapper, Relationship> implements CrudDao<Relationship> {
+    private final RelationshipMapper relationshipMapper;
 }

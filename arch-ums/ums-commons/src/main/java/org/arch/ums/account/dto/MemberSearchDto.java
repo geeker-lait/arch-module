@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -12,9 +13,10 @@ import java.util.Map;
  * 账号-会员账号(Member) search dto
  *
  * @author YongWu zheng
- * @date 2021-01-29 21:12:47
+ * @date 2021-03-13 12:56:16
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
@@ -34,6 +36,21 @@ public class MemberSearchDto implements BaseSearchDto {
      * 会员级别ID
      */
     private Integer memberLevelId;
+
+    /**
+     * 总佣金
+     */
+    private BigDecimal brokerage;
+
+    /**
+     * 推荐佣金
+     */
+    private BigDecimal referrerBrokerage;
+
+    /**
+     * 被推荐佣金
+     */
+    private BigDecimal proposedBrokerage;
 
     /**
      * 开始时间
@@ -77,13 +94,16 @@ public class MemberSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
-        putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
+        putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_account_id", this.getAccountId(), map);
-        putNoNull("EQ_deleted", this.getDeleted(), map);
         putNoNull("EQ_app_id", this.getAppId(), map);
         putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_member_level_id", this.getMemberLevelId(), map);
+        putNoNull("EQ_deleted", this.getDeleted(), map);
+        putNoNull("EQ_brokerage", this.getBrokerage(), map);
+        putNoNull("EQ_referrer_brokerage", this.getReferrerBrokerage(), map);
+        putNoNull("EQ_proposed_brokerage", this.getProposedBrokerage(), map);
         putNoNull("EQ_start_time", this.getStartTime(), map);
         putNoNull("EQ_end_time", this.getEndTime(), map);
         putNoNull("EQ_rev", this.getRev(), map);
