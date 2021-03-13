@@ -107,10 +107,10 @@ spring:
 
     schemas:
       - typ: xmind
-        reader: api
+        patterns: api
         resources: classpath:api.xmind
       - typ: excel
-        reader: mvc
+        patterns: mvc
         resources: classpath:uni-life-ums.xlsx
         configuration: {
           table: "表名/Table",
@@ -125,13 +125,13 @@ spring:
           comment: "备注/Comment"
         }
       - typ: database
-        reader: mvc
+        patterns: mvc
         resources: arch_module
         configuration: {
-          driver: com.mysql.cj.jdbc.Driver
-          url: "jdbc:mysql://localhost:3306?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
-          username: root
-          password: root
+          driver: com.mysql.cj.jdbc.Driver,
+          url: "jdbc:mysql://localhost:3306?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai",
+          username: "root",
+          password: "root"
         }
 
 

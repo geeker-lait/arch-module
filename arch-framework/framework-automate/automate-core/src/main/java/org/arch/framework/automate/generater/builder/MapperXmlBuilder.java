@@ -4,6 +4,7 @@ import cn.hutool.extra.template.TemplateEngine;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.Buildable;
 import org.arch.framework.automate.generater.core.Generable;
+import org.arch.framework.automate.generater.core.SchemaData;
 import org.arch.framework.automate.generater.core.TemplateName;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
@@ -30,6 +31,10 @@ public class MapperXmlBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaData schemaData) {
+
+    }
+
     public void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) throws IOException {
 
         String fileName = buildFileName(documentProperties, "Mapper", true);
@@ -45,10 +50,6 @@ public class MapperXmlBuilder extends AbstractBuilder implements Buildable {
         Files.write(filePath, code.getBytes());
     }
 
-    @Override
-    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaProperties schemaProperties) {
-
-    }
 
 
 }

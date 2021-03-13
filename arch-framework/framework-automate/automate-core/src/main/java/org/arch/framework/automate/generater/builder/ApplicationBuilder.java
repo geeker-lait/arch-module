@@ -3,8 +3,10 @@ package org.arch.framework.automate.generater.builder;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
 import org.arch.framework.automate.generater.core.Buildable;
 import org.arch.framework.automate.generater.core.Generable;
+import org.arch.framework.automate.generater.core.SchemaData;
 import org.arch.framework.automate.generater.core.TemplateName;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
@@ -32,6 +34,10 @@ public class ApplicationBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaData schemaData) {
+
+    }
+
     public void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) throws IOException {
         String basePkg = null == projectProperties.getBasePkg() ? "" : projectProperties.getBasePkg();
         Path fileDir = path.resolve(Generable.MAIN_JAVA.concat(basePkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
@@ -63,8 +69,4 @@ public class ApplicationBuilder extends AbstractBuilder implements Buildable {
         Files.write(filePath, code.getBytes());
     }
 
-    @Override
-    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaProperties schemaProperties) {
-
-    }
 }

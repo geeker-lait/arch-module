@@ -3,6 +3,7 @@ package org.arch.framework.automate.generater.properties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.arch.framework.automate.generater.core.ConfigProperties;
 
 import java.util.Map;
 
@@ -15,16 +16,37 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @ToString
-public class SchemaProperties {
+public class SchemaProperties  implements ConfigProperties {
     // schema(xmind/excel/database/json)
     private String typ;
-    // schema类型名称 mvc/api
-    private String reader;
+    // schema模式 mvc/api/mvc,api
+    private String patterns;
     // 资源 多个用“,”隔开
     private String resources;
     // 资源为excel时做转化/数据源，当typ 为database时链接数据库
     private Map<String, String> configuration;
     // 自定义yml表,可以是mvc/api表
     private TableProperties tables;
+
+
+    public <T extends ConfigProperties> T buildSchemaProperties(){
+        if (typ.equalsIgnoreCase("database")) {
+
+            return null;
+
+        } else if (typ.equalsIgnoreCase("excel")) {
+
+            return null;
+
+        } else if (typ.equalsIgnoreCase("xmind")) {
+
+            return null;
+
+        } else if (typ.equalsIgnoreCase("ddl")) {
+
+            return null;
+        }
+        return null;
+    }
 
 }

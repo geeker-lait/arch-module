@@ -1,14 +1,13 @@
 package org.arch.framework.automate.generater.reader;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.generater.config.GeneratorConfig;
-import org.arch.framework.automate.generater.core.AbstractGenerator;
 import org.arch.framework.automate.generater.core.SchemaReadable;
-import org.arch.framework.automate.generater.core.ConfigProperties;
-import org.arch.framework.automate.generater.core.SourceName;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
+import org.arch.framework.automate.generater.core.SchemaType;
+import org.arch.framework.automate.generater.properties.SchemaProperties;
+import org.arch.framework.automate.generater.properties.XmindProoerties;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -19,27 +18,15 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class XmindSchemaReader extends AbstractSchemaReader implements SchemaReadable {
+public class XmindSchemaReader extends AbstractSchemaReader implements SchemaReadable<XmindProoerties> {
+
     @Override
-    public SourceName getSource() {
-        return SourceName.XMIND_SOURCE;
+    public SchemaType getTyp() {
+        return SchemaType.XMIND;
     }
+
     @Override
-    public String getReaderName() {
-        return this.getClass().getSimpleName();
-    }
-    @Override
-    public List<DatabaseProperties> read(ConfigProperties source) {
+    public List<XmindProoerties> read(SchemaProperties schemaProperties) {
         return null;
-    }
-
-    @Override
-    public void read(AbstractGenerator abstractGenerator, GeneratorConfig generatorConfig) {
-        log.info("xmind reader reading ",generatorConfig.getSchemas().getXminds());
-    }
-
-    @Override
-    public void read(AbstractGenerator abstractGenerator) {
-
     }
 }

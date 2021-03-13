@@ -1,14 +1,15 @@
 package org.arch.framework.automate.generater.reader;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.generater.config.GeneratorConfig;
-import org.arch.framework.automate.generater.core.AbstractGenerator;
+import org.arch.framework.automate.generater.core.SchemaData;
 import org.arch.framework.automate.generater.core.SchemaReadable;
-import org.arch.framework.automate.generater.core.SourceName;
+import org.arch.framework.automate.generater.core.SchemaType;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
+import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,18 +23,8 @@ import java.util.List;
 @Slf4j
 @Service
 public class DatabaseSchemaReader extends AbstractSchemaReader implements SchemaReadable<DatabaseProperties> {
-    @Override
-    public SourceName getSource() {
-        return SourceName.DATABASE_SOURCE;
-    }
 
-    @Override
-    public String getReaderName() {
-        return this.getClass().getSimpleName();
-    }
-
-    @Override
-    public List<DatabaseProperties> read(DatabaseProperties source) {
+    public List<DatabaseProperties> read1(DatabaseProperties source) {
         List<DatabaseProperties> databasePropertiesList = new ArrayList<>();
         Arrays.asList(source.getName().split(",")).forEach(dbname -> {
             // 获取数据库的table
@@ -55,13 +46,14 @@ public class DatabaseSchemaReader extends AbstractSchemaReader implements Schema
 
 
     @Override
-    public void read(AbstractGenerator abstractGenerator, GeneratorConfig generatorConfig) {
-        //read(generatorConfig.getDatabase());
-        //abstractGenerator.buildModule();
+    public SchemaType getTyp() {
+        return SchemaType.DATABASE;
     }
 
     @Override
-    public void read(AbstractGenerator abstractGenerator) {
-
+    public <T extends SchemaData> List<T> read(SchemaProperties schemaProperties) {
+        return null;
     }
+
+
 }

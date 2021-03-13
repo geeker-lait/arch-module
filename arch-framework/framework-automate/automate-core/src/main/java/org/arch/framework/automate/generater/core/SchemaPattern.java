@@ -8,15 +8,15 @@ import lombok.Getter;
  * @weixin PN15855012581
  * @date :
  */
-public enum SchemaReader {
+public enum SchemaPattern {
 
     API("api"),
     MVC("mvc"),
     ;
     @Getter
-    private String reader;
+    private String pattern;
 
-    SchemaReader(String reader) {
-        this.reader = reader;
+    SchemaPattern(String pattern) {
+        this.pattern = pattern;
     }
 }

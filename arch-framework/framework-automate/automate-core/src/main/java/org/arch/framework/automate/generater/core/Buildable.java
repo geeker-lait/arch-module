@@ -32,14 +32,14 @@ public interface Buildable {
      * @param documentProperties 包配置
      * @param databaseProperties 数据库配置
      */
-    void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) throws IOException;
+    //void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) throws IOException;
 
     /**
      * @param path
      * @param engine
      * @param projectProperties
      * @param documentProperties
-     * @param schemaProperties
+     * @param schemaData
      */
-    void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaProperties schemaProperties);
+    void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaData schemaData);
 }

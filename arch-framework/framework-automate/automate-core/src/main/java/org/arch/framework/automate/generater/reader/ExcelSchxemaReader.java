@@ -8,22 +8,14 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.arch.framework.automate.common.utils.ExcelUtils;
-import org.arch.framework.automate.generater.config.GeneratorConfig;
 import org.arch.framework.automate.generater.core.*;
-import org.arch.framework.automate.generater.properties.ColumnsProperties;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
-import org.arch.framework.automate.generater.properties.ExcelProperties;
-import org.arch.framework.automate.generater.properties.TableProperties;
+import org.arch.framework.automate.generater.properties.*;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author lait.zhang@gmail.com
@@ -33,42 +25,39 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaReadable<ExcelProperties> {
+public class ExcelSchxemaReader extends AbstractSchemaReader implements SchemaReadable<ExcelProperties> {
 
     @Override
-    public SourceName getSource() {
-        return SourceName.EXCEl_SOURCE;
-    }
-    @Override
-    public String getReaderName() {
-        return this.getClass().getSimpleName();
-    }
-    @Override
-    public List<DatabaseProperties> read(ExcelProperties source) throws Exception {
-        return readMvc(source.getFile(),source.getHeads());
+    public SchemaType getTyp() {
+        return SchemaType.EXCEL;
     }
 
     @Override
-    public void read(AbstractGenerator abstractGenerator, GeneratorConfig generatorConfig) throws IOException {
-        Path rootPath = generatorConfig.getProject().getProjectRootPath();
-        Files.createDirectories(rootPath);
-        // to do read
-        abstractGenerator.buildModule(rootPath,generatorConfig.getProject().getPom());
+    public <T extends SchemaData> List<T> read(SchemaProperties schemaProperties) {
+        Stream<String> stream = Arrays.stream(schemaProperties.getResources().split(","));
+        /**
+         * excel 文档只能匹配一个,不能同时匹配，即要么api 要么 mvc
+         */
+        if(schemaProperties.getPatterns().equalsIgnoreCase(SchemaPattern.MVC.name())){
+            List<SchemaData>  databaseProperties = new ArrayList<>();
+            stream.forEach(res->{
+                databaseProperties.addAll(readMvc(res,schemaProperties.getConfiguration()));
+            });
+            return (List<T>) databaseProperties;
+
+        } else if(schemaProperties.getPatterns().equalsIgnoreCase(SchemaPattern.API.name())){
+
+        }
+        return null;
     }
 
-    @Override
-    public void read(AbstractGenerator abstractGenerator) {
 
-//        abstractGenerator.buildModule();
-        //doRead();
-    }
-
-    public List<DatabaseProperties> readApi(String excel,Map<String,String> heads) throws Exception{
+    private List<DatabaseProperties> readApi(String excel,Map<String,String> heads){
 
         return null;
     }
 
-    public List<DatabaseProperties> readMvc(String excel,Map<String,String> heads) throws Exception {
+    private List<DatabaseProperties> readMvc(String excel,Map<String,String> heads) {
         Map<String, String> swapHeads = heads.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, e -> e.getKey()));
         List<DatabaseProperties> databasePropertiesList= new ArrayList<>();
         Map<String, String> tableMap = new HashMap<>();
@@ -76,7 +65,12 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
         if(-1 != excel.indexOf("classpath:")){
             excel = new ClassPathResource(excel.split(":")[1]).getAbsolutePath();
         }
-        Workbook workbook = ExcelUtils.initWorkBook(excel);
+        Workbook workbook = null;
+        try {
+            workbook = ExcelUtils.initWorkBook(excel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         for (int i = 0, length = workbook.getNumberOfSheets(); i < length; ++i) {
             // 存放所有table信息
             List<TableProperties> tables = new ArrayList<>();
