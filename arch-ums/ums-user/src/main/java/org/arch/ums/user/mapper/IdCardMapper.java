@@ -1,7 +1,7 @@
 package org.arch.ums.user.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.arch.framework.crud.CrudMapper;
 import org.arch.ums.user.entity.IdCard;
 
 /**
@@ -12,6 +12,6 @@ import org.arch.ums.user.entity.IdCard;
  * @since 1.0.0
  */
 @Mapper
-public interface IdCardMapper extends BaseMapper<IdCard> {
+public interface IdCardMapper extends CrudMapper<IdCard> {
 
 }

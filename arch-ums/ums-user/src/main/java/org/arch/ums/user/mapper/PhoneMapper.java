@@ -1,7 +1,7 @@
 package org.arch.ums.user.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.arch.framework.crud.CrudMapper;
 import org.arch.ums.user.entity.Phone;
 
 /**
@@ -12,6 +12,6 @@ import org.arch.ums.user.entity.Phone;
  * @since 1.0.0
  */
 @Mapper
-public interface PhoneMapper extends BaseMapper<Phone> {
+public interface PhoneMapper extends CrudMapper<Phone> {
 
 }

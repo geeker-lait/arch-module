@@ -1,7 +1,7 @@
 package org.arch.ums.account.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.arch.framework.crud.CrudMapper;
 import org.arch.ums.account.entity.Name;
 
 /**
@@ -12,6 +12,6 @@ import org.arch.ums.account.entity.Name;
  * @since 1.0.0
  */
 @Mapper
-public interface NameMapper extends BaseMapper<Name> {
+public interface NameMapper extends CrudMapper<Name> {
 
 }

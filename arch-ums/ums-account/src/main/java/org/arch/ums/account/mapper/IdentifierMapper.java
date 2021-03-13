@@ -1,10 +1,10 @@
 package org.arch.ums.account.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.arch.framework.crud.CrudMapper;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.entity.Identifier;
 import org.springframework.lang.NonNull;
@@ -20,7 +20,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @Mapper
-public interface IdentifierMapper extends BaseMapper<Identifier> {
+public interface IdentifierMapper extends CrudMapper<Identifier> {
 
     /**
      * 查询 identifiers 是否已经存在.

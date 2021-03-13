@@ -1,8 +1,9 @@
 package org.arch.ums.user.dao;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudDao;
+import org.arch.framework.crud.CrudServiceImpl;
 import org.arch.ums.user.entity.BankCard;
 import org.arch.ums.user.mapper.BankCardMapper;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Repository;
  * @since 1.0.0
  */
 @Slf4j
+@RequiredArgsConstructor
 @Repository
-public class BankCardDao extends ServiceImpl<BankCardMapper, BankCard> implements CrudDao<BankCard> {
-
+public class BankCardDao extends CrudServiceImpl<BankCardMapper, BankCard> implements CrudDao<BankCard> {
+    private final BankCardMapper bankCardMapper;
 }

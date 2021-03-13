@@ -1,8 +1,9 @@
 package org.arch.ums.account.dao;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudDao;
+import org.arch.framework.crud.CrudServiceImpl;
 import org.arch.ums.account.entity.Category;
 import org.arch.ums.account.mapper.CategoryMapper;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Repository;
  * @since 1.0.0
  */
 @Slf4j
+@RequiredArgsConstructor
 @Repository
-public class CategoryDao extends ServiceImpl<CategoryMapper, Category> implements CrudDao<Category> {
-
+public class CategoryDao extends CrudServiceImpl<CategoryMapper, Category> implements CrudDao<Category> {
+    private final CategoryMapper categoryMapper;
 }

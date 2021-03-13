@@ -1,7 +1,7 @@
 package org.arch.ums.account.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.arch.framework.crud.CrudMapper;
 import org.arch.ums.account.entity.RoleGroup;
 
 /**
@@ -12,6 +12,6 @@ import org.arch.ums.account.entity.RoleGroup;
  * @since 1.0.0
  */
 @Mapper
-public interface RoleGroupMapper extends BaseMapper<RoleGroup> {
+public interface RoleGroupMapper extends CrudMapper<RoleGroup> {
 
 }

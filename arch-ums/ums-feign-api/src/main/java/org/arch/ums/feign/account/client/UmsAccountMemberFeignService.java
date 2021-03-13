@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * arch-ums-api {@code MemberService}服务远程调用的 feign 客户端.
  *
  * @author YongWu zheng
- * @date 2021-03-06 15:03:22
+ * @date 2021-03-13 12:33:32
  * @since 1.0.0
  */
 @Component
