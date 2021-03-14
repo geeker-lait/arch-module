@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 /**
  * 账号-关系(Relationship) 表服务层
  *
@@ -78,5 +80,21 @@ public class RelationshipService extends CrudService<Relationship, java.lang.Lon
 
         // 逻辑删除
         return relationshipDao.update(updateWrapper);
+    }
+
+    /**
+     * 保存, 如果 seq 或 org 等于 null, 则通过 sql max(org/seq) + 1 自增
+     * @param relationship  {@link Relationship}
+     * @return 是否保存成功
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
+    public boolean saveMax(@NonNull Relationship relationship) {
+        boolean saveMax = relationshipDao.saveMax(relationship);
+        if (isNull(relationship.getOrg()) || isNull(relationship.getSeq())) {
+            Relationship byId = relationshipDao.getById(relationship.getId());
+            relationship.setOrg(byId.getOrg());
+            relationship.setSeq(byId.getSeq());
+        }
+        return saveMax;
     }
 }

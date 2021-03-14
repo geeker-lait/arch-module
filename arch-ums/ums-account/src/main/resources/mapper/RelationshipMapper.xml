@@ -32,4 +32,48 @@
         `id`, `pid`, `org`, `deep`, `seq`, `pseq`, `vector`, `from_user_id`, `from_user_name`, `from_user_phone`, `to_user_id`, `to_user_name`, `to_user_phone`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
     </sql>
 
+    <sql id="insertBaseColumn">
+        `pid`, `org`, `deep`, `seq`, `pseq`, `vector`, `from_user_id`, `from_user_name`, `from_user_phone`,
+        `to_user_id`, `to_user_name`, `to_user_phone`, `tenant_id`, `app_id`, `store_id`, `deleted`
+    </sql>
+    <insert id="saveMax" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into <include refid="tableName"/>(<include refid="insertBaseColumn"/>)
+        values(
+            #{rs.pid},
+            <choose>
+                <when test="rs.org == null">
+                    (select
+                     case when max(org) is null then 0 else max(org) + 1 end
+                     from <include refid="tableName"/> rso where `tenant_id` = #{rs.tenantId} and pid = -1),
+                </when>
+                <otherwise>
+                    #{rs.org},
+                </otherwise>
+            </choose>
+            #{rs.deep},
+            <choose>
+                <when test="rs.seq == null">
+                    (select
+                     case when max(seq) is null then 1 else max(seq) + 1 end
+                     from <include refid="tableName"/> rsr where `tenant_id` = #{rs.tenantId} and deep = #{rs.deep}),
+                </when>
+                <otherwise>
+                    #{rs.seq},
+                </otherwise>
+            </choose>
+            #{rs.pseq},
+            #{rs.vector},
+            #{rs.fromUserId},
+            #{rs.fromUserName},
+            #{rs.fromUserPhone},
+            #{rs.toUserId},
+            #{rs.toUserName},
+            #{rs.toUserPhone},
+            #{rs.tenantId},
+            #{rs.appId},
+            #{rs.storeId},
+            #{rs.deleted}
+        );
+    </insert>
+
 </mapper>

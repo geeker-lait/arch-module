@@ -13,11 +13,13 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -62,6 +64,26 @@ public class RelationshipController implements CrudController<Relationship, java
     @Override
     public RelationshipSearchDto getSearchDto() {
         return new RelationshipSearchDto();
+    }
+
+
+    /**
+     * 保存, 如果 seq 或 org 等于 null, 则通过 sql max(org/seq) + 1 自增
+     * @param relationship      实体类
+     * @param token             token info
+     * @return  {@link Response}
+     */
+    @Override
+    @PostMapping
+    public Response<Relationship> save(@Valid @RequestBody Relationship relationship, TokenInfo token) {
+        resolver(token, relationship);
+        if (isNull(relationship.getSeq()) || isNull(relationship.getOrg())) {
+            relationshipService.saveMax(relationship);
+        }
+        else {
+            relationshipService.save(relationship);
+        }
+        return Response.success(relationship);
     }
 
     /**
