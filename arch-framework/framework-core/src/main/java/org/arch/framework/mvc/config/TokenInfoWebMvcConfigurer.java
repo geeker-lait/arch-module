@@ -1,4 +1,4 @@
-package org.arch.auth.sdk.config;
+package org.arch.framework.mvc.config;
 
 import org.arch.framework.mvc.resolver.TokenInfoHandlerMethodArgumentResolver;
 import org.arch.framework.ums.bean.TokenInfo;
