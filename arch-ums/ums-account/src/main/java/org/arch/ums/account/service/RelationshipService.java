@@ -18,13 +18,14 @@ import java.util.List;
  * 账号-关系(Relationship) 表服务层
  *
  * @author YongWu zheng
- * @date 2021-02-26 13:28:42
+ * @date 2021-03-14 14:36:56
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class RelationshipService extends CrudService<Relationship, java.lang.Long> {
+
     private final RelationshipDao relationshipDao;
 
     /**
@@ -39,7 +40,7 @@ public class RelationshipService extends CrudService<Relationship, java.lang.Lon
         Relationship entity = new Relationship();
         entity.setId(id);
         entity.setDeleted(Boolean.FALSE);
-        LambdaUpdateWrapper<Relationship> updateWrapper = Wrappers.<Relationship>lambdaUpdate(entity)
+        LambdaUpdateWrapper<Relationship> updateWrapper = Wrappers.lambdaUpdate(entity)
                 .set(Relationship::getDeleted, 1);
         return relationshipDao.update(updateWrapper);
     }
@@ -54,7 +55,7 @@ public class RelationshipService extends CrudService<Relationship, java.lang.Lon
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean deleteById(Relationship entity) {
         entity.setDeleted(Boolean.FALSE);
-        LambdaUpdateWrapper<Relationship> updateWrapper = Wrappers.<Relationship>lambdaUpdate(entity)
+        LambdaUpdateWrapper<Relationship> updateWrapper = Wrappers.lambdaUpdate(entity)
                 .set(Relationship::getDeleted, 1);
         // 逻辑删除
         return relationshipDao.update(updateWrapper);

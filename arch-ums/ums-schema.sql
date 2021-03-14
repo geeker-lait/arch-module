@@ -269,11 +269,12 @@ DROP TABLE IF EXISTS `account_relationship`;
 
 CREATE TABLE `account_relationship` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `pid` bigint(19) NOT NULL DEFAULT '0' COMMENT '父节点ID（数据库自增）, 没有父节点则为 0',
+  `pid` bigint(19) NOT NULL DEFAULT '-1' COMMENT '父节点ID（数据库自增）, 没有父节点则为 -1',
   `org` bigint(19) NOT NULL COMMENT '组',
   `deep` bigint(19) NOT NULL COMMENT '深度',
   `seq` bigint(19) NOT NULL COMMENT '顺序',
-  `pseq` bigint(19) NOT NULL DEFAULT '-1' COMMENT '父节点顺序, 没有父节点则为 -1',
+  `pseq` varchar(64) NULL COMMENT '父节点顺序: 3,4,5,6(对应: deep-4, deep-3, deep-2, deep-1)',
+  `vector` varchar(64) DEFAULT NULL COMMENT 'seq 向量',
   `from_user_id` bigint(19) NOT NULL DEFAULT '-1'  COMMENT '推荐人ID, 没有推荐人则为 -1',
   `from_user_name` varchar(32) NULL COMMENT '推荐人姓名',
   `from_user_phone` varchar(11) NULL COMMENT '推荐人手机',
@@ -287,8 +288,10 @@ CREATE TABLE `account_relationship` (
   `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UNQ_TENANTID_PID_AND_ORG_AND_DEEP_AND_SEQ` (`tenant_id`,`pid`,`org`,`deep`,`seq`),
-  UNIQUE KEY `UNQ_TENANTID_TOUSERID_FROMUSERID` (`tenant_id`,`to_user_id`, `from_user_id`)
+  UNIQUE KEY `UNQ_TENANTID_ORG_AND_DEEP_AND_SEQ` (`tenant_id`,`org`,`deep`,`seq`),
+  UNIQUE KEY `UNQ_TENANTID_TOUSERID_FROMUSERID` (`tenant_id`,`to_user_id`, `from_user_id`),
+  KEY `IDX_TENANTID_AND_PID` (`tenant_id`,`pid`),
+  KEY `IDX_TENANTiD_AND_DEEP` (`tenant_id`,`deep`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='账号-关系';
 
 /*Table structure for table `account_resource` */

@@ -7,8 +7,9 @@
         <result property="pid" column="pid" jdbcType="INTEGER"/>
         <result property="org" column="org" jdbcType="INTEGER"/>
         <result property="deep" column="deep" jdbcType="INTEGER"/>
-        <result property="pseq" column="pseq" jdbcType="INTEGER"/>
         <result property="seq" column="seq" jdbcType="INTEGER"/>
+        <result property="pseq" column="pseq" jdbcType="VARCHAR"/>
+        <result property="vector" column="vector" jdbcType="VARCHAR"/>
         <result property="fromUserId" column="from_user_id" jdbcType="INTEGER"/>
         <result property="fromUserName" column="from_user_name" jdbcType="VARCHAR"/>
         <result property="fromUserPhone" column="from_user_phone" jdbcType="VARCHAR"/>
@@ -28,7 +29,7 @@
     </sql>
 
     <sql id="baseColumn">
-        `id`, `pid`, `org`, `deep`, `pseq`, `seq`, `from_user_id`, `from_user_name`, `from_user_phone`, `to_user_id`, `to_user_name`, `to_user_phone`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
+        `id`, `pid`, `org`, `deep`, `seq`, `pseq`, `vector`, `from_user_id`, `from_user_name`, `from_user_phone`, `to_user_id`, `to_user_name`, `to_user_phone`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
     </sql>
 
 </mapper>
