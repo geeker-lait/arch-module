@@ -32,7 +32,7 @@ public enum JwtArchClaimNames {
      */
     USER_ID("userId", "用户 ID"),
     /**
-     * 用户名
+     * 用户名 对应与 AccountIdentifier 的 identifier 字段
      */
     USERNAME("username", "用户名"),
     /**
