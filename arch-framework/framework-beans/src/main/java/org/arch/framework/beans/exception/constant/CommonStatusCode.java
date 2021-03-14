@@ -28,6 +28,13 @@ public enum CommonStatusCode implements CommonExceptionAssert {
     // retry
     DUPLICATE_KEY(7001, "主键或唯一索引重复"),
 
+    // 推荐码与账号类型
+    EXTRACT_ACCOUNT_TYPE(7990, "提取账号类型失败, aid[%s]"),
+    NOT_USER_OR_ARCH_SOURCE_TYPE(7991, "推荐类型不是 USER 或 ARCH 类型"),
+    EXTRACT_USER_RECOMMEND_CODE_FAILED(7992, "提取 USER 推荐码失败: code[%s]"),
+    QUERY_USER_RECOMMEND_CODE_FAILED(7993, "查询 USER 推荐码失败: code[%s]"),
+    GENERATE_USER_RECOMMEND_CODE_FAILED(7994, "生成用户推荐关系失败: accountId[%s]"),
+    SAVE_USER_RECOMMEND_RELATION_FAILED(7995, "保存用户推荐关系失败: code[%s]"),
 
     // Time
     DATE_NOT_NULL(5001, "日期不能为空"), DATETIME_NOT_NULL(5001, "时间不能为空"), TIME_NOT_NULL(5001, "时间不能为空"),

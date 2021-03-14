@@ -14,7 +14,8 @@ public interface RecommendAndPromotionService {
 
     /**
      * 生成用户推荐码, 只有在用户登录情况下才会生成, 未登录情况下抛出 {@link AuthenticationException}
-     * @return  返回用户推荐码.
+     * // 002_3_48: 00 为 SourceType 业务前缀, 2_3_48 为 rsOrg_rsDeep_rsSeq(rs=Relationship)
+     * @return  返回用户推荐码(002_3_48_44).
      */
     @NonNull
     String generateUserRecommendCode();
@@ -22,10 +23,10 @@ public interface RecommendAndPromotionService {
     /**
      * 根据渠道生成推广码, 用于 {@link SourceType#ARCH} 生成推广码
      * @param sourceType 渠道 {@link SourceType}
-     * @return  返回渠道推广码字符串
+     * @return  返回渠道推广码字符串(PromotionPrefix_UUID)
      */
     @NonNull
-    String generatePromotionCode(@NonNull String sourceType);
+    String generatePromotionCode(@NonNull SourceType sourceType);
 
     /**
      * 加密 推广或用户推荐码

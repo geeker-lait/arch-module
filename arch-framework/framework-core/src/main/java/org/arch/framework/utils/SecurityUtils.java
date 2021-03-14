@@ -1,7 +1,11 @@
 package org.arch.framework.utils;
 
+import org.arch.framework.api.IdKey;
 import org.arch.framework.beans.exception.AuthenticationException;
+import org.arch.framework.beans.exception.BusinessException;
+import org.arch.framework.id.IdService;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.ums.enums.AccountType;
 import org.arch.framework.ums.enums.LoginType;
 import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
 import org.arch.framework.ums.userdetails.ArchUser;
@@ -12,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.EXTRACT_ACCOUNT_TYPE;
 
 /**
  * 获取当前登录的用户
@@ -42,6 +48,7 @@ public class SecurityUtils {
      * 获取系统用户名称
      * @return 系统用户名称
      */
+    @NonNull
     public static String getAccountName() {
         TokenInfo tokenInfo = getCurrentUser();
         return tokenInfo.getAccountName();
@@ -52,9 +59,50 @@ public class SecurityUtils {
      *
      * @return 系统用户ID, 这里的 userId 即 accountId
      */
+    @NonNull
     public static Long getCurrentUserId() {
         TokenInfo tokenInfo = getCurrentUser();
         return tokenInfo.getUserId();
+    }
+
+    /**
+     * 获取当前账号的 {@link AccountType}
+     * @return  {@link AccountType}
+     */
+    @NonNull
+    public static AccountType getAccountType() {
+        Long currentUserId = getCurrentUserId();
+        return extractAccountTypeByAid(currentUserId);
+    }
+
+    /**
+     * 根据 aid(账号id/用户id/会员id/商户id) 提取 {@link AccountType}
+     * @param aid    {@link IdService#generateId(IdKey)} 生成的 账号id/用户id/会员id/商户id
+     * @return  {@link AccountType}
+     */
+    @NonNull
+    public static AccountType extractAccountTypeByAid(@NonNull Long aid) {
+        String id = aid.toString();
+        // 17 = 年  日  日内的秒数 redis原子自增(20 234 86399 0000001)
+        int end = id.length() - 17;
+        if (end < 1) {
+            throw new BusinessException(EXTRACT_ACCOUNT_TYPE, new Object[]{aid}, "提取账号类型失败");
+        }
+        String bizPrefix = id.substring(0, end);
+
+        if (bizPrefix.equals(IdKey.UMS_MEMBER_ID.getBizPrefix())) {
+            return AccountType.MEMBER;
+        }
+        if (bizPrefix.equals(IdKey.UMS_MERCHANT_ID.getBizPrefix())) {
+            return AccountType.MERCHANT;
+        }
+        if (bizPrefix.equals(IdKey.UMS_ACCOUNT_ID.getBizPrefix())) {
+            return AccountType.ACCOUNT;
+        }
+        if (bizPrefix.equals(IdKey.UMS_USER_ID.getBizPrefix())) {
+            return AccountType.USER;
+        }
+        throw new BusinessException(EXTRACT_ACCOUNT_TYPE, new Object[]{aid}, "提取账号类型失败");
     }
 
     /**
