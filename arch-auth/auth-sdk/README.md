@@ -11,18 +11,6 @@
     <groupId>org.arch.projects</groupId>
     <artifactId>auth-sdk</artifactId>
     <version>${project.version}</version>
-    <exclusions>
-        <exclusion>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <groupId>com.nimbusds</groupId>
-        </exclusion>
-    </exclusions>
-</dependency>
-        <!-- 解决兼容性问题 -->
-<dependency>
-<artifactId>nimbus-jose-jwt</artifactId>
-<groupId>com.nimbusds</groupId>
-<scope>compile</scope>
 </dependency>
 ```
 

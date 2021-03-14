@@ -8,69 +8,69 @@ package org.arch.framework.ums.enums;
  */
 public enum SourceType {
     /**
+     * 用户推荐, 存储使用 00 accountId_relationshipId_rsOrg_rsDeep_rsSeq,
+     */
+    USER("00", "_"),
+    /**
      *  百度
      */
-    BAIDU("baidu_", "_"),
+    BAIDU("01", "_"),
     /**
      *  百度小程序
      */
-    BAIDU_MINI("baiduMini_", "_"),
+    BAIDU_MINI("02", "_"),
     /**
      * 抖音
      */
-    DOUYIN("douyin_", "_"),
+    DOUYIN("03", "_"),
     /**
      * 抖音小程序
      */
-    DOUYIN_MINI("douyinMini_", "_"),
+    DOUYIN_MINI("04", "_"),
     /**
      * 头条
      */
-    TOUTIAO("toutiao_", "_"),
+    TOUTIAO("05", "_"),
     /**
      * 头条小程序
      */
-    TOUTIAO_MINI("toutiaoMini_", "_"),
+    TOUTIAO_MINI("06", "_"),
     /**
      * 微信
      */
-    WEIXIN("weixin_", "_"),
+    WEIXIN("07", "_"),
     /**
      * 微信公众号
      */
-    WEIXIN_MP("weixinMp_", "_"),
+    WEIXIN_MP("08", "_"),
     /**
      * 微信小程序
      */
-    WINXIN_MINI("winxinMini_", "_"),
+    WINXIN_MINI("09", "_"),
     /**
      * 微博
      */
-    WEIBO("weibo_", "_"),
+    WEIBO("10", "_"),
     /**
      * 微博小程序
      */
-    WEIBO_MINI("weiboMini_", "_"),
+    WEIBO_MINI("11", "_"),
     /**
      * 快手
      */
-    KUAISHOU("kuaishou_", "_"),
+    KUAISHOU("12", "_"),
     /**
      * 快手小程序
      */
-    KUAISHOU_MINI("kuaishouMini_", "_"),
-    /**
-     * 用户推荐, 存储使用 user_accountId_relationshipId_rsOrg_rsDeep_rsSeq,
-     */
-    USER("user_", "_"),
+    KUAISHOU_MINI("13", "_"),
     /**
      * 财智有道
      */
-    ARCH("arch_", "_"),
+    ARCH("18", "_"),
     /**
      * 其他
      */
-    OTHER("other_", "_");
+    OTHER("20", "_");
 
 
     /**
@@ -79,12 +79,18 @@ public enum SourceType {
     private final String delimiter;
 
     /**
+     * 前缀字符串长度
+     */
+    private final Integer length;
+
+    /**
      * 推广或用户推荐业务前缀
      */
     private final String prefix;
 
     SourceType(String prefix, String delimiter) {
         this.prefix = prefix;
+        this.length = prefix.length();
         this.delimiter = delimiter;
     }
 
@@ -94,5 +100,9 @@ public enum SourceType {
 
     public String getPrefix() {
         return prefix;
+    }
+
+    public Integer getLength() {
+        return length;
     }
 }
