@@ -1,9 +1,7 @@
 package org.arch.framework.automate.generater.core;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;
-import org.arch.framework.automate.generater.properties.ProjectProperties;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,12 +18,13 @@ import java.nio.file.Path;
 public class GradleGenerator extends AbstractGenerator {
 
     @Override
-    public void buildModule(Path path, ProjectProperties projectProperties, PomProperties pomProperties, DatabaseProperties databaseProperties) throws IOException {
-        log.info("gradle is  null implementor");
-    }
-
-    @Override
     public BuildToolsName getBuildTools() {
         return BuildToolsName.GRADLE;
+    }
+
+
+    @Override
+    public void buildModule(Path path, PomProperties pomProperties, SchemaMetadata schemaData) {
+
     }
 }

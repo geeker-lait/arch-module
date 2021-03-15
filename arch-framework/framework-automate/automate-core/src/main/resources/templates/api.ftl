@@ -17,4 +17,5 @@ import ${import};
 public interface ${name!""} {
 
 
+
 }

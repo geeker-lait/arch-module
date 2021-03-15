@@ -8,18 +8,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.arch.framework.automate.common.utils.ExcelUtils;
-import org.arch.framework.automate.generater.config.GeneratorConfig;
+import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.generater.core.*;
-import org.arch.framework.automate.generater.properties.ColumnsProperties;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
-import org.arch.framework.automate.generater.properties.ExcelProperties;
-import org.arch.framework.automate.generater.properties.TableProperties;
+import org.arch.framework.automate.generater.properties.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -30,35 +25,36 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class ExcelMvcSchemaReader extends AbstractSchemaReader implements SchemaReadable<ExcelProperties> {
+public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaReadable {
+
 
     @Override
-    public SourceName getSource() {
-        return SourceName.EXCEl_SOURCE;
-    }
-    @Override
-    public String getReaderName() {
-        return this.getClass().getSimpleName();
-    }
-    @Override
-    public List<DatabaseProperties> read(ExcelProperties source) throws Exception {
-        return doRead(source.getFile(),source.getHeads());
+    public List<SchemaMetadata> read(SchemaProperties schemaProperties) {
+        // 如果有有特殊处理，再次处理，如果没有则调用父类通用处理
+        return super.read(schemaProperties);
     }
 
-    @Override
-    public void read(AbstractGenerator abstractGenerator, GeneratorConfig generatorConfig) {
 
+    protected List<SchemaMetadata> readApi(String res,Map<String,String> heads){
+        List<SchemaMetadata> schemaMetadata = new ArrayList<>();
+
+        return schemaMetadata;
     }
 
-    public List<DatabaseProperties> doRead(String excel,Map<String,String> heads) throws Exception {
+    protected List<SchemaMetadata> readMvc(String res, Map<String,String> heads) {
         Map<String, String> swapHeads = heads.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, e -> e.getKey()));
-        List<DatabaseProperties> databasePropertiesList= new ArrayList<>();
+        List<SchemaMetadata> schemaMetadatas= new ArrayList<>();
         Map<String, String> tableMap = new HashMap<>();
         // 从类路劲加载
-        if(-1 != excel.indexOf("classpath:")){
-            excel = new ClassPathResource(excel.split(":")[1]).getAbsolutePath();
+        if(-1 != res.indexOf("classpath:")){
+            res = new ClassPathResource(res.split(":")[1]).getAbsolutePath();
         }
-        Workbook workbook = ExcelUtils.initWorkBook(excel);
+        Workbook workbook = null;
+        try {
+            workbook = ExcelUtils.initWorkBook(res);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         for (int i = 0, length = workbook.getNumberOfSheets(); i < length; ++i) {
             // 存放所有table信息
             List<TableProperties> tables = new ArrayList<>();
@@ -105,17 +101,17 @@ public class ExcelMvcSchemaReader extends AbstractSchemaReader implements Schema
                 }
                 // 对每一行信息转换为对象
                 if (map.size() > 0) {
-                    MvcSchema mvcSchema = BeanUtil.toBean(map, MvcSchema.class);
-                    /*Class c = JdbcTypeUtils.getFieldType(tableSchema.getType());
+                    Excel2Table excel2Table = BeanUtil.toBean(map, Excel2Table.class);
+                    Class c = JdbcTypeUtils.getFieldType(excel2Table.getType());
                     if(c == null){
-                        log.info("jdbc type convert to java type is error {}",tableSchema);
+                        log.info("jdbc type convert to java type is error {}",excel2Table);
                         continue;
-                    }*/
+                    }
                     ColumnsProperties columnsProperties = new ColumnsProperties();
-                    columnsProperties.setName(mvcSchema.getColumn());
-                    columnsProperties.setComment(mvcSchema.getComment());
-                    columnsProperties.setLength(mvcSchema.getLength());
-                    columnsProperties.setTyp(mvcSchema.getType());
+                    columnsProperties.setName(excel2Table.getColumn());
+                    columnsProperties.setComment(excel2Table.getComment());
+                    columnsProperties.setLength(excel2Table.getLength());
+                    columnsProperties.setTyp(c.getSimpleName());
                     columns.add(columnsProperties);
                 }
             }
@@ -123,8 +119,14 @@ public class ExcelMvcSchemaReader extends AbstractSchemaReader implements Schema
             DatabaseProperties databaseProperties = new DatabaseProperties();
             databaseProperties.setName(dbName);
             databaseProperties.setTables(tables);
-            databasePropertiesList.add(databaseProperties);
+            schemaMetadatas.add(databaseProperties);
         }
-        return databasePropertiesList;
+        return schemaMetadatas;
+    }
+
+
+    @Override
+    public SchemaType getTyp() {
+        return SchemaType.EXCEL;
     }
 }

@@ -3,7 +3,7 @@ package org.arch.framework.automate.generater.properties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.arch.framework.automate.generater.core.SchemaProperties;
+import org.arch.framework.automate.generater.core.ConfigProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @ToString
-public class TableProperties implements SchemaProperties {
+public class TableProperties implements ConfigProperties {
     // 表名
     private String name;
     // 说明

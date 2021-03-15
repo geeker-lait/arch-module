@@ -8,14 +8,15 @@ import lombok.Getter;
  * @weixin PN15855012581
  * @date 2/26/2021 11:27 AM
  */
-public enum SourceName {
+public enum SchemaSource {
     DATABASE_SOURCE("database"),
     EXCEl_SOURCE("excel"),
     JSON_SOURCE("json"),
+    XMIND_SOURCE("xmind"),
     ;
     @Getter
     private String source;
-    SourceName(String source) {
+    SchemaSource(String source) {
         this.source = source;
     }
 }
