@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.arch.framework.automate.generater.core.ConfigProperties;
-import org.arch.framework.automate.generater.core.SchemaData;
+import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.core.SchemaPattern;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -23,7 +23,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @ToString
-public class DatabaseProperties implements ConfigProperties, SchemaData {
+public class DatabaseProperties implements ConfigProperties, SchemaMetadata {
     private String driver;
     private String dialect;
     private String host;
@@ -34,8 +34,4 @@ public class DatabaseProperties implements ConfigProperties, SchemaData {
     @NestedConfigurationProperty
     private List<TableProperties> tables = new ArrayList<>();
 
-    @Override
-    public SchemaPattern getPattern() {
-        return null;
-    }
 }

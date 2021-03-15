@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public final class MvcSchema implements MetadataSchema {
+public final class Excel2Table {
     private Integer row;
     private String table;
     private String column;
@@ -23,4 +23,5 @@ public final class MvcSchema implements MetadataSchema {
     private String unique;
     private String forienKey;
     private String comment;
+
 }

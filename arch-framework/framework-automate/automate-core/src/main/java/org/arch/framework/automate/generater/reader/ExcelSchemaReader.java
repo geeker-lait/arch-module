@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.arch.framework.automate.common.utils.ExcelUtils;
+import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.properties.*;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author lait.zhang@gmail.com
@@ -25,49 +25,33 @@ import java.util.stream.Stream;
  */
 @Slf4j
 @Service
-public class ExcelSchxemaReader extends AbstractSchemaReader implements SchemaReadable<ExcelProperties> {
+public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaReadable {
+
 
     @Override
-    public SchemaType getTyp() {
-        return SchemaType.EXCEL;
-    }
-
-    @Override
-    public <T extends SchemaData> List<T> read(SchemaProperties schemaProperties) {
-        Stream<String> stream = Arrays.stream(schemaProperties.getResources().split(","));
-        /**
-         * excel 文档只能匹配一个,不能同时匹配，即要么api 要么 mvc
-         */
-        if(schemaProperties.getPatterns().equalsIgnoreCase(SchemaPattern.MVC.name())){
-            List<SchemaData>  databaseProperties = new ArrayList<>();
-            stream.forEach(res->{
-                databaseProperties.addAll(readMvc(res,schemaProperties.getConfiguration()));
-            });
-            return (List<T>) databaseProperties;
-
-        } else if(schemaProperties.getPatterns().equalsIgnoreCase(SchemaPattern.API.name())){
-
-        }
-        return null;
+    public List<SchemaMetadata> read(SchemaProperties schemaProperties) {
+        // 如果有有特殊处理，再次处理，如果没有则调用父类通用处理
+        return super.read(schemaProperties);
     }
 
 
-    private List<DatabaseProperties> readApi(String excel,Map<String,String> heads){
+    protected List<SchemaMetadata> readApi(String res,Map<String,String> heads){
+        List<SchemaMetadata> schemaMetadata = new ArrayList<>();
 
-        return null;
+        return schemaMetadata;
     }
 
-    private List<DatabaseProperties> readMvc(String excel,Map<String,String> heads) {
+    protected List<SchemaMetadata> readMvc(String res, Map<String,String> heads) {
         Map<String, String> swapHeads = heads.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, e -> e.getKey()));
-        List<DatabaseProperties> databasePropertiesList= new ArrayList<>();
+        List<SchemaMetadata> schemaMetadatas= new ArrayList<>();
         Map<String, String> tableMap = new HashMap<>();
         // 从类路劲加载
-        if(-1 != excel.indexOf("classpath:")){
-            excel = new ClassPathResource(excel.split(":")[1]).getAbsolutePath();
+        if(-1 != res.indexOf("classpath:")){
+            res = new ClassPathResource(res.split(":")[1]).getAbsolutePath();
         }
         Workbook workbook = null;
         try {
-            workbook = ExcelUtils.initWorkBook(excel);
+            workbook = ExcelUtils.initWorkBook(res);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,17 +101,17 @@ public class ExcelSchxemaReader extends AbstractSchemaReader implements SchemaRe
                 }
                 // 对每一行信息转换为对象
                 if (map.size() > 0) {
-                    MvcSchema mvcSchema = BeanUtil.toBean(map, MvcSchema.class);
-                    /*Class c = JdbcTypeUtils.getFieldType(tableSchema.getType());
+                    Excel2Table excel2Table = BeanUtil.toBean(map, Excel2Table.class);
+                    Class c = JdbcTypeUtils.getFieldType(excel2Table.getType());
                     if(c == null){
-                        log.info("jdbc type convert to java type is error {}",tableSchema);
+                        log.info("jdbc type convert to java type is error {}",excel2Table);
                         continue;
-                    }*/
+                    }
                     ColumnsProperties columnsProperties = new ColumnsProperties();
-                    columnsProperties.setName(mvcSchema.getColumn());
-                    columnsProperties.setComment(mvcSchema.getComment());
-                    columnsProperties.setLength(mvcSchema.getLength());
-                    columnsProperties.setTyp(mvcSchema.getType());
+                    columnsProperties.setName(excel2Table.getColumn());
+                    columnsProperties.setComment(excel2Table.getComment());
+                    columnsProperties.setLength(excel2Table.getLength());
+                    columnsProperties.setTyp(c.getSimpleName());
                     columns.add(columnsProperties);
                 }
             }
@@ -135,8 +119,14 @@ public class ExcelSchxemaReader extends AbstractSchemaReader implements SchemaRe
             DatabaseProperties databaseProperties = new DatabaseProperties();
             databaseProperties.setName(dbName);
             databaseProperties.setTables(tables);
-            databasePropertiesList.add(databaseProperties);
+            schemaMetadatas.add(databaseProperties);
         }
-        return databasePropertiesList;
+        return schemaMetadatas;
+    }
+
+
+    @Override
+    public SchemaType getTyp() {
+        return SchemaType.EXCEL;
     }
 }

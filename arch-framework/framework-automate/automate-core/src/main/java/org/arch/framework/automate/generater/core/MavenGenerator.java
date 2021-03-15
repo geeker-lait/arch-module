@@ -30,13 +30,16 @@ import java.util.Optional;
 @Service
 public class MavenGenerator extends AbstractGenerator {
 
-
     @Override
-    public void buildModule(Path path, PomProperties pomProperties, SchemaData schemaData) {
-        build(path, pomProperties, schemaData);
+    public void buildModule(Path path, PomProperties pomProperties, SchemaMetadata schemaData)  {
+        try {
+            doBuild(path,pomProperties,schemaData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void build(Path path, PomProperties pomProperties, SchemaData schemaData) {
+    private void doBuild(Path path, PomProperties pomProperties, SchemaMetadata schemaData) throws Exception {
         List<PomProperties> modules = pomProperties.getModules();
         if (modules != null) {
             for (PomProperties module : modules) {
@@ -60,14 +63,11 @@ public class MavenGenerator extends AbstractGenerator {
                 buildModule(subPath, module, schemaData);
             }
         } else {
-            try {
-                // 创建模块src目录,可不创建最后一起创建，这里为了标准化目录创建一下
-                for (String dir : srcDirectorys) {
-                    Files.createDirectories(path.resolve(dir));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            // 创建模块src目录,可不创建最后一起创建，这里为了标准化目录创建一下
+            for (String dir : srcDirectorys) {
+                Files.createDirectories(path.resolve(dir));
             }
+
         }
         pomProperties.setPackaging("jar");
         if (!StringUtils.isEmpty(pomProperties.getDocumentTypes())) {
@@ -140,6 +140,7 @@ public class MavenGenerator extends AbstractGenerator {
     public BuildToolsName getBuildTools() {
         return BuildToolsName.MAVEN;
     }
+
 
 
 }

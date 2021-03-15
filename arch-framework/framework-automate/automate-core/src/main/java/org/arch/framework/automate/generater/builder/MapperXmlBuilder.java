@@ -4,7 +4,8 @@ import cn.hutool.extra.template.TemplateEngine;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.Buildable;
 import org.arch.framework.automate.generater.core.Generable;
-import org.arch.framework.automate.generater.core.SchemaData;
+
+import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.core.TemplateName;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
@@ -31,11 +32,15 @@ public class MapperXmlBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaData schemaData) {
-
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
+        try {
+            doBuild(path, engine, projectProperties, documentProperties, (DatabaseProperties) schemaData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) throws IOException {
+    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) throws IOException {
 
         String fileName = buildFileName(documentProperties, "Mapper", true);
         String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();

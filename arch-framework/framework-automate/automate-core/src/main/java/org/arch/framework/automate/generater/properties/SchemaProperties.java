@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.arch.framework.automate.generater.core.ConfigProperties;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,7 +25,7 @@ public class SchemaProperties  implements ConfigProperties {
     // 资源 多个用“,”隔开
     private String resources;
     // 资源为excel时做转化/数据源，当typ 为database时链接数据库
-    private Map<String, String> configuration;
+    private Map<String, String> configuration = new HashMap<>();
     // 自定义yml表,可以是mvc/api表
     private TableProperties tables;
 

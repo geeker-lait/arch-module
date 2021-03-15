@@ -11,7 +11,7 @@ import java.util.List;
  * @weixin PN15855012581
  * @date 2/26/2021 11:07 AM
  */
-public interface SchemaReadable<S extends ConfigProperties> {
+public interface SchemaReadable {
 
     SchemaType getTyp();
 
@@ -21,6 +21,6 @@ public interface SchemaReadable<S extends ConfigProperties> {
      * @param schemaProperties
      * @throws IOException
      */
-    <T extends SchemaData> List<T> read(SchemaProperties schemaProperties);
+    List<SchemaMetadata> read(SchemaProperties schemaProperties);
 
 }

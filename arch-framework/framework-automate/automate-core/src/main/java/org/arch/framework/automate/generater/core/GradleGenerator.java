@@ -24,7 +24,7 @@ public class GradleGenerator extends AbstractGenerator {
 
 
     @Override
-    public void buildModule(Path path, PomProperties pomProperties, SchemaData schemaData)  {
+    public void buildModule(Path path, PomProperties pomProperties, SchemaMetadata schemaData) {
 
     }
 }

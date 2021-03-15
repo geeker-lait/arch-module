@@ -1,7 +1,10 @@
 package org.arch.framework.automate.generater.reader;
 
+import cn.hutool.core.bean.BeanUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.generater.core.SchemaData;
+import org.arch.framework.automate.from.service.DatabaseService;
+import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.core.SchemaReadable;
 import org.arch.framework.automate.generater.core.SchemaType;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
@@ -9,10 +12,9 @@ import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lait.zhang@gmail.com
@@ -22,27 +24,38 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class DatabaseSchemaReader extends AbstractSchemaReader implements SchemaReadable<DatabaseProperties> {
+@RequiredArgsConstructor
+public class DatabaseSchemaReader extends AbstractSchemaReader implements SchemaReadable {
 
-    public List<DatabaseProperties> read1(DatabaseProperties source) {
-        List<DatabaseProperties> databasePropertiesList = new ArrayList<>();
-        Arrays.asList(source.getName().split(",")).forEach(dbname -> {
-            // 获取数据库的table
-            List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(source, dbname);
-            if (null == tableProperties) {
-                tableProperties = new ArrayList<>();
-            }
-            if (null == source.getTables()) {
-                source.setTables(tableProperties);
-            }
-            // 追加自定义的table
-            tableProperties.addAll(source.getTables());
-            DatabaseProperties databaseProperties = new DatabaseProperties();
-            databaseProperties.setTables(tableProperties);
-            databasePropertiesList.add(databaseProperties);
-        });
-        return databasePropertiesList;
+    private final DatabaseService databaseService;
+
+    @Override
+    public List<SchemaMetadata> read(SchemaProperties schemaProperties) {
+        return super.read(schemaProperties);
     }
+
+    @Override
+    protected List<SchemaMetadata> readMvc(String res, Map<String, String> configuration) {
+        List<SchemaMetadata> schemaMetadata = new ArrayList<>();
+        DatabaseProperties databaseProperties  = BeanUtil.toBean(configuration,DatabaseProperties.class);
+        // 获取数据库的table
+        List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(databaseProperties, res);
+        if (null == tableProperties) {
+            tableProperties = new ArrayList<>();
+        }
+        databaseProperties.setName(res);
+        databaseProperties.setTables(tableProperties);
+        schemaMetadata.add(databaseProperties);
+        return schemaMetadata;
+    }
+
+    @Override
+    protected List<SchemaMetadata> readApi(String res, Map<String, String> configuration) {
+        List<SchemaMetadata> schemaMetadata = new ArrayList<>();
+
+        return schemaMetadata;
+    }
+
 
 
     @Override
@@ -50,10 +63,6 @@ public class DatabaseSchemaReader extends AbstractSchemaReader implements Schema
         return SchemaType.DATABASE;
     }
 
-    @Override
-    public <T extends SchemaData> List<T> read(SchemaProperties schemaProperties) {
-        return null;
-    }
 
 
 }

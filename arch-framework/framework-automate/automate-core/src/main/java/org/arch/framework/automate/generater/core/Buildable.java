@@ -1,10 +1,8 @@
 package org.arch.framework.automate.generater.core;
 
 import cn.hutool.extra.template.TemplateEngine;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
-import org.arch.framework.automate.generater.properties.SchemaProperties;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -41,5 +39,5 @@ public interface Buildable {
      * @param documentProperties
      * @param schemaData
      */
-    void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaData schemaData);
+    void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData);
 }

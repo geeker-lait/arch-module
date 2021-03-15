@@ -5,14 +5,10 @@ import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.formula.functions.T;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
 import org.arch.framework.automate.generater.properties.*;
 import org.arch.framework.beans.utils.StringUtils;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,13 +37,10 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
 
     protected TemplateEngine engine;
     protected ProjectProperties projectProperties;
-    //protected List<SchemaProperties> schemaProperties;
-    protected Boolean cover;
-    protected boolean pomBuildOnce = true;
     protected String buildTool;
     protected List<String> schemaTyps;
-    //protected String source;
-
+    protected Boolean cover;
+    protected boolean pomBuildOnce = true;
 
     @Autowired
     private List<Buildable> builders;
@@ -73,11 +66,7 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
 
         cover = generatorConfig.getProject().getCover();
         buildTool = generatorConfig.getBuildTool();
-        //source = generatorConfig.getSource();
-
         projectProperties = generatorConfig.getProject();
-        //schemaProperties = generatorConfig.getSchemas();
-
         schemaTyps = Arrays.stream(SchemaType.values()).map(v -> v.name()).collect(Collectors.toList());
     }
 
@@ -98,9 +87,9 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
         // 创建根目录
         Path rootPath = projectProperties.getProjectRootPath();
         Files.createDirectories(rootPath);
-        // 根据schema创建
+        // 根据schema创建项目
         generatorConfig.getSchemas().forEach(s -> {
-            List<SchemaData> schemaDatas = readerMap.get(s.getTyp()).read(s);
+            List<SchemaMetadata> schemaDatas = readerMap.get(s.getTyp()).read(s);
             if(schemaDatas != null) {
                 schemaDatas.forEach(d -> {
                     // 创建项目模块
@@ -113,6 +102,6 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
     }
 
 
-    public abstract  void buildModule(Path path, PomProperties pomProperties, SchemaData schemaData);
+    public abstract  void buildModule(Path path, PomProperties pomProperties, SchemaMetadata schemaData);
 
 }
