@@ -3,12 +3,16 @@ package org.arch.framework.automate.generater.builder;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
 import org.arch.framework.automate.generater.core.Buildable;
 import org.arch.framework.automate.generater.core.Generable;
+
+import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.core.TemplateName;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
-import org.arch.framework.automate.generater.properties.PackageProperties;
+import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
+import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +35,21 @@ public class ApplicationBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public void build(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PackageProperties packageProperties, DatabaseProperties databaseProperties) throws IOException {
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
+        try {
+            doBuild(path, engine, projectProperties, documentProperties, (DatabaseProperties) schemaData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) throws IOException {
         String basePkg = null == projectProperties.getBasePkg() ? "" : projectProperties.getBasePkg();
         Path fileDir = path.resolve(Generable.MAIN_JAVA.concat(basePkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
         Files.createDirectories(fileDir);
-        String suffix = StringUtils.isEmpty(packageProperties.getSuffix()) ? "" : packageProperties.getSuffix();
-        String ext = StringUtils.isEmpty(packageProperties.getExt()) ? "" : packageProperties.getExt();
-        String bootstrap = packageProperties.getBootstrap();
+        String suffix = StringUtils.isEmpty(documentProperties.getSuffix()) ? "" : documentProperties.getSuffix();
+        String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
+        String bootstrap = documentProperties.getBootstrap();
         String fileName = StringUtils.isEmpty(bootstrap) ? "Application" : bootstrap + suffix;
         Path filePath = Paths.get(fileDir.toString().concat(File.separator).concat(fileName).concat(ext));
         // 写入文件
@@ -53,12 +65,13 @@ public class ApplicationBuilder extends AbstractBuilder implements Buildable {
         Files.createFile(filePath);
         // 渲染模板
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.putAll(JSONUtil.parseObj(packageProperties));
+        dataMap.putAll(JSONUtil.parseObj(documentProperties));
         dataMap.put("package", buildPkg(filePath));
         dataMap.put("mainClass", fileName);
         // 获取模板并渲染
-        String code = templateEngine.getTemplate(packageProperties.getTemplate()).render(dataMap);
+        String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
         // 写入文件
         Files.write(filePath, code.getBytes());
     }
+
 }

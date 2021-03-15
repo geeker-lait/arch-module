@@ -79,17 +79,29 @@ public class Assert {
     }
 
     public static void isNull(StatusCode statusCode, Object... conditions) {
-        if (ObjectUtil.isNotNull(conditions)) {
-            fail(statusCode);
-        }
-    }
-
-    public static void notNull(StatusCode statusCode, Object... conditions) {
         if (ObjectUtil.isNull(conditions)) {
             fail(statusCode);
         }
     }
 
+    public static void notNull(StatusCode statusCode, Object... conditions) {
+        if (ObjectUtil.isNotNull(conditions)) {
+            fail(statusCode);
+        }
+    }
+
+
+    public static void isEmpty(StatusCode statusCode, Object... conditions) {
+        if (ObjectUtil.isEmpty(conditions)) {
+            fail(statusCode);
+        }
+    }
+
+    public static void isNotEmpty(StatusCode statusCode, Object... conditions) {
+        if (ObjectUtil.isNotEmpty(conditions)) {
+            fail(statusCode);
+        }
+    }
     /**
      * 失败结果
      *
