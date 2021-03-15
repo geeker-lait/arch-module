@@ -9,8 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ums-config</artifactId>
-    <name>ums-config</name>
+    <artifactId>ums-conf</artifactId>
+    <description>系统配置信息</description>
+    <name>ums-conf</name>
 
     <dependencies>
         <dependency>

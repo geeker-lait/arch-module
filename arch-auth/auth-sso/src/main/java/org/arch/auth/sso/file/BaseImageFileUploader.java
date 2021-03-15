@@ -10,7 +10,7 @@ import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.conf.entity.FileInfo;
-import org.arch.ums.feign.conf.client.UmsConfFileInfoFeignService;
+import org.arch.ums.feign.conf.client.ConfFileInfoFeignService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -38,16 +38,16 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
 
     public static final Logger log = LoggerFactory.getLogger(BaseImageFileUploader.class);
 
-    protected final UmsConfFileInfoFeignService umsConfFileInfoFeignService;
+    protected final ConfFileInfoFeignService confFileInfoFeignService;
     protected final TenantContextHolder tenantContextHolder;
     protected final ImageClient imageClient;
     protected ApplicationContext applicationContext;
 
-    protected BaseImageFileUploader(UmsConfFileInfoFeignService umsConfFileInfoFeignService,
+    protected BaseImageFileUploader(ConfFileInfoFeignService confFileInfoFeignService,
                                     TenantContextHolder tenantContextHolder,
                                     ImageClient imageClient,
                                     FileProperties fileProperties) {
-        this.umsConfFileInfoFeignService = umsConfFileInfoFeignService;
+        this.confFileInfoFeignService = confFileInfoFeignService;
         this.tenantContextHolder = tenantContextHolder;
         this.imageClient = new ImageClientAdapter(fileProperties, imageClient);
     }
@@ -115,7 +115,7 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
             fileInfo.setDeleted(Boolean.FALSE);
             FileInfo successData;
             try {
-                Response<FileInfo> response = this.umsConfFileInfoFeignService.save(fileInfo);
+                Response<FileInfo> response = this.confFileInfoFeignService.save(fileInfo);
                 successData = response.getSuccessData();
                 if (isNull(successData)) {
                     if (DUPLICATE_KEY.getCode() == response.getCode()) {
@@ -125,8 +125,8 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
                         String traceId = getTraceId();
                         log.warn("保持对象存储信息到数据库失败, 发布重试事件, traceId={}", traceId);
                         publishRetryEvent(this.applicationContext, traceId,
-                                          this.umsConfFileInfoFeignService,
-                                          UmsConfFileInfoFeignService.class,
+                                          this.confFileInfoFeignService,
+                                          ConfFileInfoFeignService.class,
                                           "save",
                                           new Class[] {FileInfo.class},
                                           fileInfo);
@@ -140,8 +140,8 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
                 String traceId = getTraceId();
                 log.warn("保持对象存储信息到数据库失败, 发布重试事件, traceId={}", traceId);
                 publishRetryEvent(this.applicationContext, getTraceId(),
-                                  this.umsConfFileInfoFeignService,
-                                  UmsConfFileInfoFeignService.class,
+                                  this.confFileInfoFeignService,
+                                  ConfFileInfoFeignService.class,
                                   "save",
                                   new Class[] {FileInfo.class},
                                   fileInfo);
@@ -164,15 +164,15 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
             FileInfo successData;
             try {
                 // 这里不关心对象存储信息是否删除成功, 因为不影响业务逻辑, 对象存储信息的一致性可通过定时任务进行补偿
-                Response<FileInfo> response = this.umsConfFileInfoFeignService.deleteByFilePathAndUploadType(filePath,
-                                                                                                             uploadType);
+                Response<FileInfo> response = this.confFileInfoFeignService.deleteByFilePathAndUploadType(filePath,
+                                                                                                          uploadType);
                 successData = response.getSuccessData();
                 if (isNull(successData)) {
                     String traceId = getTraceId();
                     log.warn("删除对象存储文件的数据库记录失败, 发布重试事件, traceId={}", traceId);
                     publishRetryEvent(this.applicationContext, traceId,
-                                      this.umsConfFileInfoFeignService,
-                                      UmsConfFileInfoFeignService.class,
+                                      this.confFileInfoFeignService,
+                                      ConfFileInfoFeignService.class,
                                       "deleteByFilePathAndUploadType",
                                       new Class[] {String.class, String.class},
                                       filePath, uploadType);
@@ -183,8 +183,8 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
                 log.error(e.getMessage(), e);
                 log.warn("删除对象存储文件的数据库记录失败, 发布重试事件, traceId={}", traceId);
                 publishRetryEvent(this.applicationContext, traceId,
-                                  this.umsConfFileInfoFeignService,
-                                  UmsConfFileInfoFeignService.class,
+                                  this.confFileInfoFeignService,
+                                  ConfFileInfoFeignService.class,
                                   "deleteByFilePathAndUploadType",
                                   new Class[] {String.class, String.class},
                                   filePath, uploadType);

@@ -19,7 +19,7 @@
         <module>ums-member</module>
         <module>ums-merchant</module>
         <module>ums-user</module>
-        <module>ums-config</module>
+        <module>ums-conf</module>
     </modules>
 
 

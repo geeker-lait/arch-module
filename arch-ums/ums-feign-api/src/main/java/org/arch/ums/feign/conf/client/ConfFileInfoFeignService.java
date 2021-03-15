@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * arch-ums-api {@code FileInfoService}服务远程调用的 feign 客户端.
+ * arch-conf-api {@code FileInfoService}服务远程调用的 feign 客户端.
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.2.27 16:51
  */
 @Component
-@FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-fileInfo", path = "/ums/conf/file/info",
+@FeignClient(name = "arch-conf-api", contextId = "arch-conf-api-fileInfo", path = "/ums/conf/file/info",
         configuration = UmsDeFaultFeignConfig.class)
-public interface UmsConfFileInfoFeignService extends BaseFeignService<FileInfo, Long> {
+public interface ConfFileInfoFeignService extends BaseFeignService<FileInfo, Long> {
 
     /**
      * 根据 filePath 与 uploadType 删除 文件信息
