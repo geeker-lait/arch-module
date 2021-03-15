@@ -19,5 +19,17 @@ public enum Role {
      * 用户角色
      */
     USER,
+    /**
+     * 会员角色
+     */
+    MEMBER,
+    /**
+     * 商户角色
+     */
+    MERCHANT,
+    /**
+     * 员工角色
+     */
+    STAFF,
 
 }

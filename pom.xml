@@ -186,7 +186,7 @@
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>ums-config</artifactId>
+                <artifactId>ums-conf</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
