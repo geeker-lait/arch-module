@@ -2,9 +2,9 @@ package org.arch.ums.conf.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.ums.conf.dto.ConfMobileInfoSearchDto;
-import org.arch.ums.conf.entity.ConfMobileInfo;
-import org.arch.ums.conf.service.ConfMobileInfoService;
+import org.arch.ums.conf.dto.MobileInfoSearchDto;
+import org.arch.ums.conf.entity.MobileInfo;
+import org.arch.ums.conf.service.MobileInfoService;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.beans.Response;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -26,7 +25,7 @@ import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
 /**
- * 手机号归属地信息(ConfMobileInfo) 表服务控制器
+ * 手机号归属地信息(MobileInfo) 表服务控制器
  *
  * @author YongWu zheng
  * @date 2021-03-15 21:48:57
@@ -36,34 +35,34 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/conf/mobile/info")
-public class ConfMobileInfoController implements CrudController<ConfMobileInfo, java.lang.Long, ConfMobileInfoSearchDto, ConfMobileInfoService> {
+public class MobileInfoController implements CrudController<MobileInfo, java.lang.Long, MobileInfoSearchDto, MobileInfoService> {
 
     private final TenantContextHolder tenantContextHolder;
-    private final ConfMobileInfoService confMobileInfoService;
+    private final MobileInfoService mobileInfoService;
 
     @Override
-    public ConfMobileInfo resolver(TokenInfo token, ConfMobileInfo confMobileInfo) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 confMobileInfo 后返回 confMobileInfo, 如: tenantId 的处理等.
-        if (isNull(confMobileInfo)) {
-            confMobileInfo = new ConfMobileInfo();
+    public MobileInfo resolver(TokenInfo token, MobileInfo mobileInfo) {
+        // TODO 默认实现不处理, 根据 TokenInfo 处理 mobileInfo 后返回 mobileInfo, 如: tenantId 的处理等.
+        if (isNull(mobileInfo)) {
+            mobileInfo = new MobileInfo();
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
-            confMobileInfo.setTenantId(token.getTenantId());
+            mobileInfo.setTenantId(token.getTenantId());
         }
         else {
-            confMobileInfo.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+            mobileInfo.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
-        return confMobileInfo;
+        return mobileInfo;
     }
 
     @Override
-    public ConfMobileInfoService getCrudService() {
-        return confMobileInfoService;
+    public MobileInfoService getCrudService() {
+        return mobileInfoService;
     }
 
     @Override
-    public ConfMobileInfoSearchDto getSearchDto() {
-        return new ConfMobileInfoSearchDto();
+    public MobileInfoSearchDto getSearchDto() {
+        return new MobileInfoSearchDto();
     }
 
     /**
@@ -77,11 +76,11 @@ public class ConfMobileInfoController implements CrudController<ConfMobileInfo, 
     @Override
     @NonNull
     @GetMapping("/single")
-    public Response<ConfMobileInfo> findOne(@RequestBody ConfMobileInfo entity, TokenInfo token) {
+    public Response<MobileInfo> findOne(@RequestBody MobileInfo entity, TokenInfo token) {
         try {
             resolver(token, entity);
-            ConfMobileInfoSearchDto searchDto = convertSearchDto(entity);
-            ConfMobileInfo t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            MobileInfoSearchDto searchDto = convertSearchDto(entity);
+            MobileInfo t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
             return Response.success(t);
         }
         catch (Exception e) {
@@ -106,9 +105,9 @@ public class ConfMobileInfoController implements CrudController<ConfMobileInfo, 
     @Override
     @NonNull
     @GetMapping("/find")
-    public Response<List<ConfMobileInfo>> find(@RequestBody ConfMobileInfo t, TokenInfo token) {
+    public Response<List<MobileInfo>> find(@RequestBody MobileInfo t, TokenInfo token) {
         resolver(token, t);
-        ConfMobileInfoSearchDto searchDto = convertSearchDto(t);
+        MobileInfoSearchDto searchDto = convertSearchDto(t);
         try {
             return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
         }
@@ -131,12 +130,12 @@ public class ConfMobileInfoController implements CrudController<ConfMobileInfo, 
     @Override
     @NonNull
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    public Response<IPage<ConfMobileInfo>> page(@RequestBody ConfMobileInfo entity,
-                                                @PathVariable(value = "pageNumber") Integer pageNumber,
-                                                @PathVariable(value = "pageSize") Integer pageSize,
-                                                TokenInfo token) {
+    public Response<IPage<MobileInfo>> page(@RequestBody MobileInfo entity,
+                                            @PathVariable(value = "pageNumber") Integer pageNumber,
+                                            @PathVariable(value = "pageSize") Integer pageSize,
+                                            TokenInfo token) {
         resolver(token, entity);
-        ConfMobileInfoSearchDto searchDto = convertSearchDto(entity);
+        MobileInfoSearchDto searchDto = convertSearchDto(entity);
         try {
             return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
         }

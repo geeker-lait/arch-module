@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.conf.mapper.MobileSegmentMapper">
+
+    <resultMap type="org.arch.ums.conf.entity.MobileSegment" id="MobileSegmentMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="prefix" column="prefix" jdbcType="INTEGER"/>
+        <result property="mno" column="mno" jdbcType="VARCHAR"/>
+        <result property="virtual" column="virtual" jdbcType="BOOLEAN"/>
+        <result property="rev" column="rev" jdbcType="INTEGER"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <sql id="tableName">
+        `conf_mobile_segment`
+    </sql>
+
+    <sql id="baseColumn">
+        `id`, `prefix`, `mno`, `virtual`, `rev`, `dt`, `deleted`
+    </sql>
+
+</mapper>

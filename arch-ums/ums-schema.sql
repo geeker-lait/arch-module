@@ -467,7 +467,7 @@ CREATE TABLE `user_address` (
   `address_type` int(1) DEFAULT NULL COMMENT '地址类型:工作地址/家庭地址/收获地址/..',
   `sorted` int(2) NOT NULL COMMENT '顺序',
   `contacts` varchar(32) DEFAULT NULL COMMENT '联系人',
-  `phone_num` varchar(11) DEFAULT NULL COMMENT '手机号',
+  `phone_num` varchar(13) DEFAULT NULL COMMENT '手机号',
   `tenant_id` int NOT NULL COMMENT '租户 id',
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
   `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
@@ -582,9 +582,11 @@ DROP TABLE IF EXISTS `user_phone`;
 CREATE TABLE `user_phone` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '用户电话信息表ID',
   `user_id` bigint(19) NOT NULL COMMENT '用户ID',
-  `phone_no` varchar(11) DEFAULT NULL COMMENT '手机号',
-  `location` varchar(12) DEFAULT NULL COMMENT '号码归属地',
+  `phone_no` varchar(13) DEFAULT NULL COMMENT '手机号',
+  `province` varchar(45) DEFAULT NULL COMMENT '省份',
+  `city` varchar(12) DEFAULT NULL COMMENT '城市',
   `mno` varchar(12) DEFAULT NULL COMMENT '运营商: 移动/电信/联通/电话..',
+  `area_code` int(45) DEFAULT NULL COMMENT '行政区划编码',
   `sorted` int(2) DEFAULT NULL COMMENT '顺序',
   `tenant_id` int NOT NULL COMMENT '租户 id',
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
@@ -593,7 +595,8 @@ CREATE TABLE `user_phone` (
   `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
+  KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`),
+  KEY `IDX_TENANT_ID_AND_PHONE_NO` (`tenant_id`, `phone_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户电话信息';
 
 /*Table structure for table `user_relatives` */
@@ -618,14 +621,14 @@ CREATE TABLE `user_relatives` (
   KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户亲朋信息';
 
-/*===================== config ==========================*/
+/*===================== conf ==========================*/
 
-/*Table structure for table `config_file_info` */
+/*Table structure for table `conf_file_info` */
 
 DROP TABLE IF EXISTS `conf_file_info`;
 
 CREATE TABLE `conf_file_info` (
-    `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '对象存储文件信息id',
     `aid` bigint(19) DEFAULT NULL COMMENT '账号ID/用户ID/会员ID/商户ID',
     `storage_type` varchar(20) NOT NULL COMMENT '存储类型: aws/aliyun/minio/tencent/qiniu/local/nginx',
     `original_file_name` varchar(255) DEFAULT NULL COMMENT '原始文件名称',
@@ -647,4 +650,38 @@ CREATE TABLE `conf_file_info` (
     `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
     PRIMARY KEY (`id`),
     UNIQUE KEY `UNQ_TENANT_ID_AND_UPLOAD_TYPE_AND_FILE_PATH` (`tenant_id`,`upload_type`,`file_path`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='对象存储文件信息'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='对象存储文件信息';
+
+/*Table structure for table `conf_mobile_segment` */
+
+DROP TABLE IF EXISTS `conf_mobile_segment`;
+
+CREATE TABLE `conf_mobile_segment` (
+    `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '手机号段信息id',
+    `prefix` int(4) NOT NULL COMMENT '手机前缀(3/4)',
+    `mno` varchar(20) NOT NULL COMMENT '运营商',
+    `virtual` tinyint(1) DEFAULT '0' COMMENT '是否虚拟号段: 1 是, 0 否, 默认: 0',
+    `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+    `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+    `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `UNQ_prefix` (`prefix`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='手机号段信息';
+
+/*Table structure for table `conf_mobile_info` */
+
+DROP TABLE IF EXISTS `conf_mobile_info`;
+
+CREATE TABLE `conf_mobile_info` (
+    `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '手机号归属地信息id',
+    `prefix` int(7) NOT NULL COMMENT '手机前缀(7)',
+    `province` varchar(45) DEFAULT NULL COMMENT '省份',
+    `city` varchar(45) DEFAULT NULL COMMENT '城市',
+    `mno` varchar(20) NOT NULL COMMENT '运营商',
+    `virtual` tinyint(1) DEFAULT '0' COMMENT '是否虚拟号段: 1 是, 0 否, 默认: 0',
+    `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+    `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+    `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `UNQ_prefix` (`prefix`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='手机号归属地信息';
