@@ -6,6 +6,7 @@ import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
+import org.arch.framework.automate.generater.properties.XmindProperties;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -27,15 +28,16 @@ public class ApiBuilder  extends AbstractBuilder implements Buildable {
 
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
-//        if(schemaData.getPattern().equals(SchemaPattern.API)){
-//            Xmind2MvcApi xmind2MvcApi = (Xmind2MvcApi)schemaData;
-//        }
+        doBuild(path,engine,projectProperties,documentProperties,(XmindProperties)schemaData);
         log.info("api builder building {}", schemaData);
     }
 
-
-
-    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) throws IOException {
-        buildPackageFile(projectProperties.getCover(), path, templateEngine, projectProperties, documentProperties, databaseProperties);
+    private void doBuild(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, XmindProperties schemaData) {
     }
+
+
+
+/*    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) throws IOException {
+        buildPackageFile(projectProperties.getCover(), path, templateEngine, projectProperties, documentProperties, databaseProperties);
+    }*/
 }

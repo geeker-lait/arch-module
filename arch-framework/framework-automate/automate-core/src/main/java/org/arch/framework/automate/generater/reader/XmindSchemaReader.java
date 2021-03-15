@@ -6,7 +6,6 @@ import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.core.SchemaReadable;
 import org.arch.framework.automate.generater.core.SchemaType;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
-import org.arch.framework.automate.generater.properties.XmindProoerties;
 import org.arch.framework.automate.generater.xmind.XmindService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

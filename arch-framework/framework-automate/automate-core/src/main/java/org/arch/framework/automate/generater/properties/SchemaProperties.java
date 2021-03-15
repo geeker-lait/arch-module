@@ -33,7 +33,9 @@ public class SchemaProperties  implements ConfigProperties {
     public <T extends ConfigProperties> T buildSchemaProperties(){
         if (typ.equalsIgnoreCase("database")) {
 
-            return null;
+            DatabaseProperties databaseProperties = new DatabaseProperties();
+            databaseProperties.setName("");
+            return (T) databaseProperties;
 
         } else if (typ.equalsIgnoreCase("excel")) {
 
