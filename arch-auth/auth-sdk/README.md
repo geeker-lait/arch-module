@@ -44,35 +44,7 @@ logging:
     top.dcenter: warn
 ```
 
-4. 引用 auth-sdk 上的配置文件
-```xml
-<resources>
-    <resource>
-        <directory>src/main/resources/</directory>
-        <filtering>true</filtering>
-        <includes>
-            <include>**/*.properties</include>
-        </includes>
-    </resource>
-    <resource>
-        <directory>src/main/resources/</directory>
-        <filtering>false</filtering>
-        <includes>
-            <include>**/*.yml</include>
-        </includes>
-    </resource>
-    <resource>
-        <directory>src/main/resources/</directory>
-        <filtering>false</filtering>
-        <includes>
-            <include>**/*.xml</include>
-        </includes>
-    </resource>
-</resources>
-```
-
-
-5. 开发时: account_auth_client 添加记录
+4. 开发时: account_auth_client 添加记录
 ```sql
 insert into `account_auth_client` (`client_id`, `client_secret`, `scopes`, `client_type`) values('006', '006', 'AUTH,
 OAUTH2,
