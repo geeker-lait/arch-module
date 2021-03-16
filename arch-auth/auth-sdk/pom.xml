@@ -18,16 +18,6 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-jwt</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>nimbus-jose-jwt</artifactId>
-                    <groupId>com.nimbusds</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <groupId>com.nimbusds</groupId>
         </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>
@@ -43,6 +33,25 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-commons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-commons</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-rbac</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

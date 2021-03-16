@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.ums.enums.LoginType;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -253,7 +252,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
 
     private static class AuthorityComparator implements Comparator<GrantedAuthority>,
             Serializable {
-        private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
+        private static final long serialVersionUID = 1L;
 
         @Override
         public int compare(GrantedAuthority g1, GrantedAuthority g2) {
