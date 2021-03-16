@@ -1,16 +1,20 @@
 package org.arch.framework.automate.generater.reader;
 
+import cn.hutool.core.io.resource.ClassPathResource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.core.SchemaReadable;
 import org.arch.framework.automate.generater.core.SchemaType;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
+import org.arch.framework.automate.generater.xmind.UnZipUtil;
 import org.arch.framework.automate.generater.xmind.XmindService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +44,7 @@ public class XmindSchemaReader extends AbstractSchemaReader implements SchemaRea
     }
 
     @Override
-    protected List<SchemaMetadata> readMvc(String excel, Map<String, String> heads) {
+    protected List<SchemaMetadata> readMvc(String res, Map<String, String> heads) {
 
         List<SchemaMetadata> schemaMetadata = new ArrayList<>();
 
@@ -48,9 +52,21 @@ public class XmindSchemaReader extends AbstractSchemaReader implements SchemaRea
     }
 
     @Override
-    protected List<SchemaMetadata> readApi(String excel, Map<String, String> heads) {
+    protected List<SchemaMetadata> readApi(String res, Map<String, String> heads) {
         List<SchemaMetadata> schemaMetadata = new ArrayList<>();
-
+        Map<String, String> tableMap = new HashMap<>();
+        // 从类路劲加载
+        if (-1 != res.indexOf("classpath:")) {
+            res = new ClassPathResource(res.split(":")[1]).getAbsolutePath();
+        }
+        String destDirPath = res.concat("\\UnZip\\");
+        try {
+            File file = new File(res);
+            UnZipUtil.unZip(file, destDirPath);
+        } catch (Exception e) {
+            log.error("解压xmind文件异常：res:{}", res, e);
+        }
+        metaDataService.parseMetaData(destDirPath.concat("\\content.json"));
         return schemaMetadata;
     }
 }
