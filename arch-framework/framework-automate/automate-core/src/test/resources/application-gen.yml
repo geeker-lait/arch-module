@@ -147,13 +147,22 @@ spring:
         }
       - typ: database
         patterns: mvc
-        resources: arch_module
+        resources: arch_module,
         configuration: {
           driver: "com.mysql.cj.jdbc.Driver",
           url: "jdbc:mysql://localhost:3306?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai",
           username: "root",
           password: "root"
         }
+#      - typ: database
+#        patterns: api
+#        resources: arch_module_api,
+#        configuration: {
+#          driver: "com.mysql.cj.jdbc.Driver",
+#          url: "jdbc:mysql://localhost:3306?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai",
+#          username: "root",
+#          password: "root"
+#        }
 
 
 

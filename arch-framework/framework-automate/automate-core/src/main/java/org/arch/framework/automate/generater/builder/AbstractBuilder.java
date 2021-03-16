@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.AbstractGenerator;
+import org.arch.framework.automate.generater.core.ConfigProperties;
 import org.arch.framework.automate.generater.core.Generable;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
@@ -68,11 +69,11 @@ public abstract class AbstractBuilder {
         Files.createFile(filePath);
     }
 
-    protected Map<String, Object> buildData(ProjectProperties projectProperties, DocumentProperties documentProperties, TableProperties tableProperties) {
+    protected Map<String, Object> buildData(ProjectProperties projectProperties, DocumentProperties documentProperties, ConfigProperties configProperties) {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.putAll(JSONUtil.parseObj(projectProperties));
         dataMap.putAll(JSONUtil.parseObj(documentProperties));
-        dataMap.putAll(JSONUtil.parseObj(tableProperties));
+        dataMap.putAll(JSONUtil.parseObj(configProperties));
         dataMap.put("author", projectProperties.getAuthor());
         dataMap.put("cover", projectProperties.getCover());
         return dataMap;

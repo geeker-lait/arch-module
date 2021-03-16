@@ -16,6 +16,7 @@ public interface ${(apiClass?cap_first)!""}{
     </#if>
     /**
      * ${method.descr}
+     * return ${}
      **/
     ${method.output!""} ${method.name!""}(${method.inputs});
 
