@@ -1,6 +1,7 @@
 package org.arch.framework.automate.generater.properties;
 
 import lombok.Data;
+import org.arch.framework.automate.generater.core.ConfigProperties;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @date 3/15/2021 6:16 PM
  */
 @Data
-public class MethodProperties {
+public class MethodProperties implements ConfigProperties {
     // 方法名
     private String name;
     // http请求方法（post/get/delete/update/....）

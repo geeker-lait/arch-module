@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.ParamProperties;
 import org.arch.framework.automate.generater.properties.XmindProperties;
+import org.arch.framework.automate.generater.core.SchemaMetadata;
+import org.arch.framework.automate.generater.properties.XmindProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -17,6 +19,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author lait.zhang@gmail.com
@@ -27,6 +33,25 @@ import java.util.List;
 @Slf4j
 @Service
 public class XmindService {
+    /**
+     * 获取xmind中实体的定义
+     * @param res
+     * @param configuration
+     * @return
+     */
+    public List<? extends SchemaMetadata> getEntityMetadate(String res, Map<String, String> configuration) {
+        return null;
+    }
+
+    /**
+     * 获取xmind中的api定义
+     * @param res
+     * @param configuration
+     * @return
+     */
+    public List<? extends SchemaMetadata> getApiMetadate(String res, Map<String, String> configuration) {
+        return null;
+    }
 
     public XmindProperties parseMetaData(String path) throws Exception {
         List<XMind> xMinds = loadMetaData(path);

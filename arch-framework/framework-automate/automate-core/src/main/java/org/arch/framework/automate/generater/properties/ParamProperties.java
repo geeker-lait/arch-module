@@ -2,6 +2,8 @@ package org.arch.framework.automate.generater.properties;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author lait.zhang@gmail.com
  * @description: TODO
@@ -18,4 +20,11 @@ public class ParamProperties {
     private String name;
     // 参数描述
     private String descr;
+    // 平铺参数
+    List<ParamProperties> childs;
+
+    public static void main(String[] args) {
+
+    }
+
 }
