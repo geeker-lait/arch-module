@@ -54,4 +54,6 @@ public class XmindSchemaReader extends AbstractSchemaReader implements SchemaRea
         schemaMetadatas.addAll(xmindService.getApiMetadate(res, configuration));
         return schemaMetadatas;
     }
+
+
 }
