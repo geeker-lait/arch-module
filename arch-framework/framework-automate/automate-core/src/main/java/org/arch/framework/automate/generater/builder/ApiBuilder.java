@@ -57,21 +57,23 @@ public class ApiBuilder  extends AbstractBuilder implements Buildable {
         Path packPath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
         try {
             Files.createDirectories(packPath);
+            String fileName = buildFileName(documentProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, xmindProperties.getTopicName()), true);
+            String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
+            Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));
+            // 创建文件
+            buildFile(cover, filePath);
+            Map<String, Object> dataMap = new HashMap();
+            dataMap.putAll(JSONUtil.parseObj(projectProperties));
+            dataMap.putAll(JSONUtil.parseObj(documentProperties));
+            dataMap.putAll(JSONUtil.parseObj(xmindProperties.getMethods()));
+            dataMap.put("author", projectProperties.getAuthor());
+            dataMap.put("cover", projectProperties.getCover());
+            dataMap.put("package", currentPkg);
+            dataMap.put("mainClass", fileName);
+            // 获取模板并渲染
+            String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
             // 写入文件
-            for (MethodProperties methodProperties : xmindProperties.getMethods()) {
-                String fileName = buildFileName(documentProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, methodProperties.getName()), true);
-                String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
-                Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));
-                // 创建文件
-                buildFile(cover, filePath);
-                Map<String, Object> dataMap = buildData(projectProperties, documentProperties, methodProperties);
-                dataMap.put("package", currentPkg);
-                dataMap.put("mainClass", fileName);
-                // 获取模板并渲染
-                String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
-                // 写入文件
-                Files.write(filePath, code.getBytes());
-            }
+            Files.write(filePath, code.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
