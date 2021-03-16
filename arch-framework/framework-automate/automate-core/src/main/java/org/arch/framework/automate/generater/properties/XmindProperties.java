@@ -13,7 +13,13 @@ import java.util.List;
  */
 @Data
 public class XmindProperties implements SchemaMetadata {
+    // 包
     private String pkg;
-    private String apiClass;
+    // 主题名称
+    private String topicName;
+    // 说明
+    private String descr;
+    // 方法列表
     private List<MethodProperties> methods;
+
 }

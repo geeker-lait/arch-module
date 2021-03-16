@@ -54,7 +54,7 @@ spring:
                     version:
     documents:
       - type: entity
-        pkg: aa.entity
+        pkg: entity
         template: entity.ftl
         suffix: Entity
       - type: mapper
@@ -109,6 +109,27 @@ spring:
       - typ: xmind
         patterns: api
         resources: classpath:api.xmind
+        project:
+          name: test
+          pkg: org.arch.pms
+          modules:
+            - name: api
+              apis:
+                - name:
+                  pkg:
+                  descr:
+                  inputs:
+                    - javaTyp:
+                      name:
+                      descr:
+                    - javaTyp:
+                      name:
+                      descr:
+                  output:
+                    javaTyp:
+                    name:
+                    descr:
+
       - typ: excel
         patterns: mvc
         resources: classpath:uni-life-ums.xlsx
