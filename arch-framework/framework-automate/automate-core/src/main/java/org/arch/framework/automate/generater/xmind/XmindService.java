@@ -182,7 +182,7 @@ public class XmindService {
             }
         } else if (TopicTyp.API.getType().equals(topicNode.getTyp())) {
             if (pkgName.endsWith(".")) {
-                pkgName = pkgName.substring(0, pkgName.lastIndexOf(".") - 1);
+                pkgName = pkgName.substring(0, pkgName.lastIndexOf("."));
             }
             xmindProperties.setPkg(pkgName);
             xmindProperties.setTopicName(topicNode.getValue());
