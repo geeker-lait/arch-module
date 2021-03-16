@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import org.arch.framework.api.crud.BaseSearchDto;
 import org.arch.framework.beans.Response;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,6 +40,8 @@ import static org.arch.framework.crud.utils.TenantUtils.removeTenantIdValue;
  */
 public interface CrudController<T extends Model<T>, ID extends Serializable,
         S extends BaseSearchDto, CS extends CrudService<T, ID>> {
+
+    Logger log = LoggerFactory.getLogger(CrudController.class);
 
     /**
      * 获取 {@link CrudService} 实例
@@ -81,9 +85,15 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
      */
     @PostMapping
     default Response<T> save(@Valid @RequestBody T t, TokenInfo token) {
-        resolver(token, t);
-        getCrudService().save(t);
-        return Response.success(t);
+        try {
+            resolver(token, t);
+            getCrudService().save(t);
+            return Response.success(t);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
     }
 
     /**
@@ -93,8 +103,14 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
      */
     @PostMapping("/saves")
     default Response<List<T>> saveAll(@Valid @RequestBody List<T> entityList) {
-        getCrudService().saveList(entityList);
-        return Response.success(entityList);
+        try {
+            getCrudService().saveList(entityList);
+            return Response.success(entityList);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
     }
 
     /**
@@ -104,7 +120,17 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
      */
     @GetMapping(path = "/{id}")
     default Response<T> findById(@PathVariable("id") ID id) {
-        return Response.success(getCrudService().findById(id));
+        try {
+            return Response.success(getCrudService().findById(id));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            if (e instanceof IncorrectResultSizeDataAccessException) {
+                return Response.error(FAILED.getCode(),"查询到多个结果");
+            } else {
+                return Response.error(FAILED.getCode(), e.getMessage());
+            }
+        }
     }
 
     /**
@@ -121,6 +147,7 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
             T t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
             return Response.success(t);
         } catch (Exception e) {
+            log.error(e.getMessage(),e);
             if (e instanceof IncorrectResultSizeDataAccessException) {
                 return Response.error(FAILED.getCode(),"查询到多个结果");
             } else {
@@ -137,9 +164,15 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
      */
     @GetMapping("/find")
     default Response<List<T>> find(T t, TokenInfo token) {
-        resolver(token, t);
-        S searchDto = convertSearchDto(t);
-        return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+        try {
+            resolver(token, t);
+            S searchDto = convertSearchDto(t);
+            return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
     }
 
     /**
@@ -149,9 +182,15 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
      */
     @GetMapping("/list")
     default Response<List<T>> list(TokenInfo token) {
-        T t = resolver(token, null);
-        S searchDto = convertSearchDto(t);
-        return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+        try {
+            T t = resolver(token, null);
+            S searchDto = convertSearchDto(t);
+            return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
     }
 
     /**
@@ -167,9 +206,15 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
                                     @PathVariable(value = "pageNumber") Integer pageNumber,
                                     @PathVariable(value = "pageSize") Integer pageSize,
                                     TokenInfo token) {
-        resolver(token, entity);
-        S searchDto = convertSearchDto(entity);
-        return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+        try {
+            resolver(token, entity);
+            S searchDto = convertSearchDto(entity);
+            return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
     }
 
     /**
@@ -179,8 +224,18 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
      */
     @DeleteMapping(path = "/{id}")
     default Response<Boolean> deleteById(@PathVariable("id") ID id) {
-        getCrudService().deleteById(id);
-        return Response.success(true);
+        try {
+            getCrudService().deleteById(id);
+            return Response.success(true);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            if (e instanceof IncorrectResultSizeDataAccessException) {
+                return Response.error(FAILED.getCode(),"查询到多个结果");
+            } else {
+                return Response.error(FAILED.getCode(), e.getMessage());
+            }
+        }
     }
 
     /**
@@ -191,17 +246,27 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
      */
     @PutMapping
     default Response<Boolean> updateById(@RequestBody T entity, TokenInfo token) {
-        // 检查 id 是否为 null
-        Object idValue = ReflectionKit.getFieldValue(entity,
-                                                     TableInfoHelper.getTableInfo(entity.getClass()).getKeyProperty());
-        if (isNull(idValue)) {
-            return Response.failed("id 不能为 null");
+        try {
+            // 检查 id 是否为 null
+            Object idValue = ReflectionKit.getFieldValue(entity,
+                                                         TableInfoHelper.getTableInfo(entity.getClass()).getKeyProperty());
+            if (isNull(idValue)) {
+                return Response.failed("id 不能为 null");
+            }
+            resolver(token, entity);
+            // id 具有唯一性, 不需要租户 id 来区分, 对于用户来说租户 id 不会变, 不必要更新;
+            // 如果更新租户 id, 对于行级租户同时会更新有租户字段的索引, 影响 sql 执行性能
+            removeTenantIdValue(entity);
+            return Response.success(getCrudService().updateById(entity));
         }
-        resolver(token, entity);
-        // id 具有唯一性, 不需要租户 id 来区分, 对于用户来说租户 id 不会变, 不必要更新;
-        // 如果更新租户 id, 对于行级租户同时会更新有租户字段的索引, 影响 sql 执行性能
-        removeTenantIdValue(entity);
-        return Response.success(getCrudService().updateById(entity));
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            if (e instanceof IncorrectResultSizeDataAccessException) {
+                return Response.error(FAILED.getCode(),"查询到多个结果");
+            } else {
+                return Response.error(FAILED.getCode(), e.getMessage());
+            }
+        }
     }
 
 }
