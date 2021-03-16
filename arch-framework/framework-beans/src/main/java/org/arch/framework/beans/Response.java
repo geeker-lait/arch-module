@@ -3,7 +3,10 @@ package org.arch.framework.beans;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.arch.framework.beans.enums.StatusCode;
+import org.arch.framework.beans.exception.BusinessException;
+import org.arch.framework.beans.exception.constant.CommonStatusCode;
 import org.arch.framework.beans.exception.constant.ResponseStatusCode;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
@@ -186,6 +189,37 @@ public class Response<T> implements Serializable {
     public Response<T> setData(T data) {
         this.data = data;
         return this;
+    }
+
+    /**
+     * 判断响应的结果是否成功.
+     * @return  当 code 等于 {@link ResponseStatusCode#SUCCESS} 时, 且响应的 data 为非 {@link Boolean} 时
+     * 或响应的 data 为 {@link Boolean#TRUE}时 返回 true. 否则返回 false.
+     */
+    @JsonIgnore
+    public boolean isSuccess() {
+        if (ResponseStatusCode.SUCCESS.getCode() == code) {
+            if (data instanceof Boolean) {
+                return ((Boolean) data);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 获取 data 数据.<br>
+     *     前提: 调用 {@link #isSuccess()} 方法返回值为 true 可以调用此方法, 此方法目的就是为了不必在去判读返回值是否为 null.
+     * @param isSuccess 一般情况请填 true
+     * @return  返回 data
+     */
+    @NonNull
+    @JsonIgnore
+    public T getSuccessData(boolean isSuccess) {
+        if (isSuccess) {
+            return data;
+        }
+        throw new BusinessException(CommonStatusCode.RESPONSE_FAILED);
     }
 
     /**
