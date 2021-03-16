@@ -3,6 +3,7 @@ package org.arch.framework.ums.filter;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.beans.exception.BusinessException;
+import org.arch.framework.beans.exception.constant.CommonStatusCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -40,6 +41,11 @@ public class ErrorHandlerFilter extends OncePerRequestFilter {
                 status = HttpStatus.UNAUTHORIZED.value();
             }
             responseWithJson(response, status, toJsonString(failed(e.getResponseCode(), e.getMessage())));
+        }
+        catch (ServletException e) {
+            log.error(e.getMessage(),e);
+            int status = HttpStatus.INTERNAL_SERVER_ERROR.value();
+            responseWithJson(response, status, toJsonString(failed(CommonStatusCode.SERVER_ERROR, e.getMessage())));
         }
     }
 }
