@@ -13,7 +13,7 @@ import java.util.Map;
  * 用户电话信息(Phone) search dto
  *
  * @author YongWu zheng
- * @date 2021-01-29 22:09:11
+ * @date 2021-03-17 22:19:44
  * @since 1.0.0
  */
 @Data
@@ -37,9 +37,14 @@ public class PhoneSearchDto implements BaseSearchDto {
     private String phoneNo;
 
     /**
-     * 号码归属地
+     * 省份
      */
-    private String location;
+    private String province;
+
+    /**
+     * 城市
+     */
+    private String city;
 
     /**
      * 运营商: 移动/电信/联通/电话..
@@ -83,15 +88,16 @@ public class PhoneSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
-        putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
+        putNoNull("EQ_id", this.getId(), map);
+        putNoNull("EQ_phone_no", this.getPhoneNo(), map);
         putNoNull("EQ_user_id", this.getUserId(), map);
         putNoNull("EQ_sorted", this.getSorted(), map);
-        putNoNull("EQ_deleted", this.getDeleted(), map);
         putNoNull("EQ_app_id", this.getAppId(), map);
         putNoNull("EQ_store_id", this.getStoreId(), map);
-        putNoNull("EQ_phone_no", this.getPhoneNo(), map);
-        putNoNull("EQ_location", this.getLocation(), map);
+        putNoNull("EQ_deleted", this.getDeleted(), map);
+        putNoNull("EQ_province", this.getProvince(), map);
+        putNoNull("EQ_city", this.getCity(), map);
         putNoNull("EQ_mno", this.getMno(), map);
         putNoNull("EQ_rev", this.getRev(), map);
         putNoNull("EQ_dt", this.getDt(), map);

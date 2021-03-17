@@ -39,9 +39,10 @@ public class ${(name?cap_first)!""}${suffix!""} extends CrudEntity<${(name?cap_f
      */
     <#if pk?? && pk == cloumn.name!"">
     // TODO 增加对主键类型(type)的判断 ,
-    @TableId("${column.name!""}")
+    @TableId(value = "`${column.name!""}`")
     </#if>
     // TODO 增加对列(xx_xx)转换为驼峰类型字段, 不能获取数据库类型对应的 JavaType
+    @TableField(value = "`${column.name!""}`")
     private ${column.typ!""} ${column.name!""};
     </#list>
 </#if>

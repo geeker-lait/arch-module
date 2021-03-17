@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.arch.framework.crud.CrudEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
  * 手机号归属地信息(MobileInfo) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-15 21:47:56
+ * @date 2021-03-17 21:28:41
  * @since 1.0.0
  */
 @Data
@@ -31,7 +32,7 @@ public class MobileInfo extends Model<MobileInfo> {
     /**
      * 手机号归属地信息id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "`id`")
     private Long id;
 
     /**
@@ -81,6 +82,7 @@ public class MobileInfo extends Model<MobileInfo> {
      */
     @TableField(value = "`deleted`")
     private Boolean deleted;
+
 
     /**
      * 获取主键值

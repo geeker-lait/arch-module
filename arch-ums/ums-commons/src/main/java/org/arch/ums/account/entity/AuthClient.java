@@ -1,6 +1,6 @@
 package org.arch.ums.account.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * 授权客户端(AuthClient) 实体类
  *
  * @author YongWu zheng
- * @date 2021-01-29 20:47:50
+ * @date 2021-03-17 21:25:26
  * @since 1.0.0
  */
 @Data
@@ -31,57 +31,67 @@ public class AuthClient extends CrudEntity<AuthClient> {
     /**
      * 授权客户端ID
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "`id`")
     private Long id;
 
     /**
      * 客户端 ID
      */
+    @TableField(value = "`client_id`")
     private String clientId;
 
     /**
      * 客户端 secret
      */
+    @TableField(value = "`client_secret`")
     private String clientSecret;
 
     /**
      * openid/userinfo/token/code/资源服务器标识等
      */
+    @TableField(value = "`scopes`")
     private String scopes;
 
     /**
      * 客户端类型: web, 安卓, ios, 小程序…
      */
+    @TableField(value = "`client_type`")
     private ClientType clientType;
 
     /**
      * 租户 id
      */
+    @TableField(value = "`tenant_id`")
     private Integer tenantId;
 
     /**
      * 应用 id
      */
+    @TableField(value = "`app_id`")
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @TableField(value = "`store_id`")
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @TableField(value = "`rev`")
     private Integer rev;
 
     /**
      * 时间戳/创建时间
      */
+    @TableField(value = "`dt`")
     private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
      */
+    @TableField(value = "`deleted`")
     private Boolean deleted;
 
 

@@ -464,6 +464,7 @@ CREATE TABLE `user_address` (
   `city` varchar(32) DEFAULT NULL COMMENT '市',
   `district` varchar(32) DEFAULT NULL COMMENT '区',
   `street` varchar(32) DEFAULT NULL COMMENT '街道',
+  `address` varchar(128) DEFAULT NULL COMMENT '详细地址',
   `address_type` int(1) DEFAULT NULL COMMENT '地址类型:工作地址/家庭地址/收获地址/..',
   `sorted` int(2) NOT NULL COMMENT '顺序',
   `contacts` varchar(32) DEFAULT NULL COMMENT '联系人',

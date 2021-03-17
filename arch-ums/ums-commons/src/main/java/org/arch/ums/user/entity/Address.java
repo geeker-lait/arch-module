@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  * 用户地址表(Address) 实体类
  *
  * @author YongWu zheng
- * @date 2021-01-29 23:07:14
+ * @date 2021-03-17 22:16:37
  * @since 1.0.0
  */
 @Data
@@ -32,93 +32,103 @@ public class Address extends CrudEntity<Address> {
     /**
      * 用户地址信息表id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "`id`")
     private Long id;
 
     /**
      * 用户id
      */
+    @TableField(value = "`user_id`")
     private Long userId;
 
     /**
      * 省
      */
+    @TableField(value = "`province`")
     private String province;
 
     /**
      * 市
      */
+    @TableField(value = "`city`")
     private String city;
 
     /**
      * 区
      */
+    @TableField(value = "`district`")
     private String district;
 
     /**
      * 街道
      */
+    @TableField(value = "`street`")
     private String street;
 
     /**
      * 详细地址
      */
+    @TableField(value = "`address`")
     private String address;
 
     /**
      * 地址类型:工作地址/家庭地址/收获地址/..
      */
+    @TableField(value = "`address_type`")
     private AddressType addressType;
 
     /**
      * 顺序
      */
+    @TableField(value = "`sorted`")
     private Integer sorted;
 
     /**
      * 联系人
      */
+    @TableField(value = "`contacts`")
     private String contacts;
 
     /**
      * 手机号
      */
+    @TableField(value = "`phone_num`")
     private String phoneNum;
-
-    /**
-     * 是否默认: 0 否, 1 是
-     */
-    @TableField(value = "default")
-    private Boolean def;
 
     /**
      * 租户 id
      */
+    @TableField(value = "`tenant_id`")
     private Integer tenantId;
 
     /**
      * 应用 id
      */
+    @TableField(value = "`app_id`")
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @TableField(value = "`store_id`")
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @TableField(value = "`rev`")
     private Integer rev;
 
     /**
      * 时间戳/创建时间
      */
+    @TableField(value = "`dt`")
     private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
      */
+    @TableField(value = "`deleted`")
     private Boolean deleted;
 
 

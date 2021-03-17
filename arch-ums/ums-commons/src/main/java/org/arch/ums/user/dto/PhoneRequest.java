@@ -1,17 +1,17 @@
 package org.arch.ums.user.dto;
 
+import java.time.LocalDateTime;
+
+import org.arch.framework.ums.enums.Mno;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.arch.framework.ums.enums.Mno;
-
-import java.time.LocalDateTime;
 
 /**
  * 用户电话信息(Phone) request
  *
  * @author YongWu zheng
- * @date 2021-01-29 22:09:10
+ * @date 2021-03-17 22:19:44
  * @since 1.0.0
  */
 @Data
@@ -35,9 +35,14 @@ public class PhoneRequest {
     private String phoneNo;
 
     /**
-     * 号码归属地
+     * 省份
      */
-    private String location;
+    private String province;
+
+    /**
+     * 城市
+     */
+    private String city;
 
     /**
      * 运营商: 移动/电信/联通/电话..

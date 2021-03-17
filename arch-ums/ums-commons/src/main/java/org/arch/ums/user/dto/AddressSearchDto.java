@@ -13,7 +13,7 @@ import java.util.Map;
  * 用户地址表(Address) search dto
  *
  * @author YongWu zheng
- * @date 2021-01-29 23:07:25
+ * @date 2021-03-17 22:19:44
  * @since 1.0.0
  */
 @SuppressWarnings("jol")
@@ -78,11 +78,6 @@ public class AddressSearchDto implements BaseSearchDto {
     private String phoneNum;
 
     /**
-     * 是否默认: 0 否, 1 是
-     */
-    private Boolean def;
-
-    /**
      * 租户 id
      */
     private Integer tenantId;
@@ -114,13 +109,13 @@ public class AddressSearchDto implements BaseSearchDto {
 
     @Override
     public void buildSearchParams(Map<String, Object> map) {
-        putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
+        putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_user_id", this.getUserId(), map);
         putNoNull("EQ_sorted", this.getSorted(), map);
-        putNoNull("EQ_deleted", this.getDeleted(), map);
         putNoNull("EQ_app_id", this.getAppId(), map);
         putNoNull("EQ_store_id", this.getStoreId(), map);
+        putNoNull("EQ_deleted", this.getDeleted(), map);
         putNoNull("EQ_province", this.getProvince(), map);
         putNoNull("EQ_city", this.getCity(), map);
         putNoNull("EQ_district", this.getDistrict(), map);
@@ -129,7 +124,6 @@ public class AddressSearchDto implements BaseSearchDto {
         putNoNull("EQ_address_type", this.getAddressType(), map);
         putNoNull("EQ_contacts", this.getContacts(), map);
         putNoNull("EQ_phone_num", this.getPhoneNum(), map);
-        putNoNull("EQ_default", this.getDef(), map);
         putNoNull("EQ_rev", this.getRev(), map);
         putNoNull("EQ_dt", this.getDt(), map);
     }

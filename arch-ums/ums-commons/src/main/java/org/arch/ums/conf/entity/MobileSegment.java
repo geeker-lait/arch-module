@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * 手机号段信息(MobileSegment) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-15 21:47:54
+ * @date 2021-03-17 21:27:02
  * @since 1.0.0
  */
 @Data
@@ -31,7 +31,7 @@ public class MobileSegment extends Model<MobileSegment> {
     /**
      * 手机号段信息id
      */
-    @TableId(value = "`id`", type = IdType.AUTO)
+    @TableId(value = "`id`")
     private Long id;
 
     /**

@@ -6,7 +6,8 @@
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
         <result property="phoneNo" column="phone_no" jdbcType="VARCHAR"/>
-        <result property="location" column="location" jdbcType="VARCHAR"/>
+        <result property="province" column="province" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
         <result property="mno" column="mno" jdbcType="VARCHAR"/>
         <result property="sorted" column="sorted" jdbcType="INTEGER"/>
         <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
@@ -22,7 +23,7 @@
     </sql>
 
     <sql id="baseColumn">
-        `id`, `user_id`, `phone_no`, `location`, `mno`, `sorted`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
+        `id`, `user_id`, `phone_no`, `province`, `city`, `mno`, `sorted`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
     </sql>
 
 </mapper>

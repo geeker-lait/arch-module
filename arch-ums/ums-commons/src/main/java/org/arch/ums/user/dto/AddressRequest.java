@@ -1,5 +1,6 @@
 package org.arch.ums.user.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
  * 用户地址表(Address) request
  *
  * @author YongWu zheng
- * @date 2021-01-29 23:07:25
+ * @date 2021-03-17 22:19:44
  * @since 1.0.0
  */
 @Data
@@ -73,11 +74,6 @@ public class AddressRequest {
      * 手机号
      */
     private String phoneNum;
-
-    /**
-     * 是否默认: 0 否, 1 是
-     */
-    private Boolean def;
 
     /**
      * 租户 id
