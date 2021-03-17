@@ -43,7 +43,7 @@ public class ErrorHttpSecurityAware implements HttpSecurityAware {
 
     @Override
     public void postConfigure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(new ErrorHandlerFilter(), WebAsyncManagerIntegrationFilter.class);
+        http.addFilterAfter(new ErrorHandlerFilter(), WebAsyncManagerIntegrationFilter.class);
     }
 
     @Override
