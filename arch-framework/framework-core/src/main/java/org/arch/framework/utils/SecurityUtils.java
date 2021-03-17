@@ -11,12 +11,21 @@ import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.AbstractOAuth2Token;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
+import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
+import java.time.Duration;
+import java.time.Instant;
+
+import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.CommonStatusCode.EXTRACT_ACCOUNT_TYPE;
 
 /**
@@ -131,5 +140,38 @@ public class SecurityUtils {
                         .avatar(jwt.getClaimAsString(JwtArchClaimNames.AVATAR.getClaimName()))
                         .authorities(authentication.getAuthorities())
                         .build();
+    }
+
+    /**
+     * 如果 {@link Authentication} 为 {@link AbstractOAuth2TokenAuthenticationToken<Jwt>} 且 {@link Jwt} 已过期, 那么清除
+     * 此 {@link AbstractOAuth2TokenAuthenticationToken<Jwt>},
+     * 再设置 {@link Authentication} 为 {@link AnonymousAuthenticationToken}.<br>
+     * 防止因 session 中的 Jwt 过期而无法查询用户信息. <br>
+     * 注意: 适合登录查询时使用.
+     * @param clockSkew 授权服务器的时钟与资源服务器的时钟可能存在偏差, 设置时钟偏移量以消除不同服务器间的时钟偏差的影响,
+     *                  通过属性 ums.jwt.clockSkew 设置.
+     */
+    public static void ifExpiredOfJwtThenClearAuthentication(Duration clockSkew) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        final Authentication authentication = context.getAuthentication();
+        if (authentication instanceof AbstractOAuth2TokenAuthenticationToken)
+        {
+            //noinspection unchecked
+            AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token> token =
+                    ((AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token>) authentication);
+            // 判断 jwt 是否过期.
+            AbstractOAuth2Token oAuth2Token = token.getToken();
+            if (oAuth2Token instanceof Jwt)
+            {
+                Jwt jwt = ((Jwt) oAuth2Token);
+                Instant expiresAt = jwt.getExpiresAt();
+                if (nonNull(expiresAt) && Instant.now().minusSeconds(clockSkew.getSeconds()).isAfter(expiresAt)) {
+                    context.setAuthentication(
+                            new AnonymousAuthenticationToken(token.getName(),
+                                                             token.getName(),
+                                                             AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS")));
+                }
+            }
+        }
     }
 }

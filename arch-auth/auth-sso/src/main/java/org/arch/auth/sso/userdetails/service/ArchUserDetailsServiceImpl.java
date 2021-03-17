@@ -16,8 +16,8 @@ import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
-import org.arch.ums.feign.account.client.UmsAccountOauthTokenFeignService;
 import org.arch.ums.feign.account.client.UmsAccountIdentifierFeignService;
+import org.arch.ums.feign.account.client.UmsAccountOauthTokenFeignService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -39,6 +39,7 @@ import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.exception.RegisterUserFailureException;
 import top.dcenter.ums.security.core.exception.UserNotExistException;
 import top.dcenter.ums.security.core.oauth.properties.Auth2Properties;
+import top.dcenter.ums.security.jwt.properties.JwtProperties;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
+import static org.arch.framework.utils.SecurityUtils.ifExpiredOfJwtThenClearAuthentication;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -77,6 +79,10 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
     private final Auth2Properties auth2Properties;
     private final UmsAccountOauthTokenFeignService umsAccountAuthTokenFeignService;
     private final Auth2StateCoder auth2StateCoder;
+    /**
+     * 授权服务器的时钟与资源服务器的时钟可能存在偏差, 设置时钟偏移量以消除不同服务器间的时钟偏差的影响, 通过属性 ums.jwt.clockSkew 设置.
+     */
+    private final JwtProperties jwtProperties;
 
     private ApplicationContext applicationContext;
 
@@ -89,6 +95,12 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
     @NonNull
     @Override
     public UserDetails loadUserByUserId(@NonNull String userId) throws UsernameNotFoundException {
+        /*
+          如果 Authentication 为 AbstractOAuth2TokenAuthenticationToken 且 Jwt 已过期, 那么清除 此
+          AbstractOAuth2TokenAuthenticationToken, 再设置 Authentication 为 AnonymousAuthenticationToken.
+          防止因 session 中的 Jwt 过期而无法查询用户信息.
+         */
+        ifExpiredOfJwtThenClearAuthentication(jwtProperties.getClockSkew());
         try {
             // 根据用户名获取用户信息
             AuthLoginDto authLoginDto;
