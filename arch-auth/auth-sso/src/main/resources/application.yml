@@ -31,7 +31,6 @@ spring:
     include: auth,arch,db,mdc,oauth2,feign,redis,vc,jwt,rbac
     active: ${profile:dev}
 
-
 management:
   endpoints:
     web:
@@ -70,6 +69,10 @@ spring:
   mvc:
     throw-exception-if-no-handler-found: true
 
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
 
 logging:
   config: classpath:logback-spring-dev.xml

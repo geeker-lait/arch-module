@@ -9,7 +9,13 @@ import org.arch.framework.beans.enums.StatusCode;
  * @date 12/11/2020 3:30 PM
  */
 public enum AuthStatusCode implements StatusCode {
+    /**
+     * 401
+     */
     UNAUTHORIZED(401, "暂未登录或token已经过期"),
+    /**
+     * 403
+     */
     FORBIDDEN(403, "没有相关权限"),
     ;
 

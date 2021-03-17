@@ -2,17 +2,17 @@ package org.arch.ums.conf.service;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import org.arch.ums.conf.entity.MobileInfo;
-import org.arch.ums.conf.dao.MobileInfoDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.arch.framework.crud.CrudService;
+import org.arch.ums.conf.dao.MobileInfoDao;
+import org.arch.ums.conf.entity.MobileInfo;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -80,4 +80,16 @@ public class MobileInfoService extends CrudService<MobileInfo, java.lang.Long> {
         // 逻辑删除
         return mobileInfoDao.update(updateWrapper);
     }
+
+    /**
+     * 批量保存, 如果主键或唯一索引重复则更新.
+     * @param mobileInfoList 实体类列表
+     * @return  true 表示成功, false 表示失败.
+     * @throws SQLException 批量保持失败
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean insertOnDuplicateKeyUpdateBatch(List<MobileInfo> mobileInfoList) throws SQLException {
+        return mobileInfoDao.insertOnDuplicateKeyUpdateBatch(mobileInfoList);
+    }
+
 }

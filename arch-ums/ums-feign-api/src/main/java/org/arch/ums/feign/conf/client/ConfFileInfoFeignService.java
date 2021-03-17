@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @since 2021.2.27 16:51
  */
 @Component
-@FeignClient(name = "arch-conf-api", contextId = "arch-conf-api-fileInfo", path = "/ums/conf/file/info",
+@FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-confFileInfo", path = "/ums/conf/file/info",
         configuration = UmsDeFaultFeignConfig.class)
 public interface ConfFileInfoFeignService extends BaseFeignService<FileInfo, Long> {
 

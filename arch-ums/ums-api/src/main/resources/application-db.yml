@@ -47,7 +47,7 @@ mybatis-plus:
   typeAliasesPackage: org.arch.ums.account.entity,org.arch.ums.user.entity
   global-config:
     db-config:
-      id-type: id_worker
+      id-type: input
       insert-strategy: not_empty
       update-strategy: not_empty
       select-strategy: not_empty

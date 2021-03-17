@@ -1,28 +1,48 @@
 package org.arch.ums.conf.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.ums.conf.dto.MobileInfoSearchDto;
-import org.arch.ums.conf.entity.MobileInfo;
-import org.arch.ums.conf.service.MobileInfoService;
+import org.arch.framework.beans.Response;
+import org.arch.framework.beans.exception.constant.AuthStatusCode;
+import org.arch.framework.beans.exception.constant.CommonStatusCode;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.beans.Response;
+import org.arch.ums.conf.dto.MobileInfoSearchDto;
+import org.arch.ums.conf.entity.MobileInfo;
+import org.arch.ums.conf.entity.MobileSegment;
+import org.arch.ums.conf.service.MobileInfoService;
+import org.arch.ums.conf.service.MobileSegmentService;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_INFO_FAILED;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_INFO_PARTIAL_FAILED;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
+import static org.arch.ums.uitls.MobileUtils.check;
+import static org.arch.ums.uitls.MobileUtils.getBooleanResponse;
+import static org.arch.ums.uitls.MobileUtils.getMobileInfo;
+import static org.arch.ums.uitls.MobileUtils.isAdminForRole;
 
 /**
  * 手机号归属地信息(MobileInfo) 表服务控制器
@@ -37,20 +57,13 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
 @RequestMapping("/conf/mobile/info")
 public class MobileInfoController implements CrudController<MobileInfo, java.lang.Long, MobileInfoSearchDto, MobileInfoService> {
 
-    private final TenantContextHolder tenantContextHolder;
     private final MobileInfoService mobileInfoService;
+    private final MobileSegmentService mobileSegmentService;
 
     @Override
     public MobileInfo resolver(TokenInfo token, MobileInfo mobileInfo) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 mobileInfo 后返回 mobileInfo, 如: tenantId 的处理等.
         if (isNull(mobileInfo)) {
             mobileInfo = new MobileInfo();
-        }
-        if (nonNull(token) && nonNull(token.getTenantId())) {
-            mobileInfo.setTenantId(token.getTenantId());
-        }
-        else {
-            mobileInfo.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
         return mobileInfo;
     }
@@ -91,6 +104,22 @@ public class MobileInfoController implements CrudController<MobileInfo, java.lan
             else {
                 return Response.error(FAILED.getCode(), e.getMessage());
             }
+        }
+    }
+
+    /**
+     * 批量保存, 如果主键或唯一索引重复则更新.
+     * @param mobileInfoList 实体类列表
+     * @return  {@link Response(Boolean)}
+     */
+    @PostMapping("/savesNoResult")
+    public Response<Boolean> saveAllNoResult(@Valid @RequestBody List<MobileInfo> mobileInfoList) {
+        try {
+            return Response.success(getCrudService().insertOnDuplicateKeyUpdateBatch(mobileInfoList));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
         }
     }
 
@@ -142,6 +171,58 @@ public class MobileInfoController implements CrudController<MobileInfo, java.lan
         catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 批量上传手机归属地信息. <br>
+     *     格式: 1999562  甘肃-兰州 <br>
+     *     分隔符可以自定义.
+     * @param file      csv 格式的手机归属地信息
+     * @param delimiter csv 行格式分隔符
+     * @param token     当前用户的登录信息.
+     * @return  {@link Response}
+     */
+    @PostMapping(value = "/uploadInfos", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Response<Boolean> addMobileInfo(@RequestParam("file") MultipartFile file,
+                                              @RequestParam("delimiter") String delimiter,
+                                              TokenInfo token) {
+        try {
+            Response<Boolean> checkFailure = check(delimiter, token);
+            if (nonNull(checkFailure)) {
+                return checkFailure;
+            }
+            // 权限校验
+            if (isAdminForRole(token)) {
+                BufferedReader bufferedReader =
+                        new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
+                // 获取手机号段信息
+                List<MobileSegment> segmentList = this.mobileSegmentService.findAll();
+                if (segmentList == null) {
+                    return Response.failed(CommonStatusCode.QUERY_MOBILE_SEGMENT_FAILED);
+                }
+                if (segmentList.size() == 0) {
+                    return Response.failed(CommonStatusCode.MOBILE_SEGMENT_NOT_DATA);
+                }
+                Map<Integer, MobileSegment> segmentMap =
+                        segmentList.stream()
+                                   .collect(Collectors.toMap(MobileSegment::getPrefix,
+                                                             mobileSegment -> mobileSegment));
+                // 存储解析错误的行信息
+                List<String> errorList = new ArrayList<>();
+                // 解析手机号段信息. 格式: 1999562	甘肃-兰州
+                List<MobileInfo> mobileInfoList = getMobileInfo(delimiter, bufferedReader, segmentMap, errorList);
+
+                Response<Boolean> savesResponse = saveAllNoResult(mobileInfoList);
+                return getBooleanResponse(errorList, savesResponse,
+                                          SAVES_MOBILE_INFO_FAILED,
+                                          SAVES_MOBILE_INFO_PARTIAL_FAILED);
+            }
+            return Response.failed(AuthStatusCode.FORBIDDEN);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Response.failed(SAVES_MOBILE_INFO_FAILED, e.getMessage());
         }
     }
 
