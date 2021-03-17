@@ -142,6 +142,7 @@ public class XmindService {
 //                if (topicType == null) {
 //                    log.warn("不存在的topic类型:{}", titles[0]);
 //                }
+
                 TopicNode topicNode = new TopicNode();
                 topicNode.setId(System.currentTimeMillis());
                 if (titles.length == 3) {
