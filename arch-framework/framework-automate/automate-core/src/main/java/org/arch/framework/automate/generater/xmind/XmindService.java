@@ -11,7 +11,6 @@ import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.ParamProperties;
 import org.arch.framework.automate.generater.properties.XmindProperties;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
-import org.arch.framework.automate.generater.properties.XmindProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -22,8 +21,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -226,7 +223,7 @@ public class XmindService {
                     }
                     methodPropertiesList.add(methodProperties);
                 }
-                xmindProperties.setMethods(methodPropertiesList);
+                xmindProperties.setApis(methodPropertiesList);
             }
             xmindPropertiesList.add(xmindProperties);
         }

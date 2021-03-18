@@ -10,16 +10,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 * @date ${.now}
 */
 public interface ${(apiClass?cap_first)!""}{
-    <#list methods as method>
-    <#if supportRpc>
-    @${method.httpMethod}
-    </#if>
-    /**
-     * ${method.descr}
-     * return ${}
-     **/
-    ${method.output!""} ${method.name!""}(${method.inputs});
+<#--    <#list methods as method>-->
+<#--    <#if supportRpc>-->
+<#--    @${method.httpMethod}-->
+<#--    </#if>-->
+<#--    /**-->
+<#--     * ${method.descr}-->
+<#--     * return ${}-->
+<#--     **/-->
+<#--    ${method.output!""} ${method.name!""}(${method.inputs});-->
 
-    </#list>
+<#--    </#list>-->
 
 }

@@ -33,5 +33,6 @@ public class DatabaseProperties implements ConfigProperties, SchemaMetadata {
     private String password;
     @NestedConfigurationProperty
     private List<TableProperties> tables = new ArrayList<>();
-
+    @NestedConfigurationProperty
+    private List<MethodProperties> apis = new ArrayList<>();
 }

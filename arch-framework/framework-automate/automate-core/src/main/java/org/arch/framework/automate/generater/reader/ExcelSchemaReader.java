@@ -101,16 +101,16 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
                 }
                 // 对每一行信息转换为对象
                 if (map.size() > 0) {
-                    Excel2Table excel2Table = BeanUtil.toBean(map, Excel2Table.class);
-                    Class c = JdbcTypeUtils.getFieldType(excel2Table.getType());
+                    ExcelProperties excelProperties = BeanUtil.toBean(map, ExcelProperties.class);
+                    Class c = JdbcTypeUtils.getFieldType(excelProperties.getType());
                     if(c == null){
-                        log.info("jdbc type convert to java type is error {}",excel2Table);
+                        log.info("jdbc type convert to java type is error {}", excelProperties);
                         continue;
                     }
                     ColumnsProperties columnsProperties = new ColumnsProperties();
-                    columnsProperties.setName(excel2Table.getColumn());
-                    columnsProperties.setComment(excel2Table.getComment());
-                    columnsProperties.setLength(excel2Table.getLength());
+                    columnsProperties.setName(excelProperties.getColumn());
+                    columnsProperties.setComment(excelProperties.getComment());
+                    columnsProperties.setLength(excelProperties.getLength());
                     columnsProperties.setTyp(c.getSimpleName());
                     columns.add(columnsProperties);
                 }

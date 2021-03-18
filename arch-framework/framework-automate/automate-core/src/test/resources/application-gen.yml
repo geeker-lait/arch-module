@@ -102,7 +102,7 @@ spring:
       - type: api
         pkg:
         template: api.ftl
-        ext:
+        ext: .java
         suffix: Client
 
     schemas:

@@ -5,7 +5,9 @@ import cn.hutool.json.JSONUtil;
 import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.*;
-import org.arch.framework.automate.generater.properties.*;
+import org.arch.framework.automate.generater.properties.DocumentProperties;
+import org.arch.framework.automate.generater.properties.ProjectProperties;
+import org.arch.framework.automate.generater.properties.XmindProperties;
 import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,7 @@ import java.util.regex.Matcher;
  */
 @Slf4j
 @Service
-public class ApiBuilder  extends AbstractBuilder implements Buildable {
+public class ApiBuilder extends AbstractBuilder implements Buildable {
     @Override
     public TemplateName getTemplateName() {
         return TemplateName.API;
@@ -34,14 +36,15 @@ public class ApiBuilder  extends AbstractBuilder implements Buildable {
 
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
-        doBuild(path,engine,projectProperties,documentProperties,(XmindProperties)schemaData);
         log.info("api builder building {}", schemaData);
+        doBuild(path, engine, projectProperties, documentProperties, (XmindProperties)schemaData);
+
     }
 
     private void doBuild(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, XmindProperties xmindProperties) {
+
         buildApiPackageFile(projectProperties.getCover(), path, engine, projectProperties, documentProperties, xmindProperties);
     }
-
 
 
     private void buildApiPackageFile(boolean cover, Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, XmindProperties xmindProperties) {
@@ -65,7 +68,7 @@ public class ApiBuilder  extends AbstractBuilder implements Buildable {
             Map<String, Object> dataMap = new HashMap();
             dataMap.putAll(JSONUtil.parseObj(projectProperties));
             dataMap.putAll(JSONUtil.parseObj(documentProperties));
-            dataMap.putAll(JSONUtil.parseObj(xmindProperties.getMethods()));
+            dataMap.putAll(JSONUtil.parseObj(xmindProperties.getApis()));
             dataMap.put("author", projectProperties.getAuthor());
             dataMap.put("cover", projectProperties.getCover());
             dataMap.put("package", currentPkg);

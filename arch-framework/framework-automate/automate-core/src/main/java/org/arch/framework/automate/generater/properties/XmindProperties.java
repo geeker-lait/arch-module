@@ -2,7 +2,10 @@ package org.arch.framework.automate.generater.properties;
 
 import lombok.Data;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
+import org.arch.framework.automate.generater.core.SchemaPattern;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +23,12 @@ public class XmindProperties implements SchemaMetadata {
     // 说明
     private String descr;
     // 方法列表
-    private List<MethodProperties> methods;
-
+    @NestedConfigurationProperty
+    private List<MethodProperties> apis = new ArrayList<>();
+    @NestedConfigurationProperty
+    private List<TableProperties> tables = new ArrayList<>();
+    @Override
+    public String getName() {
+        return topicName;
+    }
 }

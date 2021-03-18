@@ -39,7 +39,7 @@ public class YmlBuilder extends AbstractBuilder implements Buildable {
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
         try {
-            doBuild(path, engine, projectProperties, documentProperties, (DatabaseProperties) schemaData);
+            doBuild(path, engine, projectProperties, documentProperties, (DatabaseProperties) null);
         } catch (IOException e) {
             e.printStackTrace();
         }

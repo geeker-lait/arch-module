@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.AbstractGenerator;
 import org.arch.framework.automate.generater.core.ConfigProperties;
 import org.arch.framework.automate.generater.core.Generable;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
+import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
@@ -55,18 +55,26 @@ public abstract class AbstractBuilder {
         }
     }
 
-    protected void buildFile(boolean cover, Path filePath) throws IOException {
-        // 写入文件
-        if (Files.exists(filePath)) {
-            // 是否覆盖
-            if (!cover) {
-                log.info("skip {} due to file exists.", filePath);
-                return;
-            } else {
-                Files.delete(filePath);
+    protected void buildFile(boolean cover, Path filePath) {
+        try {
+            // 写入文件
+            if (Files.exists(filePath)) {
+
+                // 是否覆盖
+                if (!cover) {
+                    log.info("skip {} due to file exists.", filePath);
+                    return;
+                } else {
+
+                    Files.delete(filePath);
+
+                }
+
             }
+            Files.createFile(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        Files.createFile(filePath);
     }
 
     protected Map<String, Object> buildData(ProjectProperties projectProperties, DocumentProperties documentProperties, ConfigProperties configProperties) {
@@ -87,24 +95,24 @@ public abstract class AbstractBuilder {
      * @param templateEngine
      * @param projectProperties
      * @param documentProperties
-     * @param databaseProperties
+     * @param schemaMetadata
      * @throws IOException
      */
-    protected void buildPackageFile(boolean cover, Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) {
+    protected void buildPackageFile(boolean cover, Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaMetadata) {
         // 设置默认包和后缀名
         String pkg = (null == documentProperties.getPkg() ? documentProperties.getType() : documentProperties.getPkg());
         String currentPkg;
         // 领域化
         if (projectProperties.getDomain()) {
-            currentPkg = projectProperties.getBasePkg().concat("." + databaseProperties.getName().toLowerCase()).concat("." + pkg);
+            currentPkg = projectProperties.getBasePkg().concat("." + schemaMetadata.getName().toLowerCase()).concat("." + pkg);
         } else {
-            currentPkg = projectProperties.getBasePkg().concat("." + pkg).concat("." + databaseProperties.getName().toLowerCase());
+            currentPkg = projectProperties.getBasePkg().concat("." + pkg).concat("." + schemaMetadata.getName().toLowerCase());
         }
         Path packPath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
         try {
             Files.createDirectories(packPath);
             // 写入文件
-            for (TableProperties tableProperties : databaseProperties.getTables()) {
+            for (TableProperties tableProperties : schemaMetadata.getTables()) {
                 String fileName = buildFileName(documentProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, tableProperties.getName()), true);
                 String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
                 Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));
