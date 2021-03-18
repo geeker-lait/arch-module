@@ -58,7 +58,7 @@ public class XmindService {
         if (-1 != res.indexOf("classpath:")) {
             res = new ClassPathResource(res.split(":")[1]).getAbsolutePath();
         }
-        String destDirPath = "./unzip";
+        String destDirPath = "../unzip";
         try {
             File file = new File(res);
             UnZipUtil.unZip(file, destDirPath);
@@ -66,7 +66,7 @@ public class XmindService {
             log.error("解压xmind文件异常：res:{}", res, e);
         }
         try {
-            return parseMetaData(destDirPath.concat("\\content.json"));
+            return parseMetaData(destDirPath.concat(File.separator).concat("content.json"));
         } catch (Exception e) {
             e.printStackTrace();
         }
