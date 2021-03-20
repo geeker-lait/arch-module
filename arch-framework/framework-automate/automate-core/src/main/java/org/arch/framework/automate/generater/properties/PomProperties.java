@@ -37,6 +37,9 @@ public class PomProperties implements ConfigProperties {
     private String documentTypes;
     // 是否跟节点
     private boolean root;
+
+    // schema模式 mvc/api 默认为mvc
+    private String pattern = "mvc";
     // 父节点
     @NestedConfigurationProperty
     private DependencieProterties parent;

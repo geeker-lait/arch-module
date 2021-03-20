@@ -35,7 +35,7 @@ public final class ExcelProperties implements SchemaMetadata {
     @NestedConfigurationProperty
     private List<MethodProperties> apis = new ArrayList<>();
     @Override
-    public String getName() {
+    public String getSchemaName() {
         return sheetName;
     }
 }

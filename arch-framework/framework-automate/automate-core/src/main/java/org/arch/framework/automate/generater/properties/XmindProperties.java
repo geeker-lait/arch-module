@@ -28,7 +28,7 @@ public class XmindProperties implements SchemaMetadata {
     @NestedConfigurationProperty
     private List<TableProperties> tables = new ArrayList<>();
     @Override
-    public String getName() {
+    public String getSchemaName() {
         return topicName;
     }
 }

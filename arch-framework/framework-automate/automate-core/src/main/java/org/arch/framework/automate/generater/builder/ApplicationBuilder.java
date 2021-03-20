@@ -37,13 +37,13 @@ public class ApplicationBuilder extends AbstractBuilder implements Buildable {
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
         try {
-            doBuild(path, engine, projectProperties, documentProperties, (DatabaseProperties) schemaData);
+            doBuild(path, engine, projectProperties, documentProperties, schemaData);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) throws IOException {
+    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) throws IOException {
         String basePkg = null == projectProperties.getBasePkg() ? "" : projectProperties.getBasePkg();
         Path fileDir = path.resolve(Generable.MAIN_JAVA.concat(basePkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
         Files.createDirectories(fileDir);

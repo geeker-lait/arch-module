@@ -24,12 +24,12 @@ public class BizBuilder extends AbstractBuilder implements Buildable {
 
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
-        doBuild(path, engine, projectProperties, documentProperties, (DatabaseProperties) schemaData);
+        doBuild(path, engine, projectProperties, documentProperties,  schemaData);
     }
 
-    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) {
+    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
         log.info("BizBuilder start");
-        buildPackageFile(projectProperties.getCover(), path, templateEngine, projectProperties, documentProperties, databaseProperties);
+        buildPackageFile(projectProperties.getCover(), path, templateEngine, projectProperties, documentProperties, schemaData);
     }
 
 }

@@ -87,15 +87,22 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
         // 创建根目录
         Path rootPath = projectProperties.getProjectRootPath();
         Files.createDirectories(rootPath);
-        // 根据schema创建项目
         generatorConfig.getSchemas().forEach(s -> {
             List<SchemaMetadata> schemaDatas = readerMap.get(s.getTyp()).read(s);
             if(schemaDatas != null) {
-                schemaDatas.forEach(d -> {
-                    // 创建项目模块
-                    buildModule(rootPath, generatorConfig.getProject().getPom(), d);
-                    pomBuildOnce = false;
-                });
+                //Arrays.stream(s.getPatterns().split(",")).forEach(pattern->{
+                    schemaDatas.forEach(d -> {
+                        //if(SchemaPattern.API.getPattern().equalsIgnoreCase(pattern) && generatorConfig.getProject().getPom().getPattern().equalsIgnoreCase(pattern)){
+                            // 创建项目模块
+                        //    buildModule(rootPath, generatorConfig.getProject().getPom(), d);
+                        //} else {
+                            // 创建项目模块
+                            buildModule(rootPath, generatorConfig.getProject().getPom(), d);
+                       // }
+                        pomBuildOnce = false;
+                    });
+                //});
+
             }
         });
         DEPS.remove();

@@ -35,11 +35,11 @@ public class DockerBuilder extends AbstractBuilder implements Buildable {
 
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
-        doBuild(path, engine, projectProperties, documentProperties, (DatabaseProperties) schemaData);
+        doBuild(path, engine, projectProperties, documentProperties,  schemaData);
     }
 
 
-    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) {
+    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata databaseProperties) {
         String fileName = buildFileName(documentProperties, "Dockerfile", false);
         String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
         Path fileDir = path.resolve(Generable.MAIN_RESOURCES);

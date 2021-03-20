@@ -14,7 +14,6 @@ import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -34,18 +33,18 @@ public class DdlBuilder extends AbstractBuilder implements Buildable {
 
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
-        doBuild(path,engine,projectProperties,documentProperties,(DatabaseProperties)schemaData);
+        doBuild(path,engine,projectProperties,documentProperties,schemaData);
     }
 
-    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties){
+    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata databaseProperties){
 
         Path fileDir = path.resolve(Generable.MAIN_RESOURCES + File.separator + documentProperties.getPkg());
         String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
         Map<String, Object> dataMap = buildData(projectProperties, documentProperties, null);
-        dataMap.put("database", databaseProperties.getName());
+        dataMap.put("database", databaseProperties.getSchemaName());
         dataMap.put("tables", databaseProperties.getTables());
         if (projectProperties.getCover()) {
-            String name = buildFileName(documentProperties, databaseProperties.getName(), true).toLowerCase();
+            String name = buildFileName(documentProperties, databaseProperties.getSchemaName(), true).toLowerCase();
             File file = new File(fileDir.toString().concat(File.separator).concat(name).concat(ext));
             // 获取模板并渲染
             templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap, file);

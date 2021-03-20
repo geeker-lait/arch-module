@@ -25,6 +25,7 @@ spring:
           - artifactId: test-api
             groupId:
             version:
+            pattern: api
             documentTypes: api
           - artifactId: test-core1
             groupId:
@@ -154,15 +155,15 @@ spring:
           username: "root",
           password: "root"
         }
-#      - typ: database
-#        patterns: api
-#        resources: arch_module_api,
-#        configuration: {
-#          driver: "com.mysql.cj.jdbc.Driver",
-#          url: "jdbc:mysql://localhost:3306?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai",
-#          username: "root",
-#          password: "root"
-#        }
+      - typ: database
+        patterns: api
+        resources: arch_module_api,
+        configuration: {
+          driver: "com.mysql.cj.jdbc.Driver",
+          url: "jdbc:mysql://localhost:3306?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai",
+          username: "root",
+          password: "root"
+        }
 
 
 

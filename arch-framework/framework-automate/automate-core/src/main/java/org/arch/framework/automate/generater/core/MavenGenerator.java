@@ -67,11 +67,11 @@ public class MavenGenerator extends AbstractGenerator {
             for (String dir : srcDirectorys) {
                 Files.createDirectories(path.resolve(dir));
             }
-
         }
         pomProperties.setPackaging("jar");
         if (!StringUtils.isEmpty(pomProperties.getDocumentTypes())) {
-            for (String p : Arrays.asList(pomProperties.getDocumentTypes().split(","))) {
+            List<String> docTyps = Arrays.asList(pomProperties.getDocumentTypes().split(","));
+            for (String p : docTyps) {
                 DocumentProperties documentProperties = documentsMap.get(p);
                 // 获取模板
                 String stemplate = documentProperties.getTemplate();

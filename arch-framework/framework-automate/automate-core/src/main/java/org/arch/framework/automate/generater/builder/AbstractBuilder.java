@@ -9,6 +9,7 @@ import org.arch.framework.automate.generater.core.ConfigProperties;
 import org.arch.framework.automate.generater.core.Generable;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
+import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
 import org.arch.framework.beans.utils.StringUtils;
@@ -19,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
@@ -104,14 +106,34 @@ public abstract class AbstractBuilder {
         String currentPkg;
         // 领域化
         if (projectProperties.getDomain()) {
-            currentPkg = projectProperties.getBasePkg().concat("." + schemaMetadata.getName().toLowerCase()).concat("." + pkg);
+            currentPkg = projectProperties.getBasePkg().concat("." + schemaMetadata.getSchemaName().toLowerCase()).concat("." + pkg);
         } else {
-            currentPkg = projectProperties.getBasePkg().concat("." + pkg).concat("." + schemaMetadata.getName().toLowerCase());
+            currentPkg = projectProperties.getBasePkg().concat("." + pkg).concat("." + schemaMetadata.getSchemaName().toLowerCase());
         }
         Path packPath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
+
+
+
+
         try {
             Files.createDirectories(packPath);
             // 写入文件
+            for(MethodProperties api: schemaMetadata.getApis()){
+                Files.createDirectories(packPath);
+                String fileName = buildFileName(documentProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, schemaMetadata.getSchemaName()), true);
+                String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
+                Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));
+                // 创建文件
+                buildFile(cover, filePath);
+                Map<String, Object> dataMap = buildData(projectProperties, documentProperties, api);
+                dataMap.put("package", currentPkg);
+                dataMap.put("mainClass", fileName);
+                // 获取模板并渲染
+                String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
+                // 写入文件
+                Files.write(filePath, code.getBytes());
+            }
+
             for (TableProperties tableProperties : schemaMetadata.getTables()) {
                 String fileName = buildFileName(documentProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, tableProperties.getName()), true);
                 String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();

@@ -35,4 +35,8 @@ public class DatabaseProperties implements ConfigProperties, SchemaMetadata {
     private List<TableProperties> tables = new ArrayList<>();
     @NestedConfigurationProperty
     private List<MethodProperties> apis = new ArrayList<>();
+    @Override
+    public String getSchemaName() {
+        return name;
+    }
 }

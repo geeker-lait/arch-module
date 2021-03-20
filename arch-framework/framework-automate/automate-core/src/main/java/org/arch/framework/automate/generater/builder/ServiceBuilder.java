@@ -24,10 +24,10 @@ public class ServiceBuilder extends AbstractBuilder implements Buildable {
 
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
-        doBuild(path, engine, projectProperties, documentProperties, (DatabaseProperties) schemaData);
+        doBuild(path, engine, projectProperties, documentProperties, schemaData);
     }
 
-    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) {
+    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata databaseProperties) {
         log.info("ServiceBuilder build: {}", path);
         buildPackageFile(projectProperties.getCover(), path, templateEngine, projectProperties, documentProperties, databaseProperties);
     }
