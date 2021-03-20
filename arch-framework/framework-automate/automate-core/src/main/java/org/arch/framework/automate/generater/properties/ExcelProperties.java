@@ -29,7 +29,8 @@ public final class ExcelProperties implements SchemaMetadata {
     private String unique;
     private String forienKey;
     private String comment;
-
+    // 匹配模式
+    private String pattern;
     @NestedConfigurationProperty
     private List<TableProperties> tables = new ArrayList<>();
     @NestedConfigurationProperty

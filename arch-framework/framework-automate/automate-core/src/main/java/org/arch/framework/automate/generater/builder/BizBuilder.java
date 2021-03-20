@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.Buildable;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.core.TemplateName;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
+import org.arch.framework.automate.generater.properties.PomProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class BizBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
         doBuild(path, engine, projectProperties, documentProperties,  schemaData);
     }
 

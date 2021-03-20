@@ -79,7 +79,7 @@ public class MavenGenerator extends AbstractGenerator {
                 if (buildable == null) {
                     throw new CodegenException("buildable is null ,please implements org.arch.framework.automate.generater.core.Buildable and config it as a spring component");
                 }
-                buildable.build(path, engine, projectProperties, documentProperties, schemaData);
+                buildable.build(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
             }
         }
         if (null == DEPS.get()) {

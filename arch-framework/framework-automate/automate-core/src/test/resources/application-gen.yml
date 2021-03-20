@@ -108,7 +108,7 @@ spring:
 
     schemas:
       - typ: xmind
-        patterns: api
+        patterns: api,mvc
         resources: classpath:api.xmind
         project:
           name: test

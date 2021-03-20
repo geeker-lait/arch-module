@@ -31,6 +31,8 @@ public class DatabaseProperties implements ConfigProperties, SchemaMetadata {
     private String name;
     private String username;
     private String password;
+    // 匹配模式
+    private String pattern;
     @NestedConfigurationProperty
     private List<TableProperties> tables = new ArrayList<>();
     @NestedConfigurationProperty

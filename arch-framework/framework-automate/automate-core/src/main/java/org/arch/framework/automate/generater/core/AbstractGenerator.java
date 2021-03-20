@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @date 2/22/2021 5:44 PM
  */
 @Slf4j
-public abstract class AbstractGenerator implements Generable/*, ApplicationContextAware */{
+public abstract class AbstractGenerator implements Generable/*, ApplicationContextAware */ {
 
     protected final static Map<String, DocumentProperties> documentsMap = new HashMap<>();
     protected final static Map<String, Buildable> builderMap = new HashMap<>();
@@ -89,19 +89,15 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
         Files.createDirectories(rootPath);
         generatorConfig.getSchemas().forEach(s -> {
             List<SchemaMetadata> schemaDatas = readerMap.get(s.getTyp()).read(s);
-            if(schemaDatas != null) {
-                //Arrays.stream(s.getPatterns().split(",")).forEach(pattern->{
+            if (schemaDatas != null) {
+                Arrays.stream(s.getPatterns().split(",")).forEach(pattern->{
                     schemaDatas.forEach(d -> {
-                        //if(SchemaPattern.API.getPattern().equalsIgnoreCase(pattern) && generatorConfig.getProject().getPom().getPattern().equalsIgnoreCase(pattern)){
-                            // 创建项目模块
-                        //    buildModule(rootPath, generatorConfig.getProject().getPom(), d);
-                        //} else {
-                            // 创建项目模块
-                            buildModule(rootPath, generatorConfig.getProject().getPom(), d);
-                       // }
+                        d.setPattern(pattern);
+                        // 创建项目模块
+                        buildModule(rootPath, generatorConfig.getProject().getPom(), d);
                         pomBuildOnce = false;
                     });
-                //});
+                });
 
             }
         });
@@ -109,6 +105,6 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
     }
 
 
-    public abstract  void buildModule(Path path, PomProperties pomProperties, SchemaMetadata schemaData);
+    public abstract void buildModule(Path path, PomProperties pomProperties, SchemaMetadata schemaData);
 
 }
