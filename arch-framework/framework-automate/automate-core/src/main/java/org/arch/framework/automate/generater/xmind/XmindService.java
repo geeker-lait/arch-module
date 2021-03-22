@@ -40,7 +40,7 @@ public class XmindService {
      * @return
      */
     public List<? extends SchemaMetadata> getEntityMetadate(String res, Map<String, String> configuration) {
-        return null;
+        return new ArrayList<>();
     }
 
     /**

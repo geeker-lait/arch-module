@@ -44,7 +44,8 @@ public class XmindSchemaReader extends AbstractSchemaReader implements SchemaRea
     @Override
     protected List<SchemaMetadata> readMvc(String res, Map<String, String> configuration) {
         List<SchemaMetadata> schemaMetadatas = new ArrayList<>();
-        schemaMetadatas.addAll(xmindService.getEntityMetadate(res, configuration));
+        List<? extends SchemaMetadata> schemaMetadata = xmindService.getEntityMetadate(res, configuration);
+        schemaMetadatas.addAll(schemaMetadata);
         return schemaMetadatas;
     }
 

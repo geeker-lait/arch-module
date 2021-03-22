@@ -24,6 +24,8 @@ public class XmindProperties implements SchemaMetadata {
     private String descr;
     // 匹配模式
     private String pattern;
+    // topic typ
+    //private String topicTyp;
     // 方法列表
     @NestedConfigurationProperty
     private List<MethodProperties> apis = new ArrayList<>();

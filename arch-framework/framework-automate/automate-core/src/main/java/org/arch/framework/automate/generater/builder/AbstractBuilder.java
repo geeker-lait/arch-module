@@ -100,25 +100,31 @@ public abstract class AbstractBuilder {
         Path packPath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
         try {
             if(pomProperties.getPattern().equalsIgnoreCase(SchemaPattern.API.getPattern())){
-                Files.createDirectories(packPath);
+                //Files.createDirectories(packPath);
                 // 写入文件
                 for(MethodProperties api: schemaMetadata.getApis()){
+                    Files.createDirectories(packPath);
                     String fileName = buildFileName(documentProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, schemaMetadata.getSchemaName()), true);
                     String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
                     Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));
                     // 创建文件
                     buildFile(projectProperties.getCover(), filePath);
-                    Map<String, Object> dataMap = buildData(projectProperties, documentProperties, api);
+                    Map<String, Object> dataMap = new HashMap<>();
+                    dataMap.putAll(JSONUtil.parseObj(projectProperties));
+                    dataMap.putAll(JSONUtil.parseObj(documentProperties));
+                    dataMap.putAll(JSONUtil.parseObj(schemaMetadata));
                     dataMap.put("package", currentPkg);
                     dataMap.put("mainClass", fileName);
+                    dataMap.put("author", projectProperties.getAuthor());
+                    dataMap.put("cover", projectProperties.getCover());
                     // 获取模板并渲染
                     String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
                     // 写入文件
                     Files.write(filePath, code.getBytes());
                 }
             } else if(pomProperties.getPattern().equalsIgnoreCase(SchemaPattern.MVC.getPattern())){
-                Files.createDirectories(packPath);
                 for (TableProperties tableProperties : schemaMetadata.getTables()) {
+                    Files.createDirectories(packPath);
                     String fileName = buildFileName(documentProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, tableProperties.getName()), true);
                     String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
                     Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));

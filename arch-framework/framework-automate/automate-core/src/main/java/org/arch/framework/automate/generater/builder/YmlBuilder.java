@@ -36,10 +36,14 @@ public class YmlBuilder extends AbstractBuilder implements Buildable {
 
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
-        buildPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
+        try {
+            doBuild(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata databaseProperties) throws IOException {
+    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaMetadata databaseProperties) throws IOException {
         String fileName = buildFileName(documentProperties, "application", false);
         String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
         Path fileDir = path.resolve(Generable.MAIN_RESOURCES);

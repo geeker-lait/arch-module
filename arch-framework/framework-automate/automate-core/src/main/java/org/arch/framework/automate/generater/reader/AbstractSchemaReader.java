@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 /**
  * @author lait.zhang@gmail.com
@@ -28,28 +27,27 @@ public abstract class AbstractSchemaReader {
      * @return
      */
     public List<SchemaMetadata> read(SchemaProperties schemaProperties) {
-        Assert.isEmpty(GeneratorCode.GENERATOR_CONFIG_ERROR,schemaProperties.getResources());
-        Assert.isEmpty(GeneratorCode.GENERATOR_CONFIG_ERROR,schemaProperties.getPatterns());
+        Assert.isEmpty(GeneratorCode.GENERATOR_CONFIG_ERROR, schemaProperties.getResources());
+        Assert.isEmpty(GeneratorCode.GENERATOR_CONFIG_ERROR, schemaProperties.getPatterns());
 
         List<SchemaMetadata> schemaMetadatas = new ArrayList<>();
-        Stream<String> resourceStream = Arrays.stream(schemaProperties.getResources().split(","));
-        Arrays.stream(schemaProperties.getPatterns().split(",")).forEach(p -> {
+        for (String pattern : schemaProperties.getPatterns().split(",")) {
             /**
              * excel/database 文档只能匹配一个,不能同时匹配，即要么api 要么 mvc
              */
-            if (p.equalsIgnoreCase(SchemaPattern.MVC.name())) {
-                resourceStream.forEach(res -> {
+            if (pattern.equalsIgnoreCase(SchemaPattern.MVC.name())) {
+                Arrays.stream(schemaProperties.getResources().split(",")).forEach(res -> {
                     schemaMetadatas.addAll(readMvc(res, schemaProperties.getConfiguration()));
                 });
-            } else if (p.equalsIgnoreCase(SchemaPattern.API.name())) {
+            } else if (pattern.equalsIgnoreCase(SchemaPattern.API.name())) {
                 // 我们不是真的渴望旅行，我们不是真正渴望看山、看水、看风景，只是这灵魂，被城市束缚，捆绑太久，我们需要找回最本真的自己，这大概便是旅行的意义
-                resourceStream.forEach(res -> {
+                Arrays.stream(schemaProperties.getResources().split(",")).forEach(res -> {
                     schemaMetadatas.addAll(readApi(res, schemaProperties.getConfiguration()));
                 });
             } else {
                 // 目前还没有支持其他schema
             }
-        });
+        }
         return schemaMetadatas;
     }
 
