@@ -18,7 +18,7 @@ spring:
         server-addr: localhost:8848
 
   profiles:
-    include: db,redis,arch
+    include: db,redis,arch,rocketmq
     active: ${profile:dev}
 
 logging:
@@ -27,6 +27,7 @@ logging:
     org.arch.ums: warn
     org.arch.auth: warn
     top.dcenter: warn
+    com.alibaba.cloud.stream.binder.rocketmq: warn
 ---
 spring:
   config:
@@ -46,3 +47,4 @@ logging:
     org.arch.ums: info
     org.arch.auth: info
     top.dcenter: info
+    com.alibaba.cloud.stream.binder.rocketmq: debug

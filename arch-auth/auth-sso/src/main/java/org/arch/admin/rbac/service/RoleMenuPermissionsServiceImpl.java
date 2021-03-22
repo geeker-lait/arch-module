@@ -1,7 +1,8 @@
-package org.arch.auth.sso.rbac.service;
+package org.arch.admin.rbac.service;
 
-import org.arch.ums.account.entity.Permission;
+import org.arch.ums.account.entity.Menu;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.core.api.premission.service.RolePermissionsService;
 import top.dcenter.ums.security.core.exception.RolePermissionsException;
 
@@ -9,13 +10,13 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 权限更新权限服务实现
- *
+ * 菜单更新权限服务实现
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.7 15:37
  */
-public class RolePermissionsServiceImpl implements RolePermissionsService<Permission> {
+@Service
+public class RoleMenuPermissionsServiceImpl implements RolePermissionsService<Menu> {
 
     @Override
     public boolean updateResourcesByRoleId(@NonNull Long roleId, Long... resourceIds) throws RolePermissionsException {
@@ -29,22 +30,6 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
                                                    Long... resourceIds) throws RolePermissionsException {
         // TODO
         return false;
-    }
-
-
-    @NonNull
-    @Override
-    public List<Permission> findAllResourcesByRoleId(@NonNull Long roleId) throws RolePermissionsException {
-        // TODO
-        return null;
-    }
-
-    @NonNull
-    @Override
-    public List<Permission> findAllResourcesByRoleIdOfTenant(@NonNull Long tenantId,
-                                                             @NonNull Long roleId) throws RolePermissionsException {
-        // TODO
-        return null;
     }
 
     @NonNull
@@ -67,15 +52,30 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
     @Override
     public boolean updateRolesByGroupIdOfTenant(@NonNull Long tenantId,
                                                 @NonNull Long groupId,
-                                                @NonNull Long... roleIds) throws RolePermissionsException {
+                                                Long... roleIds) throws RolePermissionsException {
         // TODO
         return false;
     }
 
     @NonNull
     @Override
-    public List<Permission> findAllResourcesByRoleIdOfScopeId(@NonNull Long scopeId,
-                                                              @NonNull Long roleId) throws RolePermissionsException {
+    public List<Menu> findAllResourcesByRoleId(@NonNull Long roleId) throws RolePermissionsException {
+        // TODO
+        return null;
+    }
+
+    @NonNull
+    @Override
+    public List<Menu> findAllResourcesByRoleIdOfTenant(@NonNull Long tenantId,
+                                                       @NonNull Long roleId) throws RolePermissionsException {
+        // TODO
+        return null;
+    }
+
+    @NonNull
+    @Override
+    public List<Menu> findAllResourcesByRoleIdOfScopeId(@NonNull Long scopeId,
+                                                        @NonNull Long roleId) throws RolePermissionsException {
         // TODO
         return null;
     }
@@ -97,7 +97,7 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
 
     @NonNull
     @Override
-    public Class<Permission> getUpdateResourcesClass() {
-        return Permission.class;
+    public Class<Menu> getUpdateResourcesClass() {
+        return Menu.class;
     }
 }

@@ -1,7 +1,8 @@
-package org.arch.auth.sso.rbac.service;
+package org.arch.admin.rbac.service;
 
 import org.arch.ums.account.entity.Group;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.core.api.premission.service.RolePermissionsService;
 import top.dcenter.ums.security.core.exception.RolePermissionsException;
 
@@ -15,6 +16,7 @@ import java.util.Set;
  * @weixin z56133
  * @since 2021.3.7 15:37
  */
+@Service
 public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<Group> {
 
     @Override

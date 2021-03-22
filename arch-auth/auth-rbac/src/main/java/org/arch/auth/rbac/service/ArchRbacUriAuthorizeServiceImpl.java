@@ -109,6 +109,7 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
         }
     }
 
+    @Override
     protected void updateAllGroupsOfAllTenant() {
         if (this.allTenantsGroupsMap != null) {
             // 从数据源获取所有角色的权限

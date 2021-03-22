@@ -29,6 +29,20 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-rbac</artifactId>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-stream</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream</artifactId>
+            <version>3.0.3.RELEASE</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

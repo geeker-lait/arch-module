@@ -19,7 +19,7 @@ import java.util.Set;
  * @since 2021.3.6 22:24
  */
 @RequiredArgsConstructor
-public class ArchAuthoritiesServiceImpl implements AuthoritiesService {
+public class ArchQueryAuthoritiesServiceImpl implements AuthoritiesService {
 
     private final RoleMenuFeignService roleMenuFeignService;
     private final RoleGroupFeignService roleGroupFeignService;

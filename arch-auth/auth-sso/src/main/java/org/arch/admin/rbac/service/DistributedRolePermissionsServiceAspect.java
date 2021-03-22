@@ -1,19 +1,19 @@
-package org.arch.auth.sso.rbac.service;
+package org.arch.admin.rbac.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.core.annotation.Order;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 import top.dcenter.ums.security.core.api.premission.service.RolePermissionsService;
 import top.dcenter.ums.security.core.api.premission.service.RolePermissionsServiceAspect;
 import top.dcenter.ums.security.core.premission.dto.UpdateRoleResourcesDto;
 import top.dcenter.ums.security.core.premission.enums.UpdateRolesResourcesType;
-import top.dcenter.ums.security.core.premission.event.UpdateRolesResourcesEvent;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,23 +22,26 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.arch.auth.rbac.utils.RbacUtils.publishEvent;
 import static top.dcenter.ums.security.common.consts.TransactionalConstants.ONE_PRECEDENCE;
 
 /**
  * 主要功能: <br>
- *     1. 当权限更新时, 发送更新消息到 redis, 以便其他微服务更新本地权限缓存.<br>
+ *     1. 当权限更新时, 发送更新消息到 MQ, 以便其他微服务更新本地权限缓存.<br>
  *     2. 发布本地更新事件, 以便其他微服务更新本地权限缓存.
  * @see top.dcenter.ums.security.core.api.premission.service.RolePermissionsServiceAspect
  * @author YongWu zheng
  * @version V2.0  Created by 2020/11/7 18:41
  */
 @SuppressWarnings("unchecked")
+@Component
 @Aspect
+@RequiredArgsConstructor
 @Slf4j
 @Order(ONE_PRECEDENCE)
-public class PublishUpdateMessageAndLocalRolePermissionsServiceAspect implements RolePermissionsServiceAspect, ApplicationContextAware {
+public class DistributedRolePermissionsServiceAspect implements RolePermissionsServiceAspect, ApplicationEventPublisherAware {
 
-    private ApplicationContext applicationContext;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     @AfterReturning(pointcut = "execution(boolean *..updateResourcesByRoleId(..)) && args(roleId, resourceIds)",
@@ -57,8 +60,7 @@ public class PublishUpdateMessageAndLocalRolePermissionsServiceAspect implements
                                               .roleResources(roleIdResourcesIdMap)
                                               .resourceClass(rolePermissionsService.getUpdateResourcesClass())
                                               .build();
-                // TODO: 2021.3.7 发布 redis 更新权限缓存消息
-                applicationContext.publishEvent(new UpdateRolesResourcesEvent(true, updateRoleResourcesDto));
+                publishEvent(updateRoleResourcesDto,this, applicationEventPublisher, Boolean.TRUE);
             }
         }
     }
@@ -83,8 +85,7 @@ public class PublishUpdateMessageAndLocalRolePermissionsServiceAspect implements
                                               .updateType(UpdateRolesResourcesType.TENANT)
                                               .resourceClass(rolePermissionsService.getUpdateResourcesClass())
                                               .build();
-                // TODO: 2021.3.7 发布 redis 更新权限缓存消息
-                applicationContext.publishEvent(new UpdateRolesResourcesEvent(true, updateRoleResourcesDto));
+                publishEvent(updateRoleResourcesDto,this, applicationEventPublisher, Boolean.TRUE);
             }
         }
     }
@@ -108,8 +109,7 @@ public class PublishUpdateMessageAndLocalRolePermissionsServiceAspect implements
                                               .roleResources(roleIdResourcesIdMap)
                                               .resourceClass(rolePermissionsService.getUpdateResourcesClass())
                                               .build();
-                // TODO: 2021.3.7 发布 redis 更新权限缓存消息
-                applicationContext.publishEvent(new UpdateRolesResourcesEvent(true, updateRoleResourcesDto));
+                publishEvent(updateRoleResourcesDto,this, applicationEventPublisher, Boolean.TRUE);
             }
         }
     }
@@ -132,8 +132,7 @@ public class PublishUpdateMessageAndLocalRolePermissionsServiceAspect implements
                                               .groupRoles(groupIdRoleIdsMap)
                                               .resourceClass(rolePermissionsService.getUpdateResourcesClass())
                                               .build();
-                // TODO: 2021.3.7 发布 redis 更新权限缓存消息
-                applicationContext.publishEvent(new UpdateRolesResourcesEvent(true, updateRoleResourcesDto));
+                publishEvent(updateRoleResourcesDto,this, applicationEventPublisher, Boolean.TRUE);
             }
         }
     }
@@ -157,16 +156,14 @@ public class PublishUpdateMessageAndLocalRolePermissionsServiceAspect implements
                                               .groupRoles(groupIdRoleIdsMap)
                                               .resourceClass(rolePermissionsService.getUpdateResourcesClass())
                                               .build();
-                // TODO: 2021.3.7 发布 redis 更新权限缓存消息
-                applicationContext.publishEvent(new UpdateRolesResourcesEvent(true, updateRoleResourcesDto));
+                publishEvent(updateRoleResourcesDto,this, applicationEventPublisher, Boolean.TRUE);
             }
         }
     }
 
-
     @Override
-    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    public void setApplicationEventPublisher(@NonNull ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
 }

@@ -2,5 +2,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.arch.auth.rbac.config.ArchRbacAutoConfiguration,\
   org.arch.auth.rbac.config.ArchRbacFeignAutoConfiguration,\
-  org.arch.auth.rbac.config.ArchRbacPermissionServiceAspectAutoConfiguration,\
   org.arch.auth.rbac.config.AuthorizeRequestsAutoConfigurer
