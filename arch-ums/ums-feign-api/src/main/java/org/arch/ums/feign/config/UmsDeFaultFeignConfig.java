@@ -4,7 +4,7 @@ import feign.codec.Encoder;
 import feign.form.spring.SpringFormEncoder;
 import org.arch.framework.feign.config.FeignGlobalConfig;
 import org.arch.framework.ums.properties.AppProperties;
-import org.arch.ums.feign.encoder.ArchSpringEncoder;
+import org.arch.framework.feign.encoder.ArchSpringEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;

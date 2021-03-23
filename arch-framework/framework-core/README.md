@@ -1,7 +1,27 @@
 ### Feign 客户端配置必须继承 FeignGlobalConfig:
 - FeignGlobalConfig:
-> 1. 添加 tenantId 到 指定请求头;
+> 1. 添加 tenantId 到 指定请求头.
 > 2. 添加 token 到 Authorization 请求头.
+> 3. 设置 MDC 日志链路追踪 ID.
+
+- 示例
+```java
+@Configuration
+public class UmsDeFaultFeignConfig extends FeignGlobalConfig {
+
+    public UmsDeFaultFeignConfig(TenantContextHolder tenantContextHolder,
+                                 AppProperties appProperties, JwtProperties jwtProperties) {
+        super(tenantContextHolder, appProperties.getTenantHeaderName(), jwtProperties.getClockSkew());
+    }
+
+    @Bean
+    public Encoder springEncode(ObjectFactory<HttpMessageConverters> messageConverters) {
+        return new ArchSpringEncoder(new SpringFormEncoder(), messageConverters);
+    }
+
+}
+```
+
 
 ### 资源服务器必须添加 org.arch.framework.ums.tenant.context.filter.TenantContextFilter 到过滤器链上.
 ```java

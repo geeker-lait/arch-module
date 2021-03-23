@@ -1,4 +1,4 @@
-package org.arch.ums.feign.encoder;
+package org.arch.framework.feign.encoder;
 
 import feign.Request;
 import feign.RequestTemplate;
