@@ -26,7 +26,7 @@ spring:
             groupId:
             version:
             pattern: api
-            documentTypes: api
+            documentTypes: api,yml,docker
           - artifactId: test-core1
             groupId:
             version:
@@ -108,8 +108,8 @@ spring:
 
     schemas:
       - typ: xmind
-        patterns: api,mvc
-        resources: classpath:api.xmind
+        patterns: api
+        resources: classpath:WMS.xmind
         project:
           name: test
           pkg: org.arch.pms

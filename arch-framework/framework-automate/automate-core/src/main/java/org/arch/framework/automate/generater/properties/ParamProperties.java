@@ -2,6 +2,7 @@ package org.arch.framework.automate.generater.properties;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public class ParamProperties {
     // 参数描述
     private String descr;
     // 平铺参数
-    List<ParamProperties> childs;
+    List<ParamProperties> childs = new ArrayList<>();
 
     public static void main(String[] args) {
 
