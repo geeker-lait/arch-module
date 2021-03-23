@@ -183,7 +183,7 @@ public class XmindService {
             }
         }
         //模块、包，拼接名称
-        else if (TopicTyp.MODULE.getType().equals(topicNode.getTyp()) || TopicTyp.PKG.getType().equals(topicNode.getTyp())) {
+        else if (!CollectionUtils.isEmpty(topicNode.getChildNodes()) && (TopicTyp.MODULE.getType().equals(topicNode.getTyp()) || TopicTyp.PKG.getType().equals(topicNode.getTyp()))) {
             if (StringUtils.isNotEmpty(pkgName)) {
                 pkgName = pkgName + "." + topicNode.getValue();
             }
