@@ -66,7 +66,7 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
     /**
      * 获取所有租户的 scopes
      *
-     * @return scopes
+     * @return scopes, Map(tenantId, Map(clientId, AuthClientVo))
      */
     @NonNull
     public Map<Integer, Map<String, AuthClientVo>> getAllScopes() {

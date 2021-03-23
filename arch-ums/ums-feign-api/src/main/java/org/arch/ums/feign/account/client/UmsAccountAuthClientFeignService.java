@@ -41,7 +41,7 @@ public interface UmsAccountAuthClientFeignService extends BaseFeignService<AuthC
     /**
      * 获取所有租户的 scopes
      *
-     * @return scopes
+     * @return scopes, Map(tenantId, Map(clientId, AuthClientVo))
      */
     @NonNull
     @GetMapping("/scopes/list")

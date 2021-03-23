@@ -165,7 +165,7 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
 
     private void syncToLocalCache() {
         try {
-            // 对 scopes 进行本地缓存.
+            // 对 scopes 进行本地缓存. Map(tenantId, Map(clientId, AuthClientVo))
             final Response<Map<Integer, Map<String, AuthClientVo>>> response = umsAccountAuthClientFeignService.getAllScopes();
             Map<Integer, Map<String, AuthClientVo>> allScopeMap = response.getSuccessData();
             if (nonNull(allScopeMap)) {

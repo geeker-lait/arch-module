@@ -94,7 +94,7 @@ public class AuthClientController implements CrudController<AuthClient, java.lan
     /**
      * 获取所有租户的 scopes
      *
-     * @return scopes
+     * @return scopes, Map(tenantId, Map(clientId, AuthClientVo))
      */
     @NonNull
     @GetMapping("/scopes/list")
