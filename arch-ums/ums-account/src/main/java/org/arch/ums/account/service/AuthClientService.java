@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.isNull;
+import static org.arch.framework.utils.AuthClientSyncUtils.setScopesUpdateSyncFlag;
 
 /**
  * 授权客户端(AuthClient) 表服务层<br>
@@ -178,10 +178,7 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
      */
     private void setRedisSyncFlag() {
         try (final RedisConnection connection = getConnection()) {
-            connection.del(authClientScopesCacheProperties.getScopesCacheUpdatedRedisHashKey().getBytes(StandardCharsets.UTF_8));
-            connection.hSet(authClientScopesCacheProperties.getScopesCacheUpdatedRedisHashKey().getBytes(StandardCharsets.UTF_8),
-                            authClientScopesCacheProperties.getScopesCacheUpdatedRedisHashField().getBytes(StandardCharsets.UTF_8),
-                            "1".getBytes(StandardCharsets.UTF_8));
+            setScopesUpdateSyncFlag(this.authClientScopesCacheProperties,connection);
         }
     }
 
