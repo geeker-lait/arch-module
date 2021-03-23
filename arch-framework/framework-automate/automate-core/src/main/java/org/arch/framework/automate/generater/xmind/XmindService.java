@@ -148,8 +148,10 @@ public class XmindService {
                     topicNode.setDescr(titles[2]);
                 } else if (titles.length == 2) {
                     topicNode.setTyp(titles[0]);
-//                    topicNode.setValue(titles[1]);
-                    topicNode.setDescr(titles[1]);
+                    topicNode.setValue(titles[1]);
+                }
+                else if (titles.length == 1) {
+                    topicNode.setValue(titles[0]);
                 } else {
                     continue;
                 }
@@ -200,8 +202,8 @@ public class XmindService {
                             if (TopicTyp.INPUT.getType().equals(paramNode.getTyp())) {
                                 ParamProperties paramProperties = new ParamProperties();
                                 paramProperties.setDescr(paramNode.getDescr());
-                                paramProperties.setJavaTyp(TopicTyp.INPUT.getType());
-                                paramProperties.setType(paramNode.getTyp());
+                                paramProperties.setJavaTyp(paramNode.getTyp());
+                                paramProperties.setType(TopicTyp.INPUT.getType());
                                 paramProperties.setName(paramNode.getValue());
                                 if (!CollectionUtils.isEmpty(paramNode.getChildNodes())) {
                                     convertParams(paramNode.getChildNodes(), paramProperties);
@@ -210,8 +212,8 @@ public class XmindService {
                             } else if (TopicTyp.OUTPUT.getType().equals(paramNode.getTyp())) {
                                 ParamProperties paramProperties = new ParamProperties();
                                 paramProperties.setDescr(paramNode.getDescr());
-                                paramProperties.setJavaTyp(TopicTyp.OUTPUT.getType());
-                                paramProperties.setType(paramNode.getTyp());
+                                paramProperties.setJavaTyp(paramNode.getTyp());
+                                paramProperties.setType(TopicTyp.OUTPUT.getType());
                                 paramProperties.setName(paramNode.getValue());
                                 if (!CollectionUtils.isEmpty(paramNode.getChildNodes())) {
                                     convertParams(paramNode.getChildNodes(), paramProperties);
@@ -236,9 +238,10 @@ public class XmindService {
         for (TopicNode paramNode : Params) {
             ParamProperties paramProperties = new ParamProperties();
             paramProperties.setDescr(paramNode.getDescr());
-            paramProperties.setJavaTyp(paramNode.getTyp());
-            paramProperties.setType(paramNode.getTyp());
-            paramProperties.setName(paramNode.getValue());
+            //类型和名称颠倒，xmind中没有按照顺序来
+            paramProperties.setJavaTyp(paramNode.getValue());
+            paramProperties.setType("");
+            paramProperties.setName(paramNode.getTyp());
             if (!CollectionUtils.isEmpty(paramNode.getChildNodes())) {
                 convertParams(paramNode.getChildNodes(), paramProperties);
             }
