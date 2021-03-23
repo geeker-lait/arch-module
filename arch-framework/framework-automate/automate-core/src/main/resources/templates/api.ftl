@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 * @author ${author!""}
 * @date ${.now}
 */
-public interface ${(topicName?cap_first)!""}{
+public interface ${(mainClass?cap_first)!""}{
     <#list apis as method>
     /**
      * ${method.descr}
@@ -19,7 +19,7 @@ public interface ${(topicName?cap_first)!""}{
     @Client()
     </#if>
     @${method.httpMethod}
-    ${(method.output.javaTyp)!""} ${method.name!""}();
+    ${(method.output.javaTyp)!""} ${method.name!""}(<#list method.input as inp> ${inp.name}</#list>);
 
     </#list>
 

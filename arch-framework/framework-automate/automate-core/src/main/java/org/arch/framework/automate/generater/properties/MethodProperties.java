@@ -2,6 +2,7 @@ package org.arch.framework.automate.generater.properties;
 
 import org.arch.framework.automate.generater.core.ConfigProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class MethodProperties implements ConfigProperties {
     // 方法描述
     private String descr;
     // 方法输入参数
-    private List<ParamProperties> input;
+    private List<ParamProperties> input = new ArrayList<>();
     // 方法输出参数
     private ParamProperties output;
 

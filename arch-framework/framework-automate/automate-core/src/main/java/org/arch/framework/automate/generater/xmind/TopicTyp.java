@@ -15,6 +15,7 @@ public enum TopicTyp {
     PROJECT("project", "项目"),
     MODULE("module", "模块"),
     PKG("pkg", "包"),
+    ENTITY("entity","实体"),
     API("api","接口"),
     POST("post","post方法"),
     GET("get","get方法"),
