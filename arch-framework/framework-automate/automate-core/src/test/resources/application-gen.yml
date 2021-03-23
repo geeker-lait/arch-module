@@ -109,7 +109,7 @@ spring:
     schemas:
       - typ: xmind
         patterns: api
-        resources: classpath:api.xmind
+        resources: classpath:WMS.xmind
         project:
           name: test
           pkg: org.arch.pms
