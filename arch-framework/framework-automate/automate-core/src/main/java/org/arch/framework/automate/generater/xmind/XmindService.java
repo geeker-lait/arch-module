@@ -156,6 +156,7 @@ public class XmindService {
                     if (StringUtils.isEmpty(titles[1]) && StringUtils.isNotEmpty(titles[2])) {
                         topicNode.setValue(changeToPinYinJP.changeToTonePinYin(titles[2]));
                     }
+                    titles[2] = titles[2].replace("-", "_");
                     topicNode.setDescr(titles[2]);
                 } else if (titles.length == 2) {
                     topicNode.setTyp(titles[0]);
@@ -212,7 +213,7 @@ public class XmindService {
                             if (TopicTyp.INPUT.getType().equals(paramNode.getTyp())) {
                                 ParamProperties paramProperties = new ParamProperties();
                                 paramProperties.setDescr(paramNode.getDescr());
-                                paramProperties.setJavaTyp(paramNode.getTyp());
+                                paramProperties.setJavaTyp(paramNode.getValue());
                                 paramProperties.setType(TopicTyp.INPUT.getType());
                                 paramProperties.setName(paramNode.getValue());
                                 if (!CollectionUtils.isEmpty(paramNode.getChildNodes())) {
@@ -222,7 +223,7 @@ public class XmindService {
                             } else if (TopicTyp.OUTPUT.getType().equals(paramNode.getTyp())) {
                                 ParamProperties paramProperties = new ParamProperties();
                                 paramProperties.setDescr(paramNode.getDescr());
-                                paramProperties.setJavaTyp(paramNode.getTyp());
+                                paramProperties.setJavaTyp(paramNode.getValue());
                                 paramProperties.setType(TopicTyp.OUTPUT.getType());
                                 paramProperties.setName(paramNode.getValue());
                                 if (StringUtils.isEmpty(paramNode.getValue()) && !CollectionUtils.isEmpty(paramNode.getChildNodes())) {
@@ -241,6 +242,62 @@ public class XmindService {
                 xmindProperties.setApis(methodPropertiesList);
             }
             xmindPropertiesList.add(xmindProperties);
+        } else if (TopicTyp.ENTITY.getType().equals(topicNode.getTyp())) {
+//            if (pkgName.endsWith(".")) {
+//                pkgName = pkgName.substring(0, pkgName.lastIndexOf("."));
+//            }
+//            xmindProperties.setPkg(pkgName);
+//            xmindProperties.setTopicName(topicNode.getValue());
+//            xmindProperties.setDescr(topicNode.getDescr());
+//            //拼装方法
+//            if (!CollectionUtils.isEmpty(topicNode.getChildNodes())) {
+//                List<MethodProperties> methodPropertiesList = new ArrayList<>();
+//                for (TopicNode methodNode : topicNode.getChildNodes()) {
+//                    MethodProperties methodProperties = new MethodProperties();
+//                    methodProperties.setDescr(methodNode.getDescr());
+//                    methodProperties.setName(methodNode.getValue());
+//                    methodProperties.setHttpMethod(methodNode.getTyp());
+//                    //拼装参数
+//                    if (!CollectionUtils.isEmpty(methodNode.getChildNodes())) {
+//                        List<ParamProperties> inputs = new ArrayList<>();
+//                        for (TopicNode paramNode : methodNode.getChildNodes()) {
+//                            if (TopicTyp.INPUT.getType().equals(paramNode.getTyp())) {
+//                                ParamProperties paramProperties = new ParamProperties();
+//                                paramProperties.setDescr(paramNode.getDescr());
+//                                paramProperties.setJavaTyp(paramNode.getTyp());
+//                                paramProperties.setType(TopicTyp.INPUT.getType());
+//                                paramProperties.setName(paramNode.getValue());
+//                                if (!CollectionUtils.isEmpty(paramNode.getChildNodes())) {
+//                                    convertParams(paramNode.getChildNodes(), paramProperties);
+//                                }
+//                                inputs.add(paramProperties);
+//                            } else if (TopicTyp.OUTPUT.getType().equals(paramNode.getTyp())) {
+//                                ParamProperties paramProperties = new ParamProperties();
+//                                paramProperties.setDescr(paramNode.getDescr());
+//                                paramProperties.setJavaTyp(paramNode.getTyp());
+//                                paramProperties.setType(TopicTyp.OUTPUT.getType());
+//                                paramProperties.setName(paramNode.getValue());
+//                                if (StringUtils.isEmpty(paramNode.getValue()) && !CollectionUtils.isEmpty(paramNode.getChildNodes())) {
+//                                    paramProperties.setName("map");
+//                                }
+//                                if (!CollectionUtils.isEmpty(paramNode.getChildNodes())) {
+//                                    convertParams(paramNode.getChildNodes(), paramProperties);
+//                                    if (paramNode.getChildNodes().size() == 1) {
+//                                        paramProperties.setJavaTyp(paramNode.getChildNodes().get(0).getTyp());
+//                                        paramProperties.setName(paramNode.getChildNodes().get(0).getValue());
+//                                        paramProperties.setDescr(paramNode.getChildNodes().get(0).getDescr());
+//                                    }
+//                                }
+//                                methodProperties.setOutput(paramProperties);
+//                            }
+//                        }
+//                        methodProperties.setInput(inputs);
+//                    }
+//                    methodPropertiesList.add(methodProperties);
+//                }
+//                xmindProperties.setApis(methodPropertiesList);
+//            }
+//            xmindPropertiesList.add(xmindProperties);
         }
 
 
