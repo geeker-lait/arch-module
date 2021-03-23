@@ -55,17 +55,13 @@ public abstract class AbstractBuilder {
         try {
             // 写入文件
             if (Files.exists(filePath)) {
-
                 // 是否覆盖
                 if (!cover) {
                     log.info("skip {} due to file exists.", filePath);
                     return;
                 } else {
-
                     Files.delete(filePath);
-
                 }
-
             }
             Files.createFile(filePath);
         } catch (IOException e) {
@@ -99,11 +95,12 @@ public abstract class AbstractBuilder {
         }
         Path packPath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
         try {
-            if(pomProperties.getPattern().equalsIgnoreCase(SchemaPattern.API.getPattern())){
-                //Files.createDirectories(packPath);
+
+            if(schemaMetadata.getPattern().equalsIgnoreCase(SchemaPattern.API.getPattern())){
+                Files.createDirectories(packPath);
                 // 写入文件
-                for(MethodProperties api: schemaMetadata.getApis()){
-                    Files.createDirectories(packPath);
+                //for(MethodProperties api: schemaMetadata.getApis()){
+                    //Files.createDirectories(packPath);
                     String fileName = buildFileName(documentProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, schemaMetadata.getSchemaName()), true);
                     String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
                     Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));
@@ -121,10 +118,10 @@ public abstract class AbstractBuilder {
                     String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
                     // 写入文件
                     Files.write(filePath, code.getBytes());
-                }
-            } else if(pomProperties.getPattern().equalsIgnoreCase(SchemaPattern.MVC.getPattern())){
+                //}
+            } else if(schemaMetadata.getPattern().equalsIgnoreCase(SchemaPattern.MVC.getPattern())){
+                Files.createDirectories(packPath);
                 for (TableProperties tableProperties : schemaMetadata.getTables()) {
-                    Files.createDirectories(packPath);
                     String fileName = buildFileName(documentProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, tableProperties.getName()), true);
                     String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
                     Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));
