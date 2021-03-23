@@ -7,10 +7,12 @@ import com.alibaba.fastjson.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.arch.framework.automate.common.utils.ChangeToPinYinJP;
 import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.ParamProperties;
 import org.arch.framework.automate.generater.properties.XmindProperties;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -32,6 +34,9 @@ import java.util.Map;
 @Slf4j
 @Service
 public class XmindService {
+    @Autowired
+    ChangeToPinYinJP changeToPinYinJP;
+
     /**
      * 获取xmind中实体的定义
      *
@@ -114,6 +119,9 @@ public class XmindService {
         topicNode.setId(System.currentTimeMillis());
         topicNode.setTyp(titles[0]);
         topicNode.setValue(titles[1]);
+        if (StringUtils.isEmpty(titles[1]) && StringUtils.isNotEmpty(titles[2])) {
+            topicNode.setValue(changeToPinYinJP.changeToTonePinYin(titles[2]));
+        }
         topicNode.setDescr(titles[2]);
         recursionXmind(xMindNode.getChildren().getAttached(), topicNode);
         log.info(JSON.toJSONString(topicNode));
@@ -145,12 +153,14 @@ public class XmindService {
                 if (titles.length == 3) {
                     topicNode.setTyp(titles[0]);
                     topicNode.setValue(titles[1]);
+                    if (StringUtils.isEmpty(titles[1]) && StringUtils.isNotEmpty(titles[2])) {
+                        topicNode.setValue(changeToPinYinJP.changeToTonePinYin(titles[2]));
+                    }
                     topicNode.setDescr(titles[2]);
                 } else if (titles.length == 2) {
                     topicNode.setTyp(titles[0]);
                     topicNode.setValue(titles[1]);
-                }
-                else if (titles.length == 1) {
+                } else if (titles.length == 1) {
                     topicNode.setValue(titles[0]);
                 } else {
                     continue;
@@ -215,6 +225,9 @@ public class XmindService {
                                 paramProperties.setJavaTyp(paramNode.getTyp());
                                 paramProperties.setType(TopicTyp.OUTPUT.getType());
                                 paramProperties.setName(paramNode.getValue());
+                                if (StringUtils.isEmpty(paramNode.getValue()) && !CollectionUtils.isEmpty(paramNode.getChildNodes())) {
+                                    paramProperties.setName("map");
+                                }
                                 if (!CollectionUtils.isEmpty(paramNode.getChildNodes())) {
                                     convertParams(paramNode.getChildNodes(), paramProperties);
                                 }

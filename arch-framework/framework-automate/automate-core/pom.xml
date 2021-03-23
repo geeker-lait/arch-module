@@ -94,6 +94,12 @@
             <artifactId>dom4j</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.github.SilenceDut/jpinyin -->
+        <dependency>
+            <groupId>com.github.SilenceDut</groupId>
+            <artifactId>jpinyin</artifactId>
+            <version>1.0</version>
+        </dependency>
 
 
         <!--<dependency>
