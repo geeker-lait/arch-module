@@ -7,13 +7,16 @@ import org.arch.framework.id.IdService;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.AccountType;
 import org.arch.framework.ums.enums.LoginType;
+import org.arch.framework.ums.enums.Role;
 import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.AbstractOAuth2Token;
@@ -24,9 +27,11 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collection;
 
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.CommonStatusCode.EXTRACT_ACCOUNT_TYPE;
+import static org.arch.framework.ums.consts.RoleConstants.ROLE_PREFIX;
 
 /**
  * 获取当前登录的用户
@@ -82,6 +87,19 @@ public class SecurityUtils {
     public static AccountType getAccountType() {
         Long currentUserId = getCurrentUserId();
         return extractAccountTypeByAid(currentUserId);
+    }
+
+    /**
+     * 检查是否有 ADMIN 角色
+     * @param token 登录用户的 {@link TokenInfo}
+     * @return  true 表示为 ADMIN 或 SUPER_ADMIN 角色.
+     */
+    public static boolean isAdminForRole(@NonNull TokenInfo token) {
+        // 权限校验
+        Collection<GrantedAuthority> authorities = token.getAuthorities();
+        SimpleGrantedAuthority admin = new SimpleGrantedAuthority(ROLE_PREFIX + Role.ADMIN.name());
+        SimpleGrantedAuthority superAdmin = new SimpleGrantedAuthority(ROLE_PREFIX + Role.SUPER_ADMIN.name());
+        return authorities.contains(admin) || authorities.contains(superAdmin);
     }
 
     /**

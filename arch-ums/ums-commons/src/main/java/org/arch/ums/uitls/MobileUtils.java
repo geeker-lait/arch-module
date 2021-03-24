@@ -2,20 +2,16 @@ package org.arch.ums.uitls;
 
 import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.constant.ArgumentStatuesCode;
-import org.arch.framework.beans.exception.constant.CommonStatusCode;
 import org.arch.framework.beans.exception.constant.AuthStatusCode;
+import org.arch.framework.beans.exception.constant.CommonStatusCode;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.ums.enums.Role;
 import org.arch.ums.conf.entity.MobileInfo;
 import org.arch.ums.conf.entity.MobileSegment;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.BufferedReader;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -23,7 +19,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static org.arch.framework.ums.consts.RoleConstants.ROLE_PREFIX;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -57,19 +52,6 @@ public class MobileUtils {
                                    "保存失败的信息: " + errorList.toString());
         }
         return Response.success(Boolean.TRUE);
-    }
-
-    /**
-     * 检查是否有 ADMIN 角色
-     * @param token 登录用户的 {@link TokenInfo}
-     * @return  true 表示为 ADMIN 或 SUPER_ADMIN 角色.
-     */
-    public static boolean isAdminForRole(@NonNull TokenInfo token) {
-        // 权限校验
-        Collection<GrantedAuthority> authorities = token.getAuthorities();
-        SimpleGrantedAuthority admin = new SimpleGrantedAuthority(ROLE_PREFIX + Role.ADMIN.name());
-        SimpleGrantedAuthority superAdmin = new SimpleGrantedAuthority(ROLE_PREFIX + Role.SUPER_ADMIN.name());
-        return authorities.contains(admin) || authorities.contains(superAdmin);
     }
 
     /**

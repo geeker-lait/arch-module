@@ -34,10 +34,10 @@ import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_SEGMENT_FAILED;
 import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_SEGMENT_PARTIAL_FAILED;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
+import static org.arch.framework.utils.SecurityUtils.isAdminForRole;
 import static org.arch.ums.uitls.MobileUtils.check;
 import static org.arch.ums.uitls.MobileUtils.getBooleanResponse;
 import static org.arch.ums.uitls.MobileUtils.getMobileSegment;
-import static org.arch.ums.uitls.MobileUtils.isAdminForRole;
 
 /**
  * 手机号段信息(MobileSegment) 表服务控制器
