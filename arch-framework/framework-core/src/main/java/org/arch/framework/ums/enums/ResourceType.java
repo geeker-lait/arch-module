@@ -22,6 +22,10 @@ public enum ResourceType {
     /**
      * 链接
      */
-    LINK
+    LINK,
+    /**
+     * 文件
+     */
+    FILE
 
 }

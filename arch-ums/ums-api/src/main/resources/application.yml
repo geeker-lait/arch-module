@@ -18,7 +18,7 @@ spring:
         server-addr: localhost:8848
 
   profiles:
-    include: db,redis,arch,rocketmq
+    include: db,redis,arch,rocketmq,feign
     active: ${profile:dev}
 
 logging:
