@@ -23,7 +23,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @ToString
-public class DatabaseProperties implements ConfigProperties, SchemaMetadata {
+public class DatabaseProperties extends MetadataProperties implements ConfigProperties, SchemaMetadata {
     private String driver;
     private String dialect;
     private String host;
@@ -33,10 +33,7 @@ public class DatabaseProperties implements ConfigProperties, SchemaMetadata {
     private String password;
     // 匹配模式
     private String pattern;
-    @NestedConfigurationProperty
-    private List<TableProperties> tables = new ArrayList<>();
-    @NestedConfigurationProperty
-    private List<MethodProperties> apis = new ArrayList<>();
+
     @Override
     public String getSchemaName() {
         return name;

@@ -5,9 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.from.service.DatabaseService;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
+import org.arch.framework.automate.generater.core.SchemaPattern;
 import org.arch.framework.automate.generater.core.SchemaReadable;
 import org.arch.framework.automate.generater.core.SchemaType;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
+import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,7 @@ public class DatabaseSchemaReader extends AbstractSchemaReader implements Schema
         }
         databaseProperties.setName(res);
         databaseProperties.setTables(tableProperties);
+        databaseProperties.setPattern(SchemaPattern.MVC.getPattern());
         schemaMetadata.add(databaseProperties);
         return schemaMetadata;
     }
@@ -52,7 +55,13 @@ public class DatabaseSchemaReader extends AbstractSchemaReader implements Schema
     @Override
     protected List<SchemaMetadata> readApi(String res, Map<String, String> configuration) {
         List<SchemaMetadata> schemaMetadata = new ArrayList<>();
-
+        DatabaseProperties databaseProperties  = BeanUtil.toBean(configuration,DatabaseProperties.class);
+        // 获取数据库的api
+        List<MethodProperties> methodProperties = databaseService.getDatabaseApisInfo(databaseProperties, res);
+        databaseProperties.setName(res);
+        databaseProperties.setApis(methodProperties);
+        databaseProperties.setPattern(SchemaPattern.API.getPattern());
+        schemaMetadata.add(databaseProperties);
         return schemaMetadata;
     }
 
