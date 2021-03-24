@@ -1,6 +1,7 @@
 package org.arch.framework.automate.generater.xmind;
 
 import cn.hutool.core.io.resource.ClassPathResource;
+import cn.hutool.core.lang.Tuple;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -8,8 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.arch.framework.automate.common.utils.ChangeToPinYinJP;
+import org.arch.framework.automate.generater.core.SchemaPattern;
+import org.arch.framework.automate.generater.properties.ColumnsProperties;
 import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.ParamProperties;
+import org.arch.framework.automate.generater.properties.TableProperties;
+import org.arch.framework.automate.generater.properties.XmindProject;
 import org.arch.framework.automate.generater.properties.XmindProperties;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import java.util.Map;
@@ -77,10 +83,14 @@ public class XmindService {
 
     public List<XmindProperties> parseMetaData(String path) throws Exception {
         List<XMind> xMinds = loadMetaData(path);
-        TopicNode topicNode = convertTopic(xMinds);
+//        TopicNode topicNode = convertTopic(xMinds);
         List<XmindProperties> xmindProperties = new ArrayList<>();
-        convertProperties("", topicNode, xmindProperties);
-        return xmindProperties;
+//        convertProperties("", topicNode, xmindProperties);
+        //第一层默认project
+        XMindNode projectNode = xMinds.get(0).getRootTopic();
+        XmindProject xmindProject = new XmindProject();
+        convertProperties("", projectNode, null, xmindProject);
+        return xmindProject.getModules();
     }
 
 
@@ -103,220 +113,254 @@ public class XmindService {
         return xMinds;
     }
 
-    private TopicNode convertTopic(List<XMind> xMinds) throws Exception {
-        TopicNode topicNode = new TopicNode();
-        XMindNode xMindNode = xMinds.get(0).getRootTopic();
-        //第一层默认项目级别
-        String[] titles = xMindNode.getTitle().split(":");
-        if (titles.length != 3) {
-            throw new Exception("title解析错误");
+
+    private void convertParams(List<XMindNode> Params, ParamProperties pParamProperties) {
+        List<ParamProperties> paramPropertiesList = new ArrayList<>();
+        for (XMindNode paramNode : Params) {
+            String paramNodeTitle = paramNode.getTitle();
+            String[] paramNodeTitles = paramNodeTitle.split(":", 3);
+            //类型
+            String paramType = "";
+            //名称
+            String paramValue = "";
+            //描述
+            String paramDesc = "";
+            if (paramNodeTitles.length == 3) {
+                paramType = paramNodeTitles[0];
+                paramValue = paramNodeTitles[1];
+                paramDesc = paramNodeTitles[2];
+                //有描述没有名称，用拼音替换
+                if (StringUtils.isEmpty(paramValue) && StringUtils.isNotEmpty(paramDesc)) {
+                    paramValue = changeToPinYinJP.changeToTonePinYin(paramDesc);
+                }
+
+            } else {
+
+            }
+            ParamProperties paramProperties = new ParamProperties();
+            paramProperties.setDescr(paramDesc);
+            //类型和名称颠倒，xmind中没有按照顺序来
+            paramProperties.setJavaTyp(paramValue);
+            paramProperties.setType("");
+            paramProperties.setName(paramType);
+            if (paramNode != null && paramNode.getChildren() != null &&
+                    !CollectionUtils.isEmpty(paramNode.getChildren().getAttached())) {
+                convertParams(paramNode.getChildren().getAttached(), paramProperties);
+            }
+            paramPropertiesList.add(paramProperties);
         }
-//        TopicType topicType = TopicType.getTopicType(titles[0]);
-//        if (topicType == null) {
-//            throw new Exception("不存在的topic类型");
-//        }
-        //todo
-        topicNode.setId(System.currentTimeMillis());
-        topicNode.setTyp(titles[0]);
-        topicNode.setValue(titles[1]);
-        if (StringUtils.isEmpty(titles[1]) && StringUtils.isNotEmpty(titles[2])) {
-            topicNode.setValue(changeToPinYinJP.changeToTonePinYin(titles[2]));
-        }
-        topicNode.setDescr(titles[2]);
-        recursionXmind(xMindNode.getChildren().getAttached(), topicNode);
-        log.info(JSON.toJSONString(topicNode));
-        return topicNode;
+        pParamProperties.setChilds(paramPropertiesList);
     }
+
 
     /**
-     * 递归调用
+     * 递归生成xmindProperties
      *
-     * @param xMindNodes
-     * @param pTopicNode
+     * @param pkgName          包名称
+     * @param xMindNode
+     * @param pXmindProperties 父节点
      * @throws Exception
      */
-    private void recursionXmind(List<XMindNode> xMindNodes, TopicNode pTopicNode) throws Exception {
-        if (!CollectionUtils.isEmpty(xMindNodes)) {
-            List<TopicNode> topicNodes = new ArrayList<>();
-            for (XMindNode xMindNode : xMindNodes) {
-                String[] titles = xMindNode.getTitle().split(":");
-//                if (titles.length != 3) {
-//                    continue;
-//                }
-//                TopicType topicType = TopicType.getTopicType(titles[0]);
-//                if (topicType == null) {
-//                    log.warn("不存在的topic类型:{}", titles[0]);
-//                }
-
-                TopicNode topicNode = new TopicNode();
-                topicNode.setId(System.currentTimeMillis());
-                if (titles.length == 3) {
-                    topicNode.setTyp(titles[0]);
-                    topicNode.setValue(titles[1]);
-                    if (StringUtils.isEmpty(titles[1]) && StringUtils.isNotEmpty(titles[2])) {
-                        topicNode.setValue(changeToPinYinJP.changeToTonePinYin(titles[2]));
-                    }
-                    titles[2] = titles[2].replace("-", "_");
-                    topicNode.setDescr(titles[2]);
-                } else if (titles.length == 2) {
-                    topicNode.setTyp(titles[0]);
-                    topicNode.setValue(titles[1]);
-                } else if (titles.length == 1) {
-                    topicNode.setValue(titles[0]);
-                } else {
-                    continue;
-                }
-
-                if (xMindNode.getChildren() != null) {
-                    recursionXmind(xMindNode.getChildren().getAttached(), topicNode);
-                }
-                topicNodes.add(topicNode);
+    private void convertProperties(String pkgName, XMindNode xMindNode, XmindProperties pXmindProperties, XmindProject xmindProject) throws Exception {
+        String title = xMindNode.getTitle();
+        String[] titles = title.split(":", 3);
+        //类型
+        String type = "";
+        //名称
+        String name = "";
+        //描述
+        String description = "";
+        if (titles.length == 3) {
+            type = titles[0];
+            name = titles[1];
+            description = titles[2];
+            //有描述没有名称，用拼音替换
+            if (StringUtils.isEmpty(name) && StringUtils.isNotEmpty(description)) {
+                name = changeToPinYinJP.changeToTonePinYin(description);
             }
-            pTopicNode.setChildNodes(topicNodes);
-        }
-    }
+        } else {
 
-    private void convertProperties(String pkgName, TopicNode topicNode, List<XmindProperties> xmindPropertiesList) throws Exception {
-        XmindProperties xmindProperties = new XmindProperties();
-        if (TopicTyp.PROJECT.getType().equals(topicNode.getTyp())) {
-            for (TopicNode topicNode1 : topicNode.getChildNodes()) {
-                convertProperties(topicNode.getValue(), topicNode1, xmindPropertiesList);
+        }
+        //层级从project开始
+        if (TopicTyp.PROJECT.getType().equals(type)) {
+            pkgName = name;
+            if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
+                XmindProperties xmindProperties = new XmindProperties();
+                xmindProperties.setTopicName(name);
+                xmindProperties.setPkg(pkgName);
+                xmindProperties.setDescr(description);
+                for (XMindNode children : xMindNode.getChildren().getAttached()) {
+                    convertProperties(pkgName, children, xmindProperties, xmindProject);
+                }
+                xmindProject.getModules().add(xmindProperties);
             }
         }
-        //模块、包，拼接名称
-        else if (!CollectionUtils.isEmpty(topicNode.getChildNodes()) && (TopicTyp.MODULE.getType().equals(topicNode.getTyp()) || TopicTyp.PKG.getType().equals(topicNode.getTyp()))) {
+        //递归生成模块
+        else if (TopicTyp.MODULE.getType().equals(type)) {
             if (StringUtils.isNotEmpty(pkgName)) {
-                pkgName = pkgName + "." + topicNode.getValue();
+                pkgName = pkgName + "." + name;
             }
-            for (TopicNode topicNode1 : topicNode.getChildNodes()) {
-                convertProperties(pkgName, topicNode1, xmindPropertiesList);
+            XmindProperties xmindProperties = new XmindProperties();
+            xmindProperties.setTopicName(name);
+            xmindProperties.setPkg(pkgName);
+            xmindProperties.setDescr(description);
+            if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
+                for (XMindNode children : xMindNode.getChildren().getAttached()) {
+                    convertProperties(pkgName, children, xmindProperties, xmindProject);
+                }
             }
-        } else if (TopicTyp.API.getType().equals(topicNode.getTyp())) {
+            pXmindProperties.getChildren().add(xmindProperties);
+        } else if (TopicTyp.PKG.getType().equals(type)) {
+            if (StringUtils.isNotEmpty(pkgName)) {
+                pkgName = pkgName + "." + name;
+            }
+            XmindProperties xmindProperties = new XmindProperties();
+            xmindProperties.setTopicName(name);
+            xmindProperties.setPkg(pkgName);
+            xmindProperties.setDescr(description);
+            if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
+                for (XMindNode children : xMindNode.getChildren().getAttached()) {
+                    convertProperties(pkgName, children, pXmindProperties, xmindProject);
+                }
+            }
+            pXmindProperties.getChildren().add(xmindProperties);
+
+        } else if (TopicTyp.API.getType().equals(type)) {
             if (pkgName.endsWith(".")) {
                 pkgName = pkgName.substring(0, pkgName.lastIndexOf("."));
             }
+            XmindProperties xmindProperties = new XmindProperties();
             xmindProperties.setPkg(pkgName);
-            xmindProperties.setTopicName(topicNode.getValue());
-            xmindProperties.setDescr(topicNode.getDescr());
+            xmindProperties.setPattern(SchemaPattern.API.getPattern());
+            xmindProperties.setTopicName(name);
+            xmindProperties.setDescr(description);
             //拼装方法
-            if (!CollectionUtils.isEmpty(topicNode.getChildNodes())) {
-                List<MethodProperties> methodPropertiesList = new ArrayList<>();
-                for (TopicNode methodNode : topicNode.getChildNodes()) {
+            if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
+                for (XMindNode methodNode : xMindNode.getChildren().getAttached()) {
+                    String methodNodeTitle = methodNode.getTitle();
+                    String[] methodNodeTitles = methodNodeTitle.split(":", 3);
+                    //类型
+                    String httpMethod = "";
+                    //名称
+                    String methodName = "";
+                    //描述
+                    String methodDesc = "";
+                    if (methodNodeTitles.length == 3) {
+                        httpMethod = methodNodeTitles[0];
+                        methodName = methodNodeTitles[1];
+                        methodDesc = methodNodeTitles[2];
+                        //有描述没有名称，用拼音替换
+                        if (StringUtils.isEmpty(methodName) && StringUtils.isNotEmpty(methodDesc)) {
+                            methodName = changeToPinYinJP.changeToTonePinYin(methodDesc);
+                        }
+
+                    } else {
+
+                    }
                     MethodProperties methodProperties = new MethodProperties();
-                    methodProperties.setDescr(methodNode.getDescr());
-                    methodProperties.setName(methodNode.getValue());
-                    methodProperties.setHttpMethod(methodNode.getTyp());
+                    methodProperties.setDescr(methodDesc);
+                    methodProperties.setName(methodName);
+                    methodProperties.setHttpMethod(httpMethod);
                     //拼装参数
-                    if (!CollectionUtils.isEmpty(methodNode.getChildNodes())) {
+                    if (methodNode != null && methodNode.getChildren() != null && !CollectionUtils.isEmpty(methodNode.getChildren().getAttached())) {
                         List<ParamProperties> inputs = new ArrayList<>();
-                        for (TopicNode paramNode : methodNode.getChildNodes()) {
-                            if (TopicTyp.INPUT.getType().equals(paramNode.getTyp())) {
+                        for (XMindNode paramNode : methodNode.getChildren().getAttached()) {
+                            String paramNodeTitle = paramNode.getTitle();
+                            String[] paramNodeTitles = paramNodeTitle.split(":", 3);
+                            //类型
+                            String paramType = "";
+                            //名称
+                            String paramValue = "";
+                            //描述
+                            String paramDesc = "";
+                            if (paramNodeTitles.length == 3) {
+                                paramType = paramNodeTitles[0];
+                                paramValue = paramNodeTitles[1];
+                                paramDesc = paramNodeTitles[2];
+                                //有描述没有名称，用拼音替换
+                                if (StringUtils.isEmpty(paramValue) && StringUtils.isNotEmpty(paramDesc)) {
+                                    paramValue = changeToPinYinJP.changeToTonePinYin(paramDesc);
+                                }
+
+                            } else {
+
+                            }
+                            if (TopicTyp.INPUT.getType().equals(paramType)) {
                                 ParamProperties paramProperties = new ParamProperties();
-                                paramProperties.setDescr(paramNode.getDescr());
-                                paramProperties.setJavaTyp(paramNode.getValue());
+                                paramProperties.setDescr(paramDesc);
+                                paramProperties.setJavaTyp(paramValue);
                                 paramProperties.setType(TopicTyp.INPUT.getType());
-                                paramProperties.setName(paramNode.getValue());
-                                if (!CollectionUtils.isEmpty(paramNode.getChildNodes())) {
-                                    convertParams(paramNode.getChildNodes(), paramProperties);
+                                paramProperties.setName(paramValue);
+                                if (paramNode != null && paramNode.getChildren() != null && !CollectionUtils.isEmpty(paramNode.getChildren().getAttached())) {
+                                    convertParams(paramNode.getChildren().getAttached(), paramProperties);
                                 }
                                 inputs.add(paramProperties);
-                            } else if (TopicTyp.OUTPUT.getType().equals(paramNode.getTyp())) {
+                            } else if (TopicTyp.OUTPUT.getType().equals(paramType)) {
                                 ParamProperties paramProperties = new ParamProperties();
-                                paramProperties.setDescr(paramNode.getDescr());
-                                paramProperties.setJavaTyp(paramNode.getValue());
+                                paramProperties.setDescr(paramDesc);
+                                paramProperties.setJavaTyp(paramValue);
                                 paramProperties.setType(TopicTyp.OUTPUT.getType());
-                                paramProperties.setName(paramNode.getValue());
-                                if (StringUtils.isEmpty(paramNode.getValue()) && !CollectionUtils.isEmpty(paramNode.getChildNodes())) {
+                                paramProperties.setName(paramValue);
+                                if (StringUtils.isEmpty(paramValue) && paramNode != null && paramNode.getChildren() != null && !CollectionUtils.isEmpty(paramNode.getChildren().getAttached())) {
                                     paramProperties.setName("map");
                                 }
-                                if (!CollectionUtils.isEmpty(paramNode.getChildNodes())) {
-                                    convertParams(paramNode.getChildNodes(), paramProperties);
+                                if (paramNode != null && paramNode.getChildren() != null && !CollectionUtils.isEmpty(paramNode.getChildren().getAttached())) {
+                                    convertParams(paramNode.getChildren().getAttached(), paramProperties);
                                 }
                                 methodProperties.setOutput(paramProperties);
                             }
                         }
                         methodProperties.setInput(inputs);
                     }
-                    methodPropertiesList.add(methodProperties);
+                    xmindProperties.getApis().add(methodProperties);
                 }
-                xmindProperties.setApis(methodPropertiesList);
             }
-            xmindPropertiesList.add(xmindProperties);
-        } else if (TopicTyp.ENTITY.getType().equals(topicNode.getTyp())) {
-//            if (pkgName.endsWith(".")) {
-//                pkgName = pkgName.substring(0, pkgName.lastIndexOf("."));
-//            }
-//            xmindProperties.setPkg(pkgName);
-//            xmindProperties.setTopicName(topicNode.getValue());
-//            xmindProperties.setDescr(topicNode.getDescr());
-//            //拼装方法
-//            if (!CollectionUtils.isEmpty(topicNode.getChildNodes())) {
-//                List<MethodProperties> methodPropertiesList = new ArrayList<>();
-//                for (TopicNode methodNode : topicNode.getChildNodes()) {
-//                    MethodProperties methodProperties = new MethodProperties();
-//                    methodProperties.setDescr(methodNode.getDescr());
-//                    methodProperties.setName(methodNode.getValue());
-//                    methodProperties.setHttpMethod(methodNode.getTyp());
-//                    //拼装参数
-//                    if (!CollectionUtils.isEmpty(methodNode.getChildNodes())) {
-//                        List<ParamProperties> inputs = new ArrayList<>();
-//                        for (TopicNode paramNode : methodNode.getChildNodes()) {
-//                            if (TopicTyp.INPUT.getType().equals(paramNode.getTyp())) {
-//                                ParamProperties paramProperties = new ParamProperties();
-//                                paramProperties.setDescr(paramNode.getDescr());
-//                                paramProperties.setJavaTyp(paramNode.getTyp());
-//                                paramProperties.setType(TopicTyp.INPUT.getType());
-//                                paramProperties.setName(paramNode.getValue());
-//                                if (!CollectionUtils.isEmpty(paramNode.getChildNodes())) {
-//                                    convertParams(paramNode.getChildNodes(), paramProperties);
-//                                }
-//                                inputs.add(paramProperties);
-//                            } else if (TopicTyp.OUTPUT.getType().equals(paramNode.getTyp())) {
-//                                ParamProperties paramProperties = new ParamProperties();
-//                                paramProperties.setDescr(paramNode.getDescr());
-//                                paramProperties.setJavaTyp(paramNode.getTyp());
-//                                paramProperties.setType(TopicTyp.OUTPUT.getType());
-//                                paramProperties.setName(paramNode.getValue());
-//                                if (StringUtils.isEmpty(paramNode.getValue()) && !CollectionUtils.isEmpty(paramNode.getChildNodes())) {
-//                                    paramProperties.setName("map");
-//                                }
-//                                if (!CollectionUtils.isEmpty(paramNode.getChildNodes())) {
-//                                    convertParams(paramNode.getChildNodes(), paramProperties);
-//                                    if (paramNode.getChildNodes().size() == 1) {
-//                                        paramProperties.setJavaTyp(paramNode.getChildNodes().get(0).getTyp());
-//                                        paramProperties.setName(paramNode.getChildNodes().get(0).getValue());
-//                                        paramProperties.setDescr(paramNode.getChildNodes().get(0).getDescr());
-//                                    }
-//                                }
-//                                methodProperties.setOutput(paramProperties);
-//                            }
-//                        }
-//                        methodProperties.setInput(inputs);
-//                    }
-//                    methodPropertiesList.add(methodProperties);
-//                }
-//                xmindProperties.setApis(methodPropertiesList);
-//            }
-//            xmindPropertiesList.add(xmindProperties);
+            pXmindProperties.getChildren().add(xmindProperties);
         }
+        else if (TopicTyp.ENTITY.getType().equals(type)) {
+            if (pkgName.endsWith(".")) {
+                pkgName = pkgName.substring(0, pkgName.lastIndexOf("."));
+            }
+            TableProperties tableProperties = new TableProperties();
+            tableProperties.setName(name);
+            tableProperties.setComment(description);
+            pXmindProperties.setPattern(SchemaPattern.MVC.getPattern());
+            //拼装方法
+            if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
 
+                List<ColumnsProperties> columnsPropertiesList=new ArrayList<>();
+                for (XMindNode paramNode : xMindNode.getChildren().getAttached()) {
+                    String paramNodeTitle = paramNode.getTitle();
+                    String[] paramNodeTitles = paramNodeTitle.split(":", 3);
+                    //类型
+                    String paramType = "";
+                    //名称
+                    String paramValue = "";
+                    //描述
+                    String paramDesc = "";
+                    if (paramNodeTitles.length == 3) {
+                        paramType = paramNodeTitles[0];
+                        paramValue = paramNodeTitles[1];
+                        paramDesc = paramNodeTitles[2];
+                        //有描述没有名称，用拼音替换
+                        if (StringUtils.isEmpty(paramValue) && StringUtils.isNotEmpty(paramDesc)) {
+                            paramValue = changeToPinYinJP.changeToTonePinYin(paramDesc);
+                        }
 
+                    } else {
+
+                    }
+                    ColumnsProperties columnsProperties = new ColumnsProperties();
+                    columnsProperties.setTyp(paramValue);
+                    columnsProperties.setName(paramType);
+                    columnsProperties.setComment(paramDesc);
+                    columnsPropertiesList.add(columnsProperties);
+                }
+                tableProperties.setColumns(columnsPropertiesList);
+            }
+            pXmindProperties.getTables().add(tableProperties);
+        }
     }
 
-    private void convertParams(List<TopicNode> Params, ParamProperties pParamProperties) {
-        List<ParamProperties> paramPropertiesList = new ArrayList<>();
-        for (TopicNode paramNode : Params) {
-            ParamProperties paramProperties = new ParamProperties();
-            paramProperties.setDescr(paramNode.getDescr());
-            //类型和名称颠倒，xmind中没有按照顺序来
-            paramProperties.setJavaTyp(paramNode.getValue());
-            paramProperties.setType("");
-            paramProperties.setName(paramNode.getTyp());
-            if (!CollectionUtils.isEmpty(paramNode.getChildNodes())) {
-                convertParams(paramNode.getChildNodes(), paramProperties);
-            }
-            paramPropertiesList.add(paramProperties);
-        }
-        pParamProperties.setChilds(paramPropertiesList);
-    }
+
 }
