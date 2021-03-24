@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaReadable {
+public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaReadable{
 
 
     @Override
@@ -35,12 +35,12 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
     }
 
 
-    protected SchemaMetadata readApi(String res,Map<String,String> heads){
+    protected List<SchemaMetadata> readApi(String res,Map<String,String> heads){
 
         return null;
     }
 
-    protected SchemaMetadata readMvc(String res, Map<String,String> heads) {
+    protected List<SchemaMetadata> readMvc(String res, Map<String,String> heads) {
         // 从类路劲加载
         if(-1 != res.indexOf("classpath:")){
             res = new ClassPathResource(res.split(":")[1]).getAbsolutePath();
@@ -53,8 +53,7 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
         }
 
         Map<String, String> swapHeads = heads.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, e -> e.getKey()));
-        //List<SchemaMetadata> schemaMetadatas= new ArrayList<>();
-        DatabaseProperties databaseProperties = new DatabaseProperties();
+        List<SchemaMetadata> schemaMetadatas= new ArrayList<>();
         Map<String, String> tableMap = new HashMap<>();
 
         for (int i = 0, length = workbook.getNumberOfSheets(); i < length; ++i) {
@@ -118,13 +117,13 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
                 }
             }
 
-
+            DatabaseProperties databaseProperties = new DatabaseProperties();
             databaseProperties.setPattern(SchemaPattern.MVC.getPattern());
             databaseProperties.setName(dbName);
             databaseProperties.setTables(tables);
-            //schemaMetadatas.add(databaseProperties);
+            schemaMetadatas.add(databaseProperties);
         }
-        return databaseProperties;
+        return schemaMetadatas;
     }
 
 
