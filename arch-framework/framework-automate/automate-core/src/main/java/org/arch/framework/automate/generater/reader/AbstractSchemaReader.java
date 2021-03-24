@@ -20,7 +20,7 @@ import java.util.Map;
  * @date 2/26/2021 2:27 PM
  */
 
-public abstract class AbstractSchemaReader<T extends SchemaMetadata> implements SchemaReadable<T> {
+public abstract class AbstractSchemaReader {
 
     /**
      * 公共读取
@@ -39,12 +39,12 @@ public abstract class AbstractSchemaReader<T extends SchemaMetadata> implements 
              */
             if (pattern.equalsIgnoreCase(SchemaPattern.MVC.name())) {
                 Arrays.stream(schemaProperties.getResources().split(",")).forEach(res -> {
-                    schemaMetadatas.add(readMvc(res, schemaProperties.getConfiguration()));
+                    schemaMetadatas.addAll(readMvc(res, schemaProperties.getConfiguration()));
                 });
             } else if (pattern.equalsIgnoreCase(SchemaPattern.API.name())) {
                 // 我们不是真的渴望旅行，我们不是真正渴望看山、看水、看风景，只是这灵魂，被城市束缚，捆绑太久，我们需要找回最本真的自己，这大概便是旅行的意义
                 Arrays.stream(schemaProperties.getResources().split(",")).forEach(res -> {
-                    schemaMetadatas.add(readApi(res, schemaProperties.getConfiguration()));
+                    schemaMetadatas.addAll(readApi(res, schemaProperties.getConfiguration()));
                 });
             } else {
                 // 目前还没有支持其他schema
@@ -60,7 +60,7 @@ public abstract class AbstractSchemaReader<T extends SchemaMetadata> implements 
      * @param config
      * @return
      */
-    protected abstract SchemaMetadata readMvc(String res, Map<String, String> config);
+    protected abstract List<SchemaMetadata> readMvc(String res, Map<String, String> config);
 
 
     /**
@@ -70,7 +70,7 @@ public abstract class AbstractSchemaReader<T extends SchemaMetadata> implements 
      * @param config
      * @return
      */
-    protected abstract SchemaMetadata readApi(String res, Map<String, String> config);
+    protected abstract List<SchemaMetadata> readApi(String res, Map<String, String> config);
 
 
 }

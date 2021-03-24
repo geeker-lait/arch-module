@@ -14,6 +14,7 @@ import org.arch.framework.automate.generater.xmind.XmindSchemaService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -42,27 +43,24 @@ public class XmindSchemaReader extends AbstractSchemaReader implements SchemaRea
     }
 
     @Override
-    protected SchemaMetadata readMvc(String res, Map<String, String> configuration) {
-        //List<SchemaMetadata> schemaMetadatas = new ArrayList<>();
+    protected List<SchemaMetadata> readMvc(String res, Map<String, String> configuration) {
+        // todo
         List<TableProperties> schemaMetadata = xmindSchemaService.getTableProperties(/*res, configuration*/);
         XmindProperties xmindProperties = new XmindProperties();
         xmindProperties.setPattern(SchemaPattern.MVC.getPattern());
         xmindProperties.setTables(schemaMetadata);
-        //schemaMetadatas.add(xmindProperties);
-        return xmindProperties;
+        return Arrays.asList(xmindProperties);
     }
 
     @Override
-    protected SchemaMetadata readApi(String res, Map<String, String> configuration) {
+    protected List<SchemaMetadata> readApi(String res, Map<String, String> configuration) {
+        // todo
         List<MethodProperties> methodProperties = xmindSchemaService.getApiProperties();
         XmindProperties xmindProperties = new XmindProperties();
         xmindProperties.setPattern(SchemaPattern.API.getPattern());
         xmindProperties.setApis(methodProperties);
-
-        //List<SchemaMetadata> schemaMetadatas = new ArrayList<>();
-        //schemaMetadatas.add(xmindProperties);
         //schemaMetadatas.addAll(xmindSchemaService.getApiMetadate(res, configuration));
-        return xmindProperties;
+        return  Arrays.asList(xmindProperties);
     }
 
 

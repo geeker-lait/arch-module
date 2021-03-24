@@ -15,6 +15,7 @@ import org.arch.framework.automate.generater.properties.TableProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +28,14 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DatabaseSchemaReader extends AbstractSchemaReader<>{
+public class DatabaseSchemaReader extends AbstractSchemaReader implements SchemaReadable {
 
     private final DatabaseService databaseService;
+
+    @Override
+    public SchemaType getTyp() {
+        return SchemaType.DATABASE;
+    }
 
     @Override
     public List<SchemaMetadata> read(SchemaProperties schemaProperties) {
@@ -37,7 +43,7 @@ public class DatabaseSchemaReader extends AbstractSchemaReader<>{
     }
 
     @Override
-    protected SchemaMetadata readMvc(String res, Map<String, String> configuration) {
+    protected List<SchemaMetadata> readMvc(String res, Map<String, String> configuration) {
         DatabaseProperties databaseProperties  = BeanUtil.toBean(configuration,DatabaseProperties.class);
         // 获取数据库的table
         List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(databaseProperties, res);
@@ -47,26 +53,22 @@ public class DatabaseSchemaReader extends AbstractSchemaReader<>{
         databaseProperties.setName(res);
         databaseProperties.setTables(tableProperties);
         databaseProperties.setPattern(SchemaPattern.MVC.getPattern());
-        return databaseProperties;
+        return Arrays.asList(databaseProperties);
     }
 
     @Override
-    protected SchemaMetadata readApi(String res, Map<String, String> configuration) {
+    protected List<SchemaMetadata> readApi(String res, Map<String, String> configuration) {
         DatabaseProperties databaseProperties  = BeanUtil.toBean(configuration,DatabaseProperties.class);
         // 获取数据库的table
         List<MethodProperties> tableProperties = databaseService.getDatabaseApisInfo(databaseProperties, res);
         databaseProperties.setName(res);
         databaseProperties.setApis(tableProperties);
         databaseProperties.setPattern(SchemaPattern.API.getPattern());
-        return databaseProperties;
+
+        return Arrays.asList(databaseProperties);
     }
 
 
-
-    @Override
-    public SchemaType getTyp() {
-        return SchemaType.DATABASE;
-    }
 
 
 

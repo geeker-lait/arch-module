@@ -26,6 +26,11 @@ public interface SchemaService {
      */
     List<MethodProperties> getApiProperties();
 
+    /**
+     * 获取schemaMatedata
+     * @return
+     */
+    List<SchemaMetadata> getSchemaMatedatas();
 
 
 }

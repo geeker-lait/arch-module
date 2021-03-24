@@ -1,6 +1,7 @@
 package org.arch.framework.automate.generater.excel;
 
 import org.arch.framework.automate.generater.core.AbstractSchemaService;
+import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.core.SchemaService;
 import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
@@ -21,6 +22,11 @@ public class ExcelSchemaService extends AbstractSchemaService implements SchemaS
 
     @Override
     public List<MethodProperties> getApiProperties() {
+        return null;
+    }
+
+    @Override
+    public List<SchemaMetadata> getSchemaMatedatas() {
         return null;
     }
 }

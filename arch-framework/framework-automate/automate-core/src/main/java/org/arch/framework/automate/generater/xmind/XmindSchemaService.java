@@ -1,7 +1,6 @@
 package org.arch.framework.automate.generater.xmind;
 
 import cn.hutool.core.io.resource.ClassPathResource;
-import cn.hutool.core.lang.Tuple;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -9,17 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.arch.framework.automate.common.utils.ChangeToPinYinJP;
-import org.arch.framework.automate.generater.core.AbstractSchemaService;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.core.SchemaPattern;
-import org.arch.framework.automate.generater.properties.ColumnsProperties;
-import org.arch.framework.automate.generater.properties.MethodProperties;
-import org.arch.framework.automate.generater.properties.ParamProperties;
-import org.arch.framework.automate.generater.properties.TableProperties;
-import org.arch.framework.automate.generater.properties.XmindProject;
-import org.arch.framework.automate.generater.properties.XmindProperties;
+import org.arch.framework.automate.generater.core.SchemaService;
+import org.arch.framework.automate.generater.properties.*;
 import org.arch.framework.beans.utils.UnZipUtil;
-import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -29,9 +22,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 import java.util.Map;
 
 /**
@@ -48,6 +39,7 @@ public class XmindSchemaService implements SchemaService {
 
     /**
      * 获取xmind中实体/表的定义
+     *
      * @return
      */
     @Override
@@ -57,6 +49,7 @@ public class XmindSchemaService implements SchemaService {
 
     /**
      * 获取xmind中的api/方法定义
+     *
      * @return
      */
     @Override
@@ -64,6 +57,14 @@ public class XmindSchemaService implements SchemaService {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public List<SchemaMetadata> getSchemaMatedatas() {
+        return null;
+    }
 
 
     /**
@@ -328,8 +329,7 @@ public class XmindSchemaService implements SchemaService {
                 }
             }
             pXmindProperties.getChildren().add(xmindProperties);
-        }
-        else if (TopicTyp.ENTITY.getType().equals(type)) {
+        } else if (TopicTyp.ENTITY.getType().equals(type)) {
             if (pkgName.endsWith(".")) {
                 pkgName = pkgName.substring(0, pkgName.lastIndexOf("."));
             }
@@ -340,7 +340,7 @@ public class XmindSchemaService implements SchemaService {
             //拼装方法
             if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
 
-                List<ColumnsProperties> columnsPropertiesList=new ArrayList<>();
+                List<ColumnsProperties> columnsPropertiesList = new ArrayList<>();
                 for (XMindNode paramNode : xMindNode.getChildren().getAttached()) {
                     String paramNodeTitle = paramNode.getTitle();
                     String[] paramNodeTitles = paramNodeTitle.split(":", 3);
