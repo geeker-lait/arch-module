@@ -6,7 +6,7 @@ package org.arch.framework.automate.generater.core;
  * @weixin PN15855012581
  * @date :
  */
-public interface SchemaMetadata extends ApiSchemaMetadata, TableSchemaMetadata {
+public interface SchemaMetadata extends MethodSchemaMetadata, TableSchemaMetadata {
     String getSchemaName();
     void setPattern(String pattern);
     String getPattern();

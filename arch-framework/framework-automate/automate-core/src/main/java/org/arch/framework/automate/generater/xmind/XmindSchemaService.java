@@ -8,10 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.arch.framework.automate.common.utils.ChangeToPinYinJP;
+import org.arch.framework.automate.generater.core.SchemaMetadata;
+import org.arch.framework.automate.generater.core.SchemaPattern;
+import org.arch.framework.automate.generater.core.SchemaService;
 import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.ParamProperties;
+import org.arch.framework.automate.generater.properties.TableProperties;
 import org.arch.framework.automate.generater.properties.XmindProperties;
-import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -22,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Map;
 
 /**
@@ -33,20 +35,29 @@ import java.util.Map;
  */
 @Slf4j
 @Service
-public class XmindService {
+public class XmindSchemaService implements SchemaService {
     @Autowired
     ChangeToPinYinJP changeToPinYinJP;
 
     /**
-     * 获取xmind中实体的定义
-     *
-     * @param res
-     * @param configuration
+     * 获取xmind中实体/表的定义
      * @return
      */
-    public List<? extends SchemaMetadata> getEntityMetadate(String res, Map<String, String> configuration) {
-        return new ArrayList<>();
+    @Override
+    public List<TableProperties> getTableProperties() {
+        return null;
     }
+
+    /**
+     * 获取xmind中的api/方法定义
+     * @return
+     */
+    @Override
+    public List<MethodProperties> getApiProperties() {
+        return null;
+    }
+
+
 
     /**
      * 获取xmind中的api定义
@@ -195,7 +206,8 @@ public class XmindService {
                 pkgName = pkgName.substring(0, pkgName.lastIndexOf("."));
             }
             xmindProperties.setPkg(pkgName);
-            xmindProperties.setTopicName(topicNode.getValue());
+            xmindProperties.setPattern(SchemaPattern.API.getPattern());
+            xmindProperties.setTopicVal(topicNode.getValue());
             xmindProperties.setDescr(topicNode.getDescr());
             //拼装方法
             if (!CollectionUtils.isEmpty(topicNode.getChildNodes())) {
@@ -262,4 +274,6 @@ public class XmindService {
         }
         pParamProperties.setChilds(paramPropertiesList);
     }
+
+
 }

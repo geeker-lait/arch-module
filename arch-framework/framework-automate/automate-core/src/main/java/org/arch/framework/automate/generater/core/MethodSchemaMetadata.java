@@ -10,7 +10,7 @@ import java.util.List;
  * @weixin PN15855012581
  * @date 3/19/2021 3:47 PM
  */
-public interface ApiSchemaMetadata {
+public interface MethodSchemaMetadata {
 
     List<MethodProperties> getApis();
 }

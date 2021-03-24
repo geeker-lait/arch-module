@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.from.ddl.DDLOperate;
 import org.arch.framework.automate.generater.properties.DatabaseProperties;
+import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +32,7 @@ public class DatabaseService {
     }
 
 
-
+    public List<MethodProperties> getDatabaseApisInfo(DatabaseProperties databaseProperties, String res) {
+        return null;
+    }
 }

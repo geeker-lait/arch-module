@@ -117,6 +117,7 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
             }
 
             DatabaseProperties databaseProperties = new DatabaseProperties();
+            databaseProperties.setPattern(SchemaPattern.MVC.getPattern());
             databaseProperties.setName(dbName);
             databaseProperties.setTables(tables);
             schemaMetadatas.add(databaseProperties);

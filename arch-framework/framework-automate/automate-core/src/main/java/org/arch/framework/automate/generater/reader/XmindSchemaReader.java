@@ -1,19 +1,17 @@
 package org.arch.framework.automate.generater.reader;
 
-import cn.hutool.core.io.resource.ClassPathResource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.core.SchemaReadable;
 import org.arch.framework.automate.generater.core.SchemaType;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
-import org.arch.framework.automate.generater.xmind.UnZipUtil;
-import org.arch.framework.automate.generater.xmind.XmindService;
+import org.arch.framework.automate.generater.properties.TableProperties;
+import org.arch.framework.automate.generater.properties.XmindProperties;
+import org.arch.framework.automate.generater.xmind.XmindSchemaService;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class XmindSchemaReader extends AbstractSchemaReader implements SchemaReadable {
 
-    private final XmindService xmindService;
+    private final XmindSchemaService xmindSchemaService;
 
     @Override
     public SchemaType getTyp() {
@@ -44,15 +42,17 @@ public class XmindSchemaReader extends AbstractSchemaReader implements SchemaRea
     @Override
     protected List<SchemaMetadata> readMvc(String res, Map<String, String> configuration) {
         List<SchemaMetadata> schemaMetadatas = new ArrayList<>();
-        List<? extends SchemaMetadata> schemaMetadata = xmindService.getEntityMetadate(res, configuration);
-        schemaMetadatas.addAll(schemaMetadata);
+        List<TableProperties> schemaMetadata = xmindSchemaService.getTableProperties(/*res, configuration*/);
+        XmindProperties xmindProperties = new XmindProperties();
+        xmindProperties.setTables(schemaMetadata);
+        schemaMetadatas.add(xmindProperties);
         return schemaMetadatas;
     }
 
     @Override
     protected List<SchemaMetadata> readApi(String res, Map<String, String> configuration) {
         List<SchemaMetadata> schemaMetadatas = new ArrayList<>();
-        schemaMetadatas.addAll(xmindService.getApiMetadate(res, configuration));
+        schemaMetadatas.addAll(xmindSchemaService.getApiMetadate(res, configuration));
         return schemaMetadatas;
     }
 

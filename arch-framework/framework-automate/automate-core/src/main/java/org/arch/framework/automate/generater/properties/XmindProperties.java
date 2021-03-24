@@ -14,7 +14,7 @@ import java.util.List;
  * @date 3/15/2021 6:08 PM
  */
 @Data
-public class XmindProperties implements SchemaMetadata {
+public class XmindProperties extends MetadataProperties implements SchemaMetadata {
     /**
      * topic typ[TopicTyp.values()]
      * <p>
@@ -54,12 +54,7 @@ public class XmindProperties implements SchemaMetadata {
      * 孩子节点
      */
     private List<XmindProperties> childs;
-    // api方法列表
-    @NestedConfigurationProperty
-    private List<MethodProperties> apis = new ArrayList<>();
-    // entity实体列表
-    @NestedConfigurationProperty
-    private List<TableProperties> tables = new ArrayList<>();
+
     // 元数据名称
     @Override
     public String getSchemaName() {

@@ -3,10 +3,6 @@ package org.arch.framework.automate.generater.properties;
 import lombok.Builder;
 import lombok.Data;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author lait.zhang@gmail.com
@@ -16,7 +12,7 @@ import java.util.List;
  */
 @Data
 @Builder
-public final class ExcelProperties implements SchemaMetadata {
+public final class ExcelProperties extends MetadataProperties implements SchemaMetadata {
     private String sheetName;
     private Integer row;
     private String table;
@@ -31,10 +27,7 @@ public final class ExcelProperties implements SchemaMetadata {
     private String comment;
     // 匹配模式
     private String pattern;
-    @NestedConfigurationProperty
-    private List<TableProperties> tables = new ArrayList<>();
-    @NestedConfigurationProperty
-    private List<MethodProperties> apis = new ArrayList<>();
+
     @Override
     public String getSchemaName() {
         return sheetName;

@@ -90,14 +90,11 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
         generatorConfig.getSchemas().forEach(s -> {
             List<SchemaMetadata> schemaDatas = readerMap.get(s.getTyp()).read(s);
             if (schemaDatas != null) {
-                for (String pattern : s.getPatterns().split(",")) {
-                    schemaDatas.forEach(d -> {
-                        d.setPattern(pattern);
-                        // 创建项目模块
-                        buildModule(rootPath, generatorConfig.getProject().getPom(), d);
-                        pomBuildOnce = false;
-                    });
-                }
+                schemaDatas.forEach(d -> {
+                    // 创建项目模块
+                    buildModule(rootPath, generatorConfig.getProject().getPom(), d);
+                    pomBuildOnce = false;
+                });
             }
         });
         DEPS.remove();
