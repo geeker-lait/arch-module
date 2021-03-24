@@ -25,4 +25,7 @@ public interface SchemaService {
      * @return
      */
     List<MethodProperties> getApiProperties();
+
+
+
 }

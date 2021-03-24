@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.xmind;
+package org.arch.framework.beans.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;

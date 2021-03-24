@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.arch.framework.automate.common.utils.ChangeToPinYinJP;
+import org.arch.framework.automate.generater.core.AbstractSchemaService;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.core.SchemaPattern;
 import org.arch.framework.automate.generater.core.SchemaService;
@@ -15,6 +16,7 @@ import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.ParamProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
 import org.arch.framework.automate.generater.properties.XmindProperties;
+import org.arch.framework.beans.utils.UnZipUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -35,12 +37,13 @@ import java.util.Map;
  */
 @Slf4j
 @Service
-public class XmindSchemaService implements SchemaService {
+public class XmindSchemaService extends AbstractSchemaService implements SchemaService {
     @Autowired
     ChangeToPinYinJP changeToPinYinJP;
 
     /**
      * 获取xmind中实体/表的定义
+     *
      * @return
      */
     @Override
@@ -50,13 +53,13 @@ public class XmindSchemaService implements SchemaService {
 
     /**
      * 获取xmind中的api/方法定义
+     *
      * @return
      */
     @Override
     public List<MethodProperties> getApiProperties() {
         return null;
     }
-
 
 
     /**

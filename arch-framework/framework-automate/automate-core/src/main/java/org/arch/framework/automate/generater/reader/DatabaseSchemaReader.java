@@ -27,18 +27,17 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DatabaseSchemaReader extends AbstractSchemaReader implements SchemaReadable {
+public class DatabaseSchemaReader extends AbstractSchemaReader<>{
 
     private final DatabaseService databaseService;
 
     @Override
     public List<SchemaMetadata> read(SchemaProperties schemaProperties) {
-        return super.read(schemaProperties);
+        return super.doRead(schemaProperties);
     }
 
     @Override
-    protected List<SchemaMetadata> readMvc(String res, Map<String, String> configuration) {
-        List<SchemaMetadata> schemaMetadata = new ArrayList<>();
+    protected SchemaMetadata readMvc(String res, Map<String, String> configuration) {
         DatabaseProperties databaseProperties  = BeanUtil.toBean(configuration,DatabaseProperties.class);
         // 获取数据库的table
         List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(databaseProperties, res);
@@ -48,21 +47,18 @@ public class DatabaseSchemaReader extends AbstractSchemaReader implements Schema
         databaseProperties.setName(res);
         databaseProperties.setTables(tableProperties);
         databaseProperties.setPattern(SchemaPattern.MVC.getPattern());
-        schemaMetadata.add(databaseProperties);
-        return schemaMetadata;
+        return databaseProperties;
     }
 
     @Override
-    protected List<SchemaMetadata> readApi(String res, Map<String, String> configuration) {
-        List<SchemaMetadata> schemaMetadata = new ArrayList<>();
+    protected SchemaMetadata readApi(String res, Map<String, String> configuration) {
         DatabaseProperties databaseProperties  = BeanUtil.toBean(configuration,DatabaseProperties.class);
-        // 获取数据库的api
-        List<MethodProperties> methodProperties = databaseService.getDatabaseApisInfo(databaseProperties, res);
+        // 获取数据库的table
+        List<MethodProperties> tableProperties = databaseService.getDatabaseApisInfo(databaseProperties, res);
         databaseProperties.setName(res);
-        databaseProperties.setApis(methodProperties);
+        databaseProperties.setApis(tableProperties);
         databaseProperties.setPattern(SchemaPattern.API.getPattern());
-        schemaMetadata.add(databaseProperties);
-        return schemaMetadata;
+        return databaseProperties;
     }
 
 

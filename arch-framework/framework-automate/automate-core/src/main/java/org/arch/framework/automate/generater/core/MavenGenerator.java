@@ -68,9 +68,7 @@ public class MavenGenerator extends AbstractGenerator {
                 Files.createDirectories(path.resolve(dir));
             }
         }
-        if(!schemaData.getPattern().equalsIgnoreCase(pomProperties.getPattern())){
-            return;
-        }
+
         pomProperties.setPackaging("jar");
         if (!StringUtils.isEmpty(pomProperties.getDocumentTypes())) {
             List<String> docTyps = Arrays.asList(pomProperties.getDocumentTypes().split(","));

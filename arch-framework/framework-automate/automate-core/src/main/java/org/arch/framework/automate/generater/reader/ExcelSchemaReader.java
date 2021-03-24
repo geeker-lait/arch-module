@@ -31,20 +31,16 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
     @Override
     public List<SchemaMetadata> read(SchemaProperties schemaProperties) {
         // 如果有有特殊处理，再次处理，如果没有则调用父类通用处理
-        return super.read(schemaProperties);
+        return super.doRead(schemaProperties);
     }
 
 
-    protected List<SchemaMetadata> readApi(String res,Map<String,String> heads){
-        List<SchemaMetadata> schemaMetadata = new ArrayList<>();
+    protected SchemaMetadata readApi(String res,Map<String,String> heads){
 
-        return schemaMetadata;
+        return null;
     }
 
-    protected List<SchemaMetadata> readMvc(String res, Map<String,String> heads) {
-        Map<String, String> swapHeads = heads.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, e -> e.getKey()));
-        List<SchemaMetadata> schemaMetadatas= new ArrayList<>();
-        Map<String, String> tableMap = new HashMap<>();
+    protected SchemaMetadata readMvc(String res, Map<String,String> heads) {
         // 从类路劲加载
         if(-1 != res.indexOf("classpath:")){
             res = new ClassPathResource(res.split(":")[1]).getAbsolutePath();
@@ -55,6 +51,12 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Map<String, String> swapHeads = heads.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, e -> e.getKey()));
+        //List<SchemaMetadata> schemaMetadatas= new ArrayList<>();
+        DatabaseProperties databaseProperties = new DatabaseProperties();
+        Map<String, String> tableMap = new HashMap<>();
+
         for (int i = 0, length = workbook.getNumberOfSheets(); i < length; ++i) {
             // 存放所有table信息
             List<TableProperties> tables = new ArrayList<>();
@@ -116,13 +118,13 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
                 }
             }
 
-            DatabaseProperties databaseProperties = new DatabaseProperties();
+
             databaseProperties.setPattern(SchemaPattern.MVC.getPattern());
             databaseProperties.setName(dbName);
             databaseProperties.setTables(tables);
-            schemaMetadatas.add(databaseProperties);
+            //schemaMetadatas.add(databaseProperties);
         }
-        return schemaMetadatas;
+        return databaseProperties;
     }
 
 
