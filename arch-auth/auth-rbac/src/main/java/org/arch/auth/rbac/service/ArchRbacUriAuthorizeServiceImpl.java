@@ -47,93 +47,17 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
     private volatile Boolean isUpdatedOfAllRoles = Boolean.FALSE;
     private volatile Boolean isUpdatedOfAllGroups = Boolean.FALSE;
 
-    /**
-     * @see #updateAuthoritiesOfAllTenant()
-     */
     @Override
-    protected void updateAuthoritiesOfAllRoles() {
+    public void initAllAuthorities() throws RolePermissionsException {
+        // 初始化更新所有的权限
+        synchronized (lock) {
+            this.isUpdatedOfAllRoles = Boolean.FALSE;
+            this.isUpdatedOfAllScopes = Boolean.FALSE;
+            this.isUpdatedOfAllGroups = Boolean.FALSE;
+        }
         updateAuthoritiesOfAllTenant();
-    }
-
-    @Override
-    protected void updateAuthoritiesOfAllTenant() {
-        if (this.allTenantsAuthoritiesMap != null) {
-            // 从数据源获取所有角色的权限
-            if (!this.isUpdatedOfAllRoles) {
-                synchronized (lock) {
-                    if (!this.isUpdatedOfAllRoles) {
-                        this.allTenantsAuthoritiesMap.putAll(authoritiesService.getAllAuthoritiesOfAllTenant());
-                        this.isUpdatedOfAllRoles = Boolean.TRUE;
-                    }
-                }
-            }
-            return;
-        }
-        synchronized (lock) {
-            if (this.allTenantsAuthoritiesMap != null) {
-                if (!this.isUpdatedOfAllRoles) {
-                    this.allTenantsAuthoritiesMap.putAll(authoritiesService.getAllAuthoritiesOfAllTenant());
-                    this.isUpdatedOfAllRoles = Boolean.TRUE;
-                }
-                return;
-            }
-            // 从数据源获取所有角色的权限
-            this.allTenantsAuthoritiesMap = new ConcurrentHashMap<>(authoritiesService.getAllAuthoritiesOfAllTenant());
-        }
-    }
-
-    @Override
-    protected void updateAuthoritiesOfAllScopes() {
-        if (this.allTenantsAuthoritiesMap != null) {
-            // 从数据源获取所有 scopes 的权限
-            if (!this.isUpdatedOfAllScopes) {
-                synchronized (lock) {
-                    if (!this.isUpdatedOfAllScopes) {
-                        this.allTenantsAuthoritiesMap.putAll(authoritiesService.getAllAuthoritiesOfAllScopes());
-                        this.isUpdatedOfAllScopes = Boolean.TRUE;
-                    }
-                }
-            }
-            return;
-        }
-        synchronized (lock) {
-            if (this.allTenantsAuthoritiesMap != null) {
-                if (!this.isUpdatedOfAllScopes) {
-                    this.allTenantsAuthoritiesMap.putAll(authoritiesService.getAllAuthoritiesOfAllScopes());
-                    this.isUpdatedOfAllScopes = Boolean.TRUE;
-                }
-                return;
-            }
-            // 从数据源获取所有 scopes 的权限
-            this.allTenantsAuthoritiesMap = new ConcurrentHashMap<>(authoritiesService.getAllAuthoritiesOfAllScopes());
-        }
-    }
-
-    @Override
-    protected void updateAllGroupsOfAllTenant() {
-        if (this.allTenantsGroupsMap != null) {
-            // 从数据源获取所有角色的权限
-            if (!this.isUpdatedOfAllGroups) {
-                synchronized (lock) {
-                    if (!this.isUpdatedOfAllGroups) {
-                        this.allTenantsGroupsMap.putAll(authoritiesService.getAllGroupRolesOfAllTenant());
-                        this.isUpdatedOfAllGroups = Boolean.TRUE;
-                    }
-                }
-            }
-            return;
-        }
-        synchronized (lock) {
-            if (this.allTenantsGroupsMap != null) {
-                if (!this.isUpdatedOfAllGroups) {
-                    this.allTenantsGroupsMap.putAll(authoritiesService.getAllGroupRolesOfAllTenant());
-                    this.isUpdatedOfAllGroups = Boolean.TRUE;
-                }
-                return;
-            }
-            // 从数据源获取所有角色的权限
-            this.allTenantsGroupsMap = new ConcurrentHashMap<>(authoritiesService.getAllGroupRolesOfAllTenant());
-        }
+        updateAuthoritiesOfAllScopes();
+        updateAllGroupsOfAllTenant();
     }
 
     /**
@@ -227,7 +151,7 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
     public void afterPropertiesSet() {
         // 缓存所有 uri(资源) 权限 Map(tenantAuthority/scopeAuthority, Map(role, map(uri/path, Set(permission)))
         // 角色组(Group) Map(tenantAuthority, Map (groupAuthority, Set(roleAuthority)))
-        initUpdateAllAuthorities();
+        initAllAuthorities();
     }
 
     @Override
@@ -322,16 +246,85 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
         });
     }
 
-    private void initUpdateAllAuthorities() {
-        // 初始化更新所有的权限
-        synchronized (lock) {
-            this.isUpdatedOfAllRoles = Boolean.FALSE;
-            this.isUpdatedOfAllScopes = Boolean.FALSE;
-            this.isUpdatedOfAllGroups = Boolean.FALSE;
+    private void updateAuthoritiesOfAllTenant() {
+        if (this.allTenantsAuthoritiesMap != null) {
+            // 从数据源获取所有角色与 scopes 的权限
+            if (!this.isUpdatedOfAllRoles) {
+                syncUpdateAllAuthoritiesOfRoles();
+            }
+            return;
         }
-        updateAuthoritiesOfAllTenant();
-        updateAuthoritiesOfAllScopes();
-        updateAllGroupsOfAllTenant();
+        synchronized (lock) {
+            if (this.allTenantsAuthoritiesMap != null) {
+                syncUpdateAllAuthoritiesOfRoles();
+                return;
+            }
+            // 从数据源获取所有角色的权限
+            this.allTenantsAuthoritiesMap = new ConcurrentHashMap<>(authoritiesService.getAllAuthoritiesOfAllTenant());
+        }
+    }
+
+    private void updateAuthoritiesOfAllScopes() {
+        if (this.allTenantsAuthoritiesMap != null) {
+            // 从数据源获取所有角色与 scopes 的权限
+            if (!this.isUpdatedOfAllRoles) {
+                syncUpdateAllAuthoritiesOfScopes();
+            }
+            return;
+        }
+        synchronized (lock) {
+            if (this.allTenantsAuthoritiesMap != null) {
+                syncUpdateAllAuthoritiesOfScopes();
+                return;
+            }
+            // 从数据源获取所有 scopes 的权限
+            this.allTenantsAuthoritiesMap = new ConcurrentHashMap<>(authoritiesService.getAllAuthoritiesOfAllScopes());
+        }
+    }
+
+    private void updateAllGroupsOfAllTenant() {
+        if (this.allTenantsGroupsMap != null) {
+            // 从数据源获取所有角色的权限
+            if (!this.isUpdatedOfAllGroups) {
+                syncUpdateAllGroups();
+            }
+            return;
+        }
+        synchronized (lock) {
+            if (this.allTenantsGroupsMap != null) {
+                syncUpdateAllGroups();
+                return;
+            }
+            // 从数据源获取所有角色的权限
+            this.allTenantsGroupsMap = new ConcurrentHashMap<>(authoritiesService.getAllGroupRolesOfAllTenant());
+        }
+    }
+
+    private void syncUpdateAllGroups() {
+        synchronized (lock) {
+            if (!this.isUpdatedOfAllGroups) {
+                this.allTenantsGroupsMap.putAll(authoritiesService.getAllGroupRolesOfAllTenant());
+                this.isUpdatedOfAllGroups = Boolean.TRUE;
+            }
+        }
+    }
+
+    private void syncUpdateAllAuthoritiesOfRoles() {
+        synchronized (lock) {
+            if (!this.isUpdatedOfAllRoles) {
+                this.allTenantsAuthoritiesMap.putAll(authoritiesService.getAllAuthoritiesOfAllTenant());
+                this.isUpdatedOfAllRoles = Boolean.TRUE;
+            }
+        }
+    }
+
+    private void syncUpdateAllAuthoritiesOfScopes() {
+        synchronized (lock) {
+            if (!this.isUpdatedOfAllScopes) {
+                this.allTenantsAuthoritiesMap.putAll(authoritiesService.getAllAuthoritiesOfAllScopes());
+                this.isUpdatedOfAllScopes = Boolean.TRUE;
+            }
+        }
     }
 
 }
