@@ -27,6 +27,7 @@
         <module>arch-pms</module>
         <module>arch-rule</module>
         <module>arch-ums</module>
+        <module>arch-sms</module>
     </modules>
 
 
