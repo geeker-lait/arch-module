@@ -3,7 +3,7 @@ package org.arch.ums.feign.account.client;
 
 import org.arch.framework.feign.BaseFeignService;
 import org.arch.ums.account.entity.Permission;
-import org.arch.ums.feign.config.UmsDeFaultFeignConfig;
+import org.arch.framework.feign.config.DeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-permission", path = "/ums/account/permission",
-        configuration = UmsDeFaultFeignConfig.class)
+        configuration = DeFaultFeignConfig.class)
 public interface UmsAccountPermissionFeignService extends BaseFeignService<Permission, java.lang.Long> {
 
 }

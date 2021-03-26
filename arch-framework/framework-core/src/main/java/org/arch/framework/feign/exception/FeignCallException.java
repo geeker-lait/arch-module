@@ -1,4 +1,4 @@
-package org.arch.ums.feign.exception;
+package org.arch.framework.feign.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.enums.StatusCode;

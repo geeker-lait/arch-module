@@ -3,7 +3,7 @@ package org.arch.ums.feign.conf.client;
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
 import org.arch.ums.conf.entity.FileInfo;
-import org.arch.ums.feign.config.UmsDeFaultFeignConfig;
+import org.arch.framework.feign.config.DeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-confFileInfo", path = "/ums/conf/file/info",
-        configuration = UmsDeFaultFeignConfig.class)
+        configuration = DeFaultFeignConfig.class)
 public interface ConfFileInfoFeignService extends BaseFeignService<FileInfo, Long> {
 
     /**

@@ -110,6 +110,11 @@
             <artifactId>ums-commons</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-jwt</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>

@@ -6,7 +6,7 @@ import org.arch.ums.account.dto.Auth2ConnectionDto;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
-import org.arch.ums.feign.config.UmsDeFaultFeignConfig;
+import org.arch.framework.feign.config.DeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
@@ -30,7 +30,7 @@ import java.util.Map;
  */
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-identifier", path = "/ums/account/identifier",
-        configuration = UmsDeFaultFeignConfig.class)
+        configuration = DeFaultFeignConfig.class)
 public interface UmsAccountIdentifierFeignService extends BaseFeignService<Identifier, Long> {
 
     /**
