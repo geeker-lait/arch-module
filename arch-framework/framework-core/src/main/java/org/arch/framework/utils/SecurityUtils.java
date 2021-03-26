@@ -12,6 +12,7 @@ import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,6 +33,7 @@ import java.util.Collection;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.CommonStatusCode.EXTRACT_ACCOUNT_TYPE;
 import static org.arch.framework.ums.consts.RoleConstants.ROLE_PREFIX;
+import static org.arch.framework.ums.consts.RoleConstants.TENANT_PREFIX;
 
 /**
  * 获取当前登录的用户
@@ -87,6 +89,39 @@ public class SecurityUtils {
     public static AccountType getAccountType() {
         Long currentUserId = getCurrentUserId();
         return extractAccountTypeByAid(currentUserId);
+    }
+
+    /**
+     * 获取角色的租户权限
+     * @return  租户权限.
+     */
+    @Nullable
+    public static String getCurrentTenantAuthority() {
+        TokenInfo currentUser = getCurrentUser();
+        Collection<GrantedAuthority> authorities = currentUser.getAuthorities();
+        for (GrantedAuthority authority : authorities) {
+            String authorityStr = authority.getAuthority();
+            if (authorityStr.startsWith(TENANT_PREFIX)) {
+                return authorityStr;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取角色的租户权限
+     * @return  租户权限.
+     */
+    @Nullable
+    public static String getTenantAuthority(@NonNull Authentication authentication) {
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        for (GrantedAuthority authority : authorities) {
+            String authorityStr = authority.getAuthority();
+            if (authorityStr.startsWith(TENANT_PREFIX)) {
+                return authorityStr;
+            }
+        }
+        return null;
     }
 
     /**
