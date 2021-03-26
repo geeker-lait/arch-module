@@ -1,13 +1,14 @@
 package org.arch.ums.account.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.beans.Response;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.ums.account.dto.RoleGroupSearchDto;
 import org.arch.ums.account.entity.RoleGroup;
 import org.arch.ums.account.service.RoleGroupService;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.beans.Response;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
-import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -141,6 +142,45 @@ public class RoleGroupController implements CrudController<RoleGroup, java.lang.
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有租户的所有角色组的角色
+     * @return  Map(tenantAuthority, Map(groupAuthority, Set(roleAuthority))), 如果不存在这返回空集合.
+     */
+    @GetMapping("/listGroups")
+    @NonNull
+    public Response<Map<String, Map<String, Set<String>>>> listAllGroups() {
+        try {
+            return Response.success(this.roleGroupService.listAllGroups());
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 多租户获取 所有 group 的所有角色资源
+     *
+     * @param tenantId 多租户 ID
+     * @param groupId  用户的 groupId
+     * @param roleIds  用户的角色 ids
+     * @return  Map(tenantAuthority, Map(groupAuthority, Set(roleAuthority))), 如果不存在这返回空集合.
+     */
+    @GetMapping("/find/{tenantId:\\d+}/{groupId:\\d+}")
+    @NonNull
+    public Response<Map<String, Map<String, Set<String>>>> findGroupRolesByGroupIdOfTenant(
+            @PathVariable(value = "tenantId") Integer tenantId,
+            @PathVariable(value = "groupId") Long groupId,
+            @RequestBody List<Long> roleIds) {
+        try {
+            return Response.success(this.roleGroupService.findGroupRolesByGroupIdOfTenant(tenantId, groupId, roleIds));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
             return Response.error(FAILED.getCode(), e.getMessage());
         }
     }

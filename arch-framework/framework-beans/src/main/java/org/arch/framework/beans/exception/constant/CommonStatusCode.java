@@ -28,6 +28,12 @@ public enum CommonStatusCode implements CommonExceptionAssert {
     // retry
     DUPLICATE_KEY(7001, "主键或唯一索引重复"),
 
+    // json
+    JSON_RESOLVE_FAILED(7940, "json 解析失败"),
+
+    // 多租户
+    NOT_TENANT_ACCOUNT(7950, "不是多租户账号"),
+
     // 上传
     MAX_UPLOAD_SIZE_EXCEEDED_EXCEPTION(7960, "超出最大上传尺寸"),
 

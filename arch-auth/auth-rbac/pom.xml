@@ -18,7 +18,7 @@
 
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>ums-feign-api</artifactId>
+            <artifactId>ums-commons</artifactId>
         </dependency>
 
         <dependency>

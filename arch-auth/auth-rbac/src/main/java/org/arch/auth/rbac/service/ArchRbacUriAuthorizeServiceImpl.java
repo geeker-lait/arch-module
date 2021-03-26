@@ -1,8 +1,11 @@
 package org.arch.auth.rbac.service;
 
 import lombok.RequiredArgsConstructor;
+import org.arch.framework.utils.SecurityUtils;
+import org.arch.ums.account.vo.MenuVo;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
 import top.dcenter.ums.security.core.api.premission.service.AbstractUriAuthorizeService;
 import top.dcenter.ums.security.core.api.premission.service.UpdateCacheOfRolesResourcesService;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
@@ -10,12 +13,18 @@ import top.dcenter.ums.security.core.exception.RolePermissionsException;
 import top.dcenter.ums.security.core.premission.enums.PermissionType;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static org.springframework.util.StringUtils.hasText;
 import static top.dcenter.ums.security.common.consts.TenantConstants.DEFAULT_TENANT_PREFIX;
 
 /**
@@ -36,6 +45,10 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
      * 所有组的角色 Map(tenantAuthority, Map(groupAuthority, Set(roleAuthority)))
      */
     private volatile Map<String, Map<String, Set<String>>> allTenantsGroupsMap;
+    /**
+     * 所有菜单权限 Map(tenantAuthority, Map(roleAuthority, Map(Menu[level,sorted], Set(Menu[sorted])))), 中括号中的排序字段.
+     */
+    private volatile Map<String, Map<String, Map<MenuVo, Set<MenuVo>>>> allTenantsMenusMap;
 
     private final TenantContextHolder tenantContextHolder;
 
@@ -46,6 +59,7 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
     private volatile Boolean isUpdatedOfAllScopes = Boolean.FALSE;
     private volatile Boolean isUpdatedOfAllRoles = Boolean.FALSE;
     private volatile Boolean isUpdatedOfAllGroups = Boolean.FALSE;
+    private volatile Boolean isUpdatedOfAllMenus = Boolean.FALSE;
 
     @Override
     public void initAllAuthorities() throws RolePermissionsException {
@@ -54,10 +68,12 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
             this.isUpdatedOfAllRoles = Boolean.FALSE;
             this.isUpdatedOfAllScopes = Boolean.FALSE;
             this.isUpdatedOfAllGroups = Boolean.FALSE;
+            this.isUpdatedOfAllMenus = Boolean.FALSE;
         }
         updateAuthoritiesOfAllTenant();
         updateAuthoritiesOfAllScopes();
         updateAllGroupsOfAllTenant();
+        updateAuthoritiesOfAllMenus();
     }
 
     /**
@@ -147,6 +163,75 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
         return scopeMap;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    @NonNull
+    public Map<MenuVo, Set<MenuVo>> getMenuByRole(@NonNull String roleAuthority) {
+        // Map(Menu[level,sorted], List(Menu[sorted])), 中括号中的排序字段
+        String tenantId = tenantContextHolder.getTenantId();
+        String tenantAuthority = DEFAULT_TENANT_PREFIX + tenantId;
+        return getMenuByRoleOfTenant(tenantAuthority, roleAuthority);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @NonNull
+    public Map<MenuVo, Set<MenuVo>> getMenusOfUser(@NonNull Authentication authentication) {
+        // Map(Menu[level,sorted], List(Menu[sorted])), 中括号中的排序字段
+        final Map<MenuVo, Set<MenuVo>> menuMap = new LinkedHashMap<>(16);
+        final Map<MenuVo, Set<MenuVo>> tempMap = new HashMap<>(16);
+        String tenantAuthority = SecurityUtils.getTenantAuthority(authentication);
+        if (!hasText(tenantAuthority)) {
+            String tenantId = tenantContextHolder.getTenantId();
+            tenantAuthority = DEFAULT_TENANT_PREFIX + tenantId;
+        }
+        Set<String> rolesOfUser = getRolesOfUser(authentication);
+        // 各个角色 menu 的并集
+        for (String roleAuthority : rolesOfUser) {
+            Map<MenuVo, Set<MenuVo>> menuByRoleOfTenant = getMenuByRoleOfTenant(tenantAuthority, roleAuthority);
+            menuByRoleOfTenant.forEach((menu, menuSet) -> tempMap.compute(menu, (key, set) -> {
+                if (isNull(set)) {
+                    return menuSet;
+                }
+                set.addAll(menuSet);
+                return set;
+            }));
+        }
+        // key 排序
+        List<MenuVo> menuKeyList = tempMap.keySet()
+                                          .stream()
+                                          .sorted((m1, m2) -> {
+                                              if (m1.getLevel() > m2.getLevel()) {
+                                                  return 1;
+                                              }
+                                              else if (m1.getLevel() < m2.getLevel()) {
+                                                  return -1;
+                                              }
+                                              else {
+                                                  return m1.getSorted().compareTo(m2.getSorted());
+                                              }
+                                          })
+                                          .collect(Collectors.toList());
+        // value 排序
+        menuKeyList.forEach(menuKey -> {
+            Set<MenuVo> menuSet = tempMap.get(menuKey);
+            List<MenuVo> menuList = menuSet.stream()
+                                           .sorted(Comparator.comparing(MenuVo::getSorted))
+                                           .collect(Collectors.toList());
+            menuMap.put(menuKey, new LinkedHashSet<>(menuList));
+        });
+        return menuMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @NonNull
+    public Map<MenuVo, Set<MenuVo>> getMenuByRoleOfTenant(@NonNull String tenantAuthority,
+                                                       @NonNull String roleAuthority) {
+
+        return this.allTenantsMenusMap.get(tenantAuthority).get(roleAuthority);
+    }
+
     @Override
     public void afterPropertiesSet() {
         // 缓存所有 uri(资源) 权限 Map(tenantAuthority/scopeAuthority, Map(role, map(uri/path, Set(permission)))
@@ -166,7 +251,7 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
                                                      Long... resourceIds) throws RolePermissionsException {
         // Map(tenantAuthority, Map ( role, map ( uri / path, Set ( permission)))
         Map<String, Map<String, Map<String, Set<String>>>> authoritiesByRoleIdOfTenant =
-                this.authoritiesService.getAuthoritiesByRoleIdOfTenant(tenantId, roleId, resourceClass, resourceIds);
+                this.authoritiesService.getAuthoritiesByRoleIdOfTenant(tenantId.intValue(), roleId, resourceClass, resourceIds);
         updateCacheAuthoritiesByTenantIdOrScopeId(authoritiesByRoleIdOfTenant);
         return true;
     }
@@ -184,7 +269,8 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
 
     @Override
     public boolean updateRolesByGroupId(@NonNull Long groupId, Long... roleIds) throws RolePermissionsException {
-        throw new RuntimeException("arch 为多租户应用, 不支持此方法更新 group 所拥有的所有角色; 使用 updateRolesByGroupIdOfTenant 方法");
+        String tenantId = this.tenantContextHolder.getTenantId();
+        return updateRolesByGroupIdOfTenant(Long.valueOf(tenantId), groupId, roleIds);
     }
 
     @Override
@@ -192,7 +278,7 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
                                                 Long... roleIds) throws RolePermissionsException {
         // Map(tenantAuthority, Map (groupAuthority, Set(roleAuthority)))
         Map<String, Map<String, Set<String>>> tenantGroupRolesMap =
-                this.authoritiesService.getGroupRolesByGroupIdOfTenant(tenantId, groupId, roleIds);
+                this.authoritiesService.getGroupRolesByGroupIdOfTenant(tenantId.intValue(), groupId, roleIds);
         updateCacheGroupRolesByTenantIdAndGroupId(tenantGroupRolesMap);
         return true;
     }
@@ -282,6 +368,25 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
         }
     }
 
+    private void updateAuthoritiesOfAllMenus() {
+        if (this.allTenantsMenusMap != null) {
+            // 从数据源获取所有角色与 menu 的权限
+            if (!this.isUpdatedOfAllMenus) {
+                syncUpdateAllAuthoritiesOfMenus();
+            }
+            return;
+        }
+        synchronized (lock) {
+            if (this.allTenantsMenusMap != null) {
+                syncUpdateAllAuthoritiesOfMenus();
+                return;
+            }
+            // 从数据源获取所有 menu 的权限
+            // Map(tenantAuthority, Map(roleAuthority, Map(Menu[level,sorted], List(Menu[sorted])))), 中括号中的排序字段.
+            this.allTenantsMenusMap = new ConcurrentHashMap<>(authoritiesService.getAllMenuOfAllTenant());
+        }
+    }
+
     private void updateAllGroupsOfAllTenant() {
         if (this.allTenantsGroupsMap != null) {
             // 从数据源获取所有角色的权限
@@ -305,6 +410,15 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
             if (!this.isUpdatedOfAllGroups) {
                 this.allTenantsGroupsMap.putAll(authoritiesService.getAllGroupRolesOfAllTenant());
                 this.isUpdatedOfAllGroups = Boolean.TRUE;
+            }
+        }
+    }
+
+    private void syncUpdateAllAuthoritiesOfMenus() {
+        synchronized (lock) {
+            if (!this.isUpdatedOfAllMenus) {
+                this.allTenantsMenusMap.putAll(authoritiesService.getAllMenuOfAllTenant());
+                this.isUpdatedOfAllMenus = Boolean.TRUE;
             }
         }
     }

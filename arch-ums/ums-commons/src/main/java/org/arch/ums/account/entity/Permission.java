@@ -1,9 +1,5 @@
 package org.arch.ums.account.entity;
 
-import java.time.LocalDateTime;
-
-import org.arch.framework.ums.enums.ResourceType;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -12,8 +8,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
+import org.arch.framework.ums.enums.ResourceType;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 账号-权限(Permission) 实体类
@@ -37,7 +35,7 @@ public class Permission extends CrudEntity<Permission> {
     private Long id;
 
     /**
-     * 权限码(与RequestMethod对应)list(GET)/add(POST)/edit(PUT)/delete(DELETE)/..
+     * 权限码
      */
     @TableField(value = "`permission_code`")
     private String permissionCode;

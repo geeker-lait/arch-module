@@ -4,9 +4,9 @@ import org.arch.auth.rbac.feign.RoleGroupFeignService;
 import org.arch.auth.rbac.feign.RoleMenuFeignService;
 import org.arch.auth.rbac.feign.RolePermissionFeignService;
 import org.arch.auth.rbac.feign.RoleResourceFeignService;
-import org.arch.auth.rbac.service.ArchQueryAuthoritiesServiceImpl;
 import org.arch.auth.rbac.service.ArchRbacUriAuthorizeServiceImpl;
 import org.arch.auth.rbac.service.AuthoritiesService;
+import org.arch.auth.rbac.service.FeignAuthoritiesServiceImpl;
 import org.arch.auth.rbac.stream.channel.RbacSink;
 import org.arch.auth.rbac.stream.channel.RbacSource;
 import org.arch.auth.rbac.stream.event.RbacRemotePermissionUpdatedEvent;
@@ -36,22 +36,22 @@ import top.dcenter.ums.security.core.premission.config.PermissionAutoConfigurati
 public class ArchRbacAutoConfiguration {
 
     @Bean
-    public AbstractUriAuthorizeService abstractUriAuthorizeService(TenantContextHolder tenantContextHolder,
-                                                                   AuthoritiesService authoritiesService) {
-        return new ArchRbacUriAuthorizeServiceImpl(tenantContextHolder,
-                                                   authoritiesService);
-    }
-
-    @Bean
     @ConditionalOnMissingBean(type = "org.arch.auth.rbac.service.AuthoritiesService")
     public AuthoritiesService authoritiesService(RoleMenuFeignService roleMenuFeignService,
                                                  RoleGroupFeignService roleGroupFeignService,
                                                  RoleResourceFeignService roleResourceFeignService,
                                                  RolePermissionFeignService rolePermissionFeignService) {
-        return new ArchQueryAuthoritiesServiceImpl(roleMenuFeignService,
-                                                   roleGroupFeignService,
-                                                   roleResourceFeignService,
-                                                   rolePermissionFeignService);
+        return new FeignAuthoritiesServiceImpl(roleMenuFeignService,
+                                               roleGroupFeignService,
+                                               roleResourceFeignService,
+                                               rolePermissionFeignService);
+    }
+
+    @Bean
+    public AbstractUriAuthorizeService abstractUriAuthorizeService(TenantContextHolder tenantContextHolder,
+                                                                   AuthoritiesService authoritiesService) {
+        return new ArchRbacUriAuthorizeServiceImpl(tenantContextHolder,
+                                                   authoritiesService);
     }
 
     /**

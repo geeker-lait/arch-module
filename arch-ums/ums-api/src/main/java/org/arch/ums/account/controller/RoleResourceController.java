@@ -1,13 +1,14 @@
 package org.arch.ums.account.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.beans.Response;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.ums.account.dto.RoleResourceSearchDto;
 import org.arch.ums.account.entity.RoleResource;
 import org.arch.ums.account.service.RoleResourceService;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.beans.Response;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
-import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -141,6 +142,47 @@ public class RoleResourceController implements CrudController<RoleResource, java
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有租户的所有角色资源权限
+     * @return  Map(tenantAuthority, Map(role, map(uri/path, Set(permission))), 如果不存在这返回空集合.
+     */
+    @GetMapping("/listAuthorities")
+    @NonNull
+    public Response<Map<String, Map<String, Map<String, Set<String>>>>> listAllResourceAuthorities() {
+        try {
+            return Response.success(this.roleResourceService.listAllResourceAuthorities());
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 多租户获取指定角色指定资源的信息
+     *
+     * @param tenantId      多租户 ID
+     * @param roleId        用户的角色 Id
+     * @param resourceIds   用户的资源 ids
+     * @return  Map(tenantAuthority, Map(role, map(uri/path, Set(permission))), 如果不存在这返回空集合.
+     */
+    @GetMapping("/find/{tenantId:\\d+}/{roleId:\\d+}")
+    @NonNull
+    public Response<Map<String, Map<String, Map<String, Set<String>>>>> findAuthoritiesByRoleIdOfTenant(
+            @PathVariable(value = "tenantId") Integer tenantId,
+            @PathVariable(value = "roleId") Long roleId,
+            @RequestBody List<Long> resourceIds) {
+        try {
+            return Response.success(this.roleResourceService.findAuthoritiesByRoleIdOfTenant(tenantId,
+                                                                                             roleId,
+                                                                                             resourceIds));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
             return Response.error(FAILED.getCode(), e.getMessage());
         }
     }

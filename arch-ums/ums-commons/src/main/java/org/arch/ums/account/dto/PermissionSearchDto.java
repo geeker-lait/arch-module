@@ -27,7 +27,7 @@ public class PermissionSearchDto implements BaseSearchDto {
     private Long id;
 
     /**
-     * 权限码(与RequestMethod对应)list(GET)/add(POST)/edit(PUT)/delete(DELETE)/..
+     * 权限码
      */
     private String permissionCode;
 

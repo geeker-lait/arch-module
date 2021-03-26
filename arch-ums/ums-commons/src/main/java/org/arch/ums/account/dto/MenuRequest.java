@@ -24,7 +24,7 @@ public class MenuRequest {
     private Long id;
 
     /**
-     * 父节点ID
+     * 父节点ID, 如果没有父节点则为: -1
      */
     private Long pid;
 
