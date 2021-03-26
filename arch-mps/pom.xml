@@ -3,17 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>arch-sms</artifactId>
+        <artifactId>arch-module</artifactId>
         <groupId>org.arch.projects</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sms-core</artifactId>
+    <artifactId>arch-mps</artifactId>
+    <packaging>pom</packaging>
 
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-
+    <modules>
+        <module>mps-api</module>
+        <module>mps-core</module>
+    </modules>
 </project>
