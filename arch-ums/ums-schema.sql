@@ -108,7 +108,7 @@ DROP TABLE IF EXISTS `account_menu`;
 
 CREATE TABLE `account_menu` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号-菜单ID',
-  `pid` bigint(19) NOT NULL COMMENT '父节点ID',
+  `pid` bigint(19) DEFAULT '-1' NOT NULL COMMENT '父节点ID, 如果没有父节点则为: -1',
   `menu_code` varchar(64) NOT NULL COMMENT '英文码',
   `menu_name` varchar(64) NOT NULL COMMENT '菜单名称',
   `menu_val` varchar(64) DEFAULT NULL COMMENT '菜单值',
@@ -123,7 +123,7 @@ CREATE TABLE `account_menu` (
   `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_PID_AND_SORTED` (`pid`,`sorted`)
+  KEY `IDX_TENANTID_PID_LEVEL_SORTED` (`tenant_id`,`pid`,`level`,`sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-菜单';
 
 /*Table structure for table `account_name` */
@@ -228,10 +228,10 @@ DROP TABLE IF EXISTS `account_permission`;
 
 CREATE TABLE `account_permission` (
   `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '账号-菜单ID',
-  `permission_code` varchar(64) NOT NULL COMMENT '权限码(与RequestMethod对应)list(GET)/add(POST)/edit(PUT)/delete(DELETE)/..',
+  `permission_code` varchar(64) NOT NULL COMMENT '权限码',
   `permission_name` varchar(64) DEFAULT NULL COMMENT '权限名称',
   `permission_val` varchar(64) DEFAULT NULL COMMENT '权限值',
-  `permission_uri` varchar(64) NOT NULL COMMENT 'uri',
+  `permission_uri` varchar(255) NOT NULL COMMENT 'uri',
   `resource_type` varchar(64) NOT NULL COMMENT '权限类型：0->目录；1->菜单；2->按钮（接口绑定权限）, 4->链接',
   `sorted` int(3) NOT NULL COMMENT '排序',
   `tenant_id` int NOT NULL COMMENT '租户 id',
@@ -305,7 +305,7 @@ CREATE TABLE `account_resource` (
   `resource_code` varchar(64) NOT NULL COMMENT '资源码',
   `resource_type` varchar(64) NOT NULL COMMENT '类型: 1目录, 2菜单, 3按钮, 4链接',
   `resource_val` varchar(64) DEFAULT NULL COMMENT '资源值',
-  `resource_path` varchar(64) NOT NULL COMMENT '资源路径',
+  `resource_path` varchar(255) NOT NULL COMMENT '资源路径',
   `resource_icon` varchar(64) DEFAULT NULL COMMENT '资源图标',
   `resource_desc` varchar(64) DEFAULT NULL COMMENT '资源描述',
   `visible` int(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏: 0不隐藏, 1隐藏. 默认: 0',
