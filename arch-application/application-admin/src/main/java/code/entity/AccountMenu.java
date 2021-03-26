@@ -1,12 +1,13 @@
 package code.entity;
 
-import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * 账号-菜单(account_menu)实体类
@@ -28,7 +29,7 @@ public class AccountMenu extends Model<AccountMenu> implements Serializable {
     @TableId
 	private Long id;
     /**
-     * 父节点ID
+     * 父节点ID, 如果没有父节点则为: -1
      */
     private Long pid;
     /**

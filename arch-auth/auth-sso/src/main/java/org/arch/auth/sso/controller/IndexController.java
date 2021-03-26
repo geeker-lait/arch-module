@@ -28,6 +28,7 @@ public class IndexController {
             model.addAttribute("id", currentUser.getIdentifierId());
             model.addAttribute("username", currentUser.getAccountName());
             model.addAttribute("accountId", currentUser.getAccountId());
+            model.addAttribute("tenantId", currentUser.getTenantId());
             model.addAttribute("nickName", currentUser.getNickName());
             model.addAttribute("avatar", currentUser.getAvatar());
             model.addAttribute("loginType", currentUser.getLoginType());

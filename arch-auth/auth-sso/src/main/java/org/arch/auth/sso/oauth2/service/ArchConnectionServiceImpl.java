@@ -21,7 +21,7 @@ import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.entity.OauthToken;
 import org.arch.ums.feign.account.client.UmsAccountOauthTokenFeignService;
 import org.arch.ums.feign.account.client.UmsAccountIdentifierFeignService;
-import org.arch.ums.feign.exception.FeignCallException;
+import org.arch.framework.feign.exception.FeignCallException;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

@@ -8,7 +8,7 @@ import org.arch.framework.ums.enums.ScopesType;
 import org.arch.framework.ums.properties.AuthClientScopesCacheProperties;
 import org.arch.ums.account.vo.AuthClientVo;
 import org.arch.ums.feign.account.client.UmsAccountAuthClientFeignService;
-import org.arch.ums.feign.exception.FeignCallException;
+import org.arch.framework.feign.exception.FeignCallException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
