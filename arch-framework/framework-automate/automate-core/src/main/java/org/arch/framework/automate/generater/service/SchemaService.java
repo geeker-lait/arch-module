@@ -1,5 +1,6 @@
-package org.arch.framework.automate.generater.core;
+package org.arch.framework.automate.generater.service;
 
+import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
 

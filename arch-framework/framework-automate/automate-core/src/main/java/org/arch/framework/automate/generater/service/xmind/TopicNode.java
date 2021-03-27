@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.xmind;
+package org.arch.framework.automate.generater.service.xmind;
 
 import lombok.Data;
 

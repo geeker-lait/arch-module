@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.xmind;
+package org.arch.framework.automate.generater.service.xmind;
 
 import cn.hutool.core.io.resource.ClassPathResource;
 import com.alibaba.fastjson.JSON;
@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.arch.framework.automate.common.utils.ChangeToPinYinJP;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.core.SchemaPattern;
-import org.arch.framework.automate.generater.core.SchemaService;
+import org.arch.framework.automate.generater.service.SchemaService;
 import org.arch.framework.automate.generater.properties.*;
 import org.arch.framework.beans.utils.UnZipUtil;
 import org.springframework.beans.factory.annotation.Autowired;

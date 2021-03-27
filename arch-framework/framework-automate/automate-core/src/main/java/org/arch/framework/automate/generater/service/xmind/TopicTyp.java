@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.xmind;
+package org.arch.framework.automate.generater.service.xmind;
 
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;

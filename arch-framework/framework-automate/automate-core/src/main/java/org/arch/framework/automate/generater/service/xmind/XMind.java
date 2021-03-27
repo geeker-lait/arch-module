@@ -1,13 +1,7 @@
-package org.arch.framework.automate.generater.xmind;
+package org.arch.framework.automate.generater.service.xmind;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.xmind.core.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @author lait.zhang@gmail.com

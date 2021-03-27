@@ -1,13 +1,10 @@
-package org.arch.framework.automate.generater.xmind;
+package org.arch.framework.automate.generater.service.xmind;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * @author lait.zhang@gmail.com

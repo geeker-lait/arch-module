@@ -10,10 +10,9 @@ import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
 import org.arch.framework.automate.generater.properties.XmindProperties;
-import org.arch.framework.automate.generater.xmind.XmindSchemaService;
+import org.arch.framework.automate.generater.service.xmind.XmindSchemaService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

@@ -1,8 +1,8 @@
-package org.arch.framework.automate.generater.database;
+package org.arch.framework.automate.generater.service.database;
 
 import org.arch.framework.automate.generater.core.AbstractSchemaService;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
-import org.arch.framework.automate.generater.core.SchemaService;
+import org.arch.framework.automate.generater.service.SchemaService;
 import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;
 
