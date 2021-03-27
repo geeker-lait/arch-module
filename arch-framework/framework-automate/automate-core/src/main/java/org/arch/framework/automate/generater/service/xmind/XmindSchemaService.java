@@ -199,7 +199,7 @@ public class XmindSchemaService implements SchemaService {
             pkgName = name;
             if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
                 XmindProperties xmindProperties = new XmindProperties();
-                xmindProperties.setTopicName(name);
+                xmindProperties.setTopicTyp(TopicTyp.PROJECT.getType());
                 xmindProperties.setPkg(pkgName);
                 xmindProperties.setDescr(description);
                 for (XMindNode children : xMindNode.getChildren().getAttached()) {
@@ -214,38 +214,38 @@ public class XmindSchemaService implements SchemaService {
                 pkgName = pkgName + "." + name;
             }
             XmindProperties xmindProperties = new XmindProperties();
-            xmindProperties.setTopicName(name);
-            xmindProperties.setPkg(pkgName);
+            xmindProperties.setTopicTyp(TopicTyp.MODULE.getType());
+            xmindProperties.setPkg(name);
             xmindProperties.setDescr(description);
             if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
                 for (XMindNode children : xMindNode.getChildren().getAttached()) {
                     convertProperties(pkgName, children, xmindProperties, xmindProject);
                 }
             }
-            pXmindProperties.getChildren().add(xmindProperties);
+            pXmindProperties.getChilds().add(xmindProperties);
         } else if (TopicTyp.PKG.getType().equals(type)) {
             if (StringUtils.isNotEmpty(pkgName)) {
                 pkgName = pkgName + "." + name;
             }
             XmindProperties xmindProperties = new XmindProperties();
-            xmindProperties.setTopicName(name);
-            xmindProperties.setPkg(pkgName);
+            xmindProperties.setTopicTyp(TopicTyp.PKG.getType());
+            xmindProperties.setPkg(name);
             xmindProperties.setDescr(description);
             if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
                 for (XMindNode children : xMindNode.getChildren().getAttached()) {
                     convertProperties(pkgName, children, pXmindProperties, xmindProject);
                 }
             }
-            pXmindProperties.getChildren().add(xmindProperties);
+            pXmindProperties.getChilds().add(xmindProperties);
 
         } else if (TopicTyp.API.getType().equals(type)) {
             if (pkgName.endsWith(".")) {
                 pkgName = pkgName.substring(0, pkgName.lastIndexOf("."));
             }
             XmindProperties xmindProperties = new XmindProperties();
-            xmindProperties.setPkg(pkgName);
+            xmindProperties.setPkg(name);
             xmindProperties.setPattern(SchemaPattern.API.getPattern());
-            xmindProperties.setTopicName(name);
+            xmindProperties.setTopicTyp(TopicTyp.API.getType());
             xmindProperties.setDescr(description);
             //拼装方法
             if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
@@ -328,7 +328,7 @@ public class XmindSchemaService implements SchemaService {
                     xmindProperties.getApis().add(methodProperties);
                 }
             }
-            pXmindProperties.getChildren().add(xmindProperties);
+            pXmindProperties.getChilds().add(xmindProperties);
         } else if (TopicTyp.ENTITY.getType().equals(type)) {
             if (pkgName.endsWith(".")) {
                 pkgName = pkgName.substring(0, pkgName.lastIndexOf("."));
