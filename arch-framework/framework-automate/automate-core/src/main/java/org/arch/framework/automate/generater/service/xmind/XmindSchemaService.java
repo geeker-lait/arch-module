@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author lait.zhang@gmail.com
@@ -39,11 +40,11 @@ public class XmindSchemaService implements SchemaService {
 
     /**
      * 获取xmind中实体/表的定义
-     *
+     *  todo 空实现为了不报错添加<T> 实现后可以去除 <T> 参考 org.arch.framework.automate.generater.service.database.DatabaseSchemaService#getTableProperties()
      * @return
      */
     @Override
-    public List<TableProperties> getTableProperties() {
+    public <T> Function<T, List<TableProperties>> getTableProperties() {
         return null;
     }
 
@@ -53,7 +54,7 @@ public class XmindSchemaService implements SchemaService {
      * @return
      */
     @Override
-    public List<MethodProperties> getApiProperties() {
+    public <T> Function<T, List<MethodProperties>> getApiProperties() {
         return null;
     }
 
@@ -62,7 +63,7 @@ public class XmindSchemaService implements SchemaService {
      * @return
      */
     @Override
-    public List<SchemaMetadata> getSchemaMatedatas() {
+    public <T> Function<T,  List<SchemaMetadata>> getSchemaMatedatas() {
         return null;
     }
 

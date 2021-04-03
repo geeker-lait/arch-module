@@ -43,8 +43,8 @@ public class XmindSchemaReader extends AbstractSchemaReader implements SchemaRea
 
     @Override
     protected List<SchemaMetadata> readMvc(String res, Map<String, String> configuration) {
-        // todo
-        List<TableProperties> schemaMetadata = xmindSchemaService.getTableProperties(/*res, configuration*/);
+        // todo getTableProperties.apply 入参需要构建，暂时只用 res(为了不报错)     getTableProperties方法暂时是空实现
+        List<TableProperties> schemaMetadata = xmindSchemaService.getTableProperties().apply(res);
         XmindProperties xmindProperties = new XmindProperties();
         xmindProperties.setPattern(SchemaPattern.MVC.getPattern());
         xmindProperties.setTables(schemaMetadata);
@@ -53,8 +53,8 @@ public class XmindSchemaReader extends AbstractSchemaReader implements SchemaRea
 
     @Override
     protected List<SchemaMetadata> readApi(String res, Map<String, String> configuration) {
-        // todo
-        List<MethodProperties> methodProperties = xmindSchemaService.getApiProperties();
+        // todo  getApiProperties.apply 入参需要构建，暂时只用 res(为了不报错)  getApiProperties暂时是空实现
+        List<MethodProperties> methodProperties = xmindSchemaService.getApiProperties().apply(res);
         XmindProperties xmindProperties = new XmindProperties();
         xmindProperties.setPattern(SchemaPattern.API.getPattern());
         xmindProperties.setApis(methodProperties);

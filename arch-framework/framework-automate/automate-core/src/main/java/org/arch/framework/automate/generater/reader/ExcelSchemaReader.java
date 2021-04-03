@@ -35,11 +35,13 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
     }
 
 
+    @Override
     protected List<SchemaMetadata> readApi(String res,Map<String,String> heads){
 
         return null;
     }
 
+    @Override
     protected List<SchemaMetadata> readMvc(String res, Map<String,String> heads) {
         // 从类路劲加载
         if(-1 != res.indexOf("classpath:")){
@@ -70,7 +72,9 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
                 Map<String, Object> map = new HashMap();
                 String key;
                 for (int k = firstRow.getFirstCellNum(); k < firstRow.getLastCellNum(); k++) {
-                    if (row == null) continue;
+                    if (row == null) {
+                        continue;
+                    }
                     TableProperties tableProperties;
                     if (ExcelUtils.isMergedRegion(sheet, j, k)) {
                         Object otable = ExcelUtils.getMergedRegionValue(sheet, j, k);
