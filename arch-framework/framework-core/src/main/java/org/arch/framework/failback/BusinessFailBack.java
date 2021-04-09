@@ -40,8 +40,10 @@ public abstract class BusinessFailBack {
         for (int i = 0, size = channels.size(); i < size; i++) {
             BusinessFailBackConfig.Channel channel = channels.get(i);
             // 根据 config 判断 是否可以执行，此处子类根据config 获取熔断逻辑,例如 redis 、local、es 做的滑动窗口统计
+            // true 可以执行，  false 降级
             boolean b = preExecute(config, channel);
             if (!b) {
+                log.info("channel FailBack ,execute next:{}", channel.getChannelCode());
                 continue;
             }
             try {
@@ -54,7 +56,7 @@ public abstract class BusinessFailBack {
                 log.info("execute fail config:{} businessKey:{}", config, businessKey, e);
             } finally {
                 // 根据config,是否熔断 和执行结果 记录一些操作，根据执行结果记录 滑动窗口数据
-                afterExecute(config, channel, b, executeResult);
+                afterExecute(config, channel, !b, executeResult);
             }
         }
         globalAfterExecute(config, businessKey);

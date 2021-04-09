@@ -43,6 +43,11 @@ public class BusinessFailBackConfig {
         private RelationEnum relation;
 
         /**
+         * 熔断的时间跨度 - 熔断持续多久  单位：分钟
+         */
+        private Long circuitBreakerTimeSpan;
+
+        /**
          * 熔断
          */
         private List<Rule> rules;
@@ -54,11 +59,16 @@ public class BusinessFailBackConfig {
 
         private String ruleCode;
 
+        /**
+         * 记录日志的类型，例如 失败、成功、熔断记录
+         */
+        private RecordEnum writeRecordEnum;
+
 
         /**
          * 失败次数 与 duration 一块使用
          */
-        private Integer failNum;
+        private Integer failBackNum;
 
         /**
          * 持续时长 - 滑动窗口时间

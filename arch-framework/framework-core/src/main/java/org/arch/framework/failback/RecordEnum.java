@@ -5,26 +5,28 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 /**
+ * 记录日志类型
  * @author junboXiang
  * @version V1.0
  * 2021-04-07
  */
-public enum RelationEnum {
+public enum RecordEnum {
 
-    AND("and", "与操作"),
-    OR("or", "或操作")
+    FAIL("fail", "执行失败"),
+    FAIL_BACK("fail_back", "降级"),
+    SUCCESS("success", "成功")
         ;
     private final String value;
     private final String description;
 
-    RelationEnum(String value, String description) {
+    RecordEnum(String value, String description) {
         this.value = value;
         this.description = description;
     }
 
-    public static RelationEnum getEnum(String value) {
-        List<RelationEnum> relationEnums = Lists.newArrayList(RelationEnum.values());
-        for (RelationEnum relationEnum : relationEnums) {
+    public static RecordEnum getEnum(String value) {
+        List<RecordEnum> relationEnums = Lists.newArrayList(RecordEnum.values());
+        for (RecordEnum relationEnum : relationEnums) {
             if (relationEnum.value.equals(value)) {
                 return relationEnum;
             }
