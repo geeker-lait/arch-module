@@ -1,6 +1,6 @@
 package org.arch.framework.automate.generater.service.excel;
 
-import org.arch.framework.automate.generater.core.AbstractSchemaService;
+import org.arch.framework.automate.generater.service.AbstractSchemaService;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.service.SchemaService;
 import org.arch.framework.automate.generater.properties.MethodProperties;

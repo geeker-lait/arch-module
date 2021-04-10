@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.arch.framework.automate.from.service.DatabaseService;
-import org.arch.framework.automate.generater.core.AbstractSchemaService;
+import org.arch.framework.automate.generater.service.AbstractSchemaService;
 import org.arch.framework.automate.generater.core.SchemaMetadata;
 import org.arch.framework.automate.generater.properties.MethodProperties;
 import org.arch.framework.automate.generater.properties.TableProperties;

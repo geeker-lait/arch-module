@@ -1,4 +1,4 @@
-package org.arch.framework.automate.generater.core;
+package org.arch.framework.automate.generater.service;
 
 /**
  * @author lait.zhang@gmail.com
@@ -6,5 +6,5 @@ package org.arch.framework.automate.generater.core;
  * @weixin PN15855012581
  * @date 3/24/2021 11:09 AM
  */
-public class AbstractSchemaService {
+public abstract class AbstractSchemaService {
 }

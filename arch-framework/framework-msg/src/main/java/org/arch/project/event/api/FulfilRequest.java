@@ -71,7 +71,7 @@ public class FulfilRequest {
     private JSONObject getRequestParam(HttpServletRequest request) {
         // 返回参数
         JSONObject params = new JSONObject();
-        // 获取内容格式
+        // 获取内容格式327977
         String contentType = request.getContentType();
         if (contentType != null && !contentType.equals("")) {
             contentType = contentType.split(";")[0];
