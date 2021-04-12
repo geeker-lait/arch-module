@@ -170,16 +170,14 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     @Override
     public Response<Boolean> deleteById(@PathVariable(value = "id") Long id) {
 
+        Integer tenantId = null;
         try {
             TokenInfo currentUser = SecurityUtils.getCurrentUser();
-            if (!currentUser.getIdentifierId().equals(id)) {
-                return Response.failed("只能删除已登录的账号");
-            }
-
+            tenantId = currentUser.getTenantId();
             Long identifierId = currentUser.getIdentifierId();
             if (!identifierId.equals(id)) {
                 log.error("删除用户 id 与 当前用户 id 不匹配: tenantId: {}, id: {}, currentUserId: {}",
-                          tenantContextHolder.getTenantId(), id, identifierId);
+                          tenantId, id, identifierId);
                 return Response.success(Boolean.FALSE);
             }
             // 逻辑删除
@@ -195,8 +193,7 @@ public class IdentifierController implements CrudController<Identifier, java.lan
             return Response.failed("未登录");
         }
         catch (Exception e) {
-            log.error(String.format("删除用户失败: tenantId: %s, id: %d",
-                                    tenantContextHolder.getTenantId(), id), e);
+            log.error(String.format("删除用户失败: tenantId: %s, id: %d", tenantId, id), e);
             return Response.success(Boolean.FALSE);
         }
     }
@@ -223,10 +220,9 @@ public class IdentifierController implements CrudController<Identifier, java.lan
         if (!token.getAccountName().equals(identifier)) {
             return Response.failed("只能删除已登录的账号");
         }
-        Integer tenantId = Integer.valueOf(tenantContextHolder.getTenantId());
         try {
             // 逻辑删除
-            Response<Boolean> success = identifierService.logicDeletedByIdentifier(tenantId, identifier);
+            Response<Boolean> success = identifierService.logicDeletedByIdentifier(token.getTenantId(), identifier);
             Boolean successData = success.getSuccessData();
             if (nonNull(successData) && successData) {
                 JwtContext.addReAuthFlag(SecurityUtils.getCurrentUserId().toString());
@@ -236,7 +232,7 @@ public class IdentifierController implements CrudController<Identifier, java.lan
         }
         catch (Exception e) {
             log.error(String.format("删除用户失败: tenantId: %s, identifier: %s",
-                                    tenantContextHolder.getTenantId(), identifier), e);
+                                    token.getTenantId(), identifier), e);
             return Response.success(Boolean.FALSE);
         }
 
@@ -269,7 +265,7 @@ public class IdentifierController implements CrudController<Identifier, java.lan
         }
         catch (Exception e) {
             log.error(String.format("解绑失败: aid: %s, tenantId: %s, identifier: %s",
-                                    aid, tenantContextHolder.getTenantId(), identifier), e);
+                                    aid, token.getTenantId(), identifier), e);
             return Response.success(Boolean.FALSE);
         }
     }
