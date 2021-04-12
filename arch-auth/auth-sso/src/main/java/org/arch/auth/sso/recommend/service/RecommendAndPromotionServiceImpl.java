@@ -2,6 +2,7 @@ package org.arch.auth.sso.recommend.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.api.IdKey;
 import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.BusinessException;
 import org.arch.framework.beans.exception.constant.CommonStatusCode;
@@ -9,7 +10,9 @@ import org.arch.framework.beans.utils.StringUtils;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.SourceType;
 import org.arch.framework.utils.SecurityUtils;
+import org.arch.ums.account.entity.Member;
 import org.arch.ums.account.entity.Relationship;
+import org.arch.ums.feign.account.client.UmsAccountMemberFeignService;
 import org.arch.ums.feign.account.client.UmsAccountRelationshipFeignService;
 import org.arch.ums.feign.user.client.UmsUserPhoneFeignService;
 import org.arch.ums.user.entity.Phone;
@@ -18,9 +21,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 import static java.util.Objects.isNull;
 import static org.arch.auth.sso.utils.RegisterUtils.getTraceId;
@@ -46,12 +46,20 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
 
     private final UmsAccountRelationshipFeignService umsAccountRelationshipFeignService;
     private final UmsUserPhoneFeignService umsUserPhoneFeignService;
+    private final UmsAccountMemberFeignService umsAccountMemberFeignService;
     private ApplicationContext applicationContext;
 
     @NonNull
     @Override
     public String generateUserRecommendCode() {
         TokenInfo currentUser = SecurityUtils.getCurrentUser();
+
+        // 检查是否是会员账号
+        if (!isMemberId(currentUser)) {
+            throw new BusinessException(CommonStatusCode.GENERATE_USER_RECOMMEND_CODE_FAILED, new Object[0],
+                                        "生成用户推荐码失败, 不是会员账号: userId=" + currentUser.getUserId());
+        }
+
         Relationship relationship = new Relationship();
         relationship.setToUserId(currentUser.getAccountId());
         relationship.setFromUserId(-1L);
@@ -76,14 +84,20 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
                                                 "生成用户推荐码失败: identifierId=" + currentUser.getIdentifierId());
                 }
             }
+
+            Member member = umsAccountMemberFeignService.findById(successData.getToUserId()).getSuccessData();
+            if (isNull(member)) {
+                throw new BusinessException(CommonStatusCode.QUERY_MEMBER_INFO_FAILED, new Object[0],
+                                            "获取会员信息失败: memberId=" + successData.getToUserId());
+            }
+
             String delimiter = USER.getDelimiter();
-            // 002_3_48: 00 为 SourceType 业务前缀, 2_3_48 为 rsOrg_rsDeep_rsSeq(rs=Relationship)
+            // 003_3: 00 为 SourceType 业务前缀, 3_3 为 rsId(rs=Relationship)_memberLevelId
             String recommendCode = USER.getPrefix() +
-                    successData.getOrg() +
+                    successData.getId() +
                     delimiter +
-                    successData.getDeep() +
-                    delimiter +
-                    successData.getSeq();
+                    member.getMemberLevelId();
+
             return encodeRecommendationOrPromotionCode(recommendCode);
 
         }
@@ -108,7 +122,9 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
     @NonNull
     @Override
     public String encodeRecommendationOrPromotionCode(@NonNull String recommendationOrPromotionCode) {
-        if (recommendationOrPromotionCode.startsWith(ARCH.getPrefix())) {
+        return recommendationOrPromotionCode;
+
+        /*if (recommendationOrPromotionCode.startsWith(ARCH.getPrefix())) {
             return recommendationOrPromotionCode;
         }
         String encodeToString =
@@ -127,13 +143,15 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
         sb.replace(afterStrQuarter, afterStrQuarter + 1, String.valueOf(beforeStr.charAt(beforeStrQuarter)));
         sb.replace(afterStrLength + beforeStrQuarter, afterStrLength + beforeStrQuarter + 1,
                    String.valueOf(afterStr.charAt(afterStrQuarter)));
-        return sb.toString();
+        return sb.toString();*/
     }
 
     @NonNull
     @Override
     public String decodeRecommendationOrPromotionCode(@NonNull String recommendationOrPromotionCode) {
-        int encodeStrLength = recommendationOrPromotionCode.length();
+        return recommendationOrPromotionCode;
+
+        /*int encodeStrLength = recommendationOrPromotionCode.length();
         int dMid = encodeStrLength / 2;
         //noinspection AlibabaUndefineMagicConstant
         if ((0x01 & encodeStrLength) == 1) {
@@ -159,7 +177,7 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
         if (!decode.startsWith(USER.getPrefix())) {
             return recommendationOrPromotionCode;
         }
-        return decode;
+        return decode;*/
     }
 
     @NonNull
@@ -172,7 +190,7 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
 
         String userPrefix = decodeRecommendationOrPromotionCode.substring(0, USER.getLength());
         if (USER.getPrefix().equals(userPrefix)) {
-            // 002_3_48: 00 为 SourceType 业务前缀, 2_3_48 为 rsOrg_rsDeep_rsSeq(rs=Relationship)
+            // 003_3: 00 为 SourceType 业务前缀, 3_3 为 rsId(rs=Relationship)_memberLevelId
             return userRecommendationHandler(decodeRecommendationOrPromotionCode);
         }
         if (ARCH.getPrefix().equals(userPrefix)) {
@@ -188,26 +206,33 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
         this.applicationContext = applicationContext;
     }
 
+    private boolean isMemberId(TokenInfo currentUser) {
+        String userId = currentUser.getUserId().toString();
+        // 账号ID/用户ID/会员ID/商户ID 必为 18 位
+        int userIdLen = 18;
+        if (userId.length() < userIdLen) {
+            return false;
+        }
+        String bizPrefix = userId.substring(0, 1);
+        if (IdKey.UMS_MEMBER_ID.getBizPrefix().equals(bizPrefix)) {
+            return true;
+        }
+        return false;
+    }
+
     private boolean userRecommendationHandler(String decodeRecommendationCode) {
-        // 002_3_48: 00 为 SourceType 业务前缀, 2_3_48 为 rsOrg_rsDeep_rsSeq(rs=Relationship)
+        // 003_3: 00 为 SourceType 业务前缀, 3_3 为 rsId(rs=Relationship)_memberLevelId
         String recommendCode = decodeRecommendationCode.substring(USER.getLength());
         String[] splits = recommendCode.split(USER.getDelimiter());
 
         //noinspection AlibabaUndefineMagicConstant
-        if (3 != splits.length) {
+        if (2 != splits.length) {
             throw new BusinessException(EXTRACT_USER_RECOMMEND_CODE_FAILED,
                                         new Object[]{recommendCode},
                                         "提取 USER 推荐码失败");
         }
 
-        Relationship fromUserRelationship = new Relationship();
-        Long org = Long.valueOf(splits[0]);
-        Long deep = Long.valueOf(splits[1]);
-        Long seq = Long.valueOf(splits[2]);
-        fromUserRelationship.setOrg(org);
-        fromUserRelationship.setDeep(deep);
-        fromUserRelationship.setSeq(seq);
-        Response<Relationship> response = this.umsAccountRelationshipFeignService.findOne(fromUserRelationship);
+        Response<Relationship> response = this.umsAccountRelationshipFeignService.findById(Long.valueOf(splits[0]));
         Relationship successData = response.getSuccessData();
         if (isNull(successData)) {
         	throw new BusinessException(QUERY_USER_RECOMMEND_CODE_FAILED, new Object[]{recommendCode},
@@ -218,9 +243,9 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
 
         Relationship toUserRelationship = new Relationship();
         toUserRelationship.setPid(successData.getId());
-        toUserRelationship.setOrg(org);
+        toUserRelationship.setOrg(successData.getOrg());
         // seq 通过 sql max(seq) + 1 自增.
-        toUserRelationship.setDeep(deep);
+        toUserRelationship.setDeep(successData.getDeep());
         toUserRelationship.setPseq(getPseq(successData));
         toUserRelationship.setFromUserId(successData.getToUserId());
         toUserRelationship.setFromUserName(successData.getToUserName());

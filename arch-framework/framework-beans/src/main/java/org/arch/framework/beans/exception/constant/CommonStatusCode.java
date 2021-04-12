@@ -56,6 +56,7 @@ public enum CommonStatusCode implements CommonExceptionAssert {
     QUERY_USER_RECOMMEND_CODE_FAILED(7993, "查询 USER 推荐码失败: code[%s]"),
     GENERATE_USER_RECOMMEND_CODE_FAILED(7994, "生成用户推荐关系失败: accountId[%s]"),
     SAVE_USER_RECOMMEND_RELATION_FAILED(7995, "保存用户推荐关系失败: code[%s]"),
+    QUERY_MEMBER_INFO_FAILED(7996, "查询会员信息失败: memberId[%s]"),
 
 
 
