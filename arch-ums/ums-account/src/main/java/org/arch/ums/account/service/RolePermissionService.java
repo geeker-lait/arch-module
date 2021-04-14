@@ -5,14 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudService;
 import org.arch.ums.account.dao.RolePermissionDao;
 import org.arch.ums.account.entity.RolePermission;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 账号-角色权限表(RolePermission) 表服务层
@@ -27,31 +20,4 @@ import java.util.Set;
 public class RolePermissionService extends CrudService<RolePermission, java.lang.Long> {
     private final RolePermissionDao rolePermissionDao;
 
-    /**
-     * 获取所有租户的所有角色权限
-     * @return  Map(tenantAuthority, Map(role, map(uri/path, Set(permission))), 如果不存在这返回空集合.
-     */
-    @NonNull
-    @Transactional(readOnly = true)
-    public Map<String, Map<String, Map<String, Set<String>>>> listAllPermissionAuthorities() {
-        // TODO: 2021.3.26
-        return new HashMap<>(0);
-    }
-
-    /**
-     * 多租户获取指定角色指定权限的信息
-     *
-     * @param tenantId          多租户 ID
-     * @param roleId            用户的角色 Id
-     * @param permissionIds     用户的权限 ids
-     * @return  Map(tenantAuthority, Map(role, map(uri/path, Set(permission))), 如果不存在这返回空集合.
-     */
-    @NonNull
-    @Transactional(readOnly = true)
-    public Map<String, Map<String, Map<String, Set<String>>>> findAuthoritiesByRoleIdOfTenant(@NonNull Integer tenantId,
-                                                                                              @NonNull Long roleId,
-                                                                                              @NonNull List<Long> permissionIds) {
-        // TODO: 2021.3.26
-        return new HashMap<>(0);
-    }
 }

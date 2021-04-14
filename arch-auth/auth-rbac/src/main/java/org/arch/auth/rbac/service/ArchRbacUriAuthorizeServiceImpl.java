@@ -249,7 +249,7 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
     public boolean updateAuthoritiesByRoleIdOfTenant(@NonNull Long tenantId, @NonNull Long roleId,
                                                      @NonNull Class<?> resourceClass,
                                                      Long... resourceIds) throws RolePermissionsException {
-        // Map(tenantAuthority, Map ( role, map ( uri / path, Set ( permission)))
+        // Map(tenantAuthority, Map ( roleAuthority, map ( uri / path, Set ( permission)))
         Map<String, Map<String, Map<String, Set<String>>>> authoritiesByRoleIdOfTenant =
                 this.authoritiesService.getAuthoritiesByRoleIdOfTenant(tenantId.intValue(), roleId, resourceClass, resourceIds);
         updateCacheAuthoritiesByTenantIdOrScopeId(authoritiesByRoleIdOfTenant);
@@ -260,7 +260,7 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
     public boolean updateAuthoritiesByRoleIdOfScopeId(@NonNull Long scopeId, @NonNull Long roleId,
                                                       @NonNull Class<?> resourceClass,
                                                       Long... resourceIds) throws RolePermissionsException {
-        // Map(scopeAuthority, Map ( role, map ( uri / path, Set ( permission)))
+        // Map(scopeAuthority, Map ( roleAuthority, map ( uri / path, Set ( permission)))
         Map<String, Map<String, Map<String, Set<String>>>> authoritiesByRoleIdOfTenant =
                 this.authoritiesService.getAuthoritiesByRoleIdOfScopeId(scopeId, roleId, resourceClass, resourceIds);
         updateCacheAuthoritiesByTenantIdOrScopeId(authoritiesByRoleIdOfTenant);

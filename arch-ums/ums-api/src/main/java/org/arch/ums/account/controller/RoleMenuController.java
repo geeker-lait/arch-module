@@ -9,7 +9,6 @@ import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.ums.account.dto.RoleMenuSearchDto;
 import org.arch.ums.account.entity.RoleMenu;
 import org.arch.ums.account.service.RoleMenuService;
-import org.arch.ums.account.vo.MenuVo;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -143,46 +140,6 @@ public class RoleMenuController implements CrudController<RoleMenu, java.lang.Lo
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Response.error(FAILED.getCode(), e.getMessage());
-        }
-    }
-
-    /**
-     * 根据 tenantId 与 tenantId 获取指定角色的菜单权限, 此接口适用于 菜单 与 权限分开设计的模型.
-     *
-     * @param tenantId 多租户权限
-     * @param roleId   用户的角色权限
-     * @return roleAuthority   所拥有的所有菜单权限集合,
-     * Map(tenantAuthority, Map(roleAuthority, Map(Menu[level,sorted], Set(Menu[sorted])))), 中括号中的排序字段.
-     */
-    @GetMapping("/find/{tenantId:\\d+}/{roleId:\\d+}")
-    @NonNull
-    Response<Map<String, Map<String, Map<MenuVo, Set<MenuVo>>>>> findMenuByRoleOfTenant(@PathVariable(value = "tenantId") Integer tenantId,
-                                                                                        @PathVariable(value = "roleId") Long roleId,
-                                                                                        @RequestBody List<Long> menuIds) {
-        try {
-            return Response.success(this.roleMenuService.findMenuByRoleOfTenant(tenantId, roleId, menuIds));
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return Response.error(FAILED.getCode(), e.getMessage());
-        }
-    }
-
-    /**
-     * 获取所有租户的菜单权限
-     *
-     * @return roleAuthority   所拥有的所有菜单权限集合,
-     * Map(tenantAuthority, Map(roleAuthority, Map(Menu[level,sorted], Set(Menu[sorted])))), 中括号中的排序字段.
-     */
-    @GetMapping("/listAllMenu")
-    @NonNull
-    Response<Map<String, Map<String, Map<MenuVo, Set<MenuVo>>>>> listAllMenuOfAllTenant() {
-        try {
-            return Response.success(this.roleMenuService.listAllMenuOfAllTenant());
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(),e);
             return Response.error(FAILED.getCode(), e.getMessage());
         }
     }

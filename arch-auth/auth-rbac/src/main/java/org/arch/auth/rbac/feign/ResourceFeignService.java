@@ -1,4 +1,4 @@
-package org.arch.ums.feign.account.client;
+package org.arch.auth.rbac.feign;
 
 
 import org.arch.framework.beans.Response;
@@ -16,15 +16,15 @@ import java.util.List;
 
 /**
  * arch-ums-api {@code ResourceService}服务远程调用的 feign 客户端.
- *
+ * 注意: 与 ums-feign-api 模块的 {@code UmsAccountResourceFeignService} 逻辑相同, 添加接口时需一同修改.
  * @author YongWu zheng
  * @date 2021-03-06 15:04:31
  * @since 1.0.0
  */
 @Component
-@FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-resource", path = "/ums/account/resource",
+@FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-rbac-resource", path = "/ums/account/resource",
         configuration = DeFaultFeignConfig.class)
-public interface UmsAccountResourceFeignService extends BaseFeignService<Resource, java.lang.Long> {
+public interface ResourceFeignService extends BaseFeignService<Resource, Long> {
 
     /**
      * 多租户根据 {@code resourceIds} 获取 {@link Resource} 列表.
@@ -36,5 +36,5 @@ public interface UmsAccountResourceFeignService extends BaseFeignService<Resourc
     @GetMapping("/findByResourceIds/{tenantId}")
     @NonNull
     Response<List<Resource>> findByResourceIds(@PathVariable(value = "tenantId") Integer tenantId,
-                                                      @RequestBody List<Long> resourceIds);
+                                               @RequestBody List<Long> resourceIds);
 }

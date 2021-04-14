@@ -28,26 +28,4 @@ import java.util.Set;
         configuration = DeFaultFeignConfig.class)
 public interface RoleResourceFeignService extends BaseFeignService<RoleResource, Long> {
 
-    /**
-     * 获取所有租户的所有角色资源权限
-     * @return  Map(tenantAuthority, Map(role, map(uri/path, Set(permission))), 如果不存在这返回空集合.
-     */
-    @GetMapping("/listAuthorities")
-    @NonNull
-    Response<Map<String, Map<String, Map<String, Set<String>>>>> listAllResourceAuthorities();
-
-    /**
-     * 多租户获取指定角色指定资源的信息
-     *
-     * @param tenantId      多租户 ID
-     * @param roleId        用户的角色 Id
-     * @param resourceIds   用户的资源 ids
-     * @return  Map(tenantAuthority, Map(role, map(uri/path, Set(permission))), 如果不存在这返回空集合.
-     */
-    @GetMapping("/find/{tenantId}/{roleId}")
-    @NonNull
-    Response<Map<String, Map<String, Map<String, Set<String>>>>> findAuthoritiesByRoleIdOfTenant(
-                                                                    @PathVariable(value = "tenantId") Integer tenantId,
-                                                                    @PathVariable(value = "roleId") Long roleId,
-                                                                    @RequestBody List<Long> resourceIds);
 }

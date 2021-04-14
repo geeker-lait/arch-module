@@ -1,5 +1,9 @@
 package org.arch.auth.rbac.config;
 
+import org.arch.auth.rbac.feign.MenuFeignService;
+import org.arch.auth.rbac.feign.PermissionFeignService;
+import org.arch.auth.rbac.feign.ResourceFeignService;
+import org.arch.auth.rbac.feign.RoleFeignService;
 import org.arch.auth.rbac.feign.RoleGroupFeignService;
 import org.arch.auth.rbac.feign.RoleMenuFeignService;
 import org.arch.auth.rbac.feign.RolePermissionFeignService;
@@ -40,11 +44,20 @@ public class ArchRbacAutoConfiguration {
     public AuthoritiesService authoritiesService(RoleMenuFeignService roleMenuFeignService,
                                                  RoleGroupFeignService roleGroupFeignService,
                                                  RoleResourceFeignService roleResourceFeignService,
-                                                 RolePermissionFeignService rolePermissionFeignService) {
+                                                 RolePermissionFeignService rolePermissionFeignService,
+                                                 MenuFeignService menuFeignService,
+                                                 RoleFeignService roleFeignService,
+                                                 PermissionFeignService permissionFeignService,
+                                                 ResourceFeignService resourceFeignService) {
+
         return new FeignAuthoritiesServiceImpl(roleMenuFeignService,
                                                roleGroupFeignService,
                                                roleResourceFeignService,
-                                               rolePermissionFeignService);
+                                               rolePermissionFeignService,
+                                               menuFeignService,
+                                               roleFeignService,
+                                               permissionFeignService,
+                                               resourceFeignService);
     }
 
     @Bean

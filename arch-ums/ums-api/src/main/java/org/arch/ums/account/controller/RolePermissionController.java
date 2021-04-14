@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -146,44 +144,4 @@ public class RolePermissionController implements CrudController<RolePermission, 
         }
     }
 
-    /**
-     * 获取所有租户的所有角色权限
-     * @return  Map(tenantAuthority, Map(role, map(uri/path, Set(permission))), 如果不存在这返回空集合.
-     */
-    @GetMapping("/listAuthorities")
-    @NonNull
-    public Response<Map<String, Map<String, Map<String, Set<String>>>>> listAllPermissionAuthorities() {
-        try {
-            return Response.success(this.rolePermissionService.listAllPermissionAuthorities());
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(),e);
-            return Response.error(FAILED.getCode(), e.getMessage());
-        }
-    }
-
-    /**
-     * 多租户获取指定角色指定权限的信息
-     *
-     * @param tenantId          多租户 ID
-     * @param roleId            用户的角色 Id
-     * @param permissionIds     用户的权限 ids
-     * @return  Map(tenantAuthority, Map(role, map(uri/path, Set(permission))), 如果不存在这返回空集合.
-     */
-    @GetMapping("/find/{tenantId:\\d+}/{roleId:\\d+}")
-    @NonNull
-    public Response<Map<String, Map<String, Map<String, Set<String>>>>> findAuthoritiesByRoleIdOfTenant(
-            @PathVariable(value = "tenantId") Integer tenantId,
-            @PathVariable(value = "roleId") Long roleId,
-            @RequestBody List<Long> permissionIds){
-        try {
-            return Response.success(this.rolePermissionService.findAuthoritiesByRoleIdOfTenant(tenantId,
-                                                                                               roleId,
-                                                                                               permissionIds));
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(),e);
-            return Response.error(FAILED.getCode(), e.getMessage());
-        }
-    }
 }

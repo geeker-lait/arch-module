@@ -25,7 +25,7 @@ import static java.util.Objects.isNull;
 @Setter
 @EqualsAndHashCode
 @Accessors(chain = true)
-public class MenuVo implements Serializable {
+public class MenuVo implements Comparable<MenuVo>, Serializable {
     private static final long serialVersionUID = 1L;
 
     public MenuVo() {
@@ -47,7 +47,6 @@ public class MenuVo implements Serializable {
         this.icon = menuVo.icon;
         this.tenantId = menuVo.tenantId;
         this.appId = menuVo.appId;
-        this.sorted = menuVo.sorted;
     }
 
     /**
@@ -56,7 +55,7 @@ public class MenuVo implements Serializable {
     private Long id;
 
     /**
-     * 父节点ID
+     * 父节点ID, 如果没有父节点则为: -1
      */
     private Long pid;
 
@@ -114,5 +113,14 @@ public class MenuVo implements Serializable {
     @JsonValue
     public String toString() {
         return JsonUtil.toJsonString(this);
+    }
+
+    @Override
+    public int compareTo(MenuVo o) {
+        int levelCp = this.level.compareTo(o.getLevel());
+        if (levelCp != 0) {
+            return levelCp;
+        }
+        return this.sorted.compareTo(o.getSorted());
     }
 }

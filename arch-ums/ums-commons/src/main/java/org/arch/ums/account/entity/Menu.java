@@ -1,6 +1,5 @@
 package org.arch.ums.account.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -20,6 +19,7 @@ import java.time.LocalDateTime;
  * @date 2021-03-17 21:25:27
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -35,7 +35,7 @@ public class Menu extends CrudEntity<Menu> {
     private Long id;
 
     /**
-     * 父节点ID
+     * 父节点ID, 如果没有父节点则为: -1
      */
     @TableField(value = "`pid`")
     private Long pid;

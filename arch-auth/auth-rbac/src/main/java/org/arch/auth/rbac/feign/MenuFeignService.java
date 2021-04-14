@@ -1,4 +1,4 @@
-package org.arch.ums.feign.account.client;
+package org.arch.auth.rbac.feign;
 
 
 import org.arch.framework.beans.Response;
@@ -16,15 +16,15 @@ import java.util.List;
 
 /**
  * arch-ums-api {@code MenuService}服务远程调用的 feign 客户端.
- *
+ * 注意: 与 ums-feign-api 模块的 {@code UmsAccountMenuFeignService} 逻辑相同, 添加接口时需一同修改.
  * @author YongWu zheng
  * @date 2021-03-06 15:03:23
  * @since 1.0.0
  */
 @Component
-@FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-menu", path = "/ums/account/menu",
+@FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-rbac-menu", path = "/ums/account/menu",
         configuration = DeFaultFeignConfig.class)
-public interface UmsAccountMenuFeignService extends BaseFeignService<Menu, java.lang.Long> {
+public interface MenuFeignService extends BaseFeignService<Menu, Long> {
 
     /**
      * 多租户根据 {@code menuIds} 获取 {@link Menu} 列表.

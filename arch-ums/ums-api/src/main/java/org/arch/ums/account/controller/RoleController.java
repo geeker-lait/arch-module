@@ -1,13 +1,16 @@
 package org.arch.ums.account.controller;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.beans.Response;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.ums.account.dto.RoleSearchDto;
 import org.arch.ums.account.entity.Role;
 import org.arch.ums.account.service.RoleService;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.beans.Response;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -138,6 +139,30 @@ public class RoleController implements CrudController<Role, java.lang.Long, Role
         RoleSearchDto searchDto = convertSearchDto(entity);
         try {
             return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 多租户根据 {@code roleIds} 获取 {@link Role} 列表.
+     *
+     * @param tenantId 多租户 ID
+     * @param roleIds  角色 ID 列表
+     * @return 角色列表
+     */
+    @GetMapping("/findByRoleIds/{tenantId}")
+    @NonNull
+    public Response<List<Role>> findByMenuIds(@PathVariable(value = "tenantId") Integer tenantId,
+                                              @RequestBody List<Long> roleIds) {
+        Wrapper<Role> roleWrapper = Wrappers.lambdaQuery(Role.class)
+                                            .eq(Role::getTenantId, tenantId)
+                                            .in(Role::getId, roleIds)
+                                            .eq(Role::getDeleted, Boolean.FALSE);
+        try {
+            return Response.success(roleService.findAllBySpec(roleWrapper));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);

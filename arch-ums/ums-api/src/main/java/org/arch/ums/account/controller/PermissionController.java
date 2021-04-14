@@ -1,13 +1,16 @@
 package org.arch.ums.account.controller;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.beans.Response;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.ums.account.dto.PermissionSearchDto;
 import org.arch.ums.account.entity.Permission;
 import org.arch.ums.account.service.PermissionService;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.beans.Response;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -138,6 +139,34 @@ public class PermissionController implements CrudController<Permission, java.lan
         PermissionSearchDto searchDto = convertSearchDto(entity);
         try {
             return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 多租户根据 {@code permissionIds} 获取 {@link Permission} 列表.
+     *
+     * @param tenantId        多租户 ID
+     * @param permissionIds   权限 ID 列表
+     * @return 权限列表, 只包含 {@code id, permissionCode, permissionUri, permissionVal} 字段
+     */
+    @GetMapping("/findByPermissionIds/{tenantId}")
+    @NonNull
+    public Response<List<Permission>> findByPermissionIds(@PathVariable(value = "tenantId") Integer tenantId,
+                                                        @RequestBody List<Long> permissionIds) {
+        Wrapper<Permission> permissionWrapper = Wrappers.lambdaQuery(Permission.class)
+                                                        .select(Permission::getId,
+                                                                Permission::getPermissionCode,
+                                                                Permission::getPermissionUri,
+                                                                Permission::getPermissionVal)
+                                                        .eq(Permission::getTenantId, tenantId)
+                                                        .in(Permission::getId, permissionIds)
+                                                        .eq(Permission::getDeleted, Boolean.FALSE);
+        try {
+            return Response.success(permissionService.findAllBySpec(permissionWrapper));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
