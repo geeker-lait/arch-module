@@ -353,7 +353,7 @@ CREATE TABLE `account_role_group` (
   `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UNQ_tenantId_roleId_groupId` (`tenant_id`, `role_id`,`group_id`)
+  UNIQUE KEY `UNQ_tenantId_groupId_roleId` (`tenant_id`, `group_id`,`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-角色组织或机构';
 
 /*Table structure for table `account_role_menu` */

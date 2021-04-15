@@ -69,8 +69,8 @@ public class RoleGroupSearchDto implements BaseSearchDto {
     public void buildSearchParams(Map<String, Object> map) {
         putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
-        putNoNull("EQ_role_id", this.getRoleId(), map);
         putNoNull("EQ_group_id", this.getGroupId(), map);
+        putNoNull("EQ_role_id", this.getRoleId(), map);
         putNoNull("EQ_deleted", this.getDeleted(), map);
         putNoNull("EQ_app_id", this.getAppId(), map);
         putNoNull("EQ_store_id", this.getStoreId(), map);
