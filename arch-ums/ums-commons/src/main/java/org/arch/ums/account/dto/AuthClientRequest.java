@@ -40,6 +40,11 @@ public class AuthClientRequest {
     private String scopes;
 
     /**
+     * 角色 id 列表, 通过逗号分割
+     */
+    private String roleIds;
+
+    /**
      * 客户端类型: web, 安卓, ios, 小程序…
      */
     private ClientType clientType;

@@ -43,8 +43,8 @@ public interface AuthClientMapper extends CrudMapper<AuthClient> {
      * @return scopes
      */
     @Nullable
-    @Select(value = "SELECT `tenant_id` as tenantId, `client_id` as clientId, `client_secret` as clientSecret, `scopes` "
-            + "FROM `account_auth_client` WHERE deleted = 0")
+    @Select(value = "SELECT `tenant_id` as tenantId, `client_id` as clientId, `client_secret` as clientSecret, " +
+            "`scopes`, `role_ids` as roleIds FROM `account_auth_client` WHERE deleted = 0")
     List<AuthClientVo> getAllScopes();
 
 }

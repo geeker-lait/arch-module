@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
  * @date 2021-03-17 21:25:26
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -51,6 +52,12 @@ public class AuthClient extends CrudEntity<AuthClient> {
      */
     @TableField(value = "`scopes`")
     private String scopes;
+
+    /**
+     * 角色 id 列表, 通过逗号分割
+     */
+    @TableField(value = "`role_ids`")
+    private String roleIds;
 
     /**
      * 客户端类型: web, 安卓, ios, 小程序…

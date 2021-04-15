@@ -30,6 +30,11 @@ public class AuthClientVo {
     private String scopes;
 
     /**
+     * 角色 id 列表, 通过逗号分割
+     */
+    private String roleIds;
+
+    /**
      * 租户 id
      */
     private Integer tenantId;

@@ -42,6 +42,11 @@ public class AuthClientSearchDto implements BaseSearchDto {
     private String scopes;
 
     /**
+     * 角色 id 列表, 通过逗号分割
+     */
+    private String roleIds;
+
+    /**
      * 客户端类型: web, 安卓, ios, 小程序…
      */
     private ClientType clientType;
@@ -89,5 +94,6 @@ public class AuthClientSearchDto implements BaseSearchDto {
         putNoNull("EQ_rev", this.getRev(), map);
         putNoNull("EQ_dt", this.getDt(), map);
         putNoNull("EQ_scopes", this.getScopes(), map);
+        putNoNull("EQ_role_ids", this.getRoleIds(), map);
     }
 }

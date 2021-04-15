@@ -156,6 +156,7 @@ CREATE TABLE `account_auth_client` (
   `client_id` varchar(32) NOT NULL COMMENT '客户端 ID',
   `client_secret` varchar(32) NOT NULL COMMENT '客户端 secret',
   `scopes` varchar(255) NOT NULL COMMENT 'openid/userinfo/token/code/资源服务器标识等',
+  `role_ids` varchar(512) DEFAULT NULL COMMENT '角色 id 列表, 通过逗号分割',
   `client_type` varchar(32) NOT NULL COMMENT '客户端类型: web, 安卓, ios, 小程序…',
   `tenant_id` int NOT NULL COMMENT '租户 id',
   `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
