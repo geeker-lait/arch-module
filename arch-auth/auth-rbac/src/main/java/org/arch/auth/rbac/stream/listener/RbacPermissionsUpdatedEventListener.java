@@ -4,11 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.auth.rbac.stream.event.RbacRemotePermissionUpdatedEvent;
 import org.arch.auth.rbac.stream.service.RbacMqReceiverOrSenderService;
 import org.springframework.context.event.EventListener;
-import top.dcenter.ums.security.core.premission.event.UpdateRolesResourcesEvent;
+import top.dcenter.ums.security.core.permission.event.UpdateRolesResourcesEvent;
 
 /**
  * 主要功能: 通过监听 Role Permissions 更新的事件, 并发布 {@link UpdateRolesResourcesEvent}
- * @see top.dcenter.ums.security.core.api.premission.service.RolePermissionsServiceAspect
+ * @see top.dcenter.ums.security.core.api.permission.service.RolePermissionsServiceAspect
  * @author YongWu zheng
  * @version V2.0  Created by 2020/11/7 18:41
  */

@@ -87,6 +87,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- 解决: 未知的枚举常量 javax.annotation.meta.When.MAYBE -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <optional>true</optional>
+        </dependency>
+
     </dependencies>
 
 </project>

@@ -10,10 +10,10 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.core.annotation.Order;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-import top.dcenter.ums.security.core.api.premission.service.RolePermissionsService;
-import top.dcenter.ums.security.core.api.premission.service.RolePermissionsServiceAspect;
-import top.dcenter.ums.security.core.premission.dto.UpdateRoleResourcesDto;
-import top.dcenter.ums.security.core.premission.enums.UpdateRolesResourcesType;
+import top.dcenter.ums.security.core.api.permission.service.RolePermissionsService;
+import top.dcenter.ums.security.core.api.permission.service.RolePermissionsServiceAspect;
+import top.dcenter.ums.security.core.permission.dto.UpdateRoleResourcesDto;
+import top.dcenter.ums.security.core.permission.enums.UpdateRolesResourcesType;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ import static top.dcenter.ums.security.common.consts.TransactionalConstants.ONE_
  * 主要功能: <br>
  *     1. 当权限更新时, 发送更新消息到 MQ, 以便其他微服务更新本地权限缓存.<br>
  *     2. 发布本地更新事件, 以便其他微服务更新本地权限缓存.
- * @see top.dcenter.ums.security.core.api.premission.service.RolePermissionsServiceAspect
+ * @see top.dcenter.ums.security.core.api.permission.service.RolePermissionsServiceAspect
  * @author YongWu zheng
  * @version V2.0  Created by 2020/11/7 18:41
  */

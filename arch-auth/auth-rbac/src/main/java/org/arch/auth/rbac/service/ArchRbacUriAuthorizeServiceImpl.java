@@ -6,11 +6,11 @@ import org.arch.ums.account.vo.MenuVo;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
-import top.dcenter.ums.security.core.api.premission.service.AbstractUriAuthorizeService;
-import top.dcenter.ums.security.core.api.premission.service.UpdateCacheOfRolesResourcesService;
+import top.dcenter.ums.security.core.api.permission.service.AbstractUriAuthorizeService;
+import top.dcenter.ums.security.core.api.permission.service.UpdateCacheOfRolesResourcesService;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.exception.RolePermissionsException;
-import top.dcenter.ums.security.core.premission.enums.PermissionType;
+import top.dcenter.ums.security.core.permission.enums.PermissionType;
 
 import java.util.Collections;
 import java.util.Comparator;

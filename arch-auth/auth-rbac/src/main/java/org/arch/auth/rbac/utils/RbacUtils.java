@@ -4,8 +4,8 @@ import org.arch.auth.rbac.stream.event.RbacRemotePermissionUpdatedEvent;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
-import top.dcenter.ums.security.core.premission.dto.UpdateRoleResourcesDto;
-import top.dcenter.ums.security.core.premission.event.UpdateRolesResourcesEvent;
+import top.dcenter.ums.security.core.permission.dto.UpdateRoleResourcesDto;
+import top.dcenter.ums.security.core.permission.event.UpdateRolesResourcesEvent;
 
 /**
  * @author YongWu zheng

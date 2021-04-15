@@ -14,7 +14,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.MimeTypeUtils;
 import top.dcenter.ums.security.common.utils.UuidUtils;
-import top.dcenter.ums.security.core.premission.dto.UpdateRoleResourcesDto;
+import top.dcenter.ums.security.core.permission.dto.UpdateRoleResourcesDto;
 
 import java.util.Iterator;
 import java.util.Map;

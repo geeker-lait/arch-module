@@ -12,9 +12,9 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2Res
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import top.dcenter.ums.security.core.premission.config.RoleHierarchyAutoConfiguration;
-import top.dcenter.ums.security.core.premission.config.UriAuthorizeAutoConfigurerAware;
-import top.dcenter.ums.security.core.premission.properties.PermissionProperties;
+import top.dcenter.ums.security.core.permission.config.RoleHierarchyAutoConfiguration;
+import top.dcenter.ums.security.core.permission.config.UriAuthorizeAutoConfigurerAware;
+import top.dcenter.ums.security.core.permission.properties.PermissionProperties;
 import top.dcenter.ums.security.jwt.config.JwtPropertiesAutoConfiguration;
 import top.dcenter.ums.security.jwt.properties.JwtProperties;
 

@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.dcenter.ums.security.core.premission.dto.UpdateRoleResourcesDto;
-import top.dcenter.ums.security.core.premission.enums.UpdateRolesResourcesType;
-import top.dcenter.ums.security.core.premission.event.UpdateRolesResourcesEvent;
+import top.dcenter.ums.security.core.permission.dto.UpdateRoleResourcesDto;
+import top.dcenter.ums.security.core.permission.enums.UpdateRolesResourcesType;
+import top.dcenter.ums.security.core.permission.event.UpdateRolesResourcesEvent;
 
 import java.util.Collections;
 import java.util.HashSet;

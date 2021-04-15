@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.access.PermissionEvaluator;
-import top.dcenter.ums.security.core.premission.evaluator.UriAuthoritiesPermissionEvaluator;
+import top.dcenter.ums.security.core.permission.evaluator.UriAuthoritiesPermissionEvaluator;
 
 import java.util.ArrayList;
 import java.util.List;

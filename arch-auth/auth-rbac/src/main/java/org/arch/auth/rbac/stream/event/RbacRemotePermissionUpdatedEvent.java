@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.lang.NonNull;
-import top.dcenter.ums.security.core.premission.dto.UpdateRoleResourcesDto;
+import top.dcenter.ums.security.core.permission.dto.UpdateRoleResourcesDto;
 
 /**
  * rbac 权限更新事件

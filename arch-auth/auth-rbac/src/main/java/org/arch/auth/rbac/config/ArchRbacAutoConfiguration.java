@@ -23,9 +23,9 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import top.dcenter.ums.security.core.api.premission.service.AbstractUriAuthorizeService;
+import top.dcenter.ums.security.core.api.permission.service.AbstractUriAuthorizeService;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
-import top.dcenter.ums.security.core.premission.config.PermissionAutoConfiguration;
+import top.dcenter.ums.security.core.permission.config.PermissionAutoConfiguration;
 
 /**
  * RBAC 权限服务自动配置
