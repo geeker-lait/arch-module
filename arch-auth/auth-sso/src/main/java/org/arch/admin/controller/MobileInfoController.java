@@ -53,7 +53,7 @@ public class MobileInfoController {
     private final ConfMobileInfoFeignService confMobileInfoFeignService;
     private final ConfMobileSegmentFeignService confMobileSegmentFeignService;
     /**
-     * 批量上传手机归属地信息, 批量保存, 如果主键或唯一索引重复则更新.<br>
+     * 批量上传手机归属地信息, 批量保存, 如果主键或唯一索引重复则更新. 注意: 必须拥有 ROLE_ADMIN 角色才能上传.<br>
      * 主要用户批量更新与添加, 如果初始化时请直接调用 ums-api 的 /ums/conf/mobile/info/uploadInfos.<br>
      *     格式: 1999562  甘肃-兰州 <br>
      *     分隔符可以自定义.
@@ -93,7 +93,7 @@ public class MobileInfoController {
                 // 解析手机号段信息. 格式: 1999562	甘肃-兰州
                 List<MobileInfo> mobileInfoList = getMobileInfo(delimiter, bufferedReader, segmentMap, errorList);
 
-                Response<Boolean> savesResponse = this.confMobileInfoFeignService.saveAllNoResult(mobileInfoList);
+                Response<Boolean> savesResponse = this.confMobileInfoFeignService.insertOnDuplicateKeyUpdate(mobileInfoList);
                 return getBooleanResponse(errorList, savesResponse,
                                           SAVES_MOBILE_INFO_FAILED,
                                           SAVES_MOBILE_INFO_PARTIAL_FAILED);
@@ -107,7 +107,7 @@ public class MobileInfoController {
     }
 
     /**
-     * 批量上传手机号段信息, 批量保存, 如果主键或唯一索引重复则更新. <br>
+     * 批量上传手机号段信息, 批量保存, 如果主键或唯一索引重复则更新.  注意: 必须拥有 ROLE_ADMIN 角色才能上传.<br>
      * 主要用户批量更新与添加, 如果初始化时请直接调用 ums-api 的 /ums/conf/mobile/Segment/uploadSegment.
      * <br>
      * 格式: 1. 格式: 1345   CMCC	0 <br>
@@ -136,7 +136,7 @@ public class MobileInfoController {
                 // 解析手机归属地信息. 格式: 1345   CMCC	0
                 List<MobileSegment> mobileSegmentList = getMobileSegment(delimiter, bufferedReader, errorList);
 
-                Response<Boolean> savesResponse = this.confMobileSegmentFeignService.saveAllNoResult(mobileSegmentList);
+                Response<Boolean> savesResponse = this.confMobileSegmentFeignService.insertOnDuplicateKeyUpdate(mobileSegmentList);
                 return getBooleanResponse(errorList, savesResponse,
                                           SAVES_MOBILE_SEGMENT_FAILED,
                                           SAVES_MOBILE_SEGMENT_PARTIAL_FAILED);

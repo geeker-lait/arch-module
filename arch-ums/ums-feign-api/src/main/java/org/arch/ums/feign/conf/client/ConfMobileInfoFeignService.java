@@ -33,6 +33,6 @@ public interface ConfMobileInfoFeignService extends BaseFeignService<MobileInfo,
      * @param mobileInfoList 实体类列表
      * @return  {@link Response(Boolean)}
      */
-    @PostMapping("/savesNoResult")
-    Response<Boolean> saveAllNoResult(@Valid @RequestBody List<MobileInfo> mobileInfoList);
+    @PostMapping("/savesOnDuplicateKeyUpdate")
+    Response<Boolean> insertOnDuplicateKeyUpdate(@Valid @RequestBody List<MobileInfo> mobileInfoList);
 }

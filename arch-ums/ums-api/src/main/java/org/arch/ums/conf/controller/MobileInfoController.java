@@ -112,8 +112,8 @@ public class MobileInfoController implements CrudController<MobileInfo, java.lan
      * @param mobileInfoList 实体类列表
      * @return  {@link Response(Boolean)}
      */
-    @PostMapping("/savesNoResult")
-    public Response<Boolean> saveAllNoResult(@Valid @RequestBody List<MobileInfo> mobileInfoList) {
+    @PostMapping("/savesOnDuplicateKeyUpdate")
+    public Response<Boolean> insertOnDuplicateKeyUpdate(@Valid @RequestBody List<MobileInfo> mobileInfoList) {
         try {
             return Response.success(getCrudService().insertOnDuplicateKeyUpdateBatch(mobileInfoList));
         }
@@ -175,7 +175,7 @@ public class MobileInfoController implements CrudController<MobileInfo, java.lan
     }
 
     /**
-     * 批量上传手机归属地信息. <br>
+     * 批量上传手机归属地信息.  注意: 必须拥有 ROLE_ADMIN 角色才能上传.<br>
      *     格式: 1999562  甘肃-兰州 <br>
      *     分隔符可以自定义.
      * @param file      csv 格式的手机归属地信息
@@ -213,7 +213,7 @@ public class MobileInfoController implements CrudController<MobileInfo, java.lan
                 // 解析手机号段信息. 格式: 1999562	甘肃-兰州
                 List<MobileInfo> mobileInfoList = getMobileInfo(delimiter, bufferedReader, segmentMap, errorList);
 
-                Response<Boolean> savesResponse = saveAllNoResult(mobileInfoList);
+                Response<Boolean> savesResponse = insertOnDuplicateKeyUpdate(mobileInfoList);
                 return getBooleanResponse(errorList, savesResponse,
                                           SAVES_MOBILE_INFO_FAILED,
                                           SAVES_MOBILE_INFO_PARTIAL_FAILED);

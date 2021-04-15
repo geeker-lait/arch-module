@@ -33,6 +33,6 @@ public interface ConfMobileSegmentFeignService extends BaseFeignService<MobileSe
      * @param mobileSegmentList 实体类列表
      * @return  {@link Response (Boolean)}
      */
-    @PostMapping("/savesNoResult")
-    Response<Boolean> saveAllNoResult(@Valid @RequestBody List<MobileSegment> mobileSegmentList);
+    @PostMapping("/savesOnDuplicateKeyUpdate")
+    Response<Boolean> insertOnDuplicateKeyUpdate(@Valid @RequestBody List<MobileSegment> mobileSegmentList);
 }

@@ -77,10 +77,10 @@ public class MobileSegmentController implements CrudController<MobileSegment, ja
      * @param mobileSegmentList 实体类列表
      * @return  {@link Response(Boolean)}
      */
-    @PostMapping("/savesNoResult")
-    public Response<Boolean> saveAllNoResult(@Valid @RequestBody List<MobileSegment> mobileSegmentList) {
+    @PostMapping("/savesOnDuplicateKeyUpdate")
+    public Response<Boolean> insertOnDuplicateKeyUpdate(@Valid @RequestBody List<MobileSegment> mobileSegmentList) {
         try {
-            return Response.success(getCrudService().insertOnDuplicateKeyUpdateBatch(mobileSegmentList));
+            return Response.success(mobileSegmentService.insertOnDuplicateKeyUpdateBatch(mobileSegmentList));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -196,7 +196,7 @@ public class MobileSegmentController implements CrudController<MobileSegment, ja
                 // 解析手机归属地信息. 格式: 1345   CMCC	0
                 List<MobileSegment> mobileSegmentList = getMobileSegment(delimiter, bufferedReader, errorList);
 
-                Response<Boolean> savesResponse = saveAllNoResult(mobileSegmentList);
+                Response<Boolean> savesResponse = insertOnDuplicateKeyUpdate(mobileSegmentList);
                 return getBooleanResponse(errorList, savesResponse,
                                           SAVES_MOBILE_SEGMENT_FAILED,
                                           SAVES_MOBILE_SEGMENT_PARTIAL_FAILED);
