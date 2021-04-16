@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import org.arch.framework.api.crud.BaseSearchDto;
 import org.arch.framework.beans.Response;
+import org.arch.framework.crud.utils.SearchFilter;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.toMap;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 import static org.arch.framework.crud.utils.TenantUtils.removeTenantIdValue;
 
@@ -266,6 +271,56 @@ public interface CrudController<T extends Model<T>, ID extends Serializable,
             } else {
                 return Response.error(FAILED.getCode(), e.getMessage());
             }
+        }
+    }
+
+    /**
+     * 根据 entity 条件模糊查询对象; 模糊查询的条件拼接 {@code CONCAT("%", condition ,"%")},
+     * 此方法会对不为 null 的 {@link String} 类型的字段都进行模糊查询.
+     * @param entity    实体类
+     * @param token     token info
+     * @return  {@link Response}
+     */
+    @GetMapping("/like")
+    default Response<List<T>> like(T entity, TokenInfo token) {
+        try {
+            resolver(token, entity);
+            Field[] fields = entity.getClass().getDeclaredFields();
+            final Class<String> stringClass = String.class;
+            final String likePrefix = SearchFilter.Operator.LIKE + "_";
+            Map<String, Object> likeParamsMap =
+                    Arrays.stream(fields)
+                          .filter(field -> {
+                              field.setAccessible(true);
+                              try {
+                                  Object value = field.get(entity);
+                                  if (isNull(value)) {
+                                      return false;
+                                  }
+                              }
+                              catch (IllegalAccessException e) {
+                                  log.error(e.getMessage(), e);
+                                  return false;
+                              }
+                              return stringClass.isAssignableFrom(field.getType());
+                          })
+                          .collect(toMap(field -> likePrefix + field.getName(),
+                                         field -> {
+                                             try {
+                                                 return field.get(entity);
+                                             }
+                                             catch (IllegalAccessException e) {
+                                                 log.error(e.getMessage(), e);
+                                                 // 如果出现异常, filter 阶段已处理, 此处结果可以忽略
+                                                 return "";
+                                             }
+                                         })
+                          );
+
+            return Response.success(getCrudService().findAllByMapParams(likeParamsMap));
+        } catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
         }
     }
 

@@ -228,4 +228,23 @@ public interface FeignCrudController<T extends Model<T>, ID extends Serializable
         }
     }
 
+    /**
+     * 根据 request 条件模糊查询对象; 模糊查询的条件拼接 {@code CONCAT("%", condition ,"%")},
+     * 此方法会对不为 null 的 {@link String} 类型的字段都进行模糊查询.
+     * @param request    实体类
+     * @return  {@link Response}
+     */
+    @GetMapping("/like")
+    default Response<List<T>> like(R request) {
+        try {
+            T entity = getEntity();
+            BeanUtils.copyProperties(request, entity);
+            return getFeignService().like(entity);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
 }
