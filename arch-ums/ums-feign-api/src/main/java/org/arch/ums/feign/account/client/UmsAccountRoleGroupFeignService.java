@@ -3,13 +3,14 @@ package org.arch.ums.feign.account.client;
 
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
-import org.arch.ums.account.entity.RoleGroup;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.ums.account.entity.RoleGroup;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -43,10 +44,36 @@ public interface UmsAccountRoleGroupFeignService extends BaseFeignService<RoleGr
      * @param roleIds  用户的角色 ids
      * @return  Map(tenantAuthority, Map(groupAuthority, Set(roleAuthority))), 如果不存在这返回空集合.
      */
-    @GetMapping("/find/{tenantId}/{groupId}")
+    @GetMapping("/findGroupRoles/{tenantId}/{groupId}")
     @NonNull
     Response<Map<String, Map<String, Set<String>>>> findGroupRolesByGroupIdOfTenant(
                                                                     @PathVariable(value = "tenantId") Integer tenantId,
                                                                     @PathVariable(value = "groupId") Long groupId,
                                                                     @RequestBody List<Long> roleIds);
+
+    /**
+     * 基于多租户, 更新角色组 {@code groupId} 的角色集合
+     *
+     * @param tenantId    多租户 ID
+     * @param groupId     角色组 ID
+     * @param roleIds     角色 ids
+     * @return 是否更新成功
+     */
+    @PutMapping("/updateRoles/{tenantId}/{groupId}")
+    @NonNull
+    Response<Boolean> updateRolesByGroupIdOfTenant(@PathVariable(value = "tenantId") Long tenantId,
+                                                   @PathVariable(value = "groupId") Long groupId,
+                                                   @RequestBody List<Long> roleIds);
+
+    /**
+     * 基于多租户, 查询指定角色组 {@code groupId} 所拥有的所有角色集合, Set(roleAuthority).
+     * @param tenantId  多租户 ID
+     * @param groupId   角色组 ID
+     * @return  groupId 所拥有的所有角色集合, Set(roleAuthority).
+     */
+    @GetMapping("/findRoles/{tenantId}/{groupId}")
+    @NonNull
+    Response<Set<String>> findRolesByGroupIdOfTenant(@PathVariable(value = "tenantId") Long tenantId,
+                                                     @PathVariable(value = "groupId") Long groupId);
+
 }

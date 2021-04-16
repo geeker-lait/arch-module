@@ -1,8 +1,9 @@
 package org.arch.ums.feign.account.client;
 
-import org.arch.framework.feign.BaseFeignService;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
-import org.arch.ums.account.entity.OauthToken;
+import org.arch.ums.account.entity.Menu;
+import org.arch.ums.account.entity.RoleMenu;
+import org.arch.ums.feign.common.service.RolePermissionFeignService;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,6 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-roleMenu", path = "/ums/account/role/menu",
         configuration = DeFaultFeignConfig.class)
-public interface UmsAccountRoleMenuFeignService extends BaseFeignService<OauthToken, Long> {
+public interface UmsAccountRoleMenuFeignService extends RolePermissionFeignService<Menu, Long, RoleMenu, Long> {
 
 }

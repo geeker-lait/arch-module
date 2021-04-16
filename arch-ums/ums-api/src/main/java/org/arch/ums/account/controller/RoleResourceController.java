@@ -4,15 +4,18 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
+import org.arch.framework.beans.exception.constant.AuthStatusCode;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.ums.account.dto.RoleResourceSearchDto;
+import org.arch.ums.account.entity.Resource;
 import org.arch.ums.account.entity.RoleResource;
 import org.arch.ums.account.service.RoleResourceService;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -144,4 +147,102 @@ public class RoleResourceController implements CrudController<RoleResource, java
         }
     }
 
+    /**
+     * 基于多租户, 更新角色 {@code roleId} 的 权限资源
+     * @param tenantId      多租户 ID
+     * @param roleId        角色 ID
+     * @param resourceIds   权限资源 ids
+     * @return  是否更新成功
+     */
+    @PutMapping("/updateOfTenant/{tenantId}/{roleId}")
+    @NonNull
+    public Response<Boolean> updateResourcesByRoleIdOfTenant(@PathVariable(value = "tenantId") Long tenantId,
+                                                             @PathVariable(value = "roleId") Long roleId,
+                                                             @RequestBody List<Long> resourceIds,
+                                                             TokenInfo token) {
+        // 必须是登录用户, 且 tenantId 必须与登录用户的 tenantId 相同
+        if (isNull(token) || !(token.getTenantId().equals(tenantId.intValue()))) {
+            Response.failed(AuthStatusCode.FORBIDDEN);
+        }
+        try {
+            return Response.success(this.roleResourceService.updateResourcesByRoleIdOfTenant(tenantId, roleId,
+                                                                                             resourceIds));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 基于 SCOPE, 更新角色 {@code roleId} 的 权限资源
+     * @param scopeId       SCOPE ID
+     * @param roleId        角色 ID
+     * @param resourceIds   权限资源 ids
+     * @return  是否更新成功
+     */
+    @PutMapping("/updateOfScope/{scopeId}/{roleId}")
+    @NonNull
+    public Response<Boolean> updateResourcesByRoleIdOfScopeId(@PathVariable(value = "scopeId") Long scopeId,
+                                                              @PathVariable(value = "roleId") Long roleId,
+                                                              @RequestBody List<Long> resourceIds,
+                                                              TokenInfo token) {
+        // 必须是登录用户
+        if (isNull(token)) {
+            Response.failed(AuthStatusCode.FORBIDDEN);
+        }
+        try {
+            return Response.success(this.roleResourceService.updateResourcesByRoleIdOfScopeId(token.getTenantId()
+                                                                                                   .longValue(),
+                                                                                              scopeId,
+                                                                                              roleId,
+                                                                                              resourceIds));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 基于多租户, 查询指定角色 {@code roleId} 的权限资源列表
+     * @param tenantId  多租户 ID
+     * @param roleId    角色 ID
+     * @return  权限资源列表
+     */
+    @GetMapping("/findOfTenant/{tenantId}/{roleId}")
+    @NonNull
+    public Response<List<Resource>> findAllResourcesByRoleIdOfTenant(@PathVariable(value = "tenantId") Long tenantId,
+                                                                     @PathVariable(value = "roleId") Long roleId) {
+        try {
+            return Response.success(this.roleResourceService.findAllResourcesByRoleIdOfTenant(tenantId, roleId));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 基于 SCOPE, 查询指定角色 {@code roleId} 的权限资源列表
+     *
+     * @param scopeId SCOPE ID
+     * @param roleId  角色 ID
+     * @return 权限资源列表
+     */
+    @GetMapping("/findOfScope/{scopeId}/{roleId}")
+    @NonNull
+    public Response<List<Resource>> findAllResourcesByRoleIdOfScopeId(@PathVariable(value = "scopeId") Long scopeId,
+                                                                      @PathVariable(value = "roleId") Long roleId) {
+        try {
+            Long tenantId = Long.valueOf(tenantContextHolder.getTenantId());
+            return Response.success(this.roleResourceService.findAllResourcesByRoleIdOfScopeId(tenantId,
+                                                                                               scopeId,
+                                                                                               roleId));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
 }

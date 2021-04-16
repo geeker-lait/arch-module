@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
+import org.arch.framework.beans.exception.constant.AuthStatusCode;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.ums.account.dto.RoleGroupSearchDto;
@@ -13,6 +14,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -173,11 +175,58 @@ public class RoleGroupController implements CrudController<RoleGroup, java.lang.
     @GetMapping("/find/{tenantId:\\d+}/{groupId:\\d+}")
     @NonNull
     public Response<Map<String, Map<String, Set<String>>>> findGroupRolesByGroupIdOfTenant(
-            @PathVariable(value = "tenantId") Integer tenantId,
-            @PathVariable(value = "groupId") Long groupId,
-            @RequestBody List<Long> roleIds) {
+                                                                    @PathVariable(value = "tenantId") Integer tenantId,
+                                                                    @PathVariable(value = "groupId") Long groupId,
+                                                                    @RequestBody List<Long> roleIds) {
         try {
             return Response.success(this.roleGroupService.findGroupRolesByGroupIdOfTenant(tenantId, groupId, roleIds));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 基于多租户, 查询指定角色组 {@code groupId} 所拥有的所有角色集合, Set(roleAuthority).
+     *
+     * @param tenantId 多租户 ID
+     * @param groupId  角色组 ID
+     * @return groupId 所拥有的所有角色集合, Set(roleAuthority).
+     */
+    @GetMapping("/findRoles/{tenantId}/{groupId}")
+    @NonNull
+    public Response<Set<String>> findRolesByGroupIdOfTenant(@PathVariable(value = "tenantId") Long tenantId,
+                                                            @PathVariable(value = "groupId") Long groupId) {
+        try {
+            return Response.success(this.roleGroupService.findRolesByGroupIdOfTenant(tenantId, groupId));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 基于多租户, 更新角色组 {@code groupId} 的角色集合
+     *
+     * @param tenantId 多租户 ID
+     * @param groupId  角色组 ID
+     * @param roleIds  角色 ids
+     * @return 是否更新成功
+     */
+    @PutMapping("/updateRoles/{tenantId}/{groupId}")
+    @NonNull
+    public Response<Boolean> updateRolesByGroupIdOfTenant(@PathVariable(value = "tenantId") Long tenantId,
+                                                          @PathVariable(value = "groupId") Long groupId,
+                                                          @RequestBody List<Long> roleIds,
+                                                          TokenInfo token) {
+        // 必须是登录用户, 且 tenantId 必须与登录用户的 tenantId 相同
+        if (isNull(token) || !(token.getTenantId().equals(tenantId.intValue()))) {
+            Response.failed(AuthStatusCode.FORBIDDEN);
+        }
+        try {
+            return Response.success(this.roleGroupService.updateRolesByGroupIdOfTenant(tenantId, groupId, roleIds));
         }
         catch (Exception e) {
             log.error(e.getMessage(),e);

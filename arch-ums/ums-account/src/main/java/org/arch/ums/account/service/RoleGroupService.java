@@ -12,6 +12,7 @@ import org.arch.ums.account.entity.RoleGroup;
 import org.slf4j.MDC;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -24,9 +25,11 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static java.lang.Boolean.FALSE;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static org.arch.framework.ums.consts.MdcConstants.MDC_KEY;
@@ -59,11 +62,11 @@ public class RoleGroupService extends CrudService<RoleGroup, java.lang.Long> {
 
         //@formatter:off
         Wrapper<Group> groupWrapper = Wrappers.<Group>lambdaQuery()
-                                              .eq(Group::getDeleted,Boolean.FALSE);
+                                              .eq(Group::getDeleted,FALSE);
         Wrapper<Role> roleWrapper = Wrappers.<Role>lambdaQuery()
-                                            .eq(Role::getDeleted,Boolean.FALSE);
+                                            .eq(Role::getDeleted,FALSE);
         Wrapper<RoleGroup> roleGroupWrapper = Wrappers.<RoleGroup>lambdaQuery()
-                                                      .eq(RoleGroup::getDeleted,Boolean.FALSE);
+                                                      .eq(RoleGroup::getDeleted,FALSE);
         CompletableFuture<List<Group>> groupCompletableFuture =
                 CompletableFuture.supplyAsync(() -> ofNullable(groupService.findAllBySpec(groupWrapper))
                         .orElse(new ArrayList<>(0)));
@@ -109,7 +112,7 @@ public class RoleGroupService extends CrudService<RoleGroup, java.lang.Long> {
         Wrapper<Role> roleWrapper = Wrappers.lambdaQuery(Role.class)
                                             .eq(Role::getTenantId, tenantId)
                                             .in(Role::getId, roleIds)
-                                            .eq(Role::getDeleted, Boolean.FALSE);
+                                            .eq(Role::getDeleted, FALSE);
         CompletableFuture<List<Role>> roleCompletableFuture =
                 CompletableFuture.supplyAsync(() -> ofNullable(roleService.findAllBySpec(roleWrapper))
                         .orElse(new ArrayList<>(0)));
@@ -151,6 +154,57 @@ public class RoleGroupService extends CrudService<RoleGroup, java.lang.Long> {
         //@formatter:on
     }
 
+    /**
+     * 基于多租户, 查询指定角色组 {@code groupId} 所拥有的所有角色集合, Set(roleAuthority).
+     *
+     * @param tenantId 多租户 ID
+     * @param groupId  角色组 ID
+     * @return groupId 所拥有的所有角色集合, Set(roleAuthority).
+     */
+    @Transactional(readOnly = true)
+    @NonNull
+    public Set<String> findRolesByGroupIdOfTenant(@NonNull Long tenantId, @NonNull Long groupId) {
+        try {
+            return roleGroupDao.findRolesByGroupIdOfTenant(tenantId, groupId);
+        }
+        catch (Exception e) {
+            String msg = String.format("获取角色组角色集合信息失败: tenantId=%s, groupId=%s", tenantId, groupId);
+            log.error(msg, e);
+            return new HashSet<>(0);
+        }
+    }
+
+    /**
+     * 基于多租户, 更新角色组 {@code groupId} 的角色集合
+     *
+     * @param tenantId 多租户 ID
+     * @param groupId  角色组 ID
+     * @param roleIds  角色 ids
+     * @return 是否更新成功
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @NonNull
+    public boolean updateRolesByGroupIdOfTenant(@NonNull Long tenantId, @NonNull Long groupId,
+                                                @NonNull List<Long> roleIds) {
+        List<RoleGroup> roleGroupList =
+                roleIds.stream()
+                       .map(roleId -> new RoleGroup().setGroupId(groupId)
+                                                     .setRoleId(roleId)
+                                                     .setTenantId(tenantId.intValue())
+                                                     .setDeleted(FALSE))
+                       .collect(toList());
+
+        Wrapper<RoleGroup> roleGroupWrapper = Wrappers.lambdaQuery(RoleGroup.class)
+                                                      .eq(RoleGroup::getTenantId, tenantId)
+                                                      .eq(RoleGroup::getGroupId, groupId)
+                                                      .eq(RoleGroup::getDeleted, FALSE);
+        boolean removeResult = roleGroupDao.remove(roleGroupWrapper);
+        if (!removeResult) {
+            return false;
+        }
+        return roleGroupDao.saveBatch(roleGroupList);
+    }
+
     private Map<String, Map<String, Set<String>>> groupingOfListAllGroup(CompletableFuture<List<Group>> groupCompletableFuture,
                                                                          CompletableFuture<List<Role>> roleCompletableFuture,
                                                                          CompletableFuture<List<RoleGroup>> roleGroupCompletableFuture,
@@ -188,4 +242,5 @@ public class RoleGroupService extends CrudService<RoleGroup, java.lang.Long> {
         }
         //@formatter:on
     }
+
 }

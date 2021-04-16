@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudService;
+import org.arch.framework.ums.consts.RoleConstants;
 import org.arch.framework.ums.properties.AuthClientScopesCacheProperties;
 import org.arch.ums.account.dao.AuthClientDao;
 import org.arch.ums.account.entity.AuthClient;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import top.dcenter.ums.security.core.util.ConvertUtil;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import java.util.Set;
 
 import static java.util.Objects.isNull;
 import static org.arch.framework.utils.AuthClientSyncUtils.setScopesUpdateSyncFlag;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * 授权客户端(AuthClient) 表服务层<br>
@@ -69,6 +72,7 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
      * @return scopes, Map(tenantId, Map(clientId, AuthClientVo))
      */
     @NonNull
+    @Transactional(readOnly = true)
     public Map<Integer, Map<String, AuthClientVo>> getAllScopes() {
         List<AuthClientVo> list = authClientDao.getAllScopes();
         if (isNull(list)) {
@@ -77,7 +81,7 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
         final Map<Integer, Map<String, AuthClientVo>> map = new HashMap<>(list.size());
         list.forEach(vo -> map.compute(vo.getTenantId(), (tenantId, valueMap) -> {
             if (isNull(valueMap)) {
-                valueMap = new HashMap<>();
+                valueMap = new HashMap<>(1);
             }
             valueMap.put(vo.getClientId(), vo);
             return valueMap;
@@ -167,6 +171,22 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
         return remove;
     }
 
+    /**
+     * 角色权限检查: 根据 scopeId 获取 roleIds, 再判断是否包含此 roleId
+     * @param scopeId   {@link AuthClient#getId()}
+     * @param roleId    角色 ID
+     * @return  返回 true 表示包含此角色(roleId), 否则返回 false
+     */
+    @Transactional(readOnly = true)
+    public boolean hasRoleId(@NonNull Long scopeId, @NonNull Long roleId) {
+        AuthClient authClient = authClientDao.getById(scopeId);
+        String roleIds = authClient.getRoleIds();
+        if (hasText(roleIds)) {
+            Set<String> roleSet = ConvertUtil.string2Set(roleIds, RoleConstants.AUTHORITY_SEPARATOR);
+            return roleSet.contains(roleId.toString());
+        }
+        return false;
+    }
 
     private RedisConnection getConnection() {
         return redisConnectionFactory.getConnection();
@@ -181,5 +201,4 @@ public class AuthClientService extends CrudService<AuthClient, java.lang.Long> {
             setScopesUpdateSyncFlag(this.authClientScopesCacheProperties,connection);
         }
     }
-
 }
