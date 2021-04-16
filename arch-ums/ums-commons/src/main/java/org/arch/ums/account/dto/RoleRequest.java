@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -26,6 +27,7 @@ public class RoleRequest {
     /**
      * 角色名
      */
+    @NotNull(message = "角色名不能为 null")
     private String roleName;
 
     /**
