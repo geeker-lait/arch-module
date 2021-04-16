@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -31,7 +32,9 @@ public class FormInterfaceController implements CrudController<FormInterface, ja
 
     @Override
     public FormInterface resolver(TokenInfo token, FormInterface formInterface) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 formInterface 后返回 formInterface, 如: tenantId 的处理等.
+        if (isNull(formInterface)) {
+            formInterface =  new FormInterface();
+        }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             formInterface.setTenantId(token.getTenantId());
         } else {

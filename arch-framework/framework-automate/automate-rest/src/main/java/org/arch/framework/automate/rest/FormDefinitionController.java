@@ -2,15 +2,16 @@ package org.arch.framework.automate.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.automate.api.dto.FormDefinitionSearchDto;
 import org.arch.framework.automate.from.entity.FormDefinition;
 import org.arch.framework.automate.from.service.FormDefinitionService;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -31,7 +32,9 @@ public class FormDefinitionController implements CrudController<FormDefinition, 
 
     @Override
     public FormDefinition resolver(TokenInfo token, FormDefinition formDefinition) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 formDefinition 后返回 formDefinition, 如: tenantId 的处理等.
+        if (isNull(formDefinition)) {
+            formDefinition =  new FormDefinition();
+        }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             formDefinition.setTenantId(token.getTenantId());
         } else {

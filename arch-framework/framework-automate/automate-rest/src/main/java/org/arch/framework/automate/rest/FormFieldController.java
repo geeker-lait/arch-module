@@ -2,15 +2,16 @@ package org.arch.framework.automate.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.automate.api.dto.FormFieldSearchDto;
 import org.arch.framework.automate.from.entity.FormField;
 import org.arch.framework.automate.from.service.FormFieldService;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -31,7 +32,9 @@ public class FormFieldController implements CrudController<FormField, java.lang.
 
     @Override
     public FormField resolver(TokenInfo token, FormField formField) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 formField 后返回 formField, 如: tenantId 的处理等.
+        if (isNull(formField)) {
+            formField =  new FormField();
+        }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             formField.setTenantId(token.getTenantId());
         } else {

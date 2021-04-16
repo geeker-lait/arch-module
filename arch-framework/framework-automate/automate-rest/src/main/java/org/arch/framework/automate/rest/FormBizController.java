@@ -2,15 +2,16 @@ package org.arch.framework.automate.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.automate.api.dto.FormBizSearchDto;
 import org.arch.framework.automate.from.entity.FormBiz;
 import org.arch.framework.automate.from.service.FormBizService;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -31,7 +32,9 @@ public class FormBizController implements CrudController<FormBiz, java.lang.Long
 
     @Override
     public FormBiz resolver(TokenInfo token, FormBiz formBiz) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 formBiz 后返回 formBiz, 如: tenantId 的处理等.
+        if (isNull(formBiz)) {
+            formBiz =  new FormBiz();
+        }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             formBiz.setTenantId(token.getTenantId());
         } else {
