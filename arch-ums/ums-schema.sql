@@ -687,3 +687,44 @@ CREATE TABLE `conf_mobile_info` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `UNQ_prefix` (`prefix`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='手机号归属地信息';
+
+/*Table structure for table `conf_dictionary` */
+
+DROP TABLE IF EXISTS `conf_dictionary`;
+
+CREATE TABLE `conf_dictionary` (
+     `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT 'id',
+     `code` varchar(50) NOT NULL COMMENT '业务码',
+     `title` varchar(50) NOT NULL COMMENT '标题',
+     `mark` varchar(255) DEFAULT NULL COMMENT '备注',
+     `tenant_id` int(11) NOT NULL COMMENT '租户 id',
+     `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+     `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+     `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+     `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+     `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+     PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='数据字典';
+
+/*Table structure for table `conf_dictionary_item` */
+
+DROP TABLE IF EXISTS `conf_dictionary_item`;
+
+CREATE TABLE `conf_dictionary_item` (
+     `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT 'id',
+     `dictionary_id` bigint(19) NOT NULL COMMENT 'conf_dictionary id',
+     `title` varchar(50) NOT NULL COMMENT '标题',
+     `val` varchar(50) DEFAULT NULL COMMENT '标题对应的值',
+     `seq` tinyint(4) NOT NULL COMMENT 'title 顺序',
+     `mark` varchar(255) DEFAULT NULL COMMENT '备注',
+     `tenant_id` int(11) NOT NULL COMMENT '租户 id',
+     `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+     `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+     `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+     `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+     `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+     PRIMARY KEY (`id`),
+     KEY IDX_dictionaryId_seq (`dictionary_id`, `seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='数据字典明细';
+
+
