@@ -54,7 +54,7 @@ public class XmindProperties extends MetadataProperties implements SchemaMetadat
     /**
      * 孩子节点
      */
-    private List<XmindProperties> childs;
+    private List<XmindProperties> childs=new ArrayList<>();
 
     // 元数据名称
     @Override

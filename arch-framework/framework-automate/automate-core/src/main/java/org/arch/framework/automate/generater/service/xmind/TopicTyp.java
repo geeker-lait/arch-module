@@ -21,8 +21,8 @@ public enum TopicTyp {
     GET("get","get方法"),
     DELETE("delete","delete方法"),
     PUT("put","put方法"),
-    INPUT("input","请求参数"),
-    OUTPUT("output","输出参数"),
+    INPUT("in","请求参数"),
+    OUTPUT("out","输出参数"),
     ;
 
     TopicTyp(String type, String description) {

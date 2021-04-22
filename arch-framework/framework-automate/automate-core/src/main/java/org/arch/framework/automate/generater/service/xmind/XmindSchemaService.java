@@ -40,7 +40,8 @@ public class XmindSchemaService implements SchemaService {
 
     /**
      * 获取xmind中实体/表的定义
-     *  todo 空实现为了不报错添加<T> 实现后可以去除 <T> 参考 org.arch.framework.automate.generater.service.database.DatabaseSchemaService#getTableProperties()
+     * todo 空实现为了不报错添加<T> 实现后可以去除 <T> 参考 org.arch.framework.automate.generater.service.database.DatabaseSchemaService#getTableProperties()
+     *
      * @return
      */
     @Override
@@ -59,11 +60,10 @@ public class XmindSchemaService implements SchemaService {
     }
 
     /**
-     *
      * @return
      */
     @Override
-    public <T> Function<T,  List<SchemaMetadata>> getSchemaMatedatas() {
+    public <T> Function<T, List<SchemaMetadata>> getSchemaMatedatas() {
         return null;
     }
 
@@ -132,7 +132,7 @@ public class XmindSchemaService implements SchemaService {
         List<ParamProperties> paramPropertiesList = new ArrayList<>();
         for (XMindNode paramNode : Params) {
             String paramNodeTitle = paramNode.getTitle();
-            String[] paramNodeTitles = paramNodeTitle.split(":", 3);
+            String[] paramNodeTitles = paramNodeTitle.split("/", 3);
             //类型
             String paramType = "";
             //名称
@@ -154,9 +154,9 @@ public class XmindSchemaService implements SchemaService {
             ParamProperties paramProperties = new ParamProperties();
             paramProperties.setDescr(paramDesc);
             //类型和名称颠倒，xmind中没有按照顺序来
-            paramProperties.setJavaTyp(paramValue);
+            paramProperties.setJavaTyp(paramType);
             paramProperties.setType("");
-            paramProperties.setName(paramType);
+            paramProperties.setName(paramValue);
             if (paramNode != null && paramNode.getChildren() != null &&
                     !CollectionUtils.isEmpty(paramNode.getChildren().getAttached())) {
                 convertParams(paramNode.getChildren().getAttached(), paramProperties);
@@ -177,7 +177,7 @@ public class XmindSchemaService implements SchemaService {
      */
     private void convertProperties(String pkgName, XMindNode xMindNode, XmindProperties pXmindProperties, XmindProject xmindProject) throws Exception {
         String title = xMindNode.getTitle();
-        String[] titles = title.split(":", 3);
+        String[] titles = title.split("/", 3);
         //类型
         String type = "";
         //名称
@@ -195,13 +195,21 @@ public class XmindSchemaService implements SchemaService {
         } else {
 
         }
+//        if ("".equals(type)) {
+//            if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
+//                for (XMindNode children : xMindNode.getChildren().getAttached()) {
+//                    convertProperties(pkgName, children, pXmindProperties, xmindProject);
+//                }
+//            }
+//        }
         //层级从project开始
-        if (TopicTyp.PROJECT.getType().equals(type)) {
+         if (TopicTyp.PROJECT.getType().equals(type)) {
             pkgName = name;
             if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
                 XmindProperties xmindProperties = new XmindProperties();
                 xmindProperties.setTopicTyp(TopicTyp.PROJECT.getType());
                 xmindProperties.setPkg(pkgName);
+                xmindProperties.setTopicVal(name);
                 xmindProperties.setDescr(description);
                 for (XMindNode children : xMindNode.getChildren().getAttached()) {
                     convertProperties(pkgName, children, xmindProperties, xmindProject);
@@ -217,6 +225,7 @@ public class XmindSchemaService implements SchemaService {
             XmindProperties xmindProperties = new XmindProperties();
             xmindProperties.setTopicTyp(TopicTyp.MODULE.getType());
             xmindProperties.setPkg(name);
+            xmindProperties.setTopicVal(name);
             xmindProperties.setDescr(description);
             if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
                 for (XMindNode children : xMindNode.getChildren().getAttached()) {
@@ -231,6 +240,7 @@ public class XmindSchemaService implements SchemaService {
             XmindProperties xmindProperties = new XmindProperties();
             xmindProperties.setTopicTyp(TopicTyp.PKG.getType());
             xmindProperties.setPkg(name);
+            xmindProperties.setTopicVal(name);
             xmindProperties.setDescr(description);
             if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
                 for (XMindNode children : xMindNode.getChildren().getAttached()) {
@@ -244,15 +254,16 @@ public class XmindSchemaService implements SchemaService {
                 pkgName = pkgName.substring(0, pkgName.lastIndexOf("."));
             }
             XmindProperties xmindProperties = new XmindProperties();
-            xmindProperties.setPkg(name);
+            xmindProperties.setPkg(pkgName);
             xmindProperties.setPattern(SchemaPattern.API.getPattern());
             xmindProperties.setTopicTyp(TopicTyp.API.getType());
+            xmindProperties.setTopicVal(name);
             xmindProperties.setDescr(description);
             //拼装方法
             if (xMindNode != null && xMindNode.getChildren() != null && !CollectionUtils.isEmpty(xMindNode.getChildren().getAttached())) {
                 for (XMindNode methodNode : xMindNode.getChildren().getAttached()) {
                     String methodNodeTitle = methodNode.getTitle();
-                    String[] methodNodeTitles = methodNodeTitle.split(":", 3);
+                    String[] methodNodeTitles = methodNodeTitle.split("/", 3);
                     //类型
                     String httpMethod = "";
                     //名称
@@ -280,7 +291,7 @@ public class XmindSchemaService implements SchemaService {
                         List<ParamProperties> inputs = new ArrayList<>();
                         for (XMindNode paramNode : methodNode.getChildren().getAttached()) {
                             String paramNodeTitle = paramNode.getTitle();
-                            String[] paramNodeTitles = paramNodeTitle.split(":", 3);
+                            String[] paramNodeTitles = paramNodeTitle.split("/", 3);
                             //类型
                             String paramType = "";
                             //名称
@@ -307,6 +318,11 @@ public class XmindSchemaService implements SchemaService {
                                 paramProperties.setName(paramValue);
                                 if (paramNode != null && paramNode.getChildren() != null && !CollectionUtils.isEmpty(paramNode.getChildren().getAttached())) {
                                     convertParams(paramNode.getChildren().getAttached(), paramProperties);
+                                    //当前入参是对象
+                                    if (paramNode.getChildren().getAttached().size() == 1 && isBaseType(paramProperties.getChilds().get(0).getJavaTyp())) {
+                                        paramProperties.setJavaTyp(paramProperties.getChilds().get(0).getJavaTyp());
+                                        paramProperties.setChilds(new ArrayList<>());
+                                    }
                                 }
                                 inputs.add(paramProperties);
                             } else if (TopicTyp.OUTPUT.getType().equals(paramType)) {
@@ -315,11 +331,16 @@ public class XmindSchemaService implements SchemaService {
                                 paramProperties.setJavaTyp(paramValue);
                                 paramProperties.setType(TopicTyp.OUTPUT.getType());
                                 paramProperties.setName(paramValue);
-                                if (StringUtils.isEmpty(paramValue) && paramNode != null && paramNode.getChildren() != null && !CollectionUtils.isEmpty(paramNode.getChildren().getAttached())) {
-                                    paramProperties.setName("map");
-                                }
+//                                if (StringUtils.isEmpty(paramValue) && paramNode != null && paramNode.getChildren() != null && !CollectionUtils.isEmpty(paramNode.getChildren().getAttached())) {
+//                                    paramProperties.setName("map");
+//                                }
                                 if (paramNode != null && paramNode.getChildren() != null && !CollectionUtils.isEmpty(paramNode.getChildren().getAttached())) {
                                     convertParams(paramNode.getChildren().getAttached(), paramProperties);
+                                    //当前入参是对象
+                                    if (paramNode.getChildren().getAttached().size() == 1 && isBaseType(paramProperties.getChilds().get(0).getJavaTyp())) {
+                                        paramProperties.setJavaTyp(paramProperties.getChilds().get(0).getJavaTyp());
+                                        paramProperties.setChilds(new ArrayList<>());
+                                    }
                                 }
                                 methodProperties.setOutput(paramProperties);
                             }
@@ -344,7 +365,7 @@ public class XmindSchemaService implements SchemaService {
                 List<ColumnsProperties> columnsPropertiesList = new ArrayList<>();
                 for (XMindNode paramNode : xMindNode.getChildren().getAttached()) {
                     String paramNodeTitle = paramNode.getTitle();
-                    String[] paramNodeTitles = paramNodeTitle.split(":", 3);
+                    String[] paramNodeTitles = paramNodeTitle.split("/", 3);
                     //类型
                     String paramType = "";
                     //名称
@@ -364,9 +385,39 @@ public class XmindSchemaService implements SchemaService {
 
                     }
                     ColumnsProperties columnsProperties = new ColumnsProperties();
-                    columnsProperties.setTyp(paramValue);
-                    columnsProperties.setName(paramType);
+                    columnsProperties.setTyp(paramType);
+                    columnsProperties.setName(paramValue);
                     columnsProperties.setComment(paramDesc);
+                    if (paramNode != null && paramNode.getChildren() != null && !CollectionUtils.isEmpty(paramNode.getChildren().getAttached())) {
+                        for (XMindNode colNode : paramNode.getChildren().getAttached()) {
+                            String colNodeTitle = colNode.getTitle();
+                            String[] colNodeTitles = colNodeTitle.split("/", 3);
+                            //类型
+                            String colType = "";
+                            //名称
+                            String colValue = "";
+                            //描述
+                            String colDesc = "";
+                            if (colNodeTitles.length == 3) {
+                                colType = colNodeTitles[0];
+                                colValue = colNodeTitles[1];
+                                colDesc = colNodeTitles[2];
+
+                            } else {
+
+                            }
+                            if (StringUtils.isNotEmpty(colValue) && "length".equals(colValue)) {
+                                columnsProperties.setLength(colDesc);
+                            } else if (StringUtils.isNotEmpty(colValue) && "pk".equals(colValue)) {
+                                columnsProperties.setPk(true);
+                                tableProperties.setPk(paramValue);
+                            } else if (StringUtils.isNotEmpty(colValue) && "unique".equals(colValue)) {
+                                columnsProperties.setUnique(true);
+                            } else if (StringUtils.isNotEmpty(colValue) && "notnull".equals(colValue)) {
+                                columnsProperties.setNotnull(true);
+                            }
+                        }
+                    }
                     columnsPropertiesList.add(columnsProperties);
                 }
                 tableProperties.setColumns(columnsPropertiesList);
@@ -375,5 +426,23 @@ public class XmindSchemaService implements SchemaService {
         }
     }
 
+    /**
+     * 判断是否为基本类型
+     *
+     * @param name
+     * @return
+     */
+    public static boolean isBaseType(String name) {
+        if ("string".equals(name)) {
+            return true;
+        }
+        if ("int".equals(name) || "byte".equals(name) || "long".equals(name)
+                || "double".equals(name) || "float".equals(name)
+                || "char".equals(name) || "short".equals(name)
+                || "bool".equals(name)) {
+            return true;
+        }
+        return false;
+    }
 
 }
