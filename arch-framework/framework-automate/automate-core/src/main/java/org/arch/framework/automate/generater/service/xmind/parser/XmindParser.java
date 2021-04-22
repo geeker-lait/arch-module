@@ -2,7 +2,7 @@ package org.arch.framework.automate.generater.service.xmind.parser;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.compress.archivers.ArchiveException;
-import org.arch.framework.automate.generater.service.xmind.modle.JsonRootBean;
+import org.arch.framework.automate.generater.service.xmind.meta.JsonRootBean;
 import org.dom4j.DocumentException;
 
 import java.io.File;

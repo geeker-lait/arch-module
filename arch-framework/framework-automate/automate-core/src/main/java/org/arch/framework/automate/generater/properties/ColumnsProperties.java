@@ -19,8 +19,18 @@ import org.arch.framework.automate.generater.core.ConfigProperties;
 @NoArgsConstructor
 @ToString
 public class ColumnsProperties implements ConfigProperties {
+    // 名称
     private String name;
+    // 类型
     private String typ;
+    // 长度
     private String length;
+    // 注释
     private String comment;
+    // 是否是主键
+    private Boolean pk;
+    // 是否唯一
+    private Boolean unique;
+    // 是否为空
+    private Boolean notnull;
 }

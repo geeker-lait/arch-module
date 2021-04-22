@@ -23,15 +23,15 @@ public class XmindTest {
 
     @Test
     public void parse() throws DocumentException, ArchiveException, IOException {
-        String fileName = "minds\\WMS.xmind";
+        String fileName = "minds\\OFSC订单履约中心ER架构.xmind";
         //String fileName = "minds\\Xmind8.xmind";
         Resource resource = new ClassPathResource(fileName);
 
         String res = XmindParser.parseJson(resource.getFile().getAbsolutePath());
-        System.out.println(res);
+        System.out.println(res+ "\n\n\n\n\n\n=================================================" );
 
-        Object root = XmindParser.parseObject(resource.getFile().getAbsolutePath());
-        System.out.println(root);
+//        Object root = XmindParser.parseObject(resource.getFile().getAbsolutePath());
+//        System.out.println(root);
 
 
     }
