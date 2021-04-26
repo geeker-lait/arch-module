@@ -11,9 +11,9 @@ import java.util.List;
  * @date 4/26/2021 10:34 AM
  */
 @Data
-public class NodeModel {
-    private NodeNamespace namespace;
+public class DataNode {
+    private NodeSpace namespace;
     private String name;
     private String descr;
-    private List<NodeModel> childs;
+    private List<DataNode> childs;
 }

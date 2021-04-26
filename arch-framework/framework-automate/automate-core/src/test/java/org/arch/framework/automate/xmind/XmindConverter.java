@@ -2,8 +2,6 @@ package org.arch.framework.automate.xmind;
 
 import com.google.common.base.CaseFormat;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
-import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.generater.service.xmind.meta.Attached;
 import org.arch.framework.automate.generater.service.xmind.meta.Children;
 import org.arch.framework.automate.generater.service.xmind.meta.JsonRootBean;
@@ -71,11 +69,11 @@ public class XmindConverter {
             String undlint_name = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
             String descr = title.substring(secondSplit);
 
-            if(NodeNamespace.LONG.getName().equalsIgnoreCase(namespace) ||
-                    NodeNamespace.BOOLEAN.getName().equalsIgnoreCase(namespace) ||
-                    NodeNamespace.INTEGER.getName().equalsIgnoreCase(namespace)||
-                    NodeNamespace.STRING.getName().equalsIgnoreCase(namespace) ||
-                    NodeNamespace.DATE.getName().equalsIgnoreCase(namespace)) {
+            if(NodeSpace.LONG.getName().equalsIgnoreCase(namespace) ||
+                    NodeSpace.BOOLEAN.getName().equalsIgnoreCase(namespace) ||
+                    NodeSpace.INTEGER.getName().equalsIgnoreCase(namespace)||
+                    NodeSpace.STRING.getName().equalsIgnoreCase(namespace) ||
+                    NodeSpace.DATE.getName().equalsIgnoreCase(namespace)) {
                 Column column = new Column();
                 column.setComment(descr);
                 column.setName(name);
@@ -87,19 +85,19 @@ public class XmindConverter {
 
 
 
-            if(NodeNamespace.MODULE.getName().equalsIgnoreCase(namespace)){
+            if(NodeSpace.MODULE.getName().equalsIgnoreCase(namespace)){
                 database.setName(undlint_name);
                 database.setTables(new ArrayList<>());
-            } else if(NodeNamespace.ENTITY.getName().equalsIgnoreCase(namespace)){
+            } else if(NodeSpace.ENTITY.getName().equalsIgnoreCase(namespace)){
                 Table table = new Table();
                 table.setTable(undlint_name);
                 table.setComment(descr);
                 database.getTables().add(table);
-            }  else if(NodeNamespace.LONG.getName().equalsIgnoreCase(namespace) ||
-                    NodeNamespace.BOOLEAN.getName().equalsIgnoreCase(namespace) ||
-                    NodeNamespace.INTEGER.getName().equalsIgnoreCase(namespace)||
-                    NodeNamespace.STRING.getName().equalsIgnoreCase(namespace) ||
-                    NodeNamespace.DATE.getName().equalsIgnoreCase(namespace)) {
+            }  else if(NodeSpace.LONG.getName().equalsIgnoreCase(namespace) ||
+                    NodeSpace.BOOLEAN.getName().equalsIgnoreCase(namespace) ||
+                    NodeSpace.INTEGER.getName().equalsIgnoreCase(namespace)||
+                    NodeSpace.STRING.getName().equalsIgnoreCase(namespace) ||
+                    NodeSpace.DATE.getName().equalsIgnoreCase(namespace)) {
                 Column column = new Column();
                 column.setComment(descr);
                 column.setName(name);

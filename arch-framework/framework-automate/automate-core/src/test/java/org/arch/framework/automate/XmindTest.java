@@ -15,6 +15,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class XmindTest {
     @Test
     public void parse() throws DocumentException, ArchiveException, IOException {
 //        String fileName = "minds\\ofs-alarm-er.xmind";
-        String fileName = "minds\\ofs-alarm-center.xmind";
+        String fileName = "minds"+ File.separator +"ofs-alarm-center.xmind";
         Resource resource = new ClassPathResource(fileName);
 
         String res = XmindParser.parseJson(resource.getFile().getAbsolutePath());

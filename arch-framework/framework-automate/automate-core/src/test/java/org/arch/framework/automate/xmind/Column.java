@@ -2,6 +2,8 @@ package org.arch.framework.automate.xmind;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author lait.zhang@gmail.com
  * @description: TODO
@@ -14,5 +16,6 @@ public class Column {
     private String typ;
     private String comment;
     private String length;
+    private List<Propertie> properties;
 
 }
