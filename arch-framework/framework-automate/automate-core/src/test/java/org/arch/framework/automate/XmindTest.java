@@ -23,7 +23,7 @@ public class XmindTest {
 
     @Test
     public void parse() throws DocumentException, ArchiveException, IOException {
-        String fileName = "minds\\OFSC订单履约中心ER架构.xmind";
+        String fileName = "minds\\ofs-alarm-er.xmind";
         //String fileName = "minds\\Xmind8.xmind";
         Resource resource = new ClassPathResource(fileName);
 

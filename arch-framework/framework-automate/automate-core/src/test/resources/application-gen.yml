@@ -23,17 +23,11 @@ spring:
             scope: import
         modules:
           - artifactId: test-api
-            groupId:
-            version:
             pattern: api
             documentTypes: api,yml,docker
           - artifactId: test-core1
-            groupId:
-            version:
             documentTypes: yml,entity,dao,application,ddl,docker,mapper,service
           - artifactId: arch-gen-common
-            groupId:
-            version:
             dependencies:
               - groupId: org.arch.projects
                 artifactId: arch-gen-core

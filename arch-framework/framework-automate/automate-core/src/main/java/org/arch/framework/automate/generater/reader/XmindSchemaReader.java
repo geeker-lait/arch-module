@@ -24,7 +24,7 @@ import java.util.Map;
  * @date 2/26/2021 11:06 AM
  */
 @Slf4j
-@Service
+//@Service
 @RequiredArgsConstructor
 public class XmindSchemaReader extends AbstractSchemaReader implements SchemaReadable {
 

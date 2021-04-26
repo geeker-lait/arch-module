@@ -56,6 +56,7 @@ public class XmindSchemaService implements SchemaService {
      */
     @Override
     public <T> Function<T, List<MethodProperties>> getApiProperties() {
+        //return res->getApiMetadate((String) res,null);
         return null;
     }
 

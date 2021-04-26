@@ -11,20 +11,23 @@ import java.util.List;
 
 /**
  * poms:
- *   - artifactId:
- *     groupId:
- *     version:
- *     packageTypes: entity,dao,service
- *     dependencies:
- *          - groupId:
- *            artifactId:
+ * - artifactId:
+ * groupId:
+ * version:
+ * packageTypes: entity,dao,service
+ * dependencies:
+ * - groupId:
+ * artifactId:
  */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
 public class PomProperties implements ConfigProperties {
+    //
     private Long id;
+    // 父节点id
+    private Long pid;
     // 项目id
     private Long projectId;
 
@@ -51,6 +54,6 @@ public class PomProperties implements ConfigProperties {
     private List<DependencieProterties> dependencies;
     // 依赖管理
     @NestedConfigurationProperty
-    private List<DependencieProterties> dependencyManagement ;
+    private List<DependencieProterties> dependencyManagement;
 
 }
