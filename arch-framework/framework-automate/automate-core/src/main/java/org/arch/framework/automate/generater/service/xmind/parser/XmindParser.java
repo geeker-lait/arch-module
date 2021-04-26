@@ -2,6 +2,7 @@ package org.arch.framework.automate.generater.service.xmind.parser;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.poi.ss.formula.functions.T;
 import org.arch.framework.automate.generater.service.xmind.meta.JsonRootBean;
 import org.dom4j.DocumentException;
 
@@ -47,9 +48,9 @@ public class XmindParser {
         return (JSON.toJSONString(jsonRootBean, false));
     }
 
-    public static Object parseObject(String xmindFile) throws DocumentException, ArchiveException, IOException {
+    public static <T> T parseObject(String xmindFile, Class<T> clazz) throws DocumentException, ArchiveException, IOException {
         String content = parseJson(xmindFile);
-        JsonRootBean jsonRootBean = JSON.parseObject(content, JsonRootBean.class);
+        T jsonRootBean = JSON.parseObject(content, clazz);
         return jsonRootBean;
     }
 

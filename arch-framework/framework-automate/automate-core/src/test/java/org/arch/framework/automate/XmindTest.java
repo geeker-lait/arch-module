@@ -1,6 +1,7 @@
 package org.arch.framework.automate;
 
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.arch.framework.automate.generater.service.xmind.meta.JsonRootBean;
 import org.arch.framework.automate.generater.service.xmind.parser.XmindParser;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class XmindTest {
         String res = XmindParser.parseJson(resource.getFile().getAbsolutePath());
         System.out.println(res+ "\n\n\n\n\n\n=================================================" );
 
-//        Object root = XmindParser.parseObject(resource.getFile().getAbsolutePath());
+        JsonRootBean root = XmindParser.parseObject(resource.getFile().getAbsolutePath(), JsonRootBean.class);
 //        System.out.println(root);
 
 
