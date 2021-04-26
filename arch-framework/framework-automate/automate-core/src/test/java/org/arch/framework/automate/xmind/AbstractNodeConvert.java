@@ -6,5 +6,5 @@ package org.arch.framework.automate.xmind;
  * @weixin PN15855012581
  * @date :
  */
-public class Propertie {
+public abstract class AbstractNodeConvert {
 }

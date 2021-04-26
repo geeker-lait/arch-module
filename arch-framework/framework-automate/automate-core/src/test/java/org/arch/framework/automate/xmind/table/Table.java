@@ -1,4 +1,4 @@
-package org.arch.framework.automate.xmind;
+package org.arch.framework.automate.xmind.table;
 
 import lombok.Data;
 

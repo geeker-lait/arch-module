@@ -1,4 +1,4 @@
-package org.arch.framework.automate.xmind;
+package org.arch.framework.automate.xmind.table;
 
 import lombok.Data;
 
@@ -15,7 +15,6 @@ public class Column {
     private String name;
     private String typ;
     private String comment;
-    private String length;
     private List<Propertie> properties;
 
 }
