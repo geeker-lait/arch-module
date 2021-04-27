@@ -1,4 +1,4 @@
-package org.arch.framework.automate.xmind;
+package org.arch.framework.automate.xmind.table;
 
 import lombok.Data;
 
@@ -12,7 +12,10 @@ import java.util.List;
  */
 @Data
 public class Table {
-    private String table;
+    private String name;
     private  String comment;
     private List<Column> columns;
+    private String indexs;
+    private String uniques;
+    private String primaryKey;
 }

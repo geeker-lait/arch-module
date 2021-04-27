@@ -8,7 +8,7 @@ import lombok.Getter;
  * @weixin PN15855012581
  * @date 4/26/2021 10:41 AM
  */
-public enum NodeNamespace {
+public enum NodeSpace {
 
     MODULE("module"),
     ENTITY("entity"),
@@ -22,7 +22,7 @@ public enum NodeNamespace {
     @Getter
     private String name;
 
-    NodeNamespace(String name) {
+    NodeSpace(String name) {
         this.name = name;
     }
 }

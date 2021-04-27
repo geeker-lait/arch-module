@@ -18,6 +18,7 @@
 
 
     <modules>
+        <module>arch-alarm</module>
         <module>arch-application</module>
         <module>arch-auth</module>
         <module>arch-framework</module>

@@ -1,4 +1,4 @@
-package org.arch.framework.automate.xmind;
+package org.arch.framework.automate.xmind.api;
 
 import lombok.Data;
 
@@ -8,12 +8,14 @@ import java.util.List;
  * @author lait.zhang@gmail.com
  * @description: TODO
  * @weixin PN15855012581
- * @date 4/26/2021 10:34 AM
+ * @date :
  */
 @Data
-public class NodeModel {
-    private NodeNamespace namespace;
+public class Interfac {
+    // 接口类目
     private String name;
+    // 接口描述
     private String descr;
-    private List<NodeModel> childs;
+    // 请求方法
+    private List<Curl> curls;
 }

@@ -2,12 +2,13 @@ package org.arch.framework.automate.xmind;
 
 import com.google.common.base.CaseFormat;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
-import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.generater.service.xmind.meta.Attached;
 import org.arch.framework.automate.generater.service.xmind.meta.Children;
 import org.arch.framework.automate.generater.service.xmind.meta.JsonRootBean;
 import org.arch.framework.automate.generater.service.xmind.meta.RootTopic;
+import org.arch.framework.automate.xmind.table.Column;
+import org.arch.framework.automate.xmind.table.Database;
+import org.arch.framework.automate.xmind.table.Table;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,12 +20,12 @@ import java.util.List;
  * @weixin PN15855012581
  * @date 4/26/2021 10:36 AM
  */
-public class XmindConverter {
+public class TableConvert extends AbstractNodeConvert implements NodeConvert{
 
     ThreadLocal<Database> DATABASE = new ThreadLocal();
 
 
-    public void doResolve(Children children){
+    private void doResolve(Children children){
         List<Attached> attached = children.getAttached();
         if(attached != null && attached.size()>0){
             attached.forEach(a->{
@@ -47,7 +48,7 @@ public class XmindConverter {
 
     }
 
-    public void resolve(JsonRootBean jsonRootBean) {
+    private void resolve(JsonRootBean jsonRootBean) {
         Database database = DATABASE.get();
         if (null == database) {
             DATABASE.set(new Database());
@@ -71,11 +72,11 @@ public class XmindConverter {
             String undlint_name = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
             String descr = title.substring(secondSplit);
 
-            if(NodeNamespace.LONG.getName().equalsIgnoreCase(namespace) ||
-                    NodeNamespace.BOOLEAN.getName().equalsIgnoreCase(namespace) ||
-                    NodeNamespace.INTEGER.getName().equalsIgnoreCase(namespace)||
-                    NodeNamespace.STRING.getName().equalsIgnoreCase(namespace) ||
-                    NodeNamespace.DATE.getName().equalsIgnoreCase(namespace)) {
+            if(NodeSpace.LONG.getName().equalsIgnoreCase(namespace) ||
+                    NodeSpace.BOOLEAN.getName().equalsIgnoreCase(namespace) ||
+                    NodeSpace.INTEGER.getName().equalsIgnoreCase(namespace)||
+                    NodeSpace.STRING.getName().equalsIgnoreCase(namespace) ||
+                    NodeSpace.DATE.getName().equalsIgnoreCase(namespace)) {
                 Column column = new Column();
                 column.setComment(descr);
                 column.setName(name);
@@ -87,19 +88,19 @@ public class XmindConverter {
 
 
 
-            if(NodeNamespace.MODULE.getName().equalsIgnoreCase(namespace)){
+            if(NodeSpace.MODULE.getName().equalsIgnoreCase(namespace)){
                 database.setName(undlint_name);
                 database.setTables(new ArrayList<>());
-            } else if(NodeNamespace.ENTITY.getName().equalsIgnoreCase(namespace)){
+            } else if(NodeSpace.ENTITY.getName().equalsIgnoreCase(namespace)){
                 Table table = new Table();
-                table.setTable(undlint_name);
+                table.setName(undlint_name);
                 table.setComment(descr);
                 database.getTables().add(table);
-            }  else if(NodeNamespace.LONG.getName().equalsIgnoreCase(namespace) ||
-                    NodeNamespace.BOOLEAN.getName().equalsIgnoreCase(namespace) ||
-                    NodeNamespace.INTEGER.getName().equalsIgnoreCase(namespace)||
-                    NodeNamespace.STRING.getName().equalsIgnoreCase(namespace) ||
-                    NodeNamespace.DATE.getName().equalsIgnoreCase(namespace)) {
+            }  else if(NodeSpace.LONG.getName().equalsIgnoreCase(namespace) ||
+                    NodeSpace.BOOLEAN.getName().equalsIgnoreCase(namespace) ||
+                    NodeSpace.INTEGER.getName().equalsIgnoreCase(namespace)||
+                    NodeSpace.STRING.getName().equalsIgnoreCase(namespace) ||
+                    NodeSpace.DATE.getName().equalsIgnoreCase(namespace)) {
                 Column column = new Column();
                 column.setComment(descr);
                 column.setName(name);
@@ -119,6 +120,11 @@ public class XmindConverter {
 //        } else if (nodeModel.getNamespace().getName().equalsIgnoreCase(NodeNamespace.MODULE.getName())) {
 //
 //        }
+
+    }
+
+    @Override
+    public void convert() {
 
     }
 }
