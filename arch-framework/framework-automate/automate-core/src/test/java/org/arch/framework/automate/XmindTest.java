@@ -1,5 +1,6 @@
 package org.arch.framework.automate;
 
+import com.google.common.base.CaseFormat;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.arch.framework.automate.generater.service.xmind.meta.Attached;
 import org.arch.framework.automate.generater.service.xmind.meta.Children;
@@ -49,36 +50,37 @@ public class XmindTest {
         JsonRootBean root = XmindParser.parseObject(resource.getFile().getAbsolutePath(), JsonRootBean.class);
 
         StringBuilder sb = new StringBuilder();
-        String databaseDdl = GeneratorDdl(root, sb).toString();
+        GeneratorDdl(root, sb);
 
-//        System.out.println(root);
-        System.out.println(databaseDdl);
+        System.out.println(sb.toString());
 
 
     }
 
     @NonNull
-    private StringBuilder GeneratorDdl(@NonNull JsonRootBean root, @NonNull StringBuilder sb) {
-        TiTleType tiTleType = getTiTleType(root.getTitle());
+    private void GeneratorDdl(@NonNull JsonRootBean root, @NonNull StringBuilder sb) {
+        TiTleType tiTleType = getTiTleType(root.getTitle().trim());
         if (!SHEET.equals(tiTleType)) {
             throw new RuntimeException("xmind 格式错误");
         }
-        return GeneratorDdlOfRoot(root.getRootTopic(), sb);
+        GeneratorDdlOfRoot(root.getRootTopic(), sb);
     }
 
     @NonNull
-    private StringBuilder GeneratorDdlOfRoot(@NonNull RootTopic rootTopic, @NonNull StringBuilder sb) {
-        String title = rootTopic.getTitle();
+    private void GeneratorDdlOfRoot(@NonNull RootTopic rootTopic, @NonNull StringBuilder sb) {
+        String title = rootTopic.getTitle().trim();
         TiTleType tiTleType = getTiTleType(title);
         switch(tiTleType) {
             case MODULE:
-                return getSqlOfChildren(rootTopic.getChildren(), sb, MODULE, null);
+                getSqlOfChildren(rootTopic.getChildren(), sb, MODULE, null);
+                break;
             case DATABASE:
-                return getDatabaseSqlOfRoot(rootTopic);
+                sb.append(getDatabaseSql(rootTopic.getChildren(), rootTopic.getTitle()));
+                break;
             case TABLE:
-                return getSqlOfChildren(rootTopic.getChildren(), sb, TABLE, title);
+                getSqlOfChildren(rootTopic.getChildren(), sb, TABLE, title);
+                break;
             default:
-                return sb;
         }
     }
 
@@ -91,21 +93,21 @@ public class XmindTest {
      * @return  sql
      */
     @NonNull
-    private StringBuilder getSqlOfChildren(@NonNull Children children, @NonNull StringBuilder sql,
+    private void getSqlOfChildren(@NonNull Children children, @NonNull StringBuilder sql,
                                            @NonNull TiTleType pTiTleType, @Nullable String pTitle) {
         if (TABLE.equals(pTiTleType) && nonNull(pTitle) && pTitle.length() > 3) {
             String[] splits = pTitle.split(SEPARATOR);
             if (splits.length < 2 || splits[1].length() < 1) {
                 throw new RuntimeException("title [" + pTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
             }
-            return getTableSql(children, sql, pTitle);
+            getTableSql(children, sql, pTitle);
+            return ;
         }
 
         List<Attached> attachedList = children.getAttached();
         for (Attached attached : attachedList) {
             getSqlOfAttached(attached, sql);
         }
-        return sql;
     }
 
     /**
@@ -115,29 +117,31 @@ public class XmindTest {
      * @return  sql
      */
     @NonNull
-    private StringBuilder getSqlOfAttached(@NonNull Attached attached, @NonNull StringBuilder sql) {
-        String title = attached.getTitle();
+    private void getSqlOfAttached(@NonNull Attached attached, @NonNull StringBuilder sql) {
+        String title = attached.getTitle().trim();
         TiTleType tiTleType = getTiTleType(title);
         switch(tiTleType) {
             case MODULE:
-                return getSqlOfChildren(attached.getChildren(), sql, MODULE, null);
+                getSqlOfChildren(attached.getChildren(), sql, MODULE, null);
+                break;
             case DATABASE:
-                return getDatabaseSqlOfAttached(attached);
+                sql.append(getDatabaseSql(attached.getChildren(), attached.getTitle()));
+                break;
             case TABLE:
-                return getSqlOfChildren(attached.getChildren(), sql, TABLE, title);
+                getSqlOfChildren(attached.getChildren(), sql, TABLE, title);
+                break;
             default:
-                return sql;
         }
     }
 
     @NonNull
-    private StringBuilder getTableSql(@NonNull Children children, @NonNull StringBuilder sql, @NonNull String pTitle) {
+    private void getTableSql(@NonNull Children children, @NonNull StringBuilder sql, @NonNull String pTitle) {
         String[] splits = pTitle.split(SEPARATOR);
         if (splits.length < 2 || splits[1].length() < 1) {
             throw new RuntimeException("title [" + pTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
         }
-        String tableName = splits[1];
-        String tableDecr = splits[2];
+        String tableName = camelToUnderscore(splits[1].trim());
+        String tableDecr = splits[2].trim().replaceAll("[\n\r]", " ");
 
         String createdTableSqlPrefix =
                 String.format("DROP TABLE IF EXISTS `%s`;\n" +
@@ -159,68 +163,60 @@ public class XmindTest {
                 String.format(") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='%s';\n\n",
                       tableDecr);
         sql.append(createdTableSqlSuffix);
-        return sql;
     }
 
     private void getColumnSql(@NonNull Attached attached, @NonNull StringBuilder sql, @NonNull StringBuilder pkSql) {
-        String title = attached.getTitle();
+        String title = attached.getTitle().trim();
         String[] splits = title.split(SEPARATOR, 3);
         if (splits.length != 3) {
             System.out.println(sql.toString());
             System.out.println("------->: " + title);
             throw new RuntimeException("title [" + title + "] 格式错误, 标准格式: columnType/columnName/[comment]");
         }
-        String columnType = splits[0];
-        String columnName = splits[1];
-        String comment = splits[2];
+        String columnTypeStr = splits[0].trim();
+        String columnName = camelToUnderscore(splits[1].trim());
+        String comment = splits[2].trim().replaceAll("[\n\r]", " ");
+
+        ColumnType columnType = getColumnType(columnTypeStr);
 
         // TODO column 属性未实现解析
         if ("id".equals(columnName)) {
             sql.append(String.format("\t`id` %s%s NOT NULL AUTO_INCREMENT COMMENT '%s',\n",
-                                     columnType,
-                                     getColumnLen(columnType),
+                                     columnType.getType(),
+                                     columnType.getLen(),
                                      comment));
             pkSql.append("\tPRIMARY KEY (`id`)\n");
+            return;
         }
         sql.append(String.format("\t`%s` %s%s DEFAULT NULL COMMENT '%s',\n",
                                  columnName,
-                                 columnType,
-                                 getColumnLen(columnType),
+                                 columnType.getType(),
+                                 columnType.getLen(),
                                  comment));
 
     }
 
     @NonNull
-    private String getColumnLen(@NonNull String columnType) {
-        // TODO column 属性未实现解析
+    private ColumnType getColumnType(@NonNull String columnType) {
         try {
-            ColumnType type = ColumnType.valueOf(columnType.toUpperCase());
-            return type.getLen();
+            return ColumnType.valueOf(columnType.toUpperCase());
         }
         catch (Exception e) {
-            return "";
-            //throw new RuntimeException("column type [" + columnType + "] 不能转换为 ColumnType");
+            throw new RuntimeException("column type [" + columnType + "] 不能转换为 ColumnType");
         }
     }
 
     @NonNull
-    private StringBuilder getDatabaseSqlOfRoot(@NonNull RootTopic rootTopic) {
-        String[] splits = rootTopic.getTitle().split(SEPARATOR);
+    private StringBuilder getDatabaseSql(@NonNull Children children, @NonNull String title) {
+        String[] splits = title.trim().split(SEPARATOR);
 
+        String databaseName = splits[1].trim();
         String databaseDdl =
                 String.format("CREATE DATABASE IF NOT EXISTS `%s` DEFAULT CHARACTER SET utf8mb4;\nUSE `%s`;\n\n",
-                              splits[1], splits[1]);
-        return getSqlOfChildren(rootTopic.getChildren(), new StringBuilder(databaseDdl), DATABASE, null);
-    }
-
-    @NonNull
-    private StringBuilder getDatabaseSqlOfAttached(@NonNull Attached attached) {
-        String[] splits = attached.getTitle().split(SEPARATOR);
-
-        String databaseDdl =
-                String.format("CREATE DATABASE IF NOT EXISTS `%s` DEFAULT CHARACTER SET utf8mb4;\nUSE `%s`;\n",
-                              splits[2], splits[2]);
-        return getSqlOfChildren(attached.getChildren(), new StringBuilder(databaseDdl), DATABASE, null);
+                              databaseName, databaseName);
+        StringBuilder databaseDdlSb = new StringBuilder(databaseDdl);
+        getSqlOfChildren(children, databaseDdlSb, DATABASE, null);
+        return databaseDdlSb;
     }
 
     @NonNull
@@ -238,6 +234,10 @@ public class XmindTest {
             }
         }
         throw new RuntimeException("title [" + title + "] 不能转换为 TitleType");
+    }
+
+    private static String camelToUnderscore(String camelStr) {
+        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, camelStr);
     }
 
 
@@ -258,20 +258,31 @@ public class XmindTest {
      * database column type
      */
     static enum ColumnType {
-        BININT("(19)"),
-        INT("(11)"),
-        VARCHAR("(50)"),
-        DATE("");
+        BIGINT("bigint", "(19)"),
+        INT("int", "(11)"),
+        VARCHAR("varchar", "(50)"),
+        BOOLEAN("tinyint", "(1)"),
+        TINYINT("tinyint", "(4)"),
+        DATE("datetime", "");
         /**
          * 默认字段类型长度字符串
          */
         private String len;
-        ColumnType(String len) {
+        /**
+         * column 类型
+         */
+        private String type;
+        ColumnType(String type, String len) {
+            this.type = type;
             this.len = len;
         }
 
         public String getLen() {
             return len;
+        }
+
+        public String getType() {
+            return type;
         }
     }
 
