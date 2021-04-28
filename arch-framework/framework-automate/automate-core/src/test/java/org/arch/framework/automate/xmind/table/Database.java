@@ -1,7 +1,9 @@
 package org.arch.framework.automate.xmind.table;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,8 +13,9 @@ import java.util.List;
  * @date 4/26/2021 11:17 AM
  */
 @Data
+@Accessors(chain = true)
 public class Database {
     private String name;
     private String comment;
-    private List<Table> tables;
+    private final List<Table> tables = new ArrayList<>();
 }

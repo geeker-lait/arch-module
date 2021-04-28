@@ -1,7 +1,9 @@
 package org.arch.framework.automate.xmind.api;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,6 +13,7 @@ import java.util.List;
  * @date :
  */
 @Data
+@Accessors(chain = true)
 public class Curl {
     // 方法名
     private String name;
@@ -19,7 +22,7 @@ public class Curl {
     // 方法描述
     private String descr;
     // 方法请求入参
-    private List<Param> inputParams;
+    private final List<Param> inputParams = new ArrayList<>();
     // 方法返回值或出参
     private Param outputParam;
 }

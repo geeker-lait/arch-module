@@ -90,7 +90,6 @@ public class TableConvert extends AbstractNodeConvert implements NodeConvert{
 
             if(NodeSpace.MODULE.getName().equalsIgnoreCase(namespace)){
                 database.setName(undlint_name);
-                database.setTables(new ArrayList<>());
             } else if(NodeSpace.ENTITY.getName().equalsIgnoreCase(namespace)){
                 Table table = new Table();
                 table.setName(undlint_name);

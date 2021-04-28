@@ -1,7 +1,9 @@
 package org.arch.framework.automate.xmind.table;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,10 +13,15 @@ import java.util.List;
  * @date 4/26/2021 10:55 AM
  */
 @Data
+@Accessors(chain = true)
 public class Column {
     private String name;
     private String typ;
     private String comment;
-    private List<Property> properties;
+    private final List<Property> properties = new ArrayList<>();
+
+    public boolean isId() {
+        return "id".equals(name);
+    }
 
 }
