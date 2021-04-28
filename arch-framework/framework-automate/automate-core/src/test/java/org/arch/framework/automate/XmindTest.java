@@ -36,7 +36,6 @@ import static org.arch.framework.automate.XmindTest.TiTleType.API;
 import static org.arch.framework.automate.XmindTest.TiTleType.DATABASE;
 import static org.arch.framework.automate.XmindTest.TiTleType.ENTITY;
 import static org.arch.framework.automate.XmindTest.TiTleType.MODULE;
-import static org.arch.framework.automate.XmindTest.TiTleType.P;
 import static org.arch.framework.automate.XmindTest.TiTleType.SHEET;
 import static org.arch.framework.automate.XmindTest.TiTleType.TABLE;
 
@@ -313,18 +312,13 @@ public class XmindTest {
         if (nonNull(children)) {
             List<Attached> attachedList = children.getAttached();
             for (Attached propAttached : attachedList) {
-                // TODO: 2021.4.27 去掉 P 命名空间
                 String propTitle = propAttached.getTitle().trim();
-                String[] propSplits = propTitle.split(SEPARATOR, 4);
-                if (propSplits.length < 4) {
+                String[] propSplits = propTitle.split(SEPARATOR, 3);
+                if (propSplits.length < 3) {
                     continue;
                 }
-                String p = propSplits[0].trim();
-                if (!(P.name().equalsIgnoreCase(p))) {
-                    continue;
-                }
-                String property = propSplits[1].trim();
-                String propValue = propSplits[2].trim();
+                String property = propSplits[0].trim();
+                String propValue = propSplits[1].trim();
                 ColumnProperty columnProperty = getColumnProperty(property);
                 switch(columnProperty) {
                     case LENGTH:
@@ -511,10 +505,6 @@ public class XmindTest {
          * 删除请求
          */
         DELETE,
-        /**
-         * 参数: column 或 in
-         */
-        P,
 
     }
 
