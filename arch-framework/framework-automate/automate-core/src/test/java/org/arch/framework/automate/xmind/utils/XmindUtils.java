@@ -1,8 +1,10 @@
 package org.arch.framework.automate.xmind.utils;
 
 import com.google.common.base.CaseFormat;
+import org.arch.framework.automate.xmind.nodespace.Annotation;
 import org.arch.framework.automate.xmind.nodespace.ColumnProperty;
 import org.arch.framework.automate.xmind.nodespace.ColumnType;
+import org.arch.framework.automate.xmind.nodespace.ParamType;
 import org.arch.framework.automate.xmind.nodespace.TiTleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,56 @@ public class XmindUtils {
 
     public static final String SEPARATOR = "/";
     public static final Logger LOG = LoggerFactory.getLogger(XmindUtils.class);
+
+    /**
+     * 获取对应的 {@link Annotation}
+     * @param annotation    annotation
+     * @param log           log
+     * @return  {@link Annotation} 或 null
+     */
+    @Nullable
+    public static Annotation getAnnotation(@NonNull String annotation, @Nullable Logger log) {
+        try {
+            return Annotation.valueOf(annotation.toUpperCase());
+        }
+        catch (Exception e) {
+            try {
+                return Annotation.valueOf(camelToUpperUnderscore(annotation));
+            }
+            catch (Exception ex) {
+                if (isNull(log)) {
+                	log = LOG;
+                }
+                log.error("annotation [" + annotation + "] 不能转换为 Annotation");
+                return null;
+            }
+        }
+    }
+
+    /**
+     * 获取对应的 {@link ParamType}
+     * @param paramType         param type
+     * @param log               log
+     * @return  {@link ParamType} 或 null
+     */
+    @Nullable
+    public static ParamType getParamType(@NonNull String paramType, @Nullable Logger log) {
+        try {
+            return ParamType.valueOf(paramType.toUpperCase());
+        }
+        catch (Exception e) {
+            try {
+                return ParamType.valueOf(camelToUpperUnderscore(paramType));
+            }
+            catch (Exception ex) {
+                if (isNull(log)) {
+                	log = LOG;
+                }
+                log.error("param type [" + paramType + "] 不能转换为 ParamType");
+                return null;
+            }
+        }
+    }
 
     /**
      * 获取对应的 {@link ColumnProperty}
@@ -133,6 +185,38 @@ public class XmindUtils {
     @NonNull
     public static String camelToUpperUnderscore(@NonNull String camelStr) {
         return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, camelStr);
+    }
+
+    /**
+     * 首字母大写
+     * @param str  字符串
+     * @return  字母大写的字符串
+     */
+    @NonNull
+    public static String firstLetterToUpper(@NonNull String str) {
+        StringBuilder sb = new StringBuilder(str);
+        return sb.replace(0,1, str.substring(0, 1).toUpperCase()).toString();
+    }
+
+    /**
+     * 去除换行符
+     * @param str  字符串
+     * @return  去除l换行符的字符串
+     */
+    @NonNull
+    public static String removeNewlines(@NonNull String str) {
+        return str.replaceAll("[\n\r]", " ");
+    }
+
+    /**
+     * 首字母小写
+     * @param str  字符串
+     * @return  字母小写的字符串
+     */
+    @NonNull
+    public static String firstLetterToLower(@NonNull String str) {
+        StringBuilder sb = new StringBuilder(str);
+        return sb.replace(0,1, str.substring(0, 1).toLowerCase()).toString();
     }
 
     /**

@@ -7,22 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author lait.zhang@gmail.com
- * @description: TODO
- * @weixin PN15855012581
- * @date :
+ * @author YongWu zheng
+ * @weixin z56133
+ * @since 2021.4.29 10:00
  */
 @Data
 @Accessors(chain = true)
-public class Interfac {
-    // 接口类目
+public class Entity {
+
     private String name;
-    // 接口描述
     private String descr;
-    // 接口包
     private String pkg;
-    // 需要导入的包
+    private final List<Annot> annotations = new ArrayList<>();
+    private final List<Param> fields = new ArrayList<>();
     private final List<String> imports = new ArrayList<>();
-    // 请求方法
-    private final List<Curl> curls = new ArrayList<>();
+
 }

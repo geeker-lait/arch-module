@@ -66,6 +66,6 @@ public enum TiTleType {
     /**
      * 删除请求
      */
-    DELETE,
+    DEL,
 
 }

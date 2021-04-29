@@ -2,6 +2,7 @@ package org.arch.framework.automate.xmind.api;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.arch.framework.automate.xmind.table.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,5 +19,6 @@ public class Param {
     private String typ;
     private String name;
     private String descr;
-    private final List<Annotation> annotations = new ArrayList<>();
+    private final List<Annot> annotations = new ArrayList<>();
+    private final List<Property> properties = new ArrayList<>();
 }

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.arch.framework.automate.xmind.api.Entity;
 import org.arch.framework.automate.xmind.api.Interfac;
 import org.arch.framework.automate.xmind.table.Database;
 
@@ -28,6 +29,7 @@ public class Module {
     private String comment;
     private final List<Database> databases = new ArrayList<>();
     private final List<Interfac> interfaces = new ArrayList<>();
+    private final List<Entity> entities = new ArrayList<>();
 
     public boolean addDatabase(Database database) {
         return this.databases.add(database);
@@ -43,6 +45,14 @@ public class Module {
 
     public boolean addInterface(List<Interfac> interfaces) {
         return this.interfaces.addAll(interfaces);
+    }
+
+    public boolean addEntity(Entity entity) {
+        return this.entities.add(entity);
+    }
+
+    public boolean addEntity(List<Entity> entities) {
+        return this.entities.addAll(entities);
     }
 
     @Override
