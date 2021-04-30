@@ -28,10 +28,6 @@ public enum ParamType {
      * API 链接
      */
     URI("", ""),
-    /**
-     * 包路径
-     */
-    PKG("", ""),
     ARRAY("", ""),
     LIST("List", "java.util.List"),
     SET("Set", "java.util.Set"),

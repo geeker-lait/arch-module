@@ -34,15 +34,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.automate.xmind.nodespace.ParamType.ANNOT;
 import static org.arch.framework.automate.xmind.nodespace.ParamType.ANNOT_E;
 import static org.arch.framework.automate.xmind.nodespace.ParamType.ANNOT_VAL;
-import static org.arch.framework.automate.xmind.nodespace.TiTleType.API;
-import static org.arch.framework.automate.xmind.nodespace.TiTleType.DATABASE;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.MODULE;
+import static org.arch.framework.automate.xmind.nodespace.TiTleType.PKG;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.SHEET;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.TABLE;
 import static org.arch.framework.automate.xmind.utils.XmindUtils.*;
@@ -75,6 +75,13 @@ public class XmindTest {
         List<Module> moduleList = new ArrayList<>();
 
         generate(root, moduleList);
+
+        moduleList.forEach(module -> {
+            String pkg = module.getPkg();
+            if (hasText(pkg)) {
+                module.modulePkgPostHandle(pkg, false);
+            }
+        });
 
         System.out.println(JSON.toJSONString(moduleList));
     }
@@ -119,19 +126,19 @@ public class XmindTest {
         if (isNull(children)) {
             return;
         }
-        if (isNull(tiTleType)) {
-            List<Attached> attachedList = children.getAttached();
-            if (isNull(attachedList) || attachedList.size() == 0) {
-                return;
-            }
-            for (Attached attached : attachedList) {
-                generateOfAttached(attached, moduleList);
-            }
+        if (nonNull(tiTleType) && MODULE.equals(tiTleType)) {
+            Module module = new Module();
+            moduleList.add(module);
+            generateOfChildren(children, moduleList, module, MODULE, title);
             return;
         }
-        Module module = new Module();
-        moduleList.add(module);
-        generateChildrenByTitleType(moduleList, module, title, tiTleType, children);
+        List<Attached> attachedList = children.getAttached();
+        if (isNull(attachedList) || attachedList.size() == 0) {
+            return;
+        }
+        for (Attached attached : attachedList) {
+            generateOfAttached(attached, moduleList);
+        }
     }
 
     /**
@@ -146,17 +153,17 @@ public class XmindTest {
         TiTleType tiTleType = getTiTleType(title, log);
         Children children = attached.getChildren();
         if (isNull(children)) {
+            if (nonNull(tiTleType) && PKG.equals(tiTleType)) {
+                generatePkg(null, moduleList, module, title, tiTleType);
+            }
         	return;
         }
         generateWithModule(children, moduleList, module, title, tiTleType);
     }
 
-    private void generateWithModule(@Nullable Children children, @NonNull List<Module> moduleList,
+    private void generateWithModule(@NonNull Children children, @NonNull List<Module> moduleList,
                                     @NonNull Module module,
                                     @NonNull String title, @Nullable TiTleType tiTleType) {
-        if (isNull(children)) {
-            return;
-        }
         if (isNull(tiTleType)) {
             List<Attached> attachedList = children.getAttached();
             if (isNull(attachedList) || attachedList.size() == 0) {
@@ -167,37 +174,13 @@ public class XmindTest {
             }
             return;
         }
-        generateChildrenByTitleType(moduleList, module, title, tiTleType, children);
-    }
-
-    /**
-     * 根据 {@link Children} 的内容生成相应的规格内容, 添加到 {@link Module}.
-     * @param moduleList    {@link Module} list
-     * @param module        {@link Module}
-     * @param pTitle        pTitle
-     * @param pTiTleType    {@link TiTleType}
-     * @param children      {@link Children}
-     */
-    private void generateChildrenByTitleType(@NonNull List<Module> moduleList, @NonNull Module module,
-                                             @NonNull String pTitle, @NonNull TiTleType pTiTleType,
-                                             @NonNull Children children) {
-
-        switch (pTiTleType) {
-            case MODULE:
-                generateOfChildren(children, moduleList, module, MODULE, pTitle);
-                break;
-            case DATABASE:
-                generateOfChildren(children, moduleList, module, DATABASE, pTitle);
-                break;
-            case API:
-                generateOfChildren(children, moduleList, module, API, pTitle);
-                break;
-            case ENTITY:
-                generateOfChildren(children, moduleList, module, TiTleType.ENTITY, pTitle);
-                break;
-            default:
-                generateOfChildren(children, moduleList, module, null, pTitle);
+        if (MODULE.equals(tiTleType)) {
+            Module newModule = new Module();
+            moduleList.add(newModule);
+            generateOfChildren(children, moduleList, newModule, MODULE, title);
+            return;
         }
+        generateOfChildren(children, moduleList, module, tiTleType, title);
     }
 
     private void generateOfChildren(@NonNull Children children, @NonNull List<Module> moduleList, @NonNull Module module) {
@@ -225,35 +208,52 @@ public class XmindTest {
             generateOfChildren(children, moduleList, module);
             return;
         }
-        // module
-        else if (MODULE.equals(pTiTleType) && pTitle.length() > 3) {
-            String[] splits = splitInto3Parts(pTitle);
-            if (splits.length == 3) {
-                module.setTyp(splits[0].trim())
-                      .setName(splits[1].trim())
-                      .setComment(removeNewlines(splits[2].trim()));
-            }
-        }
-        // 数据库
-        else if (DATABASE.equals(pTiTleType) && pTitle.length() > 3) {
-            generateDatabase(children, moduleList, module, pTitle);
-            return;
-        }
-        // api
-        else if (API.equals(pTiTleType) && pTitle.length() > 3) {
-            generateApi(children, moduleList, module, pTitle);
-            return;
-        }
-        // entity
-        else if (TiTleType.ENTITY.equals(pTiTleType) && pTitle.length() > 3) {
-            generateEntity(children, moduleList, module, pTitle, null);
-            return;
+
+        switch (pTiTleType) {
+            case MODULE:
+                String[] splits = splitInto3Parts(pTitle);
+                if (splits.length == 3) {
+                    module.setTyp(splits[0].trim())
+                          .setName(splits[1].trim())
+                          .setComment(removeNewlines(splits[2].trim()));
+                }
+                generateOfChildren(children, moduleList, module);
+                return;
+            case DATABASE:
+                generateDatabase(children, moduleList, module, pTitle);
+                return;
+            case API: case INTERFACE:
+                generateApi(children, moduleList, module, pTitle);
+                return;
+            case ENTITY:
+                generateEntity(children, moduleList, module, pTitle, null);
+                return;
+            case PKG:
+                generatePkg(children, moduleList, module, pTitle, pTiTleType);
+                return;
+            default:
+                generateOfChildren(children, moduleList, module);
         }
 
-        generateOfChildren(children, moduleList, module);
     }
 
     //  ------------------------------- api -------------------------------
+
+    private void generatePkg(@Nullable Children children, @NonNull List<Module> moduleList,
+                             @NonNull Module module, @NonNull String pTitle,
+                             @NonNull TiTleType pTiTleType) {
+        if (!PKG.equals(pTiTleType)) {
+            return;
+        }
+        String[] tokens = splitInto3Parts(pTitle);
+        if (tokens.length > 1) {
+            String pkg = tokens[1].trim();
+            module.setPkg(pkg);
+        }
+        if (nonNull(children)) {
+            generateOfChildren(children, moduleList, module);
+        }
+    }
 
     private void generateApi(@NonNull Children children, @NonNull List<Module> moduleList,
                                 @NonNull Module module, @NonNull String title) {
@@ -281,18 +281,17 @@ public class XmindTest {
                                  .setDescr(commentStr);
         List<Annot> paramAnnotations = param.getAnnotations();
         // 新增 entity
-        // todo entity 自己的 pkg 未设置
         Entity entity = new Entity().setName(entityName)
                                     .setDescr(commentStr);
         module.addEntity(entity);
-        String pkg = entity.getPkg();
-        if (nonNull(pEntity) && hasText(pkg)) {
-            pEntity.getImports().add(pkg);
+        // 缓存包后置处理信息
+        if (nonNull(pEntity)) {
+            module.getEntityImports().put(entity.getName(), pEntity);
         }
-        List<String> imports = entity.getImports();
+        // 遍历 entity 字段
+        Set<String> imports = entity.getImports();
         List<Annot> entityAnnotations = entity.getAnnotations();
         List<Param> params = entity.getFields();
-        // 遍历 entity 字段
         List<Attached> attachedList = children.getAttached();
         if (isNull(attachedList) || attachedList.size() == 0) {
             return null;
@@ -419,7 +418,7 @@ public class XmindTest {
             splits = splitInto3Parts(paramTitle);
             ParamType type = getParamType(splits[0], log);
             if (splits.length != 3 || isNull(type)) {
-                log.warn("title [" + paramTitle + "] 格式错误, 标准格式: paramType/paramName/[description]");
+                log.warn("title [" + paramTitle + "] 格式错误, 标准格式: annot_val/annot_valKey/annot_valValue");
                 generateOfAttachedWithModule(paramAttached, moduleList, module);
                 continue;
             }

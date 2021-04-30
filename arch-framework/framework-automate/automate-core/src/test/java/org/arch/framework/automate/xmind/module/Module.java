@@ -7,9 +7,14 @@ import lombok.experimental.Accessors;
 import org.arch.framework.automate.xmind.api.Entity;
 import org.arch.framework.automate.xmind.api.Interfac;
 import org.arch.framework.automate.xmind.table.Database;
+import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * @author lait.zhang@gmail.com
@@ -21,15 +26,32 @@ import java.util.List;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class Module {
+
+    public static final String DEFAULT_ENTITY_PKG = "entity";
+    public static final String DEFAULT_API_PKG = "api";
+    public static final String PKG_SEPARATOR = ".";
+
     @Setter
     private String name;
     @Setter
     private String typ;
     @Setter
     private String comment;
+    @Setter
+    private String pkg;
     private final List<Database> databases = new ArrayList<>();
     private final List<Interfac> interfaces = new ArrayList<>();
     private final List<Entity> entities = new ArrayList<>();
+    /**
+     * 缓存需要包后置处理 {@link Entity}
+     * map(entityName, Entity): key 为 {@link Entity} name, value 为 {@link Entity}
+     */
+    private transient final Map<String, Entity> entityImports = new HashMap<>();
+    /**
+     * 缓存需要包后置处理 {@link Interfac}
+     * map(entityName, Interfac): key 为 {@link Entity} name, value 为 {@link Interfac}
+     */
+    private transient final Map<String, Interfac> apiImports = new HashMap<>();
 
     public boolean addDatabase(Database database) {
         return this.databases.add(database);
@@ -55,6 +77,75 @@ public class Module {
         return this.entities.addAll(entities);
     }
 
+    /**
+     * module 包后置处理, 需要在解析 xmind 完成后调用.
+     *
+     * @param modulePkg    module 包
+     * @param isForce      是否复写原有的包设置, 当为 true 时, 会清除缓存的包后置处理信息, 再次调用此方法时不会更新相关的 import 包.
+     */
+    public void modulePkgPostHandle(@NonNull String modulePkg, @NonNull Boolean isForce) {
+
+        final String oldPkg = this.pkg;
+
+        // 设置 modulePkg
+        if (isForce || !hasText(this.pkg)) {
+            this.pkg = modulePkg;
+        }
+        final List<Entity> entityList = this.getEntities();
+        final String newPkg = this.pkg + PKG_SEPARATOR + DEFAULT_ENTITY_PKG;
+        entityList.forEach(entity -> {
+            if (isForce || !hasText(entity.getPkg())) {
+                entity.setPkg(newPkg);
+            }
+        });
+        this.getInterfaces().forEach(api -> {
+            if (isForce || !hasText(api.getPkg())) {
+                api.setPkg(newPkg);
+            }
+        });
+
+        // 从 entity/api 的 import 中清楚旧的包
+        if (isForce) {
+            final String entityPkg = oldPkg + PKG_SEPARATOR + DEFAULT_ENTITY_PKG;
+            this.entities.forEach(entity -> {
+                entity.getImports().removeIf(impt -> hasText(impt) && impt.startsWith(entityPkg));
+            });
+            this.interfaces.forEach(api -> {
+                api.getImports().removeIf(impt -> hasText(impt) && impt.startsWith(entityPkg));
+            });
+        }
+
+        final String pkgPart = PKG_SEPARATOR + DEFAULT_ENTITY_PKG + PKG_SEPARATOR;
+        // 添加 entity import
+        entityImports.forEach((entityName, pEntity) -> {
+            for (Entity entity : entityList) {
+                String name = entity.getName();
+                if (entityName.equals(name)) {
+                    pEntity.getImports()
+                           .add(entity.getPkg() + pkgPart + name);
+                }
+            }
+        });
+
+        // 添加 api/interface import
+        apiImports.forEach((entityName, pInterface) -> {
+            for (Entity entity : entityList) {
+                String name = entity.getName();
+                if (entityName.equals(name)) {
+                    pInterface.getImports()
+                              .add(entity.getPkg() + pkgPart + name);
+                }
+            }
+        });
+
+        // 清楚 imports 缓存
+        if (isForce) {
+            this.entityImports.clear();
+            this.apiImports.clear();
+        }
+    }
+
+    @SuppressWarnings("EqualsReplaceableByObjectsCall")
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -64,24 +155,30 @@ public class Module {
 
         Module module = (Module) o;
 
-        if (!getName().equals(module.getName()))
+        if (!name.equals(module.name))
             return false;
-        if (!getTyp().equals(module.getTyp()))
+        if (!typ.equals(module.typ))
             return false;
-        if (!getComment().equals(module.getComment()))
+        if (comment != null ? !comment.equals(module.comment) : module.comment != null)
             return false;
-        if (!getDatabases().equals(module.getDatabases()))
+        if (pkg != null ? !pkg.equals(module.pkg) : module.pkg != null)
             return false;
-        return getInterfaces().equals(module.getInterfaces());
+        if (!databases.equals(module.databases))
+            return false;
+        if (!interfaces.equals(module.interfaces))
+            return false;
+        return entities.equals(module.entities);
     }
 
     @Override
     public int hashCode() {
-        int result = getName().hashCode();
-        result = 31 * result + getTyp().hashCode();
-        result = 31 * result + getComment().hashCode();
-        result = 31 * result + getDatabases().hashCode();
-        result = 31 * result + getInterfaces().hashCode();
+        int result = name.hashCode();
+        result = 31 * result + typ.hashCode();
+        result = 31 * result + (comment != null ? comment.hashCode() : 0);
+        result = 31 * result + (pkg != null ? pkg.hashCode() : 0);
+        result = 31 * result + databases.hashCode();
+        result = 31 * result + interfaces.hashCode();
+        result = 31 * result + entities.hashCode();
         return result;
     }
 
@@ -91,8 +188,10 @@ public class Module {
                 "name='" + name + '\'' +
                 ", typ='" + typ + '\'' +
                 ", comment='" + comment + '\'' +
+                ", pkg='" + pkg + '\'' +
                 ", databases=" + databases +
                 ", interfaces=" + interfaces +
+                ", entities=" + entities +
                 '}';
     }
 }

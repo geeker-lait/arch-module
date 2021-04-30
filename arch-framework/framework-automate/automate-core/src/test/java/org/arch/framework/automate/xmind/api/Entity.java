@@ -4,7 +4,9 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author YongWu zheng
@@ -20,6 +22,6 @@ public class Entity {
     private String pkg;
     private final List<Annot> annotations = new ArrayList<>();
     private final List<Param> fields = new ArrayList<>();
-    private final List<String> imports = new ArrayList<>();
+    private final Set<String> imports = new HashSet<>();
 
 }

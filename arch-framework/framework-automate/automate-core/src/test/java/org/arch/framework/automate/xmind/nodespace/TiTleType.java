@@ -67,5 +67,9 @@ public enum TiTleType {
      * 删除请求
      */
     DEL,
+    /**
+     * 包
+     */
+    PKG,
 
 }

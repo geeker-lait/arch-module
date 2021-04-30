@@ -4,7 +4,9 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author lait.zhang@gmail.com
@@ -22,7 +24,7 @@ public class Interfac {
     // 接口包
     private String pkg;
     // 需要导入的包
-    private final List<String> imports = new ArrayList<>();
+    private final Set<String> imports = new HashSet<>();
     // 请求方法
     private final List<Curl> curls = new ArrayList<>();
 }

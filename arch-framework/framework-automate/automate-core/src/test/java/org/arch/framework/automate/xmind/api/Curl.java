@@ -19,6 +19,8 @@ public class Curl {
     private String name;
     // 支持http请求类型
     private String httpMethod;
+    // 是否 restful 风格 API
+    private boolean restMethod = false;
     // 方法描述
     private String descr;
     // 方法请求入参
