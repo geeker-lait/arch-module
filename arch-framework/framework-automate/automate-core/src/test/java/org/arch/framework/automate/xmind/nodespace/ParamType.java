@@ -13,6 +13,18 @@ public enum ParamType {
      */
     ENTITY("", ""),
     /**
+     * 泛型
+     */
+    GENERIC("", ""),
+    /**
+     * 泛型类型
+     */
+    GENERIC_TYP("", ""),
+    /**
+     * 泛型值
+     */
+    GENERIC_VAL("", ""),
+    /**
      * 注释字段
      */
     ANNOT("", ""),
@@ -28,7 +40,8 @@ public enum ParamType {
      * API 链接
      */
     URI("", ""),
-    ARRAY("", ""),
+    OBJECT("Object", ""),
+    OBJ("Object", ""),
     LIST("List", "java.util.List"),
     SET("Set", "java.util.Set"),
     MAP("Map", "java.util.Map"),

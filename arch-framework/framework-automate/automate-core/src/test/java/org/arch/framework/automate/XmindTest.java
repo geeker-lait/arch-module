@@ -16,6 +16,7 @@ import org.arch.framework.automate.xmind.module.Module;
 import org.arch.framework.automate.xmind.nodespace.Annotation;
 import org.arch.framework.automate.xmind.nodespace.ColumnProperty;
 import org.arch.framework.automate.xmind.nodespace.ColumnType;
+import org.arch.framework.automate.xmind.nodespace.ParamProperty;
 import org.arch.framework.automate.xmind.nodespace.ParamType;
 import org.arch.framework.automate.xmind.nodespace.TiTleType;
 import org.arch.framework.automate.xmind.table.Column;
@@ -41,6 +42,11 @@ import static java.util.Objects.nonNull;
 import static org.arch.framework.automate.xmind.nodespace.ParamType.ANNOT;
 import static org.arch.framework.automate.xmind.nodespace.ParamType.ANNOT_E;
 import static org.arch.framework.automate.xmind.nodespace.ParamType.ANNOT_VAL;
+import static org.arch.framework.automate.xmind.nodespace.ParamType.GENERIC;
+import static org.arch.framework.automate.xmind.nodespace.ParamType.GENERIC_TYP;
+import static org.arch.framework.automate.xmind.nodespace.ParamType.GENERIC_VAL;
+import static org.arch.framework.automate.xmind.nodespace.TiTleType.API;
+import static org.arch.framework.automate.xmind.nodespace.TiTleType.INTERFACE;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.MODULE;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.PKG;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.SHEET;
@@ -223,7 +229,7 @@ public class XmindTest {
                 generateDatabase(children, moduleList, module, pTitle);
                 return;
             case API: case INTERFACE:
-                generateApi(children, moduleList, module, pTitle);
+                generateApi(children, moduleList, module, pTitle, pTiTleType);
                 return;
             case ENTITY:
                 generateEntity(children, moduleList, module, pTitle, null);
@@ -256,8 +262,15 @@ public class XmindTest {
     }
 
     private void generateApi(@NonNull Children children, @NonNull List<Module> moduleList,
-                                @NonNull Module module, @NonNull String title) {
-        // TODO: 2021.4.27 生成 api
+                             @NonNull Module module, @NonNull String title, @NonNull TiTleType pTiTleType) {
+
+        if (API.equals(pTiTleType)) {
+            // TODO: 2021.4.30
+        }
+        if (INTERFACE.equals(pTiTleType)) {
+            // TODO: 2021.4.30
+        }
+
     }
 
     //  ------------------------------- entity -------------------------------
@@ -324,12 +337,20 @@ public class XmindTest {
                     entityAnnotations.add(annotation);
                 }
             }
+            else if (GENERIC_TYP.equals(paramType)) {
+                String genericTyp = splits[1].trim();
+                entity.setGenericTyp(genericTyp);
+                String[] genericTypes = genericTyp.split(",");
+                for (String typ : genericTypes) {
+                    module.getEntityImports().put(typ.trim(), entity);
+                }
+            }
             else {
                 String paramTypePkg = paramType.getPkg();
                 if (hasText(paramTypePkg)) {
                     imports.add(paramTypePkg);
                 }
-                Param fieldParam = generateField(attached, moduleList, module, splits, paramType);
+                Param fieldParam = generateField(attached, moduleList, module, splits, paramType, entity);
                 if (nonNull(fieldParam)) {
                     params.add(fieldParam);
                 }
@@ -397,9 +418,14 @@ public class XmindTest {
     @Nullable
     private Param generateField(@NonNull Attached attached, @NonNull List<Module> moduleList,
                                 @NonNull Module module, @NonNull String[] tokens,
-                                @NonNull ParamType paramType) {
+                                @NonNull ParamType paramType, @NonNull Entity entity) {
+
         // 新增 param
-        Param param = new Param().setTyp(paramType.getType())
+        String typ = paramType.getType();
+        if (!hasText(typ)) {
+            typ = firstLetterToUpper(tokens[0].trim());
+        }
+        Param param = new Param().setTyp(typ)
                                  .setName(tokens[1].trim())
                                  .setDescr(removeNewlines(tokens[2].trim()));
 
@@ -408,24 +434,57 @@ public class XmindTest {
         	return param;
         }
 
-        // 遍历 annots
+        // 遍历 annots/genericTyp
         List<Annot> annots = param.getAnnotations();
         List<Attached> attachedList = children.getAttached();
+        List<Property> properties = param.getProperties();
         String paramTitle;
         String[] splits;
         for (Attached paramAttached : attachedList) {
             paramTitle = paramAttached.getTitle();
             splits = splitInto3Parts(paramTitle);
-            ParamType type = getParamType(splits[0], log);
-            if (splits.length != 3 || isNull(type)) {
+            String title = splits[0].trim();
+            ParamType paramTyp = getParamType(title, log, false);
+            ParamProperty paramProperty = getParamProperty(title, log, false);
+            if (splits.length != 3 || (isNull(paramTyp) && isNull(paramProperty))) {
                 log.warn("title [" + paramTitle + "] 格式错误, 标准格式: annot_val/annot_valKey/annot_valValue");
                 generateOfAttachedWithModule(paramAttached, moduleList, module);
                 continue;
             }
-            if (ANNOT.equals(type)) {
+            if (nonNull(paramTyp) && ANNOT.equals(paramTyp)) {
                 Annot annotation = generateAnnot(paramAttached, moduleList, module, splits);
                 if (nonNull(annotation)) {
                     annots.add(annotation);
+                }
+            }
+            else if (nonNull(paramTyp) && GENERIC_TYP.equals(paramTyp)) {
+                String genericTyp = splits[1].trim();
+                if (hasText(genericTyp)) {
+                    param.setGenericTyp(genericTyp);
+                    String[] genericTypes = genericTyp.split(",");
+                    for (String genericType : genericTypes) {
+                        module.getEntityImports().put(genericType.trim(), entity);
+                    }
+                }
+            }
+            else if (nonNull(paramTyp) && GENERIC.equals(paramType) && GENERIC_VAL.equals(paramTyp)) {
+                String genericVal = splits[1].trim();
+                param.setTyp(genericVal);
+                Children paramAttachedChildren = paramAttached.getChildren();
+                if (nonNull(paramAttachedChildren)) {
+                    generateOfChildren(children, moduleList, module);
+                }
+            }
+            else if (nonNull(paramProperty)) {
+                switch (paramProperty) {
+                    case ARRAY_TYP:
+                        properties.add(new Property().setName(paramProperty.getType()).setValue("true"));
+                        break;
+                    case LIST_TYP: case SET_TYP: case MAP_TYP: case COLLECTION_TYP:
+                        properties.add(new Property().setName(paramProperty.getType()).setValue(splits[1].trim()));
+                        break;
+                    default:
+                        generateOfAttachedWithModule(paramAttached, moduleList, module);
                 }
             }
             else {

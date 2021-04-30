@@ -4,6 +4,7 @@ import com.google.common.base.CaseFormat;
 import org.arch.framework.automate.xmind.nodespace.Annotation;
 import org.arch.framework.automate.xmind.nodespace.ColumnProperty;
 import org.arch.framework.automate.xmind.nodespace.ColumnType;
+import org.arch.framework.automate.xmind.nodespace.ParamProperty;
 import org.arch.framework.automate.xmind.nodespace.ParamType;
 import org.arch.framework.automate.xmind.nodespace.TiTleType;
 import org.slf4j.Logger;
@@ -59,6 +60,29 @@ public class XmindUtils {
      */
     @Nullable
     public static ParamType getParamType(@NonNull String paramType, @Nullable Logger log) {
+        return getParamType(paramType, log, Boolean.TRUE);
+    }
+
+    /**
+     * 获取对应的 {@link ParamProperty}
+     * @param paramProperty     param property
+     * @param log               log
+     * @return  {@link ParamProperty} 或 null
+     */
+    @Nullable
+    public static ParamProperty getParamProperty(@NonNull String paramProperty, @Nullable Logger log) {
+        return getParamProperty(paramProperty, log, Boolean.TRUE);
+    }
+
+    /**
+     * 获取对应的 {@link ParamType}
+     * @param paramType         param type
+     * @param log               log
+     * @param isLog             是否打印日志
+     * @return  {@link ParamType} 或 null
+     */
+    @Nullable
+    public static ParamType getParamType(@NonNull String paramType, @Nullable Logger log, @NonNull Boolean isLog) {
         try {
             return ParamType.valueOf(paramType.toUpperCase());
         }
@@ -67,10 +91,41 @@ public class XmindUtils {
                 return ParamType.valueOf(camelToUpperUnderscore(paramType));
             }
             catch (Exception ex) {
-                if (isNull(log)) {
-                	log = LOG;
+                if (isLog) {
+                    if (isNull(log)) {
+                        log = LOG;
+                    }
+                    log.error("param type [" + paramType + "] 不能转换为 ParamType");
                 }
-                log.error("param type [" + paramType + "] 不能转换为 ParamType");
+                return null;
+            }
+        }
+    }
+
+    /**
+     * 获取对应的 {@link ParamProperty}
+     * @param paramProperty     param property
+     * @param log               log
+     * @param isLog             是否打印日志
+     * @return  {@link ParamProperty} 或 null
+     */
+    @Nullable
+    public static ParamProperty getParamProperty(@NonNull String paramProperty, @Nullable Logger log,
+                                                 @NonNull Boolean isLog) {
+        try {
+            return ParamProperty.valueOf(paramProperty.toUpperCase());
+        }
+        catch (Exception e) {
+            try {
+                return ParamProperty.valueOf(camelToUpperUnderscore(paramProperty));
+            }
+            catch (Exception ex) {
+                if (isLog) {
+                    if (isNull(log)) {
+                        log = LOG;
+                    }
+                    log.error("param property [" + paramProperty + "] 不能转换为 ParamProperty");
+                }
                 return null;
             }
         }

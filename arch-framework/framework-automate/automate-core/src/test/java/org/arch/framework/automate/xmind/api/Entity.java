@@ -20,6 +20,7 @@ public class Entity {
     private String name;
     private String descr;
     private String pkg;
+    private String genericTyp;
     private final List<Annot> annotations = new ArrayList<>();
     private final List<Param> fields = new ArrayList<>();
     private final Set<String> imports = new HashSet<>();

@@ -19,6 +19,7 @@ public class Param {
     private String typ;
     private String name;
     private String descr;
+    private String genericTyp;
     private final List<Annot> annotations = new ArrayList<>();
     private final List<Property> properties = new ArrayList<>();
 }
