@@ -1,5 +1,7 @@
 package org.arch.framework.automate.xmind.module;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,8 +13,10 @@ import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.util.StringUtils.hasText;
 
@@ -41,17 +45,22 @@ public class Module {
     private String pkg;
     private final List<Database> databases = new ArrayList<>();
     private final List<Interfac> interfaces = new ArrayList<>();
-    private final List<Entity> entities = new ArrayList<>();
+    private final Set<Entity> entities = new HashSet<>();
     /**
      * 缓存需要包后置处理 {@link Entity}
-     * map(entityName, Entity): key 为 {@link Entity} name, value 为 {@link Entity}
+     * map(entityName, Entity): key 为 {@link Entity} name, value 为需要导入 import 的 {@link Entity}
      */
-    private transient final Map<String, Entity> entityImports = new HashMap<>();
+    private transient final Multimap<String, Entity> entityImports = HashMultimap.create();
     /**
      * 缓存需要包后置处理 {@link Interfac}
-     * map(entityName, Interfac): key 为 {@link Entity} name, value 为 {@link Interfac}
+     * map(entityName, Interfac): key 为 {@link Entity} name, value 为需要导入 import 的 {@link Interfac}
      */
-    private transient final Map<String, Interfac> apiImports = new HashMap<>();
+    private transient final Multimap<String, Interfac> apiImports = HashMultimap.create();
+    /**
+     * 缓存 Entity/Api 中用到的其他对象的包路径
+     * map(entityName, pkg): key 为 {@link Entity} name, value 为 {@link Entity} 的包路径(全路径)
+     */
+    private transient final Map<String, String> otherImports = new HashMap<>();
 
     public boolean addDatabase(Database database) {
         return this.databases.add(database);
@@ -77,6 +86,7 @@ public class Module {
         return this.entities.addAll(entities);
     }
 
+
     /**
      * module 包后置处理, 需要在解析 xmind 完成后调用.
      *
@@ -91,20 +101,21 @@ public class Module {
         if (isForce || !hasText(this.pkg)) {
             this.pkg = modulePkg;
         }
-        final List<Entity> entityList = this.getEntities();
-        final String newPkg = this.pkg + PKG_SEPARATOR + DEFAULT_ENTITY_PKG;
+        final Set<Entity> entityList = this.getEntities();
+        final String newEntityPkg = this.pkg + PKG_SEPARATOR + DEFAULT_ENTITY_PKG;
+        final String apiPkg = this.pkg + PKG_SEPARATOR + DEFAULT_API_PKG;
         entityList.forEach(entity -> {
             if (isForce || !hasText(entity.getPkg())) {
-                entity.setPkg(newPkg);
+                entity.setPkg(newEntityPkg);
             }
         });
         this.getInterfaces().forEach(api -> {
             if (isForce || !hasText(api.getPkg())) {
-                api.setPkg(newPkg);
+                api.setPkg(apiPkg);
             }
         });
 
-        // 从 entity/api 的 import 中清楚旧的包
+        // 从 entity/api 的 import 中清除旧的包
         if (isForce) {
             final String entityPkg = oldPkg + PKG_SEPARATOR + DEFAULT_ENTITY_PKG;
             this.entities.forEach(entity -> {
@@ -118,23 +129,41 @@ public class Module {
         final String pkgPart = PKG_SEPARATOR + DEFAULT_ENTITY_PKG + PKG_SEPARATOR;
         // 添加 entity import
         entityImports.forEach((entityName, pEntity) -> {
+            final Set<String> imports = pEntity.getImports();
+            boolean isAdd = false;
             for (Entity entity : entityList) {
                 String name = entity.getName();
                 if (entityName.equals(name)) {
-                    pEntity.getImports()
-                           .add(entity.getPkg() + pkgPart + name);
+                    imports.add(entity.getPkg() + pkgPart + name);
+                    isAdd = true;
                 }
+            }
+            if (!isAdd) {
+                otherImports.forEach((objName, objPkg) -> {
+                    if (entityName.equals(objName)) {
+                        imports.add(objPkg);
+                    }
+                });
             }
         });
 
         // 添加 api/interface import
         apiImports.forEach((entityName, pInterface) -> {
+            final Set<String> imports = pInterface.getImports();
+            boolean isAdd = false;
             for (Entity entity : entityList) {
                 String name = entity.getName();
                 if (entityName.equals(name)) {
-                    pInterface.getImports()
-                              .add(entity.getPkg() + pkgPart + name);
+                    imports.add(entity.getPkg() + pkgPart + name);
+                    isAdd = true;
                 }
+            }
+            if (!isAdd) {
+                otherImports.forEach((objName, objPkg) -> {
+                    if (entityName.equals(objName)) {
+                        imports.add(objPkg);
+                    }
+                });
             }
         });
 

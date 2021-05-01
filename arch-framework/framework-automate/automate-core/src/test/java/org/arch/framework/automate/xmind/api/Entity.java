@@ -2,6 +2,7 @@ package org.arch.framework.automate.xmind.api;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.arch.framework.automate.xmind.Import;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,13 +16,14 @@ import java.util.Set;
  */
 @Data
 @Accessors(chain = true)
-public class Entity {
+public class Entity implements Import {
 
     private String name;
     private String descr;
     private String pkg;
+    // 泛型类型: String -> <String>, String, Object -> <String, Object>, Map<String, Object> -> <Map<String, Object>>
     private String genericTyp;
-    private final List<Annot> annotations = new ArrayList<>();
+    private final Set<Annot> annotations = new HashSet<>();
     private final List<Param> fields = new ArrayList<>();
     private final Set<String> imports = new HashSet<>();
 

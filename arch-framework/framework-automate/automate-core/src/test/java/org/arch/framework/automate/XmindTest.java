@@ -8,8 +8,10 @@ import org.arch.framework.automate.generater.service.xmind.meta.Children;
 import org.arch.framework.automate.generater.service.xmind.meta.JsonRootBean;
 import org.arch.framework.automate.generater.service.xmind.meta.RootTopic;
 import org.arch.framework.automate.generater.service.xmind.parser.XmindParser;
+import org.arch.framework.automate.xmind.Import;
 import org.arch.framework.automate.xmind.api.Annot;
 import org.arch.framework.automate.xmind.api.AnnotVal;
+import org.arch.framework.automate.xmind.api.Curl;
 import org.arch.framework.automate.xmind.api.Entity;
 import org.arch.framework.automate.xmind.api.Interfac;
 import org.arch.framework.automate.xmind.api.Param;
@@ -38,14 +40,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static org.arch.framework.automate.xmind.nodespace.ParamType.ANNOT;
-import static org.arch.framework.automate.xmind.nodespace.ParamType.ANNOT_E;
-import static org.arch.framework.automate.xmind.nodespace.ParamType.ANNOT_VAL;
-import static org.arch.framework.automate.xmind.nodespace.ParamType.GENERIC;
-import static org.arch.framework.automate.xmind.nodespace.ParamType.GENERIC_TYP;
-import static org.arch.framework.automate.xmind.nodespace.ParamType.GENERIC_VAL;
+import static org.arch.framework.automate.xmind.nodespace.ParamType.*;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.API;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.MODULE;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.PKG;
@@ -275,8 +274,395 @@ public class XmindTest {
         Interfac interfac = new Interfac().setName(interfaceName).setDescr(comment);
         module.addInterface(interfac);
 
+        // 遍历 interface 的方法
+        Set<Annot> entityAnnotations = interfac.getAnnotations();
+        List<Curl> curls = interfac.getCurls();
+        List<Attached> attachedList = children.getAttached();
+        if (isNull(attachedList) || attachedList.size() == 0) {
+            return;
+        }
+        String curlTitle;
+        for (Attached attached : attachedList) {
+            curlTitle = attached.getTitle();
+            splits = splitInto3Parts(curlTitle);
+            ParamType paramType = getParamType(splits[0].trim(), log);
+            if (splits.length != 3 || isNull(paramType)) {
+                log.info("title [" + curlTitle + "] 格式错误, 标准格式: paramType/paramName/[description]");
+                generateOfAttachedWithModule(attached, moduleList, module);
+                continue;
+            }
+            String name = firstLetterToLower(splits[1].trim());
+            String curlComment = removeNewlines(splits[2].trim());
+            switch(paramType) {
+                case GET:
+                    curls.add(generateCurl(moduleList, module, interfac, attached, GET, name, curlComment, TRUE));
+                    break;
+                case POST:
+                    curls.add(generateCurl(moduleList, module, interfac, attached, POST, name, curlComment, TRUE));
+                    break;
+                case PUT:
+                    curls.add(generateCurl(moduleList, module, interfac, attached, PUT, name, curlComment, TRUE));
+                    break;
+                case DEL:
+                    curls.add(generateCurl(moduleList, module, interfac, attached, DEL, name, curlComment, TRUE));
+                    break;
+                case INTERFACE:
+                    curls.add(generateCurl(moduleList, module, interfac, attached, GET, name, curlComment, FALSE));
+                    break;
+                case METHOD:
+                    curls.add(generateCurl(moduleList, module, interfac, attached, METHOD, name, curlComment, FALSE));
+                    break;
+                case ANNOT: case ANNOTATION:
+                    Annot annotation = generateAnnot(attached, moduleList, module, splits);
+                    if (nonNull(annotation)) {
+                        entityAnnotations.add(annotation);
+                    }
+                    break;
+                case URI:
+                    Annot annot = new Annot().setName("RequestMapping");
+                    annot.getAnnotVals().add(new AnnotVal().setKey("value").setValue("/" + splits[1].trim()));
+                    entityAnnotations.add(annot);
+                    break;
+                case GENERIC_TYP:
+                    String genericTyp = firstLetterToUpper(splits[1].trim());
+                    interfac.setGenericTyp(genericTyp);
+                    Children attachedChildren = attached.getChildren();
+                    if (nonNull(attachedChildren)) {
+                        generateImport(attachedChildren, moduleList, module, interfac);
+                    }
+                    break;
+                default:
+                    generateOfAttachedWithModule(attached, moduleList, module);
+                    break;
+            }
+
+        }
 
     }
+
+    @NonNull
+    private Curl generateCurl(@NonNull List<Module> moduleList, @NonNull Module module,
+                              @NonNull Interfac interfac, @NonNull Attached attached,
+                              @NonNull ParamType paramType, @NonNull String curlName,
+                              @NonNull String curlComment, @NonNull Boolean isRestMethod) {
+        String methodName = paramType.name();
+        if (INTERFACE.equals(paramType)) {
+            methodName = GET.name();
+        }
+        else if (METHOD.equals(paramType)){
+            methodName = "";
+        }
+        Curl curl = new Curl().setName(curlName).setDescr(curlComment)
+                              .setHttpMethod(methodName).setRestMethod(isRestMethod);
+        Children attachedChildren = attached.getChildren();
+        if (nonNull(attachedChildren)) {
+            resolveMethod(attached.getChildren(), moduleList, module, interfac, curl);
+        }
+        return curl;
+    }
+
+    private void resolveMethod(@NonNull Children children, @NonNull List<Module> moduleList, @NonNull Module module,
+                               @NonNull Interfac interfac, @NonNull Curl curl) {
+        List<Attached> attachedList = children.getAttached();
+        if (attachedList.size() == 0) {
+            return;
+        }
+
+        Set<Annot> annotations = curl.getAnnotations();
+        for (Attached attached : attachedList) {
+            String title = attached.getTitle().trim();
+            String[] splits = splitInto3Parts(title);
+            ParamType paramType = getParamType(splits[0].trim(), log);
+            if (splits.length != 3 || isNull(paramType)) {
+                log.info("title [" + title + "] 格式错误, 标准格式: paramType/paramName/[description]");
+                generateOfAttachedWithModule(attached, moduleList, module);
+                return;
+            }
+            switch(paramType) {
+                case IN:
+                    generateInOrOut(attached, moduleList, module, interfac, curl, TRUE);
+                    break;
+                case OUT:
+                    generateInOrOut(attached, moduleList, module, interfac, curl, FALSE);
+                    break;
+                case ANNOT: case ANNOTATION:
+                    Annot annotation = generateAnnot(attached, moduleList, module, splits);
+                    if (nonNull(annotation)) {
+                        annotations.add(annotation);
+                    }
+                    break;
+                case GENERIC_VAL:
+                    curl.setGenericVal(firstLetterToUpper(splits[1].trim()));
+                    break;
+                case URI:
+                    String method = splits[2].trim().toUpperCase();
+                    String httpMethod;
+                    switch(method) {
+                        case "GET":
+                            httpMethod = "GetMapping";
+                            break;
+                        case "POST":
+                            httpMethod = "PostMapping";
+                            break;
+                        case "PUT":
+                            httpMethod = "PutMapping";
+                            break;
+                        case "DEL":
+                            httpMethod = "DeleteMapping";
+                            break;
+                        default:
+                            httpMethod = "RequestMapping";
+                            break;
+                    }
+                    Annot annot = new Annot().setName(httpMethod);
+                    annot.getAnnotVals().add(new AnnotVal().setKey("value").setValue("/" + splits[1].trim()));
+                    annotations.add(annot);
+                    break;
+                default:
+                    generateOfAttachedWithModule(attached, moduleList, module);
+                    break;
+            }
+        }
+
+    }
+
+    /**
+     * 生成输入输出参数
+     * @param attached      {@link Attached}
+     * @param moduleList    {@link Module} 列表
+     * @param module        {@link Module}
+     * @param interfac      {@link Interfac}
+     * @param curl          {@link Curl}
+     * @param inOrOut       true 表示 {@link ParamType#IN}, false 表示 {@link ParamType#OUT}.
+     */
+    private void generateInOrOut(@NonNull Attached attached, @NonNull List<Module> moduleList,
+                                 @NonNull Module module, @NonNull Interfac interfac,
+                                 @NonNull Curl curl, @NonNull Boolean inOrOut) {
+
+        Children children = attached.getChildren();
+        if (isNull(children)) {
+            return;
+        }
+        List<Attached> attachedList = children.getAttached();
+        if (attachedList.size() == 0) {
+            return;
+        }
+        // 遍历获取入参或返回参数
+        List<Param> inputParams = curl.getInputParams();
+        for (Attached paramAttached : attachedList) {
+            String title = paramAttached.getTitle().trim();
+            String[] splits = splitInto3Parts(title);
+            ParamType paramType = getParamType(splits[0].trim(), log);
+            if (splits.length != 3 || isNull(paramType)) {
+                log.info("title [" + title + "] 格式错误, 标准格式: paramType/paramName/[description]");
+                generateOfAttachedWithModule(paramAttached, moduleList, module);
+                continue;
+            }
+            if (!ENTITY.equals(paramType)) {
+                String type = paramType.getType();
+                if (!hasText(type)) {
+                    Children attachedChildren = paramAttached.getChildren();
+                    if (nonNull(attachedChildren)) {
+                        generateOfChildren(children, moduleList, module);
+                    }
+                }
+            }
+            if (inOrOut) {
+                inputParams.add(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
+            }
+            else {
+                curl.setOutputParam(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
+            }
+
+        }
+
+    }
+
+    @Nullable
+    private Param generateParam(@NonNull Attached attached, @NonNull List<Module> moduleList,
+                                @NonNull Module module, @NonNull String[] tokens,
+                                @NonNull ParamType paramType, @NonNull Interfac interfac) {
+        // 新增 param
+        String typ = paramType.getType();
+        if (ENTITY.equals(paramType)) {
+            Children children = attached.getChildren();
+            if (nonNull(children)) {
+                resolveEntity(children, moduleList, module, attached.getTitle(), interfac);
+            }
+            typ = firstLetterToUpper(tokens[1].trim());
+        }
+        if (!hasText(typ)) {
+            typ = firstLetterToUpper(tokens[0].trim());
+        }
+        Param param = new Param().setTyp(typ)
+                                 .setName(firstLetterToLower(tokens[1].trim()))
+                                 .setDescr(removeNewlines(tokens[2].trim()));
+
+        Children children = attached.getChildren();
+        if (isNull(children)) {
+            return param;
+        }
+
+        // 遍历 annots/generic/genericTyp
+        List<Annot> annots = param.getAnnotations();
+        List<Attached> attachedList = children.getAttached();
+        List<Property> properties = param.getProperties();
+        String paramTitle;
+        String[] splits;
+        for (Attached paramAttached : attachedList) {
+            paramTitle = paramAttached.getTitle();
+            splits = splitInto3Parts(paramTitle);
+            String title = splits[0].trim();
+            ParamType paramTyp = getParamType(title, log, false);
+            ParamProperty paramProperty = null;
+            if (isNull(paramTyp)) {
+                paramProperty = getParamProperty(title, log);
+            }
+            if (splits.length != 3 || (isNull(paramTyp) && isNull(paramProperty))) {
+                log.info("title [" + paramTitle + "] 格式错误, 标准格式: type/Key/Value");
+                generateOfAttachedWithModule(paramAttached, moduleList, module);
+                continue;
+            }
+            if (nonNull(paramTyp) && (ANNOT.equals(paramTyp) || ANNOTATION.equals(paramType))) {
+                Annot annotation = generateAnnot(paramAttached, moduleList, module, splits);
+                if (nonNull(annotation)) {
+                    annots.add(annotation);
+                }
+            }
+            else if (nonNull(paramTyp) && GENERIC_TYP.equals(paramTyp)) {
+                String genericTyp = firstLetterToUpper(splits[1].trim());
+                if (hasText(genericTyp)) {
+                    param.setGenericTyp(genericTyp);
+                }
+                Children attachedChildren = paramAttached.getChildren();
+                if (nonNull(attachedChildren)) {
+                    generateImport(attachedChildren, moduleList, module, interfac);
+                }
+            }
+            else if (nonNull(paramTyp) && GENERIC.equals(paramType) && GENERIC_VAL.equals(paramTyp)) {
+                String genericVal = splits[1].trim();
+                param.setTyp(genericVal);
+                Children paramAttachedChildren = paramAttached.getChildren();
+                if (nonNull(paramAttachedChildren)) {
+                    generateOfChildren(children, moduleList, module);
+                }
+            }
+            else if (nonNull(paramProperty)) {
+                switch (paramProperty) {
+                    case ARRAY_TYP:
+                        properties.add(new Property().setName(paramProperty.getType()).setValue("true"));
+                        break;
+                    case LIST_TYP: case SET_TYP: case MAP_TYP: case COLLECTION_TYP:
+                        properties.add(new Property().setName(paramProperty.getType()).setValue(splits[1].trim()));
+                        break;
+                    default:
+                        generateOfAttachedWithModule(paramAttached, moduleList, module);
+                }
+            }
+            else {
+                Children paramAttachedChildren = paramAttached.getChildren();
+                if (nonNull(paramAttachedChildren)) {
+                    generateOfChildren(children, moduleList, module);
+                }
+            }
+        }
+
+        return param;
+    }
+
+    private void resolveEntity(@NonNull Children children, @NonNull List<Module> moduleList,
+                               @NonNull Module module, @NonNull String title, @NonNull Interfac interfac) {
+        String[] splits = splitInto3Parts(title);
+        if (splits.length != 3) {
+            log.info("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+            generateOfChildren(children, moduleList, module, null, title);
+            return;
+        }
+
+        String name = splits[1].trim();
+        String commentStr = removeNewlines(splits[2].trim());
+        String entityName = firstLetterToUpper(name);
+
+        // 新增 entity
+        Entity entity = new Entity().setName(entityName)
+                                    .setDescr(commentStr);
+        // 是否新建对象
+        boolean isNewCreatedEntity = false;
+        // 缓存包后置处理信息
+        module.getApiImports().put(entity.getName(), interfac);
+
+        // 遍历 entity 字段
+        Set<String> imports = entity.getImports();
+        Set<Annot> entityAnnotations = entity.getAnnotations();
+        List<Param> params = entity.getFields();
+        List<Attached> attachedList = children.getAttached();
+        if (isNull(attachedList) || attachedList.size() == 0) {
+            return;
+        }
+        String fieldTitle;
+        for (Attached attached : attachedList) {
+            fieldTitle = attached.getTitle();
+            splits = splitInto3Parts(fieldTitle);
+            ParamType paramType = getParamType(splits[0].trim(), log);
+            if (splits.length != 3 || isNull(paramType)) {
+                log.info("title [" + fieldTitle + "] 格式错误, 标准格式: paramType/paramName/[description]");
+                generateOfAttachedWithModule(attached, moduleList, module);
+                continue;
+            }
+            if (ParamType.ENTITY.equals(paramType)) {
+                Param entityParam = generateEntity(attached.getChildren(), moduleList, module, fieldTitle, entity);
+                if (nonNull(entityParam)) {
+                    params.add(entityParam);
+                    isNewCreatedEntity = true;
+                }
+            }
+            else if (IMPORT.equals(paramType)) {
+                String objName = firstLetterToUpper(splits[1].trim());
+                String pkg = splits[2].trim();
+                interfac.getImports().add(pkg);
+                module.getOtherImports().put(objName, pkg);
+                Children attachedChildren = attached.getChildren();
+                if (nonNull(attachedChildren)) {
+                    generateOfChildren(attachedChildren, moduleList, module);
+                }
+            }
+            else if ((ANNOT.equals(paramType) || ANNOTATION.equals(paramType))) {
+                Annot annotation = generateAnnot(attached, moduleList, module, splits);
+                if (nonNull(annotation)) {
+                    entityAnnotations.add(annotation);
+                }
+            }
+            else if (ANNOT_E.equals(paramType)) {
+                Annot annotation = generateAnnot(attached, moduleList, module, splits);
+                if (nonNull(annotation)) {
+                    entityAnnotations.add(annotation);
+                }
+            }
+            else if (GENERIC_TYP.equals(paramType)) {
+                String genericTyp = firstLetterToUpper(splits[1].trim());
+                entity.setGenericTyp(genericTyp);
+                Children attachedChildren = attached.getChildren();
+                if (nonNull(attachedChildren)) {
+                    generateImport(attachedChildren, moduleList, module, entity);
+                }
+            }
+            else {
+                String paramTypePkg = paramType.getPkg();
+                if (hasText(paramTypePkg)) {
+                    imports.add(paramTypePkg);
+                }
+                Param fieldParam = generateField(attached, moduleList, module, splits, paramType, entity);
+                if (nonNull(fieldParam)) {
+                    params.add(fieldParam);
+                    isNewCreatedEntity = true;
+                }
+            }
+        }
+        if (isNewCreatedEntity) {
+            module.addEntity(entity);
+        }
+    }
+    
 
     //  ------------------------------- entity -------------------------------
 
@@ -285,7 +671,7 @@ public class XmindTest {
                                  @NonNull Module module, @NonNull String title, @Nullable Entity pEntity) {
         String[] splits = splitInto3Parts(title);
         if (splits.length != 3) {
-            log.warn("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+            log.info("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
             generateOfChildren(children, moduleList, module, null, title);
             return null;
         }
@@ -298,21 +684,19 @@ public class XmindTest {
         List<Annot> paramAnnotations = null;
         if (nonNull(pEntity)) {
             param = new Param().setTyp(entityName)
-                               .setName(firstLetterToLower(name))
+                               .setName(firstLetterToLower(firstLetterToLower(name)))
                                .setDescr(commentStr);
             paramAnnotations = param.getAnnotations();
         }
         // 新增 entity
         Entity entity = new Entity().setName(entityName)
                                     .setDescr(commentStr);
-        module.addEntity(entity);
-        // 缓存包后置处理信息
-        if (nonNull(pEntity)) {
-            module.getEntityImports().put(entity.getName(), pEntity);
-        }
+        // 是否新建对象
+        boolean isNewCreatedEntity = false;
+
         // 遍历 entity 字段
         Set<String> imports = entity.getImports();
-        List<Annot> entityAnnotations = entity.getAnnotations();
+        Set<Annot> entityAnnotations = entity.getAnnotations();
         List<Param> params = entity.getFields();
         List<Attached> attachedList = children.getAttached();
         if (isNull(attachedList) || attachedList.size() == 0) {
@@ -322,9 +706,9 @@ public class XmindTest {
         for (Attached attached : attachedList) {
             fieldTitle = attached.getTitle();
             splits = splitInto3Parts(fieldTitle);
-            ParamType paramType = getParamType(splits[0], log);
+            ParamType paramType = getParamType(splits[0].trim(), log);
             if (splits.length != 3 || isNull(paramType)) {
-                log.warn("title [" + fieldTitle + "] 格式错误, 标准格式: paramType/paramName/[description]");
+                log.info("title [" + fieldTitle + "] 格式错误, 标准格式: paramType/paramName/[description]");
                 generateOfAttachedWithModule(attached, moduleList, module);
                 continue;
             }
@@ -332,9 +716,20 @@ public class XmindTest {
                 Param entityParam = generateEntity(attached.getChildren(), moduleList, module, fieldTitle, entity);
                 if (nonNull(entityParam)) {
                     params.add(entityParam);
+                    isNewCreatedEntity = true;
                 }
             }
-            else if (ANNOT.equals(paramType) && nonNull(pEntity)) {
+            else if (IMPORT.equals(paramType) && nonNull(pEntity)) {
+                String objName = firstLetterToUpper(splits[1].trim());
+                String pkg = splits[2].trim();
+                pEntity.getImports().add(pkg);
+                module.getOtherImports().put(objName, pkg);
+                Children attachedChildren = attached.getChildren();
+                if (nonNull(attachedChildren)) {
+                    generateOfChildren(attachedChildren, moduleList, module);
+                }
+            }
+            else if ((ANNOT.equals(paramType) || ANNOTATION.equals(paramType)) && nonNull(pEntity)) {
                 Annot annotation = generateAnnot(attached, moduleList, module, splits);
                 if (nonNull(annotation)) {
                     paramAnnotations.add(annotation);
@@ -347,11 +742,11 @@ public class XmindTest {
                 }
             }
             else if (GENERIC_TYP.equals(paramType)) {
-                String genericTyp = splits[1].trim();
+                String genericTyp = firstLetterToUpper(splits[1].trim());
                 entity.setGenericTyp(genericTyp);
-                String[] genericTypes = genericTyp.split(",");
-                for (String typ : genericTypes) {
-                    module.getEntityImports().put(typ.trim(), entity);
+                Children attachedChildren = attached.getChildren();
+                if (nonNull(attachedChildren)) {
+                    generateImport(attachedChildren, moduleList, module, entity);
                 }
             }
             else {
@@ -362,10 +757,50 @@ public class XmindTest {
                 Param fieldParam = generateField(attached, moduleList, module, splits, paramType, entity);
                 if (nonNull(fieldParam)) {
                     params.add(fieldParam);
+                    isNewCreatedEntity = true;
                 }
             }
         }
+        if (isNewCreatedEntity) {
+            module.addEntity(entity);
+            // 缓存包后置处理信息
+            if (nonNull(pEntity)) {
+                module.getEntityImports().put(entity.getName(), pEntity);
+            }
+        }
         return param;
+    }
+
+    private void generateImport(@NonNull Children children, @NonNull List<Module> moduleList,
+                                @NonNull Module module, @NonNull Import importObj) {
+        List<Attached> attachedList = children.getAttached();
+        if (attachedList.size() == 0) {
+            return;
+        }
+        for (Attached attached : attachedList) {
+            String title = attached.getTitle().trim();
+            String[] splits = splitInto3Parts(title);
+            ParamType paramType = getParamType(splits[0].trim(), log, FALSE);
+            if (splits.length != 3 && nonNull(paramType)) {
+                log.info("title [" + title + "] 格式错误, 标准格式: type/name/comment");
+                generateOfAttachedWithModule(attached, moduleList, module);
+                continue;
+            }
+            if (GENERIC_TYP.equals(paramType)) {
+                String entityName = firstLetterToUpper(splits[1].trim());
+                String pkg = splits[2].trim();
+                importObj.getImports().add(pkg);
+                module.getOtherImports().put(entityName, pkg);
+                Children attachedChildren = attached.getChildren();
+                if (nonNull(attachedChildren)) {
+                    generateOfChildren(attachedChildren, moduleList, module);
+                }
+            }
+            else {
+                generateOfAttachedWithModule(attached, moduleList, module);
+            }
+        }
+
     }
 
     @Nullable
@@ -392,7 +827,7 @@ public class XmindTest {
                 String title = annotValAttached.getTitle().trim();
                 String[] splits = splitInto3Parts(title);
                 if (splits.length != 3) {
-                    log.warn("title [" + title + "] 格式错误, 标准格式: annot_val/annot_valKey/annot_valValue");
+                    log.info("title [" + title + "] 格式错误, 标准格式: annot_val/annot_valKey/annot_valValue");
                     generateOfChildren(children, moduleList, module, null, title);
                     continue;
                 }
@@ -435,7 +870,7 @@ public class XmindTest {
             typ = firstLetterToUpper(tokens[0].trim());
         }
         Param param = new Param().setTyp(typ)
-                                 .setName(tokens[1].trim())
+                                 .setName(firstLetterToLower(tokens[1].trim()))
                                  .setDescr(removeNewlines(tokens[2].trim()));
 
         Children children = attached.getChildren();
@@ -443,7 +878,7 @@ public class XmindTest {
         	return param;
         }
 
-        // 遍历 annots/genericTyp
+        // 遍历 annots/generic/genericTyp
         List<Annot> annots = param.getAnnotations();
         List<Attached> attachedList = children.getAttached();
         List<Property> properties = param.getProperties();
@@ -454,26 +889,29 @@ public class XmindTest {
             splits = splitInto3Parts(paramTitle);
             String title = splits[0].trim();
             ParamType paramTyp = getParamType(title, log, false);
-            ParamProperty paramProperty = getParamProperty(title, log, false);
+            ParamProperty paramProperty = null;
+            if (isNull(paramTyp)) {
+                paramProperty = getParamProperty(title, log);
+            }
             if (splits.length != 3 || (isNull(paramTyp) && isNull(paramProperty))) {
-                log.warn("title [" + paramTitle + "] 格式错误, 标准格式: annot_val/annot_valKey/annot_valValue");
+                log.info("title [" + paramTitle + "] 格式错误, 标准格式: type/key/value");
                 generateOfAttachedWithModule(paramAttached, moduleList, module);
                 continue;
             }
-            if (nonNull(paramTyp) && ANNOT.equals(paramTyp)) {
+            if (nonNull(paramTyp) && (ANNOT.equals(paramTyp) || ANNOTATION.equals(paramType))) {
                 Annot annotation = generateAnnot(paramAttached, moduleList, module, splits);
                 if (nonNull(annotation)) {
                     annots.add(annotation);
                 }
             }
             else if (nonNull(paramTyp) && GENERIC_TYP.equals(paramTyp)) {
-                String genericTyp = splits[1].trim();
+                String genericTyp = firstLetterToUpper(splits[1].trim());
                 if (hasText(genericTyp)) {
                     param.setGenericTyp(genericTyp);
-                    String[] genericTypes = genericTyp.split(",");
-                    for (String genericType : genericTypes) {
-                        module.getEntityImports().put(genericType.trim(), entity);
-                    }
+                }
+                Children attachedChildren = paramAttached.getChildren();
+                if (nonNull(attachedChildren)) {
+                    generateImport(attachedChildren, moduleList, module, entity);
                 }
             }
             else if (nonNull(paramTyp) && GENERIC.equals(paramType) && GENERIC_VAL.equals(paramTyp)) {
@@ -510,7 +948,7 @@ public class XmindTest {
                                   @NonNull Module module, @NonNull String pTitle) {
         String[] splits = splitInto3Parts(pTitle);
         if (splits.length != 3) {
-            log.warn("title [" + pTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+            log.info("title [" + pTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
             generateOfChildren(children, moduleList, module, null, pTitle);
             return;
         }
@@ -531,7 +969,7 @@ public class XmindTest {
             tableTitle = attached.getTitle();
             splits = splitInto3Parts(tableTitle);
             if (splits.length != 3) {
-                log.warn("title [" + tableTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+                log.info("title [" + tableTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
                 generateOfAttachedWithModule(attached, moduleList, module);
                 continue;
             }
@@ -579,7 +1017,7 @@ public class XmindTest {
         String title = attached.getTitle().trim();
         String[] splits = splitInto3Parts(title);
         if (splits.length != 3) {
-            log.warn("title [" + title + "] 格式错误, 标准格式: columnType/columnName/[comment]");
+            log.info("title [" + title + "] 格式错误, 标准格式: columnType/columnName/[comment]");
             generateOfAttachedWithModule(attached, moduleList, module);
             return ;
         }
@@ -620,7 +1058,7 @@ public class XmindTest {
             String propTitle = attached.getTitle().trim();
             String[] propSplits = splitInto3Parts(propTitle);
             if (propSplits.length != 3) {
-                log.warn("title [" + propTitle + "] 格式错误, 标准格式: propType/propValue/[description]");
+                log.info("title [" + propTitle + "] 格式错误, 标准格式: propType/propValue/[description]");
                 generateOfAttachedWithModule(attached, moduleList, module);
                 continue;
             }

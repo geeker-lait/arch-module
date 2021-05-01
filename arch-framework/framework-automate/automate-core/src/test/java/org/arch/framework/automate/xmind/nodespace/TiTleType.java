@@ -32,42 +32,6 @@ public enum TiTleType {
      */
     ENTITY,
     /**
-     * 接口
-     */
-    INTERFACE,
-    /**
-     * 接口入参
-     */
-    IN,
-    /**
-     * 接口返回值
-     */
-    OUT,
-    /**
-     * 请求头参数
-     */
-    HEAD,
-    /**
-     * 注释(as ANNOT)
-     */
-    ANNOTATION,
-    /**
-     * 查询请求
-     */
-    GET,
-    /**
-     * 新增请求
-     */
-    POST,
-    /**
-     * 修改请求
-     */
-    PUT,
-    /**
-     * 删除请求
-     */
-    DEL,
-    /**
      * 包
      */
     PKG,
