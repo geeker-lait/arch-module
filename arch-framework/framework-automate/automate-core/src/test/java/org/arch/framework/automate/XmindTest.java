@@ -11,6 +11,7 @@ import org.arch.framework.automate.generater.service.xmind.parser.XmindParser;
 import org.arch.framework.automate.xmind.api.Annot;
 import org.arch.framework.automate.xmind.api.AnnotVal;
 import org.arch.framework.automate.xmind.api.Entity;
+import org.arch.framework.automate.xmind.api.Interfac;
 import org.arch.framework.automate.xmind.api.Param;
 import org.arch.framework.automate.xmind.module.Module;
 import org.arch.framework.automate.xmind.nodespace.Annotation;
@@ -46,7 +47,6 @@ import static org.arch.framework.automate.xmind.nodespace.ParamType.GENERIC;
 import static org.arch.framework.automate.xmind.nodespace.ParamType.GENERIC_TYP;
 import static org.arch.framework.automate.xmind.nodespace.ParamType.GENERIC_VAL;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.API;
-import static org.arch.framework.automate.xmind.nodespace.TiTleType.INTERFACE;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.MODULE;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.PKG;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.SHEET;
@@ -228,7 +228,7 @@ public class XmindTest {
             case DATABASE:
                 generateDatabase(children, moduleList, module, pTitle);
                 return;
-            case API: case INTERFACE:
+            case API:
                 generateApi(children, moduleList, module, pTitle, pTiTleType);
                 return;
             case ENTITY:
@@ -262,14 +262,19 @@ public class XmindTest {
     }
 
     private void generateApi(@NonNull Children children, @NonNull List<Module> moduleList,
-                             @NonNull Module module, @NonNull String title, @NonNull TiTleType pTiTleType) {
+                             @NonNull Module module, @NonNull String pTitle, @NonNull TiTleType pTiTleType) {
 
-        if (API.equals(pTiTleType)) {
-            // TODO: 2021.4.30
+        if (!API.equals(pTiTleType)) {
+            generateOfChildren(children, moduleList, module);
+            return;
         }
-        if (INTERFACE.equals(pTiTleType)) {
-            // TODO: 2021.4.30
-        }
+        // add interface
+        String[] splits = splitInto3Parts(pTitle);
+        String interfaceName = firstLetterToUpper(splits[1].trim());
+        String comment = removeNewlines(splits[2].trim());
+        Interfac interfac = new Interfac().setName(interfaceName).setDescr(comment);
+        module.addInterface(interfac);
+
 
     }
 
@@ -289,10 +294,14 @@ public class XmindTest {
         String commentStr = removeNewlines(splits[2].trim());
         String entityName = firstLetterToUpper(name);
         // add param
-        Param param = new Param().setTyp(entityName)
-                                 .setName(firstLetterToLower(name))
-                                 .setDescr(commentStr);
-        List<Annot> paramAnnotations = param.getAnnotations();
+        Param param = null;
+        List<Annot> paramAnnotations = null;
+        if (nonNull(pEntity)) {
+            param = new Param().setTyp(entityName)
+                               .setName(firstLetterToLower(name))
+                               .setDescr(commentStr);
+            paramAnnotations = param.getAnnotations();
+        }
         // 新增 entity
         Entity entity = new Entity().setName(entityName)
                                     .setDescr(commentStr);
@@ -325,7 +334,7 @@ public class XmindTest {
                     params.add(entityParam);
                 }
             }
-            else if (ANNOT.equals(paramType)) {
+            else if (ANNOT.equals(paramType) && nonNull(pEntity)) {
                 Annot annotation = generateAnnot(attached, moduleList, module, splits);
                 if (nonNull(annotation)) {
                     paramAnnotations.add(annotation);
