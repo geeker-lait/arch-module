@@ -46,7 +46,7 @@ public class XmindUtils {
                 if (isNull(log)) {
                 	log = LOG;
                 }
-                log.error("annotation [" + annotation + "] 不能转换为 Annotation");
+                log.info("annotation [" + annotation + "] 不能转换为 Annotation");
                 return null;
             }
         }
@@ -95,7 +95,7 @@ public class XmindUtils {
                     if (isNull(log)) {
                         log = LOG;
                     }
-                    log.error("param type [" + paramType + "] 不能转换为 ParamType");
+                    log.info("param type [" + paramType + "] 不能转换为 ParamType");
                 }
                 return null;
             }
@@ -124,7 +124,7 @@ public class XmindUtils {
                     if (isNull(log)) {
                         log = LOG;
                     }
-                    log.error("param property [" + paramProperty + "] 不能转换为 ParamProperty");
+                    log.info("param property [" + paramProperty + "] 不能转换为 ParamProperty");
                 }
                 return null;
             }
@@ -150,7 +150,7 @@ public class XmindUtils {
                 if (isNull(log)) {
                 	log = LOG;
                 }
-                log.error("column property [" + columnProperty + "] 不能转换为 ColumnProperty");
+                log.info("column property [" + columnProperty + "] 不能转换为 ColumnProperty");
                 return null;
             }
         }
@@ -175,7 +175,7 @@ public class XmindUtils {
                 if (isNull(log)) {
                     log = LOG;
                 }
-                log.error("column type [" + columnType + "] 不能转换为 ColumnType");
+                log.info("column type [" + columnType + "] 不能转换为 ColumnType");
                 return null;
             }
         }
@@ -194,7 +194,7 @@ public class XmindUtils {
             if (isNull(log)) {
                 log = LOG;
             }
-            log.error("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+            log.info("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
             return null;
         }
         if (title.length() > 0) {
@@ -210,7 +210,7 @@ public class XmindUtils {
                     if (isNull(log)) {
                         log = LOG;
                     }
-                    log.error("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+                    log.info("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
                     return null;
                 }
             }
@@ -218,7 +218,7 @@ public class XmindUtils {
         if (isNull(log)) {
             log = LOG;
         }
-        log.error("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+        log.info("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
         return null;
     }
 
@@ -249,6 +249,9 @@ public class XmindUtils {
      */
     @NonNull
     public static String firstLetterToUpper(@NonNull String str) {
+        if (str.length() < 1) {
+            return str;
+        }
         StringBuilder sb = new StringBuilder(str);
         return sb.replace(0,1, str.substring(0, 1).toUpperCase()).toString();
     }
@@ -270,6 +273,9 @@ public class XmindUtils {
      */
     @NonNull
     public static String firstLetterToLower(@NonNull String str) {
+        if (str.length() < 1) {
+            return str;
+        }
         StringBuilder sb = new StringBuilder(str);
         return sb.replace(0,1, str.substring(0, 1).toLowerCase()).toString();
     }
