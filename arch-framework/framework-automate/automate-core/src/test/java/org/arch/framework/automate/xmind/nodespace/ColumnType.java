@@ -9,31 +9,32 @@ import org.springframework.lang.NonNull;
  * @version V2.0  Created by 2021-04-28 15:05
  */
 public enum ColumnType {
-    BIGINT("bigint", "19"),
-    LONG("bigint", "19"),
-    INTEGER("int", "11"),
-    INT("int", "11"),
-    CHAR("char", "50"),
-    VARCHAR("varchar", "50"),
-    STRING("varchar", "50"),
-    TINYTEXT("tinytext", "255"),
-    TEXT("text", "65535"),
-    MEDIUMTEXT("mediumtext", "16777215"),
-    LONGTEXT("longtext", "4294967295"),
-    BIT("bit", "1"),
-    BINARY("binary", ""),
-    BLOB("blob", ""),
-    MEDIUMBLOB("mediumblob", ""),
-    LONGBLOB("longblob", ""),
-    BOOLEAN("tinyint", "1"),
-    TINYINT("tinyint", "4"),
-    DECIMAL("decimal", "11,2"),
-    FLOAT("decimal", "11,2"),
-    DOUBLE("decimal", "11,2"),
-    TIMESTAMP("timestamp", "14"),
-    DATETIME("datetime", ""),
-    TIME("time", ""),
-    DATE("datetime", "");
+    BIGINT("bigint", "19", "Long"),
+    LONG("bigint", "19", "Long"),
+    INTEGER("int", "11", "Integer"),
+    INT("int", "11", "Integer"),
+    CHAR("char", "50", "String"),
+    VARCHAR("varchar", "50", "String"),
+    STRING("varchar", "50", "String"),
+    TINYTEXT("tinytext", "255", "String"),
+    TEXT("text", "65535", "String"),
+    MEDIUMTEXT("mediumtext", "16777215", "String"),
+    LONGTEXT("longtext", "4294967295", "String"),
+    BIT("bit", "1", "Boolean"),
+    BINARY("binary", "", "byte[]"),
+    VARBINARY("varbinary", "", "byte[]"),
+    BLOB("blob", "", "byte[]"),
+    MEDIUMBLOB("mediumblob", "", "byte[]"),
+    LONGBLOB("longblob", "", "byte[]"),
+    BOOLEAN("tinyint", "1", "Boolean"),
+    TINYINT("tinyint", "4", "Integer"),
+    DECIMAL("decimal", "11,2", "java.math.BigDecimal"),
+    FLOAT("decimal", "11,2", "java.math.BigDecimal"),
+    DOUBLE("decimal", "11,2", "java.math.BigDecimal"),
+    TIMESTAMP("timestamp", "14", "java.time.LocalDateTime"),
+    DATETIME("datetime", "", "java.time.LocalDateTime"),
+    TIME("time", "", "java.time.LocalDateTime"),
+    DATE("datetime", "", "java.time.LocalDateTime");
     /**
      * 默认字段类型长度字符串
      */
@@ -42,10 +43,15 @@ public enum ColumnType {
      * column 类型
      */
     private final String type;
+    /**
+     * java 类型
+     */
+    private final String javaType;
 
-    ColumnType(String type, String defValue) {
+    ColumnType(String type, String defValue, String javaType) {
         this.type = type;
         this.defValue = defValue;
+        this.javaType = javaType;
     }
 
     public String getDefValue() {
@@ -54,6 +60,10 @@ public enum ColumnType {
 
     public String getType() {
         return type;
+    }
+
+    public String getJavaType() {
+        return javaType;
     }
 
     public static boolean isString(@NonNull String columnType) {
@@ -65,4 +75,13 @@ public enum ColumnType {
                MEDIUMTEXT.name().equalsIgnoreCase(columnType) ||
                LONGTEXT.name().equalsIgnoreCase(columnType);
     }
+
+    public static boolean isArray(@NonNull String columnType) {
+        return BLOB.name().equalsIgnoreCase(columnType) ||
+               MEDIUMBLOB.name().equalsIgnoreCase(columnType) ||
+               BINARY.name().equalsIgnoreCase(columnType) ||
+               VARBINARY.name().equalsIgnoreCase(columnType) ||
+               LONGBLOB.name().equalsIgnoreCase(columnType);
+    }
+
 }

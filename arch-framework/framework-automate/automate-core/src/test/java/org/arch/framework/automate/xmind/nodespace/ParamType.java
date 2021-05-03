@@ -108,11 +108,10 @@ public enum ParamType {
     BOOLEAN("Boolean", ""),
     FLOAT("Float", ""),
     DOUBLE("Double", ""),
-    BYTE("Byte", ""),
+    BYTE("byte", ""),
     SHORT("Short", ""),
     BIG_DECIMAL("BigDecimal", "java.math.BigDecimal"),
-    LOCAL_DATE("Date", "java.time.LocalDateTime"),
-    DATE("Date", "java.util.Date");
+    DATE("LocalDateTime", "java.time.LocalDateTime");
 
     /**
      * 类型

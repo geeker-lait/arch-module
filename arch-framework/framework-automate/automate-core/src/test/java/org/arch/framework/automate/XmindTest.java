@@ -16,6 +16,7 @@ import org.arch.framework.automate.xmind.api.Entity;
 import org.arch.framework.automate.xmind.api.Interfac;
 import org.arch.framework.automate.xmind.api.Param;
 import org.arch.framework.automate.xmind.module.Module;
+import org.arch.framework.automate.xmind.module.Project;
 import org.arch.framework.automate.xmind.nodespace.Annotation;
 import org.arch.framework.automate.xmind.nodespace.ColumnProperty;
 import org.arch.framework.automate.xmind.nodespace.ColumnType;
@@ -36,19 +37,24 @@ import org.springframework.lang.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toMap;
 import static org.arch.framework.automate.xmind.nodespace.ParamProperty.ARRAY_TYP;
 import static org.arch.framework.automate.xmind.nodespace.ParamType.*;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.API;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.MODULE;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.PKG;
+import static org.arch.framework.automate.xmind.nodespace.TiTleType.PROJECT;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.SHEET;
 import static org.arch.framework.automate.xmind.nodespace.TiTleType.TABLE;
 import static org.arch.framework.automate.xmind.utils.XmindUtils.*;
@@ -79,43 +85,48 @@ public class XmindTest {
 
         JsonRootBean root = XmindParser.parseObject(absolutePath, JsonRootBean.class);
 
-        List<Module> moduleList = new ArrayList<>();
+        Project project = new Project();
 
-        generate(root, moduleList);
+        generate(root, project);
 
-        moduleList.forEach(module -> {
+        project.getModules().forEach(module -> {
             String pkg = module.getPkg();
             if (hasText(pkg)) {
-                module.modulePkgPostHandle(pkg, false);
+                module.modulePkgPostHandle(pkg, null, false);
             }
         });
 
-        System.out.println(JSON.toJSONString(moduleList));
+        System.out.println(JSON.toJSONString(project));
     }
 
     /**
      * 解析 xmind 命名空间为(module) 的节点, 把解析后的 module 添加金 moduleList 中
      * @param root          xmind 的 {@link JsonRootBean}
-     * @param moduleList    用于存放 xmind 的解析结果
+     * @param project       {@link Project} 用于存放 xmind 的解析结果
      */
-    public void generate(@NonNull JsonRootBean root, @NonNull List<Module> moduleList) {
+    public void generate(@NonNull JsonRootBean root, @NonNull Project project) {
         try {
             TiTleType tiTleType = TiTleType.valueOf(root.getTitle().trim().toUpperCase());
             if (!SHEET.equals(tiTleType)) {
                 return;
             }
-            generateOfRoot(root.getRootTopic(), moduleList);
+            generateOfRoot(root.getRootTopic(), project);
         }
         catch (Exception e) {
             log.error(e.getMessage(),e);
         }
     }
 
-    private void generateOfRoot(@NonNull RootTopic rootTopic, @NonNull List<Module> moduleList) {
+    private void generateOfRoot(@NonNull RootTopic rootTopic, @NonNull Project project) {
         String title = rootTopic.getTitle().trim();
         TiTleType tiTleType = getTiTleType(title, log);
+        if (nonNull(tiTleType) && PROJECT.equals(tiTleType)) {
+            String[] splits = splitInto3Parts(title);
+            project.setName(splits[1].trim());
+            project.setDescr(removeNewlines(splits[2].trim()));
+        }
         Children children = rootTopic.getChildren();
-        generate(children, moduleList, title, tiTleType);
+        generate(children, project.getModules(), title, tiTleType);
     }
 
     /**
@@ -328,15 +339,15 @@ public class XmindTest {
                     Set<String> imports = interfac.getImports();
                     Annot controllerAnnot;
                     if ("REST".equals(rest)) {
-                        controllerAnnot = new Annot().setName("RestController");
-                        imports.add("org.springframework.web.bind.annotation.RestController");
+                        controllerAnnot = new Annot().setName(Annotation.REST_CONTROLLER.getAnnotName());
+                        imports.add(Annotation.REST_CONTROLLER.getPkg());
                     }
                     else {
-                        controllerAnnot = new Annot().setName("Controller");
-                        imports.add("org.springframework.web.bind.annotation.Controller");
+                        controllerAnnot = new Annot().setName(Annotation.CONTROLLER.getAnnotName());
+                        imports.add(Annotation.CONTROLLER.getPkg());
                     }
-                    Annot annot = new Annot().setName("RequestMapping");
-                    imports.add("org.springframework.web.bind.annotation.RequestMapping");
+                    Annot annot = new Annot().setName(Annotation.REQUEST_MAPPING.getAnnotName());
+                    imports.add(Annotation.REQUEST_MAPPING.getPkg());
                     annot.getAnnotVals().add(new AnnotVal().setKey("value").setValue("/" + splits[1].trim()));
                     interfaceAnnotations.add(annot);
                     interfaceAnnotations.add(controllerAnnot);
@@ -424,33 +435,33 @@ public class XmindTest {
                     String httpMethod;
                     switch(method) {
                         case "GET":
-                            httpMethod = "GetMapping";
+                            httpMethod = Annotation.GET_MAPPING.getAnnotName();
                             curl.setHttpMethod("GET");
                             curl.setRestMethod(true);
-                            imports.add("org.springframework.web.bind.annotation.GetMapping");
+                            imports.add(Annotation.GET_MAPPING.getPkg());
                             break;
                         case "POST":
-                            httpMethod = "PostMapping";
+                            httpMethod = Annotation.POST_MAPPING.getAnnotName();
                             curl.setHttpMethod("POST");
                             curl.setRestMethod(true);
-                            imports.add("org.springframework.web.bind.annotation.PostMapping");
+                            imports.add(Annotation.POST_MAPPING.getPkg());
                             break;
                         case "PUT":
-                            httpMethod = "PutMapping";
+                            httpMethod = Annotation.PUT_MAPPING.getAnnotName();
                             curl.setHttpMethod("PUT");
                             curl.setRestMethod(true);
-                            imports.add("org.springframework.web.bind.annotation.PutMapping");
+                            imports.add(Annotation.PUT_MAPPING.getPkg());
                             break;
                         case "DEL":
-                            httpMethod = "DeleteMapping";
+                            httpMethod = Annotation.DELETE_MAPPING.getAnnotName();
                             curl.setHttpMethod("DEL");
                             curl.setRestMethod(true);
-                            imports.add("org.springframework.web.bind.annotation.DeleteMapping");
+                            imports.add(Annotation.DELETE_MAPPING.getPkg());
                             break;
                         default:
-                            httpMethod = "RequestMapping";
+                            httpMethod = Annotation.REQUEST_MAPPING.getAnnotName();
                             curl.setHttpMethod("GET");
-                            imports.add("org.springframework.web.bind.annotation.RequestMapping");
+                            imports.add(Annotation.REQUEST_MAPPING.getPkg());
                             break;
                     }
                     Annot annot = new Annot().setName(httpMethod);
@@ -909,18 +920,115 @@ public class XmindTest {
         database.getTables().add(table);
 
         // 遍历 column
+        // Map(pkProp, column)
+        Map<String, String> pkMap = new TreeMap<>();
+        // Map(uniqueGroupProp, column)
+        Map<String, String> uniqueMap = new TreeMap<>();
+        // Map(indexGroupProp, column)
+        Map<String, String> indexMap = new TreeMap<>();
         List<Attached> attachedList = children.getAttached();
         if (isNull(attachedList) || attachedList.size() == 0) {
             return;
         }
         for (Attached attached : attachedList) {
-            generateColumn(attached, moduleList, module, table);
+            generateColumn(attached, moduleList, module, table, pkMap, uniqueMap, indexMap);
         }
 
+        // 拼装 pk 索引
+        if (pkMap.size() == 0) {
+            // 遍历 columns 查找是否有 colName = id 的字段
+            Optional<Column> columnOptional = table.getColumns()
+                                                   .stream()
+                                                   .filter(col -> "id".equals(col.getName()))
+                                                   .findFirst();
+            // 有 id 字段设置为主键
+            if (columnOptional.isPresent()) {
+                Column column = columnOptional.get();
+                column.setNotNull(true)
+                      .setAutoIncrement(true)
+                      .setLength(ColumnType.BIGINT.getDefValue())
+                      .setTyp(ColumnType.BIGINT.getType());
+            }
+            // 没有 id 字段添加 id 字段并设置为自增主键
+            else {
+                table.getColumns().add(new Column().setName("id")
+                                                   .setTyp(ColumnType.BIGINT.getType())
+                                                   .setLength(ColumnType.BIGINT.getDefValue())
+                                                   .setComment("主键id")
+                                                   .setNotNull(true)
+                                                   .setAutoIncrement(true));
+            }
+            table.setPkStatement("PRIMARY KEY (`id`)");
+        }
+        else {
+            // 拼装
+            final StringBuilder pkStat = new StringBuilder();
+            pkStat.append("PRIMARY KEY (`");
+            pkMap.forEach((pkGroup, column) -> {
+                pkStat.append(column).append("`, `");
+            });
+            pkStat.setLength(pkStat.length() - 3);
+            pkStat.append(")");
+            table.setPkStatement(pkStat.toString());
+        }
+
+        // 拼装 unique 索引
+        resolveIndexStat(table.getUniquesStatements(), uniqueMap, "UNIQUE KEY");
+        // 拼装 index 索引
+        resolveIndexStat(table.getIndexesStatements(), indexMap, "INDEX");
+    }
+
+    /**
+     * 解析为索引语句, 不包含末尾逗号
+     * @param indexStatList 存放索引语句列表
+     * @param indexMap      Map(idxGroupProp, column)
+     * @param idxKeyword    索引关键字, 如: UNIQUE KEY/INDEX/KEY
+     */
+    private void resolveIndexStat(@NonNull List<String> indexStatList, @NonNull Map<String, String> indexMap,
+                                  @NonNull String idxKeyword) {
+        if (indexMap.isEmpty()) {
+            return;
+        }
+        // 分组: TreeMap(indexGroup[indexPropPre], TreeMap(indexProp, column))
+        TreeMap<String, TreeMap<String, String>> groupMap =
+                indexMap.entrySet()
+                         .stream()
+                         .collect(groupingBy(entry -> {
+                                               String indexGroup = entry.getKey();
+                                               String[] splits = indexGroup.split(COLUMN_PROPERTY_SEPARATOR);
+                                               if (splits.length <= 2) {
+                                                   return indexGroup;
+                                               }
+                                               else {
+                                                   return splits[0].concat(COLUMN_PROPERTY_SEPARATOR).concat(splits[1]);
+                                               }
+                                             },
+                                             TreeMap::new,
+                                             toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                                   (ignore, ignore2) -> ignore, TreeMap::new)));
+
+        // TreeMap(indexGroup[indexPropPre], TreeMap(indexProp, column))
+        groupMap.forEach((indexGroup, map) -> {
+            final StringBuilder idxStat = new StringBuilder();
+            final StringBuilder idxColumns = new StringBuilder();
+            idxColumns.append("(`");
+            idxStat.append(idxKeyword).append(" `").append(indexGroup.toUpperCase()).append(COLUMN_PROPERTY_SEPARATOR);
+            map.forEach((propName, colName) -> {
+                idxStat.append(colName.toUpperCase()).append(COLUMN_PROPERTY_SEPARATOR).append("AND_");
+                idxColumns.append(colName).append("`, `");
+            });
+            idxColumns.setLength(idxColumns.length() - 3);
+            idxColumns.append(")");
+            idxStat.setLength(idxStat.length() - COLUMN_PROPERTY_SEPARATOR.length());
+            idxStat.append("` ").append(idxColumns).append(" USING BTREE");
+            indexStatList.add(idxStat.toString());
+        });
     }
 
     private void generateColumn(@NonNull Attached attached, @NonNull List<Module> moduleList,
-                                @NonNull Module module, @NonNull Table table) {
+                                @NonNull Module module, @NonNull Table table,
+                                @NonNull Map<String, String> pkMap, @NonNull Map<String, String> uniqueMap,
+                                @NonNull Map<String, String> indexMap) {
         // add column
         String title = attached.getTitle().trim();
         String[] splits = splitInto3Parts(title);
@@ -947,13 +1055,14 @@ public class XmindTest {
         if (isNull(children)) {
         	return;
         }
-        generateProperty(children, moduleList, module, column, columnType);
+        generateProperty(children, moduleList, module, column, columnType, pkMap, uniqueMap, indexMap);
 
     }
 
     private void generateProperty(@NonNull Children children, @NonNull List<Module> moduleList,
                                   @NonNull Module module, @NonNull Column column,
-                                  @NonNull ColumnType columnType) {
+                                  @NonNull ColumnType columnType, @NonNull Map<String, String> pkMap,
+                                  @NonNull Map<String, String> uniqueMap, @NonNull Map<String, String> indexMap) {
 
         List<Attached> attachedList = children.getAttached();
         if (isNull(attachedList) || attachedList.size() == 0) {
@@ -961,26 +1070,60 @@ public class XmindTest {
         }
 
         // add column property
-        List<Property> properties = column.getProperties();
         for (Attached attached : attachedList) {
             String propTitle = attached.getTitle().trim();
             String[] propSplits = splitInto3Parts(propTitle);
-            if (propSplits.length != 3) {
+            String propName = propSplits[0].trim();
+            ColumnProperty columnProperty = getColumnProperty(propName, log);
+            if (propSplits.length < 2 || isNull(columnProperty)) {
                 log.info("title [" + propTitle + "] 格式错误, 标准格式: propType/propValue/[description]");
                 generateOfAttachedWithModule(attached, moduleList, module);
                 continue;
             }
-            String propName = propSplits[0].trim();
             String propValue = propSplits[1].trim();
-            if (propValue.length() == 0) {
-            	propValue = columnType.getDefValue();
+            switch(columnProperty) {
+                case LEN: case LENGTH:
+                    if (propValue.length() == 0) {
+                        propValue = columnType.getDefValue();
+                    }
+                    column.setLength(propValue);
+                    break;
+                case  PK:
+                    pkMap.put(propName, column.getName());
+                    column.setNotNull(true);
+                    break;
+                case UNIQUE: case UNQ:
+                    uniqueMap.put(propName, column.getName());
+                    column.setNotNull(true);
+                    break;
+                case NOTNULL:
+                    column.setNotNull(true);
+                    break;
+                case DEFAULT: case DEF:
+                    column.setDef(propValue);
+                    break;
+                case UNSIGNED:
+                    column.setUnsigned(true);
+                    break;
+                case ON_UPDATE:
+                    if (hasText(propValue)) {
+                        column.setOnUpdate(propValue);
+                    }
+                    else {
+                        column.setOnUpdate("ON UPDATE CURRENT_TIMESTAMP");
+                    }
+                    break;
+                case AUTO_INCREMENT: case INCR:
+                    column.setAutoIncrement(true);
+                    break;
+                case INDEX: case IDX:
+                    indexMap.put(propName, column.getName());
+                    column.setNotNull(true);
+                    break;
+                default:
+                    generateOfAttachedWithModule(attached, moduleList, module);
+                    break;
             }
-            ColumnProperty columnProperty = getColumnProperty(propName, log);
-            if (isNull(columnProperty)) {
-                generateOfAttachedWithModule(attached, moduleList, module);
-                continue;
-            }
-            properties.add(new Property().setName(propName).setValue(propValue));
         }
 
     }
