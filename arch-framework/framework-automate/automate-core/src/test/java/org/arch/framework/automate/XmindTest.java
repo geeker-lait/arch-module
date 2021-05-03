@@ -939,7 +939,7 @@ public class XmindTest {
             return ;
         }
         String columnTypeStr = splits[0].trim();
-        String columnName = splits[1].trim();
+        String columnName = camelToUnderscore(splits[1].trim());
         String comment = removeNewlines(splits[2].trim());
         ColumnType columnType = getColumnType(columnTypeStr, log);
         if (isNull(columnType)) {
