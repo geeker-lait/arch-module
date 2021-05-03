@@ -321,9 +321,7 @@ public class XmindTest {
                     break;
                 case ANNOT: case ANNOTATION:
                     Annot annotation = generateAnnot(attached, moduleList, module, splits, interfac);
-                    if (nonNull(annotation)) {
-                        interfaceAnnotations.add(annotation);
-                    }
+                    interfaceAnnotations.add(annotation);
                     break;
                 case URI:
                     String rest = splits[2].trim().toUpperCase();
@@ -408,9 +406,7 @@ public class XmindTest {
                     break;
                 case ANNOT: case ANNOTATION:
                     Annot annotation = generateAnnot(attached, moduleList, module, splits, interfac);
-                    if (nonNull(annotation)) {
-                        annotations.add(annotation);
-                    }
+                    annotations.add(annotation);
                     break;
                 case GENERIC_VAL:
                     curl.setGenericVal(firstLetterToUpper(splits[1].trim()));
@@ -599,20 +595,16 @@ public class XmindTest {
                 } else {
                     annotation = generateAnnot(attached, moduleList, module, splits, entity);
                 }
-                if (nonNull(annotation)) {
-                    if (entityOrInterface && nonNull(pImport)) {
-                        paramAnnotations.add(annotation);
-                    }
-                    else {
-                        entityAnnotations.add(annotation);
-                    }
+                if (entityOrInterface && nonNull(pImport)) {
+                    paramAnnotations.add(annotation);
+                }
+                else {
+                    entityAnnotations.add(annotation);
                 }
             }
             else if (ANNOT_E.equals(paramType)) {
                 Annot annotation = generateAnnot(attached, moduleList, module, splits, entity);
-                if (nonNull(annotation)) {
-                    entityAnnotations.add(annotation);
-                }
+                entityAnnotations.add(annotation);
             }
             else if (GENERIC_TYP.equals(paramType)) {
                 String genericTyp = firstLetterToUpper(splits[1].trim());
@@ -688,24 +680,25 @@ public class XmindTest {
         }
     }
 
-    @Nullable
+    @NonNull
     private Annot generateAnnot(@NonNull Attached attached, @NonNull List<Module> moduleList,
                                 @NonNull Module module, @NonNull String[] tokens,
                                 @NonNull Import importObj) {
 
         // 新增 annot
-        Annotation annotation = getAnnotation(tokens[1].trim(), log);
-        Children children = attached.getChildren();
-        if (isNull(annotation)) {
-            if (nonNull(children)) {
-                generateOfChildren(children, moduleList, module, null, "");
-            }
-            return null;
+        String annotName = tokens[1].trim();
+        Annotation annotation = getAnnotation(annotName, log);
+        Annot annot;
+        if (nonNull(annotation)) {
+            annot = new Annot().setName(annotation.getAnnotName());
+            importObj.getImports().add(annotation.getPkg());
         }
-        importObj.getImports().add(annotation.getPkg());
-        Annot annot = new Annot().setName(annotation.getAnnotName());
-        List<AnnotVal> annotVals = annot.getAnnotVals();
+        else {
+            annot = new Annot().setName(firstLetterToUpper(annotName));
+        }
 
+        List<AnnotVal> annotVals = annot.getAnnotVals();
+        Children children = attached.getChildren();
         // 添加 annot 的 键值对
         if (nonNull(children)) {
             List<Attached> attachedList = children.getAttached();
@@ -809,9 +802,7 @@ public class XmindTest {
             }
             if (nonNull(paramTyp) && (ANNOT.equals(paramTyp) || ANNOTATION.equals(pParamType))) {
                 Annot annotation = generateAnnot(paramAttached, moduleList, module, splits, pImport);
-                if (nonNull(annotation)) {
-                    annots.add(annotation);
-                }
+                annots.add(annotation);
             }
             else if (nonNull(paramTyp) && GENERIC_TYP.equals(paramTyp)) {
                 String genericTyp = firstLetterToUpper(splits[1].trim());
