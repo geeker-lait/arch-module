@@ -26,6 +26,7 @@ import org.arch.framework.automate.xmind.table.Column;
 import org.arch.framework.automate.xmind.table.Database;
 import org.arch.framework.automate.xmind.table.Property;
 import org.arch.framework.automate.xmind.table.Table;
+import org.arch.framework.automate.xmind.utils.FreeMarkerUtil;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -68,7 +69,7 @@ public class XmindTest {
     @Test
     public void parse() throws DocumentException, ArchiveException, IOException {
         //        String fileName = "minds\\ofs-alarm-er.xmind";
-        String fileName = "minds"+ File.separator +"ofs-alarm-center.xmind";
+        String fileName = "minds"+ File.separator +"ofs-alarm-center-1.xmind";
         Resource resource = new ClassPathResource(fileName);
         String absolutePath = resource.getFile().getAbsolutePath();
 
@@ -87,6 +88,8 @@ public class XmindTest {
                 module.modulePkgPostHandle(pkg, false);
             }
         });
+        Database database = moduleList.get(0).getDatabases().get(0);
+        FreeMarkerUtil.geneFile("ddl","templates","ddl.sql",database);
 
         System.out.println(JSON.toJSONString(moduleList));
     }
@@ -662,7 +665,7 @@ public class XmindTest {
             module.addEntity(entity);
         }
     }
-    
+
 
     //  ------------------------------- entity -------------------------------
 
