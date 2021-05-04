@@ -10,6 +10,7 @@ import org.arch.framework.automate.xmind.api.Entity;
 import org.arch.framework.automate.xmind.api.Interfac;
 import org.arch.framework.automate.xmind.table.Database;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.Objects.nonNull;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -91,9 +93,16 @@ public class Module {
      * module 包后置处理, 需要在解析 xmind 完成后调用.
      *
      * @param modulePkg    module 包
+     * @param otherImports 缓存 Entity/Api 中用到的其他对象的包路径, Map(对象名称[不包含包路径], 包路径),
+     *                     待改进: 如果对象重名会覆盖原有对象的包路径.
      * @param isForce      是否复写原有的包设置, 当为 true 时, 会清除缓存的包后置处理信息, 再次调用此方法时不会更新相关的 import 包.
      */
-    public void modulePkgPostHandle(@NonNull String modulePkg, @NonNull Boolean isForce) {
+    public void modulePkgPostHandle(@NonNull String modulePkg, @Nullable Map<String, String> otherImports,
+                                    @NonNull Boolean isForce) {
+
+        if (nonNull(otherImports)) {
+            this.otherImports.putAll(otherImports);
+        }
 
         final String oldPkg = this.pkg;
 
@@ -139,7 +148,7 @@ public class Module {
                 }
             }
             if (!isAdd) {
-                otherImports.forEach((objName, objPkg) -> {
+                this.otherImports.forEach((objName, objPkg) -> {
                     if (entityName.equals(objName)) {
                         imports.add(objPkg);
                     }
@@ -159,7 +168,7 @@ public class Module {
                 }
             }
             if (!isAdd) {
-                otherImports.forEach((objName, objPkg) -> {
+                this.otherImports.forEach((objName, objPkg) -> {
                     if (entityName.equals(objName)) {
                         imports.add(objPkg);
                     }

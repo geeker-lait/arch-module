@@ -7,11 +7,7 @@ package org.arch.framework.automate.xmind.nodespace;
  * @version V2.0  Created by 2021-04-28 15:03
  */
 public enum ParamProperty {
-    ARRAY_TYP("arrayTyp"),
-    LIST_TYP("listTyp"),
-    SET_TYP("setTyp"),
-    MAP_TYP("mapTyp"),
-    COLLECTION_TYP("collectionTyp");
+    ARRAY_TYP("arrayTyp");
 
     private final String type;
 

@@ -78,14 +78,19 @@ public enum ParamType {
      */
     DEL("", ""),
     /**
-     * 属于 TitleType.API 子节点, 如: uri = user, 那么在接口上注解 @RequestMapping("/user").<br>
-     * 属于 ParamType(INTERFACE/GET/POST/PUT/DELETE) 子节点, 如: uri = user, 那么在接口方法上根据接口方法的类型添加对应的注解.
+     * 属于 TitleType.API 子节点, 如: uri/user/, 那么在接口上注解 @Controller @RequestMapping("/user").<br>
+     * 属于 TitleType.API 子节点, 如: uri/user/rest, 那么在接口上注解 @RestController @RequestMapping("/user").<br>
+     * 属于 ParamType(INTERFACE/GET/POST/PUT/DELETE) 子节点, 如: uri/user/, 那么在接口方法上根据接口方法的类型添加对应的注解.
      * <pre>
      *  TitleType.INTERFACE     @RequestMapping("/user")
      *  TitleType.GET           @GetMapping("/user")
      *  TitleType.POST          @PostMapping("/user")
      *  TitleType.PUT           @PutMapping("/user")
      *  TitleType.DELETE        @DeleteMapping("/user")
+     * 属于 ParamType(INTERFACE/GET/POST/PUT/DELETE) 子节点, 格式: uri/user/[get/post/put/del], 如: uri/user/post,
+     * 那么在接口方法上根据接口方法的类型添加对应的注解.
+     * <pre>
+     *  TitleType.POST          @PostMapping("/user")
      * </pre>
      */
     URI("", ""),
@@ -103,10 +108,10 @@ public enum ParamType {
     BOOLEAN("Boolean", ""),
     FLOAT("Float", ""),
     DOUBLE("Double", ""),
-    BYTE("Byte", ""),
+    BYTE("byte", ""),
     SHORT("Short", ""),
     BIG_DECIMAL("BigDecimal", "java.math.BigDecimal"),
-    DATE("Date", "java.util.Date");
+    DATE("LocalDateTime", "java.time.LocalDateTime");
 
     /**
      * 类型

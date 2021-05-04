@@ -17,8 +17,17 @@ import java.util.List;
 public class Table {
     private String name;
     private String comment;
+    /**
+     * 主键语句, 不包含末尾逗号
+     */
+    private String pkStatement;
+    /**
+     * 索引语句, 不包含末尾逗号
+     */
+    private final List<String> uniquesStatements = new ArrayList<>();
+    /**
+     * 唯一索引语句, 不包含末尾逗号
+     */
+    private final List<String> indexesStatements = new ArrayList<>();
     private final List<Column> columns = new ArrayList<>();
-    private String indexes;
-    private String uniques;
-    private String primaryKey;
 }

@@ -25,6 +25,7 @@ import static java.util.Objects.isNull;
 public class XmindUtils {
 
     public static final String SEPARATOR = "/";
+    public static final String COLUMN_PROPERTY_SEPARATOR = "_";
     public static final Logger LOG = LoggerFactory.getLogger(XmindUtils.class);
 
     /**
@@ -133,18 +134,20 @@ public class XmindUtils {
 
     /**
      * 获取对应的 {@link ColumnProperty}
-     * @param columnProperty    column property
+     * @param columnProperty    column property, 格式: length/index_1_2/unique_1_1/unique/index/pk 等
      * @param log               log
      * @return  {@link ColumnProperty} 或 null
      */
     @Nullable
     public static ColumnProperty getColumnProperty(@NonNull String columnProperty, @Nullable Logger log) {
+        String[] splits = columnProperty.toUpperCase().split(COLUMN_PROPERTY_SEPARATOR);
+        String property = splits[0].trim();
         try {
-            return ColumnProperty.valueOf(columnProperty.toUpperCase());
+            return ColumnProperty.valueOf(property);
         }
         catch (Exception e) {
             try {
-                return ColumnProperty.valueOf(camelToUpperUnderscore(columnProperty));
+                return ColumnProperty.valueOf(camelToUpperUnderscore(property));
             }
             catch (Exception ex) {
                 if (isNull(log)) {

@@ -16,4 +16,25 @@ public enum ColumnProperty {
     ON_UPDATE,
     AUTO_INCREMENT,
     INDEX,
+    /**
+     * 等效于 LENGTH
+     */
+    LEN,
+    /**
+     * 等效于 DEFAULT
+     */
+    DEF,
+    /**
+     * 等效于 INDEX
+     */
+    IDX,
+    /**
+     * 等效于 UNIQUE
+     */
+    UNQ,
+    /**
+     * 等效于 AUTO_INCREMENT
+     */
+    INCR,
+
 }

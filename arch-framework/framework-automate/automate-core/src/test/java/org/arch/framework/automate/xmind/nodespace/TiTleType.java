@@ -12,6 +12,10 @@ public enum TiTleType {
      */
     SHEET,
     /**
+     * 项目
+     */
+    PROJECT,
+    /**
      * 模块
      */
     MODULE,

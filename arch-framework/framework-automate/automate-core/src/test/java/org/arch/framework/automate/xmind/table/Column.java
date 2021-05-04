@@ -3,9 +3,6 @@ package org.arch.framework.automate.xmind.table;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author lait.zhang@gmail.com
  * @description: TODO
@@ -18,10 +15,14 @@ public class Column {
     private String name;
     private String typ;
     private String comment;
-    private final List<Property> properties = new ArrayList<>();
-
-    public boolean isId() {
-        return "id".equals(name);
-    }
+    private String length;
+    /**
+     * 前提条件 pk = false
+     */
+    private boolean autoIncrement = false;
+    private boolean notNull = false;
+    private boolean unsigned = false;
+    private String def;
+    private String onUpdate;
 
 }
