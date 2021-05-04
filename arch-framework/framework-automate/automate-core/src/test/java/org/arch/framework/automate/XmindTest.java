@@ -26,6 +26,7 @@ import org.arch.framework.automate.xmind.nodespace.TiTleType;
 import org.arch.framework.automate.xmind.table.Column;
 import org.arch.framework.automate.xmind.table.Database;
 import org.arch.framework.automate.xmind.table.Table;
+import org.arch.framework.automate.xmind.utils.FreeMarkerUtil;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -96,7 +97,8 @@ public class XmindTest {
                 module.modulePkgPostHandle(pkg, null, false);
             }
         });
-
+        Database database = project.getModules().get(0).getDatabases().get(0);
+        FreeMarkerUtil.geneFile("ddl","templates","ddl.sql",database);
         System.out.println(JSON.toJSONString(project));
     }
 
