@@ -47,7 +47,7 @@ public class XmindUtils {
                 if (isNull(log)) {
                 	log = LOG;
                 }
-                log.info("annotation [" + annotation + "] 不能转换为 Annotation");
+                log.debug("annotation [" + annotation + "] 不能转换为 Annotation");
                 return null;
             }
         }
@@ -96,7 +96,7 @@ public class XmindUtils {
                     if (isNull(log)) {
                         log = LOG;
                     }
-                    log.info("param type [" + paramType + "] 不能转换为 ParamType");
+                    log.debug("param type [" + paramType + "] 不能转换为 ParamType");
                 }
                 return null;
             }
@@ -125,7 +125,7 @@ public class XmindUtils {
                     if (isNull(log)) {
                         log = LOG;
                     }
-                    log.info("param property [" + paramProperty + "] 不能转换为 ParamProperty");
+                    log.debug("param property [" + paramProperty + "] 不能转换为 ParamProperty");
                 }
                 return null;
             }
@@ -153,7 +153,35 @@ public class XmindUtils {
                 if (isNull(log)) {
                 	log = LOG;
                 }
-                log.info("column property [" + columnProperty + "] 不能转换为 ColumnProperty");
+                log.debug("column property [" + columnProperty + "] 不能转换为 ColumnProperty");
+                return null;
+            }
+        }
+    }
+
+    /**
+     * 获取对应的 {@link ColumnType}
+     * @param columnType    column type
+     * @param log           log
+     * @param isLog         是否打印日志
+     * @return  {@link ColumnType} 或 null
+     */
+    @Nullable
+    public static ColumnType getColumnType(@NonNull String columnType, @Nullable Logger log, @NonNull Boolean isLog) {
+        try {
+            return ColumnType.valueOf(columnType.toUpperCase());
+        }
+        catch (Exception e) {
+            try {
+                return ColumnType.valueOf(camelToUpperUnderscore(columnType));
+            }
+            catch (Exception ex) {
+                if (isLog) {
+                    if (isNull(log)) {
+                        log = LOG;
+                    }
+                    log.debug("column type [" + columnType + "] 不能转换为 ColumnType");
+                }
                 return null;
             }
         }
@@ -167,21 +195,7 @@ public class XmindUtils {
      */
     @Nullable
     public static ColumnType getColumnType(@NonNull String columnType, @Nullable Logger log) {
-        try {
-            return ColumnType.valueOf(columnType.toUpperCase());
-        }
-        catch (Exception e) {
-            try {
-                return ColumnType.valueOf(camelToUpperUnderscore(columnType));
-            }
-            catch (Exception ex) {
-                if (isNull(log)) {
-                    log = LOG;
-                }
-                log.info("column type [" + columnType + "] 不能转换为 ColumnType");
-                return null;
-            }
-        }
+        return getColumnType(columnType, log, Boolean.TRUE);
     }
 
     /**
@@ -197,7 +211,7 @@ public class XmindUtils {
             if (isNull(log)) {
                 log = LOG;
             }
-            log.info("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+            log.debug("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
             return null;
         }
         if (title.length() > 0) {
@@ -213,7 +227,7 @@ public class XmindUtils {
                     if (isNull(log)) {
                         log = LOG;
                     }
-                    log.info("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+                    log.debug("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
                     return null;
                 }
             }
@@ -221,7 +235,7 @@ public class XmindUtils {
         if (isNull(log)) {
             log = LOG;
         }
-        log.info("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+        log.debug("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
         return null;
     }
 
@@ -291,6 +305,16 @@ public class XmindUtils {
     @NonNull
     public static String underscoreToCamel(@NonNull String underscoreStr) {
         return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, underscoreStr);
+    }
+
+    /**
+     * 下划线转大写驼峰
+     * @param underscoreStr  小写下划线字符串
+     * @return  大写驼峰字符串
+     */
+    @NonNull
+    public static String underscoreToUpperCamel(@NonNull String underscoreStr) {
+        return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, underscoreStr);
     }
 
     /**

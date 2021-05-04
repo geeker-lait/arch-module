@@ -30,6 +30,10 @@ public enum ParamType {
      */
     GENERIC_VAL("", ""),
     /**
+     * 注解: ANNOT/ANNOTATION/ANNOT_E 都是此命名空间的子节点
+     */
+    ANNOTES("", ""),
+    /**
      * 注解字段(as ANNOTATION)
      */
     ANNOT("", ""),
@@ -49,10 +53,6 @@ public enum ParamType {
      * 普通方法
      */
     METHOD("", ""),
-    /**
-     * 接口方法, 与 GET/POST/PUT/DELETE 功能相似
-     */
-    INTERFACE("", ""),
     /**
      * 接口入参
      */

@@ -15,9 +15,8 @@ public class Column {
     private String name;
     private String typ;
     private String comment;
-    private String length;
     /**
-     * 前提条件 pk = false
+     * 前提条件此字段为主键且 typ = bigint/int
      */
     private boolean autoIncrement = false;
     private boolean notNull = false;

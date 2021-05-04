@@ -56,9 +56,6 @@ public enum Annotation {
     TEST_COMPONENT("TestComponent", "org.springframework.boot.test.context."),
     TEST_CONFIGURATION("TestConfiguration", "org.springframework.boot.test.context."),
 
-
-//    ("", "org.springframework.boot.test.context."),
-
     // spring MVC
     CONTROLLER("Controller", "org.springframework.stereotype.GetMapping.Controller"),
     COMPONENT("Component", "org.springframework.stereotype.GetMapping.Component"),
@@ -99,6 +96,8 @@ public enum Annotation {
     TABLE_NAME("TableName", "com.baomidou.mybatisplus.annotation.TableName"),
     TABLE_LOGIC("TableLogic", "com.baomidou.mybatisplus.annotation.TableLogic"),
     VERSION("Version", "com.baomidou.mybatisplus.annotation.Version"),
+
+    // JACKSON2
 
 
     // validation
@@ -165,7 +164,20 @@ public enum Annotation {
     LOG("Log", "lombok.extern.java.Log"),
     JBOSS_LOG("JBossLog", "lombok.extern.jbosslog.JBossLog"),
     LOG4J("Log4j", "lombok.extern.log4j.Log4j"),
-    LOG4J2("Log4j2", "lombok.extern.log4j.Log4j2");
+    LOG4J2("Log4j2", "lombok.extern.log4j.Log4j2"),
+
+    // test
+    TEST("Test", "org.junit.Test"),
+    AFTER("After", "org.junit.After"),
+    BEFORE("Before", "org.junit.Before"),
+    RUN_WITH("RunWith", "org.junit.runner.RunWith"),
+    ORDER_WITH("OrderWith", "org.junit.runner.OrderWith"),
+    AFTER_CLASS("AfterClass", "org.junit.AfterClass"),
+    BEFORE_CLASS("BeforeClass", "org.junit.BeforeClass"),
+    CLASS_RULE("ClassRule", "org.junit.ClassRule"),
+    FIX_METHOD_ORDER("FixMethodOrder", "org.junit.FixMethodOrder"),
+    IGNORE("Ignore", "org.junit.Ignore"),
+    RULE("Rule", "org.junit.Rule");
 
     private final String annotName;
     private final String pkg;

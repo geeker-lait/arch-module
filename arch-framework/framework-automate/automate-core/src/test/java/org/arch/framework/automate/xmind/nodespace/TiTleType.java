@@ -32,6 +32,10 @@ public enum TiTleType {
      */
     API,
     /**
+     * 接口
+     */
+    INTERFACE,
+    /**
      * 实体对象
      */
     ENTITY,
