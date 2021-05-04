@@ -17,6 +17,10 @@ public enum ParamType {
      */
     IMPORT("", ""),
     /**
+     * 数组类型
+     */
+    ARRAY("", ""),
+    /**
      * 泛型
      */
     GENERIC("", ""),

@@ -574,9 +574,11 @@ public class XmindTest {
                 }
             }
             if (inOrOut) {
+                // TODO: 2021.5.4 对象数组的处理 paramType 识别不到的情况
                 inputParams.add(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
             }
             else {
+                // TODO: 2021.5.4 对象数组的处理  paramType 识别不到的情况
                 curl.setOutputParam(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
             }
 
@@ -717,6 +719,7 @@ public class XmindTest {
                 if (hasText(paramTypePkg)) {
                     imports.add(paramTypePkg);
                 }
+                // TODO: 2021.5.4 对象数组的处理  paramType 识别不到的情况
                 Param fieldParam = generateParam(attached, moduleList, module, splits, paramType, entity);
                 if (nonNull(fieldParam)) {
                     entityFields.add(fieldParam);
@@ -853,24 +856,39 @@ public class XmindTest {
 
         // 新增 param
         String typ = pParamType.getType();
+        String orgType = tokens[0].trim();
         String orgName = tokens[1].trim();
         String paramName = orgName.contains("_") ? underscoreToCamel(orgName) : orgName;
-        if (ENTITY.equals(pParamType)) {
-            Children children = attached.getChildren();
-            if (nonNull(children)) {
-                if (pImport instanceof Entity)
-                {
-                    generateEntity(children, moduleList, module, attached.getTitle(), pImport, TRUE);
+        switch(pParamType) {
+            // 实体对象
+            case ENTITY:
+                Children children = attached.getChildren();
+                if (nonNull(children)) {
+                    if (pImport instanceof Entity)
+                    {
+                        generateEntity(children, moduleList, module, attached.getTitle(), pImport, TRUE);
+                    }
+                    else if (pImport instanceof Interfac) {
+                        generateEntity(children, moduleList, module, attached.getTitle(), pImport, FALSE);
+                    }
                 }
-                else if (pImport instanceof Interfac) {
-                    generateEntity(children, moduleList, module, attached.getTitle(), pImport, FALSE);
+                typ = firstLetterToUpper(paramName);
+                break;
+            // 泛型
+            case LIST: case SET: case MAP: case COLLECTION:
+                typ = firstLetterToUpper(orgType);
+                break;
+            default:
+                // 数组
+                if (orgType.contains("[") && !orgType.contains("<")) {
+                    typ = orgType.contains("_") ? underscoreToUpperCamel(orgType) : firstLetterToUpper(orgName);
                 }
-            }
-            typ = firstLetterToUpper(paramName);
+                break;
         }
+
         if (!hasText(typ)) {
             String orgTyp = tokens[0].trim();
-            typ = orgTyp.contains("-") ? underscoreToUpperCamel(orgTyp) : firstLetterToUpper(orgTyp);
+            typ = orgTyp.contains("_") ? underscoreToUpperCamel(orgTyp) : firstLetterToUpper(orgTyp);
         }
         Param param = new Param().setTyp(typ)
                                  .setName(firstLetterToLower(paramName))
@@ -897,11 +915,11 @@ public class XmindTest {
         for (Attached paramAttached : attachedList) {
             paramTitle = paramAttached.getTitle();
             splits = splitInto3Parts(paramTitle);
-            String title = splits[0].trim();
-            ParamType paramTyp = getParamType(title, log, false);
+            String paramType = splits[0].trim();
+            ParamType paramTyp = getParamType(paramType, log, false);
             ParamProperty paramProperty = null;
             if (isNull(paramTyp)) {
-                paramProperty = getParamProperty(title, log);
+                paramProperty = getParamProperty(paramType, log);
             }
             if (splits.length != 3 || (isNull(paramTyp) && isNull(paramProperty))) {
                 log.debug("title [" + paramTitle + "] 格式错误, 标准格式: type/key/value");
@@ -910,7 +928,17 @@ public class XmindTest {
             }
             if (isNull(paramTyp)) {
                 if (ARRAY_TYP.equals(paramProperty)) {
-                    param.setTyp(param.getTyp().concat("[]"));
+                    // 对象数组处理
+                    if (nonNull(pParamType) && ARRAY.equals(pParamType)) {
+                        String orgTyp = splits[1].trim();
+                        String entityTyp = orgTyp.contains("_") ? underscoreToUpperCamel(orgTyp)
+                                                                : firstLetterToUpper(orgTyp);
+                        param.setTyp(entityTyp + "[]");
+                    }
+                    // 八大基本数据类型处理
+                    else {
+                        param.setTyp(param.getTyp().concat("[]"));
+                    }
                 }
                 else {
                     generateOfAttachedWithModule(paramAttached, moduleList, module);

@@ -1,6 +1,7 @@
 package org.arch.framework.automate.xmind.utils;
 
 import com.google.common.base.CaseFormat;
+import org.arch.framework.automate.generater.service.xmind.meta.Attached;
 import org.arch.framework.automate.xmind.nodespace.Annotation;
 import org.arch.framework.automate.xmind.nodespace.ColumnProperty;
 import org.arch.framework.automate.xmind.nodespace.ColumnType;
@@ -84,12 +85,24 @@ public class XmindUtils {
      */
     @Nullable
     public static ParamType getParamType(@NonNull String paramType, @Nullable Logger log, @NonNull Boolean isLog) {
+        String type = paramType;
+        int genericIndex = type.indexOf("<");
+        int arrIndex = type.indexOf("[");
+        // Map<String, String[]>/List<String>/Set<String>
+        if (genericIndex != -1 && (arrIndex == -1 || genericIndex < arrIndex)) {
+            type = type.substring(0, genericIndex);
+        }
+        // String[]
+        else if (arrIndex != -1) {
+            type = type.substring(0, arrIndex);
+        }
+
         try {
-            return ParamType.valueOf(paramType.toUpperCase());
+            return ParamType.valueOf(type.toUpperCase());
         }
         catch (Exception e) {
             try {
-                return ParamType.valueOf(camelToUpperUnderscore(paramType));
+                return ParamType.valueOf(camelToUpperUnderscore(type));
             }
             catch (Exception ex) {
                 if (isLog) {
@@ -200,21 +213,21 @@ public class XmindUtils {
 
     /**
      * 获取对应的 {@link TiTleType}
-     * @param title    title
-     * @param log      log
+     * @param attachedTitle     {@link Attached} title
+     * @param log               log
      * @return  {@link TiTleType} 或 null
      */
     @Nullable
-    public static TiTleType getTiTleType(@NotNull String title, @Nullable Logger log) {
-        String[] splits = splitInto3Parts(title);
+    public static TiTleType getTiTleType(@NotNull String attachedTitle, @Nullable Logger log) {
+        String[] splits = splitInto3Parts(attachedTitle);
         if (splits.length != 3) {
             if (isNull(log)) {
                 log = LOG;
             }
-            log.debug("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+            log.debug("title [" + attachedTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
             return null;
         }
-        if (title.length() > 0) {
+        if (attachedTitle.length() > 0) {
             String type = splits[0].trim();
             try {
                 return TiTleType.valueOf(type.toUpperCase());
@@ -227,7 +240,7 @@ public class XmindUtils {
                     if (isNull(log)) {
                         log = LOG;
                     }
-                    log.debug("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+                    log.debug("title [" + attachedTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
                     return null;
                 }
             }
@@ -235,7 +248,7 @@ public class XmindUtils {
         if (isNull(log)) {
             log = LOG;
         }
-        log.debug("title [" + title + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
+        log.debug("title [" + attachedTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
         return null;
     }
 

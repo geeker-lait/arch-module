@@ -9,6 +9,7 @@ import org.springframework.lang.NonNull;
  * @version V2.0  Created by 2021-04-28 15:05
  */
 public enum ColumnType {
+
     BIGINT("bigint", "19", "Long"),
     LONG("bigint", "19", "Long"),
     INTEGER("int", "11", "Integer"),
