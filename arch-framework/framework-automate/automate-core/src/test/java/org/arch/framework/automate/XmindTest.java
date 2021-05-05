@@ -47,6 +47,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
 import static org.arch.framework.automate.xmind.nodespace.ColumnType.BIGINT;
@@ -383,9 +384,24 @@ public class XmindTest {
                     }
                     Annot annot = new Annot().setName(Annotation.REQUEST_MAPPING.getAnnotName());
                     imports.add(Annotation.REQUEST_MAPPING.getPkg());
-                    annot.getAnnotVals().add(new AnnotVal().setKey("value").setValue("/" + tokens[1].trim()));
+                    List<AnnotVal> annotValList = annot.getAnnotVals();
+                    annotValList.add(new AnnotVal().setKey("value").setValue("/" + tokens[1].trim()));
                     interfaceAnnotations.add(annot);
                     interfaceAnnotations.add(controllerAnnot);
+                    Children uriChildren = attached.getChildren();
+                    if (nonNull(uriChildren)) {
+                        List<Attached> uriAttachedList = uriChildren.getAttached();
+                        for (Attached annotValAttached : uriAttachedList) {
+                            String annotValTitle = annotValAttached.getTitle().trim();
+                            String[] annotValSplits = splitInto3Parts(annotValTitle);
+                            ParamType annotValParamType = getParamType(annotValSplits[0].trim(), log);
+                            if (nonNull(annotValParamType) && ANNOT_VAL.equals(annotValParamType)) {
+                                AnnotVal annotVal = generateAnnotVal(annotValAttached, moduleList,
+                                                                     module, annotValSplits, interfac);
+                                annotValList.add(annotVal);
+                            }
+                        }
+                    }
                     break;
                 case GENERIC_TYP:
                     String genericTyp = firstLetterToUpper(tokens[1].trim());
@@ -502,8 +518,23 @@ public class XmindTest {
                             break;
                     }
                     Annot annot = new Annot().setName(annotName);
-                    annot.getAnnotVals().add(new AnnotVal().setKey("value").setValue("/" + splits[1].trim()));
+                    List<AnnotVal> annotValList = annot.getAnnotVals();
+                    annotValList.add(new AnnotVal().setKey("value").setValue("/" + splits[1].trim()));
                     annotations.add(annot);
+                    Children uriChildren = attached.getChildren();
+                    if (nonNull(uriChildren)) {
+                        List<Attached> uriAttachedList = uriChildren.getAttached();
+                        for (Attached annotValAttached : uriAttachedList) {
+                            String annotValTitle = annotValAttached.getTitle().trim();
+                            String[] annotValSplits = splitInto3Parts(annotValTitle);
+                            ParamType annotValParamType = getParamType(annotValSplits[0].trim(), log);
+                            if (nonNull(annotValParamType) && ANNOT_VAL.equals(annotValParamType)) {
+                                AnnotVal annotVal = generateAnnotVal(annotValAttached, moduleList,
+                                                                     module, annotValSplits, interfac);
+                                annotValList.add(annotVal);
+                            }
+                        }
+                    }
                     break;
                 default:
                     generateOfAttachedWithModule(attached, moduleList, module);
@@ -791,7 +822,8 @@ public class XmindTest {
             importObj.getImports().add(annotation.getPkg());
         }
         else {
-            annot = new Annot().setName(underscoreToUpperCamel(annotName));
+            annotName = annotName.contains("_") ? underscoreToUpperCamel(annotName) : annotName;
+            annot = new Annot().setName(firstLetterToUpper(annotName));
         }
 
         List<AnnotVal> annotVals = annot.getAnnotVals();
@@ -1147,7 +1179,7 @@ public class XmindTest {
             });
             idxColumns.setLength(idxColumns.length() - 3);
             idxColumns.append(")");
-            idxStat.setLength(idxStat.length() - COLUMN_PROPERTY_SEPARATOR.length());
+            idxStat.setLength(idxStat.length() - (3 + 2 * COLUMN_PROPERTY_SEPARATOR.length()));
             idxStat.append("` ").append(idxColumns).append(" USING BTREE");
             indexStatList.add(idxStat.toString());
         });
@@ -1182,8 +1214,10 @@ public class XmindTest {
             typ = columnType.getType();
         }
         Column column = new Column().setTyp(typ)
+                                    .setLength(ofNullable(defValue).orElse(null))
                                     .setName(columnName)
                                     .setComment(comment);
+
         table.getColumns().add(column);
 
         // add column property
@@ -1221,6 +1255,7 @@ public class XmindTest {
                 case LEN: case LENGTH:
                     if (hasText(propValue)) {
                         column.setTyp(columnType.getType().concat("(").concat(propValue).concat(")"));
+                        column.setLength(propValue);
                     }
                     break;
                 case  PK:
