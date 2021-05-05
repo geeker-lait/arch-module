@@ -17,10 +17,6 @@ public enum ParamType {
      */
     IMPORT("", ""),
     /**
-     * 数组类型
-     */
-    ARRAY("", ""),
-    /**
      * 泛型
      */
     GENERIC("", ""),
@@ -29,6 +25,12 @@ public enum ParamType {
      * {@code Map<String, Object> -> <Map<String, Object>>}
      */
     GENERIC_TYP("", ""),
+    /**
+     * 针对对象: 当父节点即是对象节点也是参数节点时使用.<br>
+     * 泛型类型, 如: {@code String -> <String>}, {@code String, Object -> <String, Object>},
+     * {@code Map<String, Object> -> <Map<String, Object>>}
+     */
+    GENERIC_TYP_E("", ""),
     /**
      * 泛型值, 如: T/E/R
      */
@@ -46,7 +48,7 @@ public enum ParamType {
      */
     ANNOTATION("", ""),
     /**
-     * 注解对象
+     * 注解对象: 针对对象, 当父节点即是对象节点也是参数节点时使用.<br>
      */
     ANNOT_E("", ""),
     /**

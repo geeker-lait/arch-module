@@ -19,7 +19,7 @@ public class Column {
      * 前提条件此字段为主键且 typ = bigint/int
      */
     private boolean autoIncrement = false;
-    private boolean notNull = false;
+    private boolean notnull = false;
     private boolean unsigned = false;
     private String def;
     private String onUpdate;

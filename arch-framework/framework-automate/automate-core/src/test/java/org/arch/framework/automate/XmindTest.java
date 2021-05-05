@@ -98,7 +98,7 @@ public class XmindTest {
             }
         });
         Database database = project.getModules().get(0).getDatabases().get(0);
-        FreeMarkerUtil.geneFile("ddl","templates","ddl.sql",database);
+        FreeMarkerUtil.geneFile("ddl","templates","ddl.sql", database);
         System.out.println(JSON.toJSONString(project));
     }
 
@@ -249,10 +249,10 @@ public class XmindTest {
                 generateDatabase(children, moduleList, module, pTitle);
                 return;
             case API:
-                generateApi(children, moduleList, module, pTiTleType);
+                generateApi(children, moduleList, module, pTiTleType, pTitle);
                 return;
             case ENTITY:
-                generateEntity(children, moduleList, module, pTitle, null, TRUE);
+                generateEntity(children, moduleList, module, pTitle, null);
                 return;
             case PKG:
                 generatePkg(children, moduleList, module, pTitle, pTiTleType);
@@ -282,12 +282,15 @@ public class XmindTest {
     }
 
     private void generateApi(@NonNull Children children, @NonNull List<Module> moduleList,
-                             @NonNull Module module, @NonNull TiTleType pTiTleType) {
+                             @NonNull Module module, @NonNull TiTleType pTiTleType,
+                             @NonNull String pTitle) {
 
         if (!API.equals(pTiTleType)) {
             generateOfChildren(children, moduleList, module);
             return;
         }
+        String[] apiTokens = splitInto3Parts(pTitle);
+        String apiName = firstLetterToLower(apiTokens[1].trim());
         List<Attached> apiAttachedList = children.getAttached();
         for (Attached interfaceAttached : apiAttachedList) {
             String title = interfaceAttached.getTitle().trim();
@@ -302,7 +305,7 @@ public class XmindTest {
                 // add inteface
                 Children interfaceChildren = interfaceAttached.getChildren();
                 if (nonNull(interfaceChildren)) {
-                    generateInterface(interfaceChildren, moduleList, module, splits);
+                    generateInterface(interfaceChildren, moduleList, module, splits, apiName);
                 }
             }
             else {
@@ -312,12 +315,13 @@ public class XmindTest {
     }
 
     private void generateInterface(@NonNull Children children, @NonNull List<Module> moduleList,
-                                   @NonNull Module module, @NonNull String[] tokens) {
+                                   @NonNull Module module, @NonNull String[] tokens,
+                                   @NonNull String apiName) {
         // add interface
         String orgName = tokens[1].trim();
         String interfaceName = orgName.contains("_") ? underscoreToUpperCamel(orgName) : firstLetterToUpper(orgName);
         String comment = removeNewlines(tokens[2].trim());
-        Interfac interfac = new Interfac().setName(interfaceName).setDescr(comment);
+        Interfac interfac = new Interfac().setName(interfaceName).setDescr(comment).setName(apiName);
         module.addInterface(interfac);
 
         // 遍历 interface 的方法
@@ -566,7 +570,7 @@ public class XmindTest {
             }
             if (!ENTITY.equals(paramType) && !GENERIC.equals(paramType)) {
                 String type = paramType.getType();
-                // 不是 entity 类型时, 没有类型值则
+                // 不是 entity/generic 类型时, 没有类型值则
                 if (!hasText(type)) {
                     Children attachedChildren = paramAttached.getChildren();
                     if (nonNull(attachedChildren)) {
@@ -576,16 +580,12 @@ public class XmindTest {
                 }
             }
             if (inOrOut) {
-                // TODO: 2021.5.4 对象数组的处理 paramType 识别不到的情况
                 inputParams.add(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
             }
             else {
-                // TODO: 2021.5.4 对象数组的处理  paramType 识别不到的情况
                 curl.setOutputParam(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
             }
-
         }
-
     }
 
     //  ------------------------------- entity -------------------------------
@@ -597,52 +597,39 @@ public class XmindTest {
      * @param module        {@link Module}
      * @param pTitle        上级节点 title
      * @param pImport       {@link Import}
-     * @param entityOrInterface 当 true 时, 表示入参 pImport 为 {@link Entity}, false 时, 表示入参 pImport 为 {@link Interfac}
-     * @return  当 {@code entityOrInterface == true && pImport != null} 时, 返回 {@link Param}, 否则返回 null.
      */
     @Nullable
-    private Param generateEntity(@NonNull Children children, @NonNull List<Module> moduleList,
+    private void generateEntity(@NonNull Children children, @NonNull List<Module> moduleList,
                                  @NonNull Module module, @NonNull String pTitle,
-                                 @Nullable Import pImport, @NonNull Boolean entityOrInterface) {
+                                 @Nullable Import pImport) {
         String[] splits = splitInto3Parts(pTitle);
         if (splits.length != 3) {
             log.debug("title [" + pTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
             generateOfChildren(children, moduleList, module, null, pTitle);
-            return null;
+            return ;
         }
 
         String name = splits[1].trim();
         String commentStr = removeNewlines(splits[2].trim());
         String entityName = name.contains("_") ? underscoreToUpperCamel(name) : firstLetterToUpper(name);
-        // add param
-        Param param = null;
-        Set<Annot> paramAnnotations = null;
-        if (entityOrInterface && nonNull(pImport)) {
-            param = new Param().setTyp(entityName)
-                               .setName(firstLetterToLower(entityName))
-                               .setDescr(commentStr);
-            paramAnnotations = param.getAnnotations();
-        }
+
         // 新增 entity
         Entity entity = new Entity().setName(entityName)
                                     .setDescr(commentStr);
+
+        if (pImport instanceof Entity) {
+            entity.setApi(((Entity) pImport).getApi());
+        }
         // 是否新建对象
         boolean isNewCreatedEntity = false;
 
         // 遍历 entity 字段
         Set<String> imports = entity.getImports();
-        Set<Annot> entityAnnotations = entity.getAnnotations();
+        Set<Annot> annotSet = entity.getAnnotations();
         List<Param> entityFields = entity.getFields();
         List<Attached> attachedList = children.getAttached();
         if (isNull(attachedList) || attachedList.size() == 0) {
-            return null;
-        }
-        Set<Annot> annotSet;
-        if (entityOrInterface && nonNull(pImport)) {
-            annotSet = paramAnnotations;
-        }
-        else {
-            annotSet = entityAnnotations;
+            return ;
         }
         String fieldTitle;
         for (Attached attached : attachedList) {
@@ -674,7 +661,7 @@ public class XmindTest {
                 }
             }
             else if (ParamType.ENTITY.equals(paramType)) {
-                Param entityParam = generateEntity(attached.getChildren(), moduleList, module, fieldTitle, entity, TRUE);
+                Param entityParam = generateParam(attached, moduleList, module, splits, paramType, entity);
                 if (nonNull(entityParam)) {
                     entityFields.add(entityParam);
                     isNewCreatedEntity = true;
@@ -706,9 +693,17 @@ public class XmindTest {
             }
             else if (ANNOT_E.equals(paramType)) {
                 Annot annotation = generateAnnot(attached, moduleList, module, splits, entity);
-                entityAnnotations.add(annotation);
+                annotSet.add(annotation);
             }
-            else if (GENERIC_TYP.equals(paramType)) {
+            else if (GENERIC_TYP_E.equals(paramType)) {
+                String genericTyp = firstLetterToUpper(orgName);
+                entity.setGenericTyp(genericTyp);
+                Children attachedChildren = attached.getChildren();
+                if (nonNull(attachedChildren)) {
+                    generateImport(attachedChildren, moduleList, module, entity);
+                }
+            }
+            else if (GENERIC_TYP.equals(paramType) && isNull(pImport)) {
                 String genericTyp = firstLetterToUpper(orgName);
                 entity.setGenericTyp(genericTyp);
                 Children attachedChildren = attached.getChildren();
@@ -721,7 +716,6 @@ public class XmindTest {
                 if (hasText(paramTypePkg)) {
                     imports.add(paramTypePkg);
                 }
-                // TODO: 2021.5.4 对象数组的处理  paramType 识别不到的情况
                 Param fieldParam = generateParam(attached, moduleList, module, splits, paramType, entity);
                 if (nonNull(fieldParam)) {
                     entityFields.add(fieldParam);
@@ -732,17 +726,17 @@ public class XmindTest {
         if (isNewCreatedEntity) {
             module.addEntity(entity);
             // 缓存包后置处理信息
-            if (entityOrInterface && nonNull(pImport)) {
+            if (pImport instanceof Entity) {
                 module.getEntityImports().put(entity.getName(), ((Entity) pImport));
             }
         }
 
-        if (!entityOrInterface && nonNull(pImport)) {
+        if (pImport instanceof Interfac) {
+            entity.setApi(((Interfac) pImport).getApi());
             // 缓存包后置处理信息
             module.getApiImports().put(entity.getName(), ((Interfac) pImport));
         }
 
-        return param;
     }
 
     private void generateImport(@NonNull Children children, @NonNull List<Module> moduleList,
@@ -861,6 +855,7 @@ public class XmindTest {
         String orgType = tokens[0].trim();
         String orgName = tokens[1].trim();
         String paramName = orgName.contains("_") ? underscoreToCamel(orgName) : orgName;
+        String entityArrayParamName = null;
         switch(pParamType) {
             // 实体对象
             case ENTITY:
@@ -868,22 +863,28 @@ public class XmindTest {
                 if (nonNull(children)) {
                     if (pImport instanceof Entity)
                     {
-                        generateEntity(children, moduleList, module, attached.getTitle(), pImport, TRUE);
+                        generateEntity(children, moduleList, module, attached.getTitle(), pImport);
                     }
                     else if (pImport instanceof Interfac) {
-                        generateEntity(children, moduleList, module, attached.getTitle(), pImport, FALSE);
+                        generateEntity(children, moduleList, module, attached.getTitle(), pImport);
                     }
                 }
-                typ = firstLetterToUpper(paramName);
+                if (orgType.contains("[")) {
+                    typ = firstLetterToUpper(paramName) + "[]";
+                    entityArrayParamName = firstLetterToLower(paramName).concat("Array");
+                }
+                else {
+                    typ = firstLetterToUpper(paramName);
+                }
                 break;
-            // 泛型
+            // 泛型值
             case LIST: case SET: case MAP: case COLLECTION:
                 typ = firstLetterToUpper(orgType);
                 break;
             default:
                 // 数组
                 if (orgType.contains("[") && !orgType.contains("<")) {
-                    typ = orgType.contains("_") ? underscoreToUpperCamel(orgType) : firstLetterToUpper(orgName);
+                    typ = orgType.contains("_") ? underscoreToUpperCamel(orgType) : firstLetterToUpper(orgType);
                 }
                 break;
         }
@@ -893,7 +894,8 @@ public class XmindTest {
             typ = orgTyp.contains("_") ? underscoreToUpperCamel(orgTyp) : firstLetterToUpper(orgTyp);
         }
         Param param = new Param().setTyp(typ)
-                                 .setName(firstLetterToLower(paramName))
+                                 .setName(isNull(entityArrayParamName) ? firstLetterToLower(paramName)
+                                                                       : entityArrayParamName)
                                  .setDescr(removeNewlines(tokens[2].trim()));
 
         Children children = attached.getChildren();
@@ -930,17 +932,8 @@ public class XmindTest {
             }
             if (isNull(paramTyp)) {
                 if (ARRAY_TYP.equals(paramProperty)) {
-                    // 对象数组处理
-                    if (nonNull(pParamType) && ARRAY.equals(pParamType)) {
-                        String orgTyp = splits[1].trim();
-                        String entityTyp = orgTyp.contains("_") ? underscoreToUpperCamel(orgTyp)
-                                                                : firstLetterToUpper(orgTyp);
-                        param.setTyp(entityTyp + "[]");
-                    }
-                    // 八大基本数据类型处理
-                    else {
-                        param.setTyp(param.getTyp().concat("[]"));
-                    }
+                    // 基本数据类型处理
+                    param.setTyp(param.getTyp().concat("[]"));
                 }
                 else {
                     generateOfAttachedWithModule(paramAttached, moduleList, module);
@@ -973,6 +966,13 @@ public class XmindTest {
                 if (nonNull(paramAttachedChildren)) {
                     generateImport(paramAttachedChildren, moduleList, module, pImport);
                     generateOfChildren(children, moduleList, module);
+                }
+                // 给对象添加泛型值
+                if (pImport instanceof Entity) {
+                    ((Entity) pImport).setGenericTyp(genericVal);
+                }
+                else if (pImport instanceof Interfac) {
+                    ((Interfac) pImport).setGenericTyp(genericVal);
                 }
             }
             else if (IMPORT.equals(paramTyp)) {
@@ -1076,7 +1076,7 @@ public class XmindTest {
             // 有 id 字段设置为主键
             if (columnOptional.isPresent()) {
                 Column column = columnOptional.get();
-                column.setNotNull(true)
+                column.setNotnull(true)
                       .setAutoIncrement(true)
                       .setTyp(typ);
             }
@@ -1085,7 +1085,7 @@ public class XmindTest {
                 table.getColumns().add(new Column().setName("id")
                                                    .setTyp(typ)
                                                    .setComment("主键id")
-                                                   .setNotNull(true)
+                                                   .setNotnull(true)
                                                    .setAutoIncrement(true));
             }
             table.setPkStatement("PRIMARY KEY (`id`)");
@@ -1094,9 +1094,7 @@ public class XmindTest {
             // 拼装
             final StringBuilder pkStat = new StringBuilder();
             pkStat.append("PRIMARY KEY (`");
-            pkMap.forEach((pkGroup, column) -> {
-                pkStat.append(column).append("`, `");
-            });
+            pkMap.forEach((pkGroup, column) -> pkStat.append(column).append("`, `"));
             pkStat.setLength(pkStat.length() - 3);
             pkStat.append(")");
             table.setPkStatement(pkStat.toString());
@@ -1227,14 +1225,14 @@ public class XmindTest {
                     break;
                 case  PK:
                     pkMap.put(propName, column.getName());
-                    column.setNotNull(true);
+                    column.setNotnull(true);
                     break;
                 case UNIQUE: case UNQ:
                     uniqueMap.put(propName, column.getName());
-                    column.setNotNull(true);
+                    column.setNotnull(true);
                     break;
                 case NOTNULL:
-                    column.setNotNull(true);
+                    column.setNotnull(true);
                     break;
                 case DEFAULT: case DEF:
                     column.setDef(propValue);
@@ -1255,7 +1253,7 @@ public class XmindTest {
                     break;
                 case INDEX: case IDX:
                     indexMap.put(propName, column.getName());
-                    column.setNotNull(true);
+                    column.setNotnull(true);
                     break;
                 default:
                     generateOfAttachedWithModule(attached, moduleList, module);

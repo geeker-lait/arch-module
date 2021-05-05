@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -111,31 +112,36 @@ public class Module {
             this.pkg = modulePkg;
         }
         final Set<Entity> entityList = this.getEntities();
-        final String newEntityPkg = this.pkg + PKG_SEPARATOR + DEFAULT_ENTITY_PKG;
-        final String apiPkg = this.pkg + PKG_SEPARATOR + DEFAULT_API_PKG;
         entityList.forEach(entity -> {
             if (isForce || !hasText(entity.getPkg())) {
-                entity.setPkg(newEntityPkg);
+                entity.setPkg(this.pkg + PKG_SEPARATOR + ofNullable(entity.getApi()).orElse("")
+                                      + PKG_SEPARATOR + DEFAULT_ENTITY_PKG);
             }
         });
         this.getInterfaces().forEach(api -> {
             if (isForce || !hasText(api.getPkg())) {
-                api.setPkg(apiPkg);
+                api.setPkg(this.pkg + PKG_SEPARATOR + ofNullable(api.getApi()).orElse("") + PKG_SEPARATOR + DEFAULT_API_PKG);
             }
         });
 
         // 从 entity/api 的 import 中清除旧的包
         if (isForce) {
-            final String entityPkg = oldPkg + PKG_SEPARATOR + DEFAULT_ENTITY_PKG;
             this.entities.forEach(entity -> {
-                entity.getImports().removeIf(impt -> hasText(impt) && impt.startsWith(entityPkg));
+                entity.getImports().removeIf(
+                        impt -> hasText(impt) && impt.startsWith(oldPkg + PKG_SEPARATOR
+                                                                         + ofNullable(entity.getApi()).orElse("")
+                                                                         + PKG_SEPARATOR
+                                                                         + DEFAULT_ENTITY_PKG));
             });
             this.interfaces.forEach(api -> {
-                api.getImports().removeIf(impt -> hasText(impt) && impt.startsWith(entityPkg));
+                api.getImports().removeIf(
+                        impt -> hasText(impt) && impt.startsWith(oldPkg + PKG_SEPARATOR
+                                                                         + ofNullable(api.getApi()).orElse("")
+                                                                         + PKG_SEPARATOR
+                                                                         + DEFAULT_API_PKG));
             });
         }
 
-        final String pkgPart = PKG_SEPARATOR + DEFAULT_ENTITY_PKG + PKG_SEPARATOR;
         // 添加 entity import
         entityImports.forEach((entityName, pEntity) -> {
             final Set<String> imports = pEntity.getImports();
@@ -143,7 +149,8 @@ public class Module {
             for (Entity entity : entityList) {
                 String name = entity.getName();
                 if (entityName.equals(name)) {
-                    imports.add(entity.getPkg() + pkgPart + name);
+                    imports.add(entity.getPkg() + PKG_SEPARATOR + ofNullable(entity.getApi()).orElse("")
+                                        + PKG_SEPARATOR + DEFAULT_ENTITY_PKG + PKG_SEPARATOR + name);
                     isAdd = true;
                 }
             }
@@ -163,7 +170,8 @@ public class Module {
             for (Entity entity : entityList) {
                 String name = entity.getName();
                 if (entityName.equals(name)) {
-                    imports.add(entity.getPkg() + pkgPart + name);
+                    imports.add(entity.getPkg() + PKG_SEPARATOR + entity.getApi()
+                                        + PKG_SEPARATOR + DEFAULT_API_PKG + PKG_SEPARATOR  + name);
                     isAdd = true;
                 }
             }

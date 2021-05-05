@@ -24,6 +24,8 @@ public class Interfac implements Import {
     private String descr;
     // 接口包
     private String pkg;
+    // api 类似于模块包
+    private String api;
     // 泛型类型: String -> <String>, String, Object -> <String, Object>, Map<String, Object> -> <Map<String, Object>>
     private String genericTyp;
     // 需要导入的包
