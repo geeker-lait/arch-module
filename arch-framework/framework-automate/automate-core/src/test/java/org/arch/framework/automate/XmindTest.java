@@ -320,7 +320,7 @@ public class XmindTest {
                                    @NonNull String apiName) {
         // add interface
         String orgName = tokens[1].trim();
-        String interfaceName = orgName.contains("_") ? underscoreToUpperCamel(orgName) : firstLetterToUpper(orgName);
+        String interfaceName = strToUpperCamelWithPinYin(orgName);
         String comment = removeNewlines(tokens[2].trim());
         Interfac interfac = new Interfac().setName(interfaceName).setDescr(comment).setName(apiName);
         module.addInterface(interfac);
@@ -427,7 +427,7 @@ public class XmindTest {
         if (METHOD.equals(paramType)){
             methodName = "";
         }
-        curlName = curlName.contains("_") ? underscoreToUpperCamel(curlName) : firstLetterToLower(curlName);
+        curlName = firstLetterToLower(strToUpperCamelWithPinYin(curlName));
         Curl curl = new Curl().setName(curlName).setDescr(curlComment)
                               .setHttpMethod(methodName).setRestMethod(isRestMethod);
         Children attachedChildren = attached.getChildren();
@@ -642,7 +642,7 @@ public class XmindTest {
 
         String name = splits[1].trim();
         String commentStr = removeNewlines(splits[2].trim());
-        String entityName = name.contains("_") ? underscoreToUpperCamel(name) : firstLetterToUpper(name);
+        String entityName = strToUpperCamelWithPinYin(name);
 
         // 新增 entity
         Entity entity = new Entity().setName(entityName)
@@ -679,7 +679,7 @@ public class XmindTest {
             String orgName = splits[1].trim();
             if (isNull(paramType)) {
                 String javaType = columnType.getJavaType();
-                String paramName = orgName.contains("_") ? underscoreToCamel(orgName) : firstLetterToLower(orgName);
+                String paramName = firstLetterToLower(strToUpperCamelWithPinYin(orgName));
                 Param field = new Param().setTyp(javaType)
                                          .setName(paramName)
                                          .setDescr(removeNewlines(splits[2].trim()));
@@ -886,7 +886,7 @@ public class XmindTest {
         String typ = pParamType.getType();
         String orgType = tokens[0].trim();
         String orgName = tokens[1].trim();
-        String paramName = orgName.contains("_") ? underscoreToCamel(orgName) : orgName;
+        String paramName = strToUpperCamelWithPinYin(orgName);
         String entityArrayParamName = null;
         switch(pParamType) {
             // 实体对象
@@ -1030,7 +1030,7 @@ public class XmindTest {
             return;
         }
         // 新增 database
-        String databaseName = splits[1].trim();
+        String databaseName = strToUnderscoreWithPinYin(splits[1].trim());
         String commentStr = removeNewlines(splits[2].trim());
         Database database = new Database().setName(camelToUnderscore(databaseName))
                                           .setComment(commentStr);
@@ -1077,7 +1077,7 @@ public class XmindTest {
         }
 
         // add table
-        String tableName = camelToUnderscore(tokens[1].trim());
+        String tableName = strToUnderscoreWithPinYin(tokens[1].trim());
         String tableDecr = removeNewlines(tokens[2].trim());
         Table table = new Table().setName(tableName).setComment(tableDecr);
         database.getTables().add(table);
@@ -1198,7 +1198,7 @@ public class XmindTest {
             return ;
         }
         String columnTypeStr = splits[0].trim();
-        String columnName = camelToUnderscore(splits[1].trim());
+        String columnName = strToUnderscoreWithPinYin(splits[1].trim());
         String comment = removeNewlines(splits[2].trim());
         ColumnType columnType = getColumnType(columnTypeStr, log);
         if (isNull(columnType)) {

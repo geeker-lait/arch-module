@@ -1,5 +1,7 @@
 package org.arch.framework.automate.xmind.utils;
 
+import com.github.stuxuhai.jpinyin.PinyinFormat;
+import com.github.stuxuhai.jpinyin.PinyinHelper;
 import com.google.common.base.CaseFormat;
 import org.arch.framework.automate.generater.service.xmind.meta.Attached;
 import org.arch.framework.automate.xmind.nodespace.Annotation;
@@ -14,6 +16,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
+import java.nio.charset.StandardCharsets;
 
 import static java.util.Objects.isNull;
 
@@ -27,6 +30,7 @@ public class XmindUtils {
 
     public static final String SEPARATOR = "/";
     public static final String COLUMN_PROPERTY_SEPARATOR = "_";
+    public static final String PIN_YIN_SEPARATOR = " ";
     public static final Logger LOG = LoggerFactory.getLogger(XmindUtils.class);
 
     /**
@@ -338,6 +342,101 @@ public class XmindUtils {
     @NonNull
     public static String[] splitInto3Parts(@NonNull String str) {
         return str.split(SEPARATOR, 3);
+    }
+
+    /**
+     * str 转换为大写驼峰字符串, 如果 str 为全中文则转换为拼音再转为大写驼峰字符串.
+     * @param str   全中文或全英文的字符串
+     * @return  大写驼峰字符串
+     */
+    @NonNull
+    public static String strToUpperCamelWithPinYin(@NonNull String str) {
+        String pinYin = null;
+        if (isChinese(str)) {
+            pinYin = changeToTonePinYin(str);
+        }
+        if (isNull(pinYin)) {
+            return str.contains("_") ? underscoreToUpperCamel(str) : firstLetterToUpper(str);
+        }
+        return pinYinToUpperCamel(pinYin);
+    }
+
+    /**
+     * str 转换为小写下滑线字符串, 如果 str 为全中文则转换为拼音再转为小写下滑线字符串.
+     * @param str   全中文或全英文的字符串
+     * @return  小写下滑线字符串
+     */
+    @NonNull
+    public static String strToUnderscoreWithPinYin(@NonNull String str) {
+        String pinYin = null;
+        if (isChinese(str)) {
+            pinYin = changeToTonePinYin(str);
+        }
+        if (isNull(pinYin)) {
+            return str.contains("_") ? firstLetterToLower(str) : camelToUnderscore(str);
+        }
+        return pinYinToUnderscore(pinYin);
+    }
+
+    /**
+     * 转换为不带音调的拼音字符串
+     *
+     * @param pinYinStr 需转换的汉字
+     * @return 拼音字符串
+     */
+    @Nullable
+    public static String changeToTonePinYin(@NonNull String pinYinStr) {
+        try {
+            return PinyinHelper.convertToPinyinString(pinYinStr, " ", PinyinFormat.WITHOUT_TONE);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * 拼音转换为驼峰字符串
+     * @param pinYinStr 全中文字符串
+     * @return  拼音大写驼峰字符串
+     */
+    @NonNull
+    private static String pinYinToUpperCamel(@NonNull String pinYinStr) {
+        String[] pinYinArr = pinYinStr.split(PIN_YIN_SEPARATOR);
+        StringBuilder sb = new StringBuilder();
+        for (String pinYin : pinYinArr) {
+            sb.append(firstLetterToUpper(pinYin));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 拼音转换为小写下滑线拼音字符串
+     * @param pinYinStr 全中文字符串
+     * @return  小写下滑线拼音字符串
+     */
+    @NonNull
+    private static String pinYinToUnderscore(@NonNull String pinYinStr) {
+        String[] pinYinArr = pinYinStr.split(PIN_YIN_SEPARATOR);
+        StringBuilder sb = new StringBuilder();
+        for (String pinYin : pinYinArr) {
+            sb.append(pinYin).append(COLUMN_PROPERTY_SEPARATOR);
+        }
+        int length = sb.length();
+        if (length > 0) {
+            sb.setLength(length - 1);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 判断字符串是否全部为中文字符串
+     * @param str   字符串
+     * @return  true 表示字符串全部为中文字符串, false 表示字符串有部分或所有字符串不为中文
+     */
+    public static boolean isChinese(@NonNull String str) {
+        int byteLen = str.getBytes(StandardCharsets.UTF_8).length;
+        int strLen = str.length();
+        return byteLen != strLen && ((byteLen / strLen) == 3);
     }
 
 }

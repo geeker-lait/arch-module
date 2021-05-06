@@ -99,10 +99,15 @@
             <artifactId>dom4j</artifactId>
         </dependency>
 
-        <dependency>
+   <!--     <dependency>
             <groupId>com.github.SilenceDut</groupId>
             <artifactId>jpinyin</artifactId>
             <version>1.0</version>
+        </dependency>-->
+        <dependency>
+            <groupId>com.github.stuxuhai</groupId>
+            <artifactId>jpinyin</artifactId>
+            <version>1.1.8</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
