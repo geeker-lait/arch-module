@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import static java.lang.Boolean.FALSE;
@@ -322,7 +323,7 @@ public class XmindTest {
         String orgName = tokens[1].trim();
         String interfaceName = strToUpperCamelWithPinYin(orgName);
         String comment = removeNewlines(tokens[2].trim());
-        Interfac interfac = new Interfac().setName(interfaceName).setDescr(comment).setName(apiName);
+        Interfac interfac = new Interfac().setName(interfaceName).setDescr(comment).setApi(apiName);
         module.addInterface(interfac);
 
         // 遍历 interface 的方法
@@ -446,6 +447,7 @@ public class XmindTest {
 
         // 遍历 in/out/注解/泛型
         Set<Annot> annotations = curl.getAnnotations();
+        int index = 1;
         for (Attached attached : attachedList) {
             String title = attached.getTitle().trim();
             String[] splits = splitInto3Parts(title);
@@ -457,10 +459,24 @@ public class XmindTest {
             }
             switch(paramType) {
                 case IN:
-                    generateInOrOut(attached, moduleList, module, interfac, curl, TRUE);
+                    if (hasText(splits[1].trim())) {
+                        // title 格式 in/type/descr
+                        generateInOrOut(attached, moduleList, module, interfac, curl, splits, TRUE, index);
+                    }
+                    else {
+                        // title 格式 in//
+                        generateInOrOut(attached, moduleList, module, interfac, curl, null, TRUE, 1);
+                    }
                     break;
                 case OUT:
-                    generateInOrOut(attached, moduleList, module, interfac, curl, FALSE);
+                    if (hasText(splits[1].trim())) {
+                        // title 格式 out/type/descr
+                        generateInOrOut(attached, moduleList, module, interfac, curl, splits, FALSE, 1);
+                    }
+                    else {
+                        // title 格式 out//
+                        generateInOrOut(attached, moduleList, module, interfac, curl, null, FALSE, 1);
+                    }
                     break;
                 case ANNOTES:
                     Children annotesChildren = attached.getChildren();
@@ -540,6 +556,7 @@ public class XmindTest {
                     generateOfAttachedWithModule(attached, moduleList, module);
                     break;
             }
+            index++;
         }
 
     }
@@ -574,12 +591,43 @@ public class XmindTest {
      * @param module        {@link Module}
      * @param interfac      {@link Interfac}
      * @param curl          {@link Curl}
+     * @param tokens        当 inOrOut 的 {@link Attached#getTitle()} 的格式为 [in/out]/type/descr 时不为 null,
+     *                      当 inOrOut 的 {@link Attached#getTitle()} 的格式为 [in/out]// 时为 null,
      * @param inOrOut       true 表示 {@link ParamType#IN}, false 表示 {@link ParamType#OUT}.
+     * @param paramIndex    出入参数索引.
      */
     private void generateInOrOut(@NonNull Attached attached, @NonNull List<Module> moduleList,
                                  @NonNull Module module, @NonNull Interfac interfac,
-                                 @NonNull Curl curl, @NonNull Boolean inOrOut) {
+                                 @NonNull Curl curl, @Nullable String[] tokens,
+                                 @NonNull Boolean inOrOut, @NonNull Integer paramIndex) {
+        // 当 inOrOut 的 attached title 的格式为 [in/out]/type/descr 的情况
+        if (nonNull(tokens)) {
+            String inOrOutParamType = tokens[1].trim();
+            ParamType paramType = getParamType(inOrOutParamType, log);
+            if (paramType == null) {
+                paramType = ENTITY;
+            }
+            // index = 0 为 newType, index = 1 为 newParamName
+            String[] typeAndParamNameArray = new String[2];
+            generateParamName(paramType, typeAndParamNameArray, inOrOutParamType, inOrOut, paramIndex);
+            String newType = typeAndParamNameArray[0];
+            String newParamName = typeAndParamNameArray[1];
+            String newDescr = tokens[2].trim();
+            String title = newType.concat("/").concat(newParamName).concat("/").concat(newDescr);
+            String[] paramSplits = new String[]{newType, newParamName, newDescr};
+            // 新建出入参数的 attached
+            Attached paramAttached = new Attached();
+            paramAttached.setId(attached.getId());
+            paramAttached.setTitle(title);
+            paramAttached.setChildren(attached.getChildren());
+            paramAttached.setComments(attached.getComments());
+            paramAttached.setNotes(attached.getNotes());
+            // 解析出入参数的 attached
+            resolveParam(moduleList, module, interfac, curl, inOrOut, paramAttached, paramSplits, paramType);
+            return;
+        }
 
+        // 当 inOrOut 的 attached title 的格式为 [in/out]// 的情况
         Children children = attached.getChildren();
         if (isNull(children)) {
             return;
@@ -589,33 +637,167 @@ public class XmindTest {
             return;
         }
         // 遍历获取入参或返回参数
-        List<Param> inputParams = curl.getInputParams();
         for (Attached paramAttached : attachedList) {
             String title = paramAttached.getTitle().trim();
             String[] splits = splitInto3Parts(title);
             ParamType paramType = getParamType(splits[0].trim(), log);
-            if (splits.length != 3 || isNull(paramType)) {
-                log.debug("title [" + title + "] 格式错误, 标准格式: paramType/paramName/[description]");
-                generateOfAttachedWithModule(paramAttached, moduleList, module);
-                continue;
-            }
-            if (!ENTITY.equals(paramType) && !GENERIC.equals(paramType)) {
-                String type = paramType.getType();
-                // 不是 entity/generic 类型时, 没有类型值则
-                if (!hasText(type)) {
-                    Children attachedChildren = paramAttached.getChildren();
-                    if (nonNull(attachedChildren)) {
-                        generateOfChildren(children, moduleList, module);
-                        continue;
-                    }
+            resolveParam(moduleList, module, interfac, curl, inOrOut, paramAttached, splits, paramType);
+        }
+    }
+
+    // inOrOut: true 表示 {@link ParamType#IN}, false 表示 {@link ParamType#OUT}.
+    @NonNull
+    private void generateParamName(@NonNull ParamType paramType, @NonNull String[] typeAndParamNameArray,
+                                   @NonNull String inOrOutParamType, @NonNull Boolean inOrOut,
+                                   @NonNull Integer paramIndex) {
+        int genericIndex = inOrOutParamType.indexOf("<");
+        int arrayIndex = inOrOutParamType.indexOf("[");
+
+        String paramName;
+        switch(paramType) {
+            case ENTITY:
+                // entityName<String, String[]>/entityName<String>/entityName/etc
+                if (genericIndex != -1 && (arrayIndex == -1 || genericIndex < arrayIndex)) {
+                    // <String, String[]>/<String>/etc
+                    String genericVal = inOrOutParamType.substring(genericIndex);
+                    // type
+                    typeAndParamNameArray[0] = ENTITY.name().toLowerCase() + genericVal;
+                    // paramName
+                    typeAndParamNameArray[1] = inOrOutParamType.substring(0, genericIndex);
+                }
+                // entityName[]
+                else if (arrayIndex != -1) {
+                    // type
+                    typeAndParamNameArray[0] = ENTITY.name().toLowerCase() + "[]";
+                    // paramName
+                    typeAndParamNameArray[1] = inOrOutParamType.substring(0, arrayIndex);
+                }
+                // entityName
+                else {
+                    // type
+                    typeAndParamNameArray[0] = ENTITY.name().toLowerCase();
+                    // paramName
+                    typeAndParamNameArray[1] = inOrOutParamType;
+                }
+                break;
+            case LIST: case MAP: case SET: case COLLECTION:
+                // type
+                typeAndParamNameArray[0] = inOrOutParamType;
+                // type<String, String[]>/type<String, Map<String, Object[]>>/type<String>/type/etc
+                if (genericIndex != -1) {
+                    // <String, String[]>/<String, Map<String, Object[]>>/<String>/etc
+                    String genericVal = inOrOutParamType.substring(genericIndex);
+                    // paramName
+                    paramName = resolveGenericParamName(genericVal, paramType);
+                }
+                // type
+                else {
+                    paramName = paramType.name().toLowerCase();
+                }
+                if (inOrOut) {
+                    paramName = paramName + paramIndex;
+                }
+                typeAndParamNameArray[1] = paramName;
+                break;
+            default:
+                // type
+                typeAndParamNameArray[0] = inOrOutParamType;
+                // type[]
+                if (arrayIndex != -1) {
+                    paramName = paramType.name().toLowerCase().concat("Array");
+                }
+                // type
+                else {
+                    paramName = paramType.name().toLowerCase();
+                }
+                if (inOrOut) {
+                    paramName = paramName + paramIndex;
+                }
+                typeAndParamNameArray[1] = paramName;
+        }
+    }
+
+    /**
+     * 根据参数泛型值生成参数名称.<br>
+     * 示例:
+     * <pre>
+     *      genericVal                              ParamType               return
+     *      &lt;String, String[]&gt;                      Map                     stringStringMap
+     *      &lt;String, Map&lt;String, Object[]&gt;&gt;         Map                     stringMapMap
+     *      &lt;String&gt;                                list/set/collection     stringList/stringSet/stringCollection
+     *      etc                                     ..                      ..
+     * </pre>
+     * @param genericVal    参数泛型值, 如 // &lt;String, String[]&gt;/&lt;String, Map&lt;String, Object[]&gt;&gt;/String/etc
+     * @param paramType     参数类型 {@link ParamType}
+     * @return 参数名称
+     */
+    @NonNull
+    private String resolveGenericParamName(@NonNull String genericVal, @NonNull ParamType paramType) {
+        // String, String[]/String, Map<String, Object[]>/String/etc
+        genericVal = genericVal.substring(1, genericVal.length() - 1);
+        String[] genericTypes = genericVal.split(",");
+        // 从泛型中获取两次对象名称.
+        int limitCount = 2;
+        int loopCount = 1;
+        StringBuilder paramNameSb = new StringBuilder();
+        for (String type : genericTypes) {
+            String genericType = type.trim();
+            if (hasText(genericType)) {
+                int secGenericIndex = genericType.indexOf("<");
+                int secArrayIndex = genericType.indexOf("[");
+                // Map<String, Object[]>
+                if (secGenericIndex != -1 && (secArrayIndex == -1 || secGenericIndex < secArrayIndex)) {
+                    paramNameSb.append(strToUpperCamelWithPinYin(genericType.substring(0, secGenericIndex)));
+                }
+                // Object[]
+                else if (secArrayIndex != -1) {
+                    paramNameSb.append(strToUpperCamelWithPinYin(genericType.substring(0, secArrayIndex)));
+                }
+                // String
+                else {
+                    paramNameSb.append(strToUpperCamelWithPinYin(genericType));
                 }
             }
-            if (inOrOut) {
-                inputParams.add(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
+            if (++loopCount > limitCount) {
+                break;
             }
-            else {
-                curl.setOutputParam(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
+        }
+        /*
+            genericVal                              ParamType               return
+            <String, String[]>                      Map                     stringStringMap
+            <String, Map<String, Object[]>>         Map                     stringMapMap
+            <String>                                list/set/collection     stringList/stringSet/stringCollection
+            etc                                     ..                      ..
+         */
+        return firstLetterToLower(paramNameSb.append(firstLetterToUpper(paramType.name().toLowerCase())).toString());
+    }
+
+    private void resolveParam(@NonNull List<Module> moduleList, @NonNull Module module,
+                              @NonNull Interfac interfac, @NonNull Curl curl,
+                              @NonNull Boolean inOrOut, @NonNull Attached paramAttached,
+                              @NonNull String[] splits, @Nullable ParamType paramType) {
+        if (splits.length != 3 || isNull(paramType)) {
+            log.debug("title [" + paramAttached.getTitle() + "] 格式错误, 标准格式: paramType/paramName/[description]");
+            generateOfAttachedWithModule(paramAttached, moduleList, module);
+            return;
+        }
+        List<Param> inputParams = curl.getInputParams();
+        if (!ENTITY.equals(paramType) && !GENERIC.equals(paramType)) {
+            String type = paramType.getType();
+            // 不是 entity/generic 类型时, 没有类型值则
+            if (!hasText(type)) {
+                Children attachedChildren = paramAttached.getChildren();
+                if (nonNull(attachedChildren)) {
+                    generateOfChildren(attachedChildren, moduleList, module);
+                    return;
+                }
             }
+        }
+        if (inOrOut) {
+            inputParams.add(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
+        }
+        else {
+            curl.setOutputParam(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
         }
     }
 
