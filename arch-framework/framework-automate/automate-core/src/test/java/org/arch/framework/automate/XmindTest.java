@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import static java.lang.Boolean.FALSE;
@@ -1286,19 +1285,26 @@ public class XmindTest {
                                                    .stream()
                                                    .filter(col -> "id".equals(col.getName()))
                                                    .findFirst();
-            String typ = BIGINT.getType().concat("(").concat(BIGINT.getDefValue()).concat(")");
+
+
             // 有 id 字段设置为主键
             if (columnOptional.isPresent()) {
                 Column column = columnOptional.get();
-                column.setNotnull(true)
-                      .setAutoIncrement(true)
-                      .setTyp(typ);
+                String columnType = column.getTyp();
+                int indexOf = columnType.indexOf("(");
+                columnType = indexOf != -1 ? columnType.substring(0, indexOf) : columnType;
+                if (ColumnType.isInteger(columnType)) {
+                    column.setAutoIncrement(true);
+                }
+                column.setPk(true).setNotnull(true);
             }
             // 没有 id 字段添加 id 字段并设置为自增主键
             else {
+                String typ = BIGINT.getType().concat("(").concat(BIGINT.getDefValue()).concat(")");
                 table.getColumns().add(new Column().setName("id")
                                                    .setTyp(typ)
                                                    .setComment("主键id")
+                                                   .setPk(true)
                                                    .setNotnull(true)
                                                    .setAutoIncrement(true));
             }
@@ -1442,11 +1448,11 @@ public class XmindTest {
                     break;
                 case  PK:
                     pkMap.put(propName, column.getName());
-                    column.setNotnull(true);
+                    column.setPk(true).setNotnull(true);
                     break;
                 case UNIQUE: case UNQ:
                     uniqueMap.put(propName, column.getName());
-                    column.setNotnull(true);
+                    column.setUnique(propValue).setNotnull(true);
                     break;
                 case NOTNULL:
                     column.setNotnull(true);
@@ -1470,7 +1476,7 @@ public class XmindTest {
                     break;
                 case INDEX: case IDX:
                     indexMap.put(propName, column.getName());
-                    column.setNotnull(true);
+                    column.setIndex(propValue).setNotnull(true);
                     break;
                 default:
                     generateOfAttachedWithModule(attached, moduleList, module);

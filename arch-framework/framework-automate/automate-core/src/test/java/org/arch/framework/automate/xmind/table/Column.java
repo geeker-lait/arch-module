@@ -22,7 +22,10 @@ public class Column {
     private boolean autoIncrement = false;
     private boolean notnull = false;
     private boolean unsigned = false;
+    private boolean pk = false;
     private String def;
+    private String index;
+    private String unique;
     private String onUpdate;
 
 }

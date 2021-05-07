@@ -67,14 +67,11 @@ public enum ColumnType {
         return javaType;
     }
 
-    public static boolean isString(@NonNull String columnType) {
-        return VARCHAR.name().equalsIgnoreCase(columnType) ||
-               CHAR.name().equalsIgnoreCase(columnType) ||
-               STRING.name().equalsIgnoreCase(columnType) ||
-               TINYTEXT.name().equalsIgnoreCase(columnType) ||
-               TEXT.name().equalsIgnoreCase(columnType) ||
-               MEDIUMTEXT.name().equalsIgnoreCase(columnType) ||
-               LONGTEXT.name().equalsIgnoreCase(columnType);
+    public static boolean isInteger(@NonNull String columnType) {
+        return BIGINT.name().equalsIgnoreCase(columnType) ||
+               LONG.name().equalsIgnoreCase(columnType) ||
+               INT.name().equalsIgnoreCase(columnType) ||
+               INTEGER.name().equalsIgnoreCase(columnType);
     }
 
     public static boolean isArray(@NonNull String columnType) {
