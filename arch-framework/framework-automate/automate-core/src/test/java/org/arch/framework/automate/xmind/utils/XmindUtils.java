@@ -185,12 +185,19 @@ public class XmindUtils {
      */
     @Nullable
     public static ColumnType getColumnType(@NonNull String columnType, @Nullable Logger log, @NonNull Boolean isLog) {
+        String type = columnType;
+        int index = type.indexOf("(");
+        int index2 = type.indexOf("[");
+        // type(len)
+        if (index != -1 || index2 != -1) {
+            type = type.substring(0, index);
+        }
         try {
-            return ColumnType.valueOf(columnType.toUpperCase());
+            return ColumnType.valueOf(type.toUpperCase());
         }
         catch (Exception e) {
             try {
-                return ColumnType.valueOf(camelToUpperUnderscore(columnType));
+                return ColumnType.valueOf(camelToUpperUnderscore(type));
             }
             catch (Exception ex) {
                 if (isLog) {
