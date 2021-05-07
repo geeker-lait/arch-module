@@ -1,6 +1,6 @@
 package org.arch.framework.automate.xmind;
 
-import org.arch.framework.automate.xmind.table.Database;
+import org.arch.framework.automate.generater.service.xmind.database.Database;
 
 /**
  * @author lait.zhang@gmail.com

@@ -1,4 +1,4 @@
-package org.arch.framework.automate.xmind.table;
+package org.arch.framework.automate.generater.service.xmind.database;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

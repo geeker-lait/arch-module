@@ -1,4 +1,4 @@
-package org.arch.framework.automate.xmind.nodespace;
+package org.arch.framework.automate.generater.service.xmind.nodespace;
 
 import org.springframework.lang.NonNull;
 
@@ -8,6 +8,7 @@ import org.springframework.lang.NonNull;
  * @author YongWu zheng
  * @version V2.0  Created by 2021-04-28 15:05
  */
+@SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
 public enum ColumnType {
 
     BIGINT("bigint", "19", "Long"),

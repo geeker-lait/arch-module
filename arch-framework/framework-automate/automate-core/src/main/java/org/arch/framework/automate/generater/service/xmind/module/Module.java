@@ -1,4 +1,4 @@
-package org.arch.framework.automate.xmind.module;
+package org.arch.framework.automate.generater.service.xmind.module;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.arch.framework.automate.xmind.api.Entity;
-import org.arch.framework.automate.xmind.api.Interfac;
-import org.arch.framework.automate.xmind.table.Database;
+import org.arch.framework.automate.generater.service.xmind.api.Entity;
+import org.arch.framework.automate.generater.service.xmind.api.Interfac;
+import org.arch.framework.automate.generater.service.xmind.database.Database;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

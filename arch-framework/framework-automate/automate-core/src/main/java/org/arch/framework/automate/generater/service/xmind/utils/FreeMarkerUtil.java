@@ -1,4 +1,4 @@
-package org.arch.framework.automate.xmind.utils;
+package org.arch.framework.automate.generater.service.xmind.utils;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
-import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

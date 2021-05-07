@@ -1,4 +1,4 @@
-package org.arch.framework.automate.xmind.api;
+package org.arch.framework.automate.generater.service.xmind.api;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

@@ -1,4 +1,4 @@
-package org.arch.framework.automate.xmind.nodespace;
+package org.arch.framework.automate.generater.service.xmind.nodespace;
 
 /**
  * api Param property
