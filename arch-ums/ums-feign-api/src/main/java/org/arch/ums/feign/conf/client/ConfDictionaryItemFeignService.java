@@ -3,6 +3,8 @@ package org.arch.ums.feign.conf.client;
 
 import org.arch.framework.feign.BaseFeignService;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.ums.conf.dto.DictionaryItemRequest;
+import org.arch.ums.conf.dto.DictionaryItemSearchDto;
 import org.arch.ums.conf.entity.DictionaryItem;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-dictionaryItem", path = "/ums/conf/dictionary/item",
         configuration = DeFaultFeignConfig.class)
-public interface ConfDictionaryItemFeignService extends BaseFeignService<DictionaryItem, java.lang.Long> {
+public interface ConfDictionaryItemFeignService extends BaseFeignService<DictionaryItemSearchDto, DictionaryItemRequest, Long> {
 
 }

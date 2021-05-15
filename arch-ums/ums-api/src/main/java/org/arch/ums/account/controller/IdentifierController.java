@@ -11,9 +11,11 @@ import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.dto.Auth2ConnectionDto;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
+import org.arch.ums.account.dto.IdentifierRequest;
 import org.arch.ums.account.dto.IdentifierSearchDto;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.service.IdentifierService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,9 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.jwt.JwtContext;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -41,22 +45,23 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
  * 用户-标识(Identifier) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-01-29 21:04:11
+ * @date 2021-05-15 21:53:03
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/identifier")
-public class IdentifierController implements CrudController<Identifier, java.lang.Long, IdentifierSearchDto, IdentifierService> {
+public class IdentifierController implements CrudController<IdentifierRequest, Identifier, java.lang.Long, IdentifierSearchDto, IdentifierService> {
 
-    private final IdentifierService identifierService;
     private final TenantContextHolder tenantContextHolder;
+    private final IdentifierService identifierService;
 
     @Override
-    public Identifier resolver(TokenInfo token, Identifier identifier) {
-        if (isNull(identifier)) {
-            identifier =  new Identifier();
+    public Identifier resolver(TokenInfo token, IdentifierRequest request) {
+        Identifier identifier = new Identifier();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, identifier);
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             identifier.setTenantId(token.getTenantId());
@@ -252,7 +257,7 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     @DeleteMapping(value = "/unbinding/{aid}/{identifier}")
     @NonNull
     public Response<Boolean> unbinding(@PathVariable(value = "aid") Long aid,
-                                @PathVariable(value = "identifier") String identifier, TokenInfo token) {
+                                       @PathVariable(value = "identifier") String identifier, TokenInfo token) {
         if (isNull(token)) {
             return Response.failed("未登录");
         }
@@ -280,7 +285,7 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     public Response<Boolean> deleteByAccountId(@PathVariable(value = "accountId") Long accountId, TokenInfo token) {
 
         if (isNull(token)) {
-        	return Response.failed("未登录");
+            return Response.failed("未登录");
         }
         if (!token.getAccountId().equals(accountId)) {
             return Response.failed("只能删除自己的账号");
@@ -325,22 +330,27 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     /**
      * 根据 entity 条件查询对象.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     * @param entity    实体类
-     * @param token     token info
-     * @return  {@link Response}
+     *
+     * @param request 实体的 request 类型
+     * @param token   token info
+     * @return {@link Response}
      */
     @Override
+    @NonNull
     @GetMapping("/single")
-    public Response<Identifier> findOne(@RequestBody Identifier entity, TokenInfo token) {
+    public Response<IdentifierSearchDto> findOne(@RequestBody @Valid IdentifierRequest request, TokenInfo token) {
         try {
-            resolver(token, entity);
-            IdentifierSearchDto searchDto = convertSearchDto(entity);
-            Identifier t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
-            return Response.success(t);
-        } catch (Exception e) {
+            Identifier identifier = resolver(token, request);
+            IdentifierSearchDto searchDto = convertSearchDto(identifier);
+            Identifier result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            return Response.success(convertSearchDto(result));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
             if (e instanceof IncorrectResultSizeDataAccessException) {
-                return Response.error(FAILED.getCode(),"查询到多个结果");
-            } else {
+                return Response.error(FAILED.getCode(), "查询到多个结果");
+            }
+            else {
                 return Response.error(FAILED.getCode(), e.getMessage());
             }
         }
@@ -349,36 +359,54 @@ public class IdentifierController implements CrudController<Identifier, java.lan
     /**
      * 根据 entity 条件查询对象列表.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     * @param t         实体类
-     * @param token     token info
-     * @return  {@link Response}
+     *
+     * @param request 实体的 request 类型
+     * @param token   token info
+     * @return {@link Response}
      */
     @Override
+    @NonNull
     @GetMapping("/find")
-    public Response<List<Identifier>> find(@RequestBody Identifier t, TokenInfo token) {
-        resolver(token, t);
-        IdentifierSearchDto searchDto = convertSearchDto(t);
-        return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+    public Response<List<IdentifierSearchDto>> find(@RequestBody @Valid IdentifierRequest request, TokenInfo token) {
+        Identifier identifier = resolver(token, request);
+        IdentifierSearchDto searchDto = convertSearchDto(identifier);
+        try {
+            List<Identifier> identifierList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            return Response.success(identifierList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
     }
 
     /**
      * 分页查询.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     * @param entity        实体类
-     * @param pageNumber    第几页
-     * @param pageSize      页大小
-     * @param token         token info
-     * @return  {@link Response}
+     *
+     * @param request    实体的 request 类型
+     * @param pageNumber 第几页
+     * @param pageSize   页大小
+     * @param token      token info
+     * @return {@link Response}
      */
     @Override
+    @NonNull
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    public Response<IPage<Identifier>> page(@RequestBody Identifier entity,
-                                                 @PathVariable(value = "pageNumber") Integer pageNumber,
-                                                 @PathVariable(value = "pageSize") Integer pageSize,
-                                                 TokenInfo token) {
-        resolver(token, entity);
-        IdentifierSearchDto searchDto = convertSearchDto(entity);
-        return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+    public Response<IPage<IdentifierSearchDto>> page(@RequestBody @Valid IdentifierRequest request,
+                                                     @PathVariable(value = "pageNumber") Integer pageNumber,
+                                                     @PathVariable(value = "pageSize") Integer pageSize,
+                                                     TokenInfo token) {
+        Identifier identifier = resolver(token, request);
+        IdentifierSearchDto searchDto = convertSearchDto(identifier);
+        try {
+            IPage<Identifier> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            return Response.success(page.convert(this::convertSearchDto));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
     }
 
 }

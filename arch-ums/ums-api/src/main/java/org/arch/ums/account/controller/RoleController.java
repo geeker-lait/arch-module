@@ -8,9 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.ums.account.dto.RoleRequest;
 import org.arch.ums.account.dto.RoleSearchDto;
 import org.arch.ums.account.entity.Role;
 import org.arch.ums.account.service.RoleService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -30,22 +33,23 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
  * 账号-角色(Role) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-03-01 00:22:30
+ * @date 2021-05-15 22:13:46
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/role")
-public class RoleController implements CrudController<Role, java.lang.Long, RoleSearchDto, RoleService> {
+public class RoleController implements CrudController<RoleRequest, Role, java.lang.Long, RoleSearchDto, RoleService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final RoleService roleService;
 
     @Override
-    public Role resolver(TokenInfo token, Role role) {
-        if (isNull(role)) {
-            role = new Role();
+    public Role resolver(TokenInfo token, RoleRequest request) {
+        Role role = new Role();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, role);
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             role.setTenantId(token.getTenantId());
@@ -70,19 +74,19 @@ public class RoleController implements CrudController<Role, java.lang.Long, Role
      * 根据 entity 条件查询对象.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param entity 实体类
-     * @param token  token info
+     * @param request 实体的 request 类型
+     * @param token   token info
      * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping("/single")
-    public Response<Role> findOne(@RequestBody Role entity, TokenInfo token) {
+    public Response<RoleSearchDto> findOne(@RequestBody @Valid RoleRequest request, TokenInfo token) {
         try {
-            resolver(token, entity);
-            RoleSearchDto searchDto = convertSearchDto(entity);
-            Role t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
-            return Response.success(t);
+            Role role = resolver(token, request);
+            RoleSearchDto searchDto = convertSearchDto(role);
+            Role result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -99,18 +103,19 @@ public class RoleController implements CrudController<Role, java.lang.Long, Role
      * 根据 entity 条件查询对象列表.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param t     实体类
-     * @param token token info
+     * @param request 实体的 request 类型
+     * @param token   token info
      * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping("/find")
-    public Response<List<Role>> find(@RequestBody Role t, TokenInfo token) {
-        resolver(token, t);
-        RoleSearchDto searchDto = convertSearchDto(t);
+    public Response<List<RoleSearchDto>> find(@RequestBody @Valid RoleRequest request, TokenInfo token) {
+        Role role = resolver(token, request);
+        RoleSearchDto searchDto = convertSearchDto(role);
         try {
-            return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+            List<Role> roleList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            return Response.success(roleList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -122,7 +127,7 @@ public class RoleController implements CrudController<Role, java.lang.Long, Role
      * 分页查询.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param entity     实体类
+     * @param request    实体的 request 类型
      * @param pageNumber 第几页
      * @param pageSize   页大小
      * @param token      token info
@@ -131,14 +136,15 @@ public class RoleController implements CrudController<Role, java.lang.Long, Role
     @Override
     @NonNull
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    public Response<IPage<Role>> page(@RequestBody Role entity,
-                                      @PathVariable(value = "pageNumber") Integer pageNumber,
-                                      @PathVariable(value = "pageSize") Integer pageSize,
-                                      TokenInfo token) {
-        resolver(token, entity);
-        RoleSearchDto searchDto = convertSearchDto(entity);
+    public Response<IPage<RoleSearchDto>> page(@RequestBody @Valid RoleRequest request,
+                                               @PathVariable(value = "pageNumber") Integer pageNumber,
+                                               @PathVariable(value = "pageSize") Integer pageSize,
+                                               TokenInfo token) {
+        Role role = resolver(token, request);
+        RoleSearchDto searchDto = convertSearchDto(role);
         try {
-            return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+            IPage<Role> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -155,14 +161,15 @@ public class RoleController implements CrudController<Role, java.lang.Long, Role
      */
     @GetMapping("/findByRoleIds/{tenantId}")
     @NonNull
-    public Response<List<Role>> findByMenuIds(@PathVariable(value = "tenantId") Integer tenantId,
-                                              @RequestBody List<Long> roleIds) {
+    public Response<List<RoleSearchDto>> findByMenuIds(@PathVariable(value = "tenantId") Integer tenantId,
+                                                       @RequestBody List<Long> roleIds) {
         Wrapper<Role> roleWrapper = Wrappers.lambdaQuery(Role.class)
                                             .eq(Role::getTenantId, tenantId)
                                             .in(Role::getId, roleIds)
                                             .eq(Role::getDeleted, Boolean.FALSE);
         try {
-            return Response.success(roleService.findAllBySpec(roleWrapper));
+            List<Role> roleList = roleService.findAllBySpec(roleWrapper);
+            return Response.success(roleList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);

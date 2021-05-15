@@ -1,14 +1,15 @@
 package org.arch.ums.user.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.beans.Response;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.ums.user.dto.JobRequest;
 import org.arch.ums.user.dto.JobSearchDto;
 import org.arch.ums.user.entity.Job;
 import org.arch.ums.user.service.JobService;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.beans.Response;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -28,22 +31,23 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
  * 用户工作信息(Job) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-03-01 00:21:10
+ * @date 2021-05-15 23:08:42
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user/job")
-public class JobController implements CrudController<Job, java.lang.Long, JobSearchDto, JobService> {
+public class JobController implements CrudController<JobRequest, Job, java.lang.Long, JobSearchDto, JobService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final JobService jobService;
 
     @Override
-    public Job resolver(TokenInfo token, Job job) {
-        if (isNull(job)) {
-            job = new Job();
+    public Job resolver(TokenInfo token, JobRequest request) {
+        Job job = new Job();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, job);
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             job.setTenantId(token.getTenantId());
@@ -68,19 +72,19 @@ public class JobController implements CrudController<Job, java.lang.Long, JobSea
      * 根据 entity 条件查询对象.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param entity 实体类
-     * @param token  token info
+     * @param request 实体的 request 类型
+     * @param token   token info
      * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping("/single")
-    public Response<Job> findOne(@RequestBody Job entity, TokenInfo token) {
+    public Response<JobSearchDto> findOne(@RequestBody @Valid JobRequest request, TokenInfo token) {
         try {
-            resolver(token, entity);
-            JobSearchDto searchDto = convertSearchDto(entity);
-            Job t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
-            return Response.success(t);
+            Job job = resolver(token, request);
+            JobSearchDto searchDto = convertSearchDto(job);
+            Job result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -97,18 +101,19 @@ public class JobController implements CrudController<Job, java.lang.Long, JobSea
      * 根据 entity 条件查询对象列表.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param t     实体类
-     * @param token token info
+     * @param request 实体的 request 类型
+     * @param token   token info
      * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping("/find")
-    public Response<List<Job>> find(@RequestBody Job t, TokenInfo token) {
-        resolver(token, t);
-        JobSearchDto searchDto = convertSearchDto(t);
+    public Response<List<JobSearchDto>> find(@RequestBody @Valid JobRequest request, TokenInfo token) {
+        Job job = resolver(token, request);
+        JobSearchDto searchDto = convertSearchDto(job);
         try {
-            return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+            List<Job> jobList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            return Response.success(jobList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -120,7 +125,7 @@ public class JobController implements CrudController<Job, java.lang.Long, JobSea
      * 分页查询.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param entity     实体类
+     * @param request    实体的 request 类型
      * @param pageNumber 第几页
      * @param pageSize   页大小
      * @param token      token info
@@ -129,14 +134,15 @@ public class JobController implements CrudController<Job, java.lang.Long, JobSea
     @Override
     @NonNull
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    public Response<IPage<Job>> page(@RequestBody Job entity,
-                                     @PathVariable(value = "pageNumber") Integer pageNumber,
-                                     @PathVariable(value = "pageSize") Integer pageSize,
-                                     TokenInfo token) {
-        resolver(token, entity);
-        JobSearchDto searchDto = convertSearchDto(entity);
+    public Response<IPage<JobSearchDto>> page(@RequestBody @Valid JobRequest request,
+                                              @PathVariable(value = "pageNumber") Integer pageNumber,
+                                              @PathVariable(value = "pageSize") Integer pageSize,
+                                              TokenInfo token) {
+        Job job = resolver(token, request);
+        JobSearchDto searchDto = convertSearchDto(job);
         try {
-            return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+            IPage<Job> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);

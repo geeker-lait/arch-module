@@ -7,10 +7,13 @@ import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.constant.AuthStatusCode;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.ums.account.dto.ResourceSearchDto;
+import org.arch.ums.account.dto.RoleResourceRequest;
 import org.arch.ums.account.dto.RoleResourceSearchDto;
 import org.arch.ums.account.entity.Resource;
 import org.arch.ums.account.entity.RoleResource;
 import org.arch.ums.account.service.RoleResourceService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -31,22 +36,23 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
  * 账号-角色资源表(RoleResource) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-03-01 00:22:31
+ * @date 2021-05-15 22:30:27
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/role/resource")
-public class RoleResourceController implements CrudController<RoleResource, java.lang.Long, RoleResourceSearchDto, RoleResourceService> {
+public class RoleResourceController implements CrudController<RoleResourceRequest, RoleResource, java.lang.Long, RoleResourceSearchDto, RoleResourceService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final RoleResourceService roleResourceService;
 
     @Override
-    public RoleResource resolver(TokenInfo token, RoleResource roleResource) {
-        if (isNull(roleResource)) {
-            roleResource = new RoleResource();
+    public RoleResource resolver(TokenInfo token, RoleResourceRequest request) {
+        RoleResource roleResource = new RoleResource();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, roleResource);
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             roleResource.setTenantId(token.getTenantId());
@@ -71,19 +77,19 @@ public class RoleResourceController implements CrudController<RoleResource, java
      * 根据 entity 条件查询对象.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param entity 实体类
-     * @param token  token info
+     * @param request 实体的 request 类型
+     * @param token   token info
      * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping("/single")
-    public Response<RoleResource> findOne(@RequestBody RoleResource entity, TokenInfo token) {
+    public Response<RoleResourceSearchDto> findOne(@RequestBody @Valid RoleResourceRequest request, TokenInfo token) {
         try {
-            resolver(token, entity);
-            RoleResourceSearchDto searchDto = convertSearchDto(entity);
-            RoleResource t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
-            return Response.success(t);
+            RoleResource roleResource = resolver(token, request);
+            RoleResourceSearchDto searchDto = convertSearchDto(roleResource);
+            RoleResource result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -100,18 +106,19 @@ public class RoleResourceController implements CrudController<RoleResource, java
      * 根据 entity 条件查询对象列表.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param t     实体类
-     * @param token token info
+     * @param request 实体的 request 类型
+     * @param token   token info
      * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping("/find")
-    public Response<List<RoleResource>> find(@RequestBody RoleResource t, TokenInfo token) {
-        resolver(token, t);
-        RoleResourceSearchDto searchDto = convertSearchDto(t);
+    public Response<List<RoleResourceSearchDto>> find(@RequestBody @Valid RoleResourceRequest request, TokenInfo token) {
+        RoleResource roleResource = resolver(token, request);
+        RoleResourceSearchDto searchDto = convertSearchDto(roleResource);
         try {
-            return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+            List<RoleResource> roleResourceList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            return Response.success(roleResourceList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -123,7 +130,7 @@ public class RoleResourceController implements CrudController<RoleResource, java
      * 分页查询.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param entity     实体类
+     * @param request    实体的 request 类型
      * @param pageNumber 第几页
      * @param pageSize   页大小
      * @param token      token info
@@ -132,14 +139,15 @@ public class RoleResourceController implements CrudController<RoleResource, java
     @Override
     @NonNull
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    public Response<IPage<RoleResource>> page(@RequestBody RoleResource entity,
-                                              @PathVariable(value = "pageNumber") Integer pageNumber,
-                                              @PathVariable(value = "pageSize") Integer pageSize,
-                                              TokenInfo token) {
-        resolver(token, entity);
-        RoleResourceSearchDto searchDto = convertSearchDto(entity);
+    public Response<IPage<RoleResourceSearchDto>> page(@RequestBody @Valid RoleResourceRequest request,
+                                                       @PathVariable(value = "pageNumber") Integer pageNumber,
+                                                       @PathVariable(value = "pageSize") Integer pageSize,
+                                                       TokenInfo token) {
+        RoleResource roleResource = resolver(token, request);
+        RoleResourceSearchDto searchDto = convertSearchDto(roleResource);
         try {
-            return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+            IPage<RoleResource> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -212,10 +220,19 @@ public class RoleResourceController implements CrudController<RoleResource, java
      */
     @GetMapping("/findOfTenant/{tenantId}/{roleId}")
     @NonNull
-    public Response<List<Resource>> findAllResourcesByRoleIdOfTenant(@PathVariable(value = "tenantId") Long tenantId,
-                                                                     @PathVariable(value = "roleId") Long roleId) {
+    public Response<List<ResourceSearchDto>> findAllResourcesByRoleIdOfTenant(@PathVariable(value = "tenantId") Long tenantId,
+                                                                              @PathVariable(value = "roleId") Long roleId) {
         try {
-            return Response.success(this.roleResourceService.findAllResourcesByRoleIdOfTenant(tenantId, roleId));
+            List<Resource> resourceList = this.roleResourceService.findAllResourcesByRoleIdOfTenant(tenantId, roleId);
+            List<ResourceSearchDto> resourceSearchDtoList =
+                    resourceList.stream()
+                                .map(permission -> {
+                                    ResourceSearchDto searchDto = new ResourceSearchDto();
+                                    BeanUtils.copyProperties(permission, searchDto);
+                                    return searchDto;
+                                })
+                                .collect(Collectors.toList());
+            return Response.success(resourceSearchDtoList);
         }
         catch (Exception e) {
             log.error(e.getMessage(),e);
@@ -232,16 +249,25 @@ public class RoleResourceController implements CrudController<RoleResource, java
      */
     @GetMapping("/findOfScope/{scopeId}/{roleId}")
     @NonNull
-    public Response<List<Resource>> findAllResourcesByRoleIdOfScopeId(@PathVariable(value = "scopeId") Long scopeId,
-                                                                      @PathVariable(value = "roleId") Long roleId) {
+    public Response<List<ResourceSearchDto>> findAllResourcesByRoleIdOfScopeId(@PathVariable(value = "scopeId") Long scopeId,
+                                                                               @PathVariable(value = "roleId") Long roleId) {
         try {
             Long tenantId = Long.valueOf(tenantContextHolder.getTenantId());
-            return Response.success(this.roleResourceService.findAllResourcesByRoleIdOfScopeId(tenantId,
-                                                                                               scopeId,
-                                                                                               roleId));
+            List<Resource> resourceList = this.roleResourceService.findAllResourcesByRoleIdOfScopeId(tenantId,
+                                                                                                     scopeId,
+                                                                                                     roleId);
+            List<ResourceSearchDto> resourceSearchDtoList =
+                    resourceList.stream()
+                                .map(permission -> {
+                                    ResourceSearchDto searchDto = new ResourceSearchDto();
+                                    BeanUtils.copyProperties(permission, searchDto);
+                                    return searchDto;
+                                })
+                                .collect(Collectors.toList());
+            return Response.success(resourceSearchDtoList);
         }
         catch (Exception e) {
-            log.error(e.getMessage(),e);
+            log.error(e.getMessage(), e);
             return Response.error(FAILED.getCode(), e.getMessage());
         }
     }

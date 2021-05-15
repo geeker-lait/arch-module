@@ -2,6 +2,8 @@ package org.arch.ums.feign.user.client;
 
 
 import org.arch.framework.feign.BaseFeignService;
+import org.arch.ums.user.dto.RelativesRequest;
+import org.arch.ums.user.dto.RelativesSearchDto;
 import org.arch.ums.user.entity.Relatives;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -17,6 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-relatives", path = "/ums/user/relatives",
         configuration = DeFaultFeignConfig.class)
-public interface UmsUserRelativesFeignService extends BaseFeignService<Relatives, java.lang.Long> {
+public interface UmsUserRelativesFeignService extends BaseFeignService<RelativesSearchDto, RelativesRequest, Long> {
 
 }

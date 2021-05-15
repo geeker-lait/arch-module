@@ -2,16 +2,17 @@ package org.arch.framework.automate.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.automate.api.dto.FormSchemaConfigSearchDto;
+import org.arch.framework.automate.api.request.FormSchemaConfigRequest;
 import org.arch.framework.automate.from.entity.FormSchemaConfig;
 import org.arch.framework.automate.from.service.FormSchemaConfigService;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -25,22 +26,24 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/schema/config")
-public class FormSchemaConfigController implements CrudController<FormSchemaConfig, java.lang.Long, FormSchemaConfigSearchDto, FormSchemaConfigService> {
+public class FormSchemaConfigController implements CrudController<FormSchemaConfigRequest, FormSchemaConfig, java.lang.Long
+        , FormSchemaConfigSearchDto, FormSchemaConfigService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormSchemaConfigService formSchemaConfigService;
 
     @Override
-    public FormSchemaConfig resolver(TokenInfo token, FormSchemaConfig formSchemaConfig) {
-        if (isNull(formSchemaConfig)) {
-            formSchemaConfig =  new FormSchemaConfig();
+    public FormSchemaConfig resolver(TokenInfo token, FormSchemaConfigRequest request) {
+        FormSchemaConfig entity = new FormSchemaConfig();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, entity);
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
-            formSchemaConfig.setTenantId(token.getTenantId());
+            entity.setTenantId(token.getTenantId());
         } else {
-            formSchemaConfig.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+            entity.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
-        return formSchemaConfig;
+        return entity;
     }
 
     @Override

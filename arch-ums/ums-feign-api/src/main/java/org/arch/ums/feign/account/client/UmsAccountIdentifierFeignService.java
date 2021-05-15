@@ -2,11 +2,13 @@ package org.arch.ums.feign.account.client;
 
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
+import org.arch.framework.feign.config.DeFaultFeignConfig;
 import org.arch.ums.account.dto.Auth2ConnectionDto;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
+import org.arch.ums.account.dto.IdentifierRequest;
+import org.arch.ums.account.dto.IdentifierSearchDto;
 import org.arch.ums.account.entity.Identifier;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
@@ -31,7 +33,8 @@ import java.util.Map;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-identifier", path = "/ums/account/identifier",
         configuration = DeFaultFeignConfig.class)
-public interface UmsAccountIdentifierFeignService extends BaseFeignService<Identifier, Long> {
+public interface UmsAccountIdentifierFeignService extends BaseFeignService<IdentifierSearchDto, IdentifierRequest,
+        Long> {
 
     /**
      * 通过 {@link Identifier#getIdentifier()} 来获取 {@link Identifier}
@@ -62,13 +65,13 @@ public interface UmsAccountIdentifierFeignService extends BaseFeignService<Ident
 
     /**
      * 保存 identifier
-     * @param identifier     实体类
+     * @param identifier     实体类对应的 request
      * @return  {@link Response}
      */
     @Override
     @NonNull
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    Response<Identifier> save(@RequestBody @Valid Identifier identifier);
+    Response<IdentifierSearchDto> save(@RequestBody @Valid IdentifierRequest identifier);
 
     /**
      * 逻辑删除(执行 account_identifier 与 account_name 的逻辑删除):<br>

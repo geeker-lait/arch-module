@@ -2,8 +2,9 @@ package org.arch.ums.feign.account.client;
 
 
 import org.arch.framework.feign.BaseFeignService;
-import org.arch.ums.account.entity.Group;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.ums.account.dto.GroupRequest;
+import org.arch.ums.account.dto.GroupSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,6 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-group", path = "/ums/account/group",
         configuration = DeFaultFeignConfig.class)
-public interface UmsAccountGroupFeignService extends BaseFeignService<Group, java.lang.Long> {
+public interface UmsAccountGroupFeignService extends BaseFeignService<GroupSearchDto, GroupRequest, java.lang.Long> {
 
 }

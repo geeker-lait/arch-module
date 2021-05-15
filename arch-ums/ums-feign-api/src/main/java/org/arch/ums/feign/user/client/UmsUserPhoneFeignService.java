@@ -2,6 +2,8 @@ package org.arch.ums.feign.user.client;
 
 
 import org.arch.framework.feign.BaseFeignService;
+import org.arch.ums.user.dto.PhoneRequest;
+import org.arch.ums.user.dto.PhoneSearchDto;
 import org.arch.ums.user.entity.Phone;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -17,6 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-phone", path = "/ums/user/phone",
         configuration = DeFaultFeignConfig.class)
-public interface UmsUserPhoneFeignService extends BaseFeignService<Phone, java.lang.Long> {
+public interface UmsUserPhoneFeignService extends BaseFeignService<PhoneSearchDto, PhoneRequest, Long> {
 
 }

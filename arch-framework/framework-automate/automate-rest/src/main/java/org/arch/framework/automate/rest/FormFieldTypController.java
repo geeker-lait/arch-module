@@ -3,15 +3,16 @@ package org.arch.framework.automate.rest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.api.dto.FormFieldTypSearchDto;
+import org.arch.framework.automate.api.request.FormFieldTypRequest;
 import org.arch.framework.automate.from.entity.FormFieldTyp;
 import org.arch.framework.automate.from.service.FormFieldTypService;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -25,22 +26,24 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/field/typ")
-public class FormFieldTypController implements CrudController<FormFieldTyp, java.lang.Long, FormFieldTypSearchDto, FormFieldTypService> {
+public class FormFieldTypController implements CrudController<FormFieldTypRequest, FormFieldTyp, java.lang.Long,
+        FormFieldTypSearchDto, FormFieldTypService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormFieldTypService formFieldTypService;
 
     @Override
-    public FormFieldTyp resolver(TokenInfo token, FormFieldTyp formFieldTyp) {
-        if (isNull(formFieldTyp)) {
-            formFieldTyp =  new FormFieldTyp();
+    public FormFieldTyp resolver(TokenInfo token, FormFieldTypRequest request) {
+        FormFieldTyp entity = new FormFieldTyp();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, entity);
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
-            formFieldTyp.setTenantId(token.getTenantId());
+            entity.setTenantId(token.getTenantId());
         } else {
-            formFieldTyp.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+            entity.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
-        return formFieldTyp;
+        return entity;
     }
 
     @Override

@@ -3,6 +3,8 @@ package org.arch.auth.rbac.feign;
 
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
+import org.arch.ums.account.dto.RoleResourceRequest;
+import org.arch.ums.account.dto.RoleResourceSearchDto;
 import org.arch.ums.account.entity.RoleResource;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -26,6 +28,6 @@ import java.util.Set;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-rbac-roleResource", path = "/ums/account/role/resource",
         configuration = DeFaultFeignConfig.class)
-public interface RoleResourceFeignService extends BaseFeignService<RoleResource, Long> {
+public interface RoleResourceFeignService extends BaseFeignService<RoleResourceSearchDto, RoleResourceRequest, Long> {
 
 }

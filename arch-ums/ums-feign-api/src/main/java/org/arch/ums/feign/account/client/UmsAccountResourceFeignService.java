@@ -4,6 +4,8 @@ package org.arch.ums.feign.account.client;
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.ums.account.dto.ResourceRequest;
+import org.arch.ums.account.dto.ResourceSearchDto;
 import org.arch.ums.account.entity.Resource;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.lang.NonNull;
@@ -24,7 +26,7 @@ import java.util.List;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-resource", path = "/ums/account/resource",
         configuration = DeFaultFeignConfig.class)
-public interface UmsAccountResourceFeignService extends BaseFeignService<Resource, java.lang.Long> {
+public interface UmsAccountResourceFeignService extends BaseFeignService<ResourceSearchDto, ResourceRequest, Long> {
 
     /**
      * 多租户根据 {@code resourceIds} 获取 {@link Resource} 列表.
@@ -35,6 +37,6 @@ public interface UmsAccountResourceFeignService extends BaseFeignService<Resourc
      */
     @GetMapping("/findByResourceIds/{tenantId}")
     @NonNull
-    Response<List<Resource>> findByResourceIds(@PathVariable(value = "tenantId") Integer tenantId,
-                                                      @RequestBody List<Long> resourceIds);
+    Response<List<ResourceSearchDto>> findByResourceIds(@PathVariable(value = "tenantId") Integer tenantId,
+                                                        @RequestBody List<Long> resourceIds);
 }

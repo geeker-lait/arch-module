@@ -3,15 +3,16 @@ package org.arch.framework.automate.rest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.api.dto.FormBizSearchDto;
+import org.arch.framework.automate.api.request.FormBizRequest;
 import org.arch.framework.automate.from.entity.FormBiz;
 import org.arch.framework.automate.from.service.FormBizService;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -25,22 +26,24 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/biz")
-public class FormBizController implements CrudController<FormBiz, java.lang.Long, FormBizSearchDto, FormBizService> {
+public class FormBizController implements CrudController<FormBizRequest, FormBiz, java.lang.Long, FormBizSearchDto,
+        FormBizService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormBizService formBizService;
 
     @Override
-    public FormBiz resolver(TokenInfo token, FormBiz formBiz) {
-        if (isNull(formBiz)) {
-            formBiz =  new FormBiz();
+    public FormBiz resolver(TokenInfo token, FormBizRequest request) {
+        FormBiz entity = new FormBiz();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, entity);
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
-            formBiz.setTenantId(token.getTenantId());
+            entity.setTenantId(token.getTenantId());
         } else {
-            formBiz.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+            entity.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
-        return formBiz;
+        return entity;
     }
 
     @Override

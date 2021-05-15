@@ -3,8 +3,9 @@ package org.arch.ums.feign.conf.client;
 
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
-import org.arch.ums.conf.entity.MobileSegment;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.ums.conf.dto.MobileSegmentRequest;
+import org.arch.ums.conf.dto.MobileSegmentSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ import java.util.List;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-confMobileSegment", path = "/ums/conf/mobile/segment",
         configuration = DeFaultFeignConfig.class)
-public interface ConfMobileSegmentFeignService extends BaseFeignService<MobileSegment, java.lang.Long> {
+public interface ConfMobileSegmentFeignService extends BaseFeignService<MobileSegmentSearchDto, MobileSegmentRequest, Long> {
     /**
      * 批量上传手机号段信息, 批量保存, 如果主键或唯一索引重复则更新. <br>
      * 主要用户批量更新与添加, 如果初始化时请直接调用 ums-api 的 /ums/conf/mobile/Segment/uploadSegment.
@@ -34,5 +35,5 @@ public interface ConfMobileSegmentFeignService extends BaseFeignService<MobileSe
      * @return  {@link Response (Boolean)}
      */
     @PostMapping("/savesOnDuplicateKeyUpdate")
-    Response<Boolean> insertOnDuplicateKeyUpdate(@Valid @RequestBody List<MobileSegment> mobileSegmentList);
+    Response<Boolean> insertOnDuplicateKeyUpdate(@Valid @RequestBody List<MobileSegmentRequest> mobileSegmentList);
 }

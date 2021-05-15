@@ -2,8 +2,9 @@ package org.arch.ums.feign.user.client;
 
 
 import org.arch.framework.feign.BaseFeignService;
-import org.arch.ums.user.entity.Address;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.ums.user.dto.AddressRequest;
+import org.arch.ums.user.dto.AddressSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,6 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-address", path = "/ums/user/address",
         configuration = DeFaultFeignConfig.class)
-public interface UmsUserAddressFeignService extends BaseFeignService<Address, java.lang.Long> {
+public interface UmsUserAddressFeignService extends BaseFeignService<AddressSearchDto, AddressRequest, java.lang.Long> {
 
 }

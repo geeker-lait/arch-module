@@ -4,6 +4,8 @@ package org.arch.auth.rbac.feign;
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.ums.account.dto.PermissionRequest;
+import org.arch.ums.account.dto.PermissionSearchDto;
 import org.arch.ums.account.entity.Permission;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.lang.NonNull;
@@ -24,17 +26,17 @@ import java.util.List;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-rbac-permission", path = "/ums/account/permission",
         configuration = DeFaultFeignConfig.class)
-public interface PermissionFeignService extends BaseFeignService<Permission, Long> {
+public interface PermissionFeignService extends BaseFeignService<PermissionSearchDto, PermissionRequest, Long> {
 
     /**
      * 多租户根据 {@code permissionIds} 获取 {@link Permission} 列表.
      *
-     * @param tenantId        多租户 ID
-     * @param permissionIds   权限 ID 列表
+     * @param tenantId      多租户 ID
+     * @param permissionIds 权限 ID 列表
      * @return 权限列表, 只包含 {@code id, permissionCode, permissionUri, permissionVal} 字段
      */
     @GetMapping("/findByPermissionIds/{tenantId}")
     @NonNull
-    Response<List<Permission>> findByPermissionIds(@PathVariable(value = "tenantId") Integer tenantId,
-                                                 @RequestBody List<Long> permissionIds);
+    Response<List<PermissionSearchDto>> findByPermissionIds(@PathVariable(value = "tenantId") Integer tenantId,
+                                                            @RequestBody List<Long> permissionIds);
 }

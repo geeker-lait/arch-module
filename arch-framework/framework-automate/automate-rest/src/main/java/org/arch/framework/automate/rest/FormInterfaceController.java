@@ -2,16 +2,17 @@ package org.arch.framework.automate.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.automate.api.dto.FormInterfaceSearchDto;
+import org.arch.framework.automate.api.request.FormInterfaceRequest;
 import org.arch.framework.automate.from.entity.FormInterface;
 import org.arch.framework.automate.from.service.FormInterfaceService;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -25,22 +26,24 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/interface")
-public class FormInterfaceController implements CrudController<FormInterface, java.lang.Long, FormInterfaceSearchDto, FormInterfaceService> {
+public class FormInterfaceController implements CrudController<FormInterfaceRequest, FormInterface, java.lang.Long,
+        FormInterfaceSearchDto, FormInterfaceService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormInterfaceService formInterfaceService;
 
     @Override
-    public FormInterface resolver(TokenInfo token, FormInterface formInterface) {
-        if (isNull(formInterface)) {
-            formInterface =  new FormInterface();
+    public FormInterface resolver(TokenInfo token, FormInterfaceRequest request) {
+        FormInterface entity = new FormInterface();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, entity);
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
-            formInterface.setTenantId(token.getTenantId());
+            entity.setTenantId(token.getTenantId());
         } else {
-            formInterface.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+            entity.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
         }
-        return formInterface;
+        return entity;
     }
 
     @Override

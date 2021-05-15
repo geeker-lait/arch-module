@@ -2,7 +2,8 @@ package org.arch.auth.rbac.feign;
 
 import org.arch.framework.feign.BaseFeignService;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
-import org.arch.ums.account.entity.RoleMenu;
+import org.arch.ums.account.dto.RoleMenuRequest;
+import org.arch.ums.account.dto.RoleMenuSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,6 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-rbac-roleMenu", path = "/ums/account/role/menu",
         configuration = DeFaultFeignConfig.class)
-public interface RoleMenuFeignService extends BaseFeignService<RoleMenu, Long> {
+public interface RoleMenuFeignService extends BaseFeignService<RoleMenuSearchDto, RoleMenuRequest, Long> {
 
 }

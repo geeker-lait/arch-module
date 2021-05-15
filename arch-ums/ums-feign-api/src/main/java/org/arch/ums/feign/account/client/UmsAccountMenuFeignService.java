@@ -4,6 +4,8 @@ package org.arch.ums.feign.account.client;
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.ums.account.dto.MenuRequest;
+import org.arch.ums.account.dto.MenuSearchDto;
 import org.arch.ums.account.entity.Menu;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.lang.NonNull;
@@ -24,7 +26,7 @@ import java.util.List;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-menu", path = "/ums/account/menu",
         configuration = DeFaultFeignConfig.class)
-public interface UmsAccountMenuFeignService extends BaseFeignService<Menu, java.lang.Long> {
+public interface UmsAccountMenuFeignService extends BaseFeignService<MenuSearchDto, MenuRequest, Long> {
 
     /**
      * 多租户根据 {@code menuIds} 获取 {@link Menu} 列表.
@@ -34,6 +36,6 @@ public interface UmsAccountMenuFeignService extends BaseFeignService<Menu, java.
      */
     @GetMapping("/findByMenuIds/{tenantId}")
     @NonNull
-    Response<List<Menu>> findByMenuIds(@PathVariable(value = "tenantId") Integer tenantId,
-                                       @RequestBody List<Long> menuIds);
+    Response<List<MenuSearchDto>> findByMenuIds(@PathVariable(value = "tenantId") Integer tenantId,
+                                                @RequestBody List<Long> menuIds);
 }
