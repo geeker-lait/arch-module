@@ -2,8 +2,9 @@ package org.arch.ums.feign.user.client;
 
 
 import org.arch.framework.feign.BaseFeignService;
-import org.arch.ums.user.entity.IdCard;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.ums.user.dto.IdCardRequest;
+import org.arch.ums.user.dto.IdCardSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,6 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-idCard", path = "/ums/user/id/card",
         configuration = DeFaultFeignConfig.class)
-public interface UmsUserIdCardFeignService extends BaseFeignService<IdCard, java.lang.Long> {
+public interface UmsUserIdCardFeignService extends BaseFeignService<IdCardSearchDto, IdCardRequest, Long> {
 
 }

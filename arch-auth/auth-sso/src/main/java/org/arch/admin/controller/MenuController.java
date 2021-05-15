@@ -2,8 +2,9 @@ package org.arch.admin.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.crud.FeignCrudController;
+import org.arch.framework.feign.FeignCrudController;
 import org.arch.ums.account.dto.MenuRequest;
+import org.arch.ums.account.dto.MenuSearchDto;
 import org.arch.ums.account.entity.Menu;
 import org.arch.ums.feign.account.client.UmsAccountMenuFeignService;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,18 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/role")
 @Slf4j
 @RequiredArgsConstructor
-public class MenuController implements FeignCrudController<Menu, Long, MenuRequest, UmsAccountMenuFeignService> {
+public class MenuController implements FeignCrudController<MenuSearchDto, Long, MenuRequest, UmsAccountMenuFeignService> {
 
     private final UmsAccountMenuFeignService menuFeignService;
 
     @Override
     public UmsAccountMenuFeignService getFeignService() {
         return this.menuFeignService;
-    }
-
-    @Override
-    public Menu getEntity() {
-        return new Menu();
     }
 
 }

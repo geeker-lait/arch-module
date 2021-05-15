@@ -7,9 +7,11 @@ import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.constant.AuthStatusCode;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.ums.account.dto.RoleGroupRequest;
 import org.arch.ums.account.dto.RoleGroupSearchDto;
 import org.arch.ums.account.entity.RoleGroup;
 import org.arch.ums.account.service.RoleGroupService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -32,22 +36,23 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
  * 账号-角色组织或机构(RoleGroup) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-03-01 00:22:30
+ * @date 2021-05-15 22:15:53
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/role/group")
-public class RoleGroupController implements CrudController<RoleGroup, java.lang.Long, RoleGroupSearchDto, RoleGroupService> {
+public class RoleGroupController implements CrudController<RoleGroupRequest, RoleGroup, java.lang.Long, RoleGroupSearchDto, RoleGroupService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final RoleGroupService roleGroupService;
 
     @Override
-    public RoleGroup resolver(TokenInfo token, RoleGroup roleGroup) {
-        if (isNull(roleGroup)) {
-            roleGroup = new RoleGroup();
+    public RoleGroup resolver(TokenInfo token, RoleGroupRequest request) {
+        RoleGroup roleGroup = new RoleGroup();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, roleGroup);
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             roleGroup.setTenantId(token.getTenantId());
@@ -72,19 +77,19 @@ public class RoleGroupController implements CrudController<RoleGroup, java.lang.
      * 根据 entity 条件查询对象.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param entity 实体类
-     * @param token  token info
+     * @param request 实体的 request 类型
+     * @param token   token info
      * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping("/single")
-    public Response<RoleGroup> findOne(@RequestBody RoleGroup entity, TokenInfo token) {
+    public Response<RoleGroupSearchDto> findOne(@RequestBody @Valid RoleGroupRequest request, TokenInfo token) {
         try {
-            resolver(token, entity);
-            RoleGroupSearchDto searchDto = convertSearchDto(entity);
-            RoleGroup t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
-            return Response.success(t);
+            RoleGroup roleGroup = resolver(token, request);
+            RoleGroupSearchDto searchDto = convertSearchDto(roleGroup);
+            RoleGroup result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -101,18 +106,19 @@ public class RoleGroupController implements CrudController<RoleGroup, java.lang.
      * 根据 entity 条件查询对象列表.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param t     实体类
-     * @param token token info
+     * @param request 实体的 request 类型
+     * @param token   token info
      * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping("/find")
-    public Response<List<RoleGroup>> find(@RequestBody RoleGroup t, TokenInfo token) {
-        resolver(token, t);
-        RoleGroupSearchDto searchDto = convertSearchDto(t);
+    public Response<List<RoleGroupSearchDto>> find(@RequestBody @Valid RoleGroupRequest request, TokenInfo token) {
+        RoleGroup roleGroup = resolver(token, request);
+        RoleGroupSearchDto searchDto = convertSearchDto(roleGroup);
         try {
-            return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+            List<RoleGroup> roleGroupList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            return Response.success(roleGroupList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -124,7 +130,7 @@ public class RoleGroupController implements CrudController<RoleGroup, java.lang.
      * 分页查询.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param entity     实体类
+     * @param request    实体的 request 类型
      * @param pageNumber 第几页
      * @param pageSize   页大小
      * @param token      token info
@@ -133,14 +139,15 @@ public class RoleGroupController implements CrudController<RoleGroup, java.lang.
     @Override
     @NonNull
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    public Response<IPage<RoleGroup>> page(@RequestBody RoleGroup entity,
-                                           @PathVariable(value = "pageNumber") Integer pageNumber,
-                                           @PathVariable(value = "pageSize") Integer pageSize,
-                                           TokenInfo token) {
-        resolver(token, entity);
-        RoleGroupSearchDto searchDto = convertSearchDto(entity);
+    public Response<IPage<RoleGroupSearchDto>> page(@RequestBody @Valid RoleGroupRequest request,
+                                                    @PathVariable(value = "pageNumber") Integer pageNumber,
+                                                    @PathVariable(value = "pageSize") Integer pageSize,
+                                                    TokenInfo token) {
+        RoleGroup roleGroup = resolver(token, request);
+        RoleGroupSearchDto searchDto = convertSearchDto(roleGroup);
         try {
-            return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+            IPage<RoleGroup> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -175,9 +182,9 @@ public class RoleGroupController implements CrudController<RoleGroup, java.lang.
     @GetMapping("/find/{tenantId:\\d+}/{groupId:\\d+}")
     @NonNull
     public Response<Map<String, Map<String, Set<String>>>> findGroupRolesByGroupIdOfTenant(
-                                                                    @PathVariable(value = "tenantId") Integer tenantId,
-                                                                    @PathVariable(value = "groupId") Long groupId,
-                                                                    @RequestBody List<Long> roleIds) {
+            @PathVariable(value = "tenantId") Integer tenantId,
+            @PathVariable(value = "groupId") Long groupId,
+            @RequestBody List<Long> roleIds) {
         try {
             return Response.success(this.roleGroupService.findGroupRolesByGroupIdOfTenant(tenantId, groupId, roleIds));
         }

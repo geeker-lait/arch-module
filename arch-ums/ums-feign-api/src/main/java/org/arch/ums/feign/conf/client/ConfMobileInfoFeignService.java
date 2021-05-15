@@ -3,8 +3,9 @@ package org.arch.ums.feign.conf.client;
 
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
-import org.arch.ums.conf.entity.MobileInfo;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.ums.conf.dto.MobileInfoRequest;
+import org.arch.ums.conf.dto.MobileInfoSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ import java.util.List;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-confMobileInfo", path = "/ums/conf/mobile/info",
         configuration = DeFaultFeignConfig.class)
-public interface ConfMobileInfoFeignService extends BaseFeignService<MobileInfo, java.lang.Long> {
+public interface ConfMobileInfoFeignService extends BaseFeignService<MobileInfoSearchDto, MobileInfoRequest, Long> {
 
     /**
      * 批量上传手机归属地信息, 批量保存, 如果主键或唯一索引重复则更新.<br>
@@ -34,5 +35,5 @@ public interface ConfMobileInfoFeignService extends BaseFeignService<MobileInfo,
      * @return  {@link Response(Boolean)}
      */
     @PostMapping("/savesOnDuplicateKeyUpdate")
-    Response<Boolean> insertOnDuplicateKeyUpdate(@Valid @RequestBody List<MobileInfo> mobileInfoList);
+    Response<Boolean> insertOnDuplicateKeyUpdate(@Valid @RequestBody List<MobileInfoRequest> mobileInfoList);
 }

@@ -1,6 +1,5 @@
 package org.arch.ums.feign.common.service;
 
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
 import org.springframework.lang.NonNull;
@@ -20,11 +19,12 @@ import java.util.List;
  *
  * @param <P>   需要返回的权限资源类型
  * @param <PID> 权限资源主键类型
- * @param <T>   {@code BaseFeignService<T, ID>} 中的 T
+ * @param <DTO> {@code BaseFeignService<T, ID>} 中的 DTO
+ * @param <R>   {@code BaseFeignService<T, ID>} 中的 R
  * @param <ID>  {@code BaseFeignService<T, ID>} 中的 ID
  */
-public interface RolePermissionFeignService<P, PID extends Serializable, T extends Model<T>, ID extends Serializable>
-                                                extends BaseFeignService<T, ID> {
+public interface RolePermissionFeignService<P, PID extends Serializable, DTO, R, ID extends Serializable>
+                                                extends BaseFeignService<DTO, R, ID> {
 
     /**
      * 基于多租户, 更新角色 {@code roleId} 的 权限资源

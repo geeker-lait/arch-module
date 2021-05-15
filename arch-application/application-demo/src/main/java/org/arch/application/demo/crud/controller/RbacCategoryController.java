@@ -2,12 +2,17 @@ package org.arch.application.demo.crud.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.application.demo.crud.dto.RbacCategoryRequest;
 import org.arch.application.demo.crud.dto.RbacCategorySearchDto;
 import org.arch.application.demo.crud.entity.RbacCategory;
 import org.arch.application.demo.crud.service.RbacCategoryService;
 import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static java.util.Objects.nonNull;
 
 /**
  * 资源类目表服务控制器
@@ -20,7 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/rbacCategory")
-public class RbacCategoryController implements CrudController<RbacCategory, Long, RbacCategorySearchDto, RbacCategoryService> {
+public class RbacCategoryController implements CrudController<RbacCategoryRequest, RbacCategory, Long, RbacCategorySearchDto,
+        RbacCategoryService> {
     private final RbacCategoryService rbacCategoryService;
 
 
@@ -67,5 +73,14 @@ public class RbacCategoryController implements CrudController<RbacCategory, Long
     @Override
     public RbacCategorySearchDto getSearchDto() {
         return new RbacCategorySearchDto();
+    }
+
+    @Override
+    public RbacCategory resolver(TokenInfo token, RbacCategoryRequest request) {
+        RbacCategory entity = new RbacCategory();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, entity);
+        }
+        return entity;
     }
 }

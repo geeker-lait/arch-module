@@ -4,7 +4,8 @@ package org.arch.ums.feign.account.client;
 import org.arch.framework.beans.Response;
 import org.arch.framework.feign.BaseFeignService;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
-import org.arch.ums.account.entity.RoleGroup;
+import org.arch.ums.account.dto.RoleGroupRequest;
+import org.arch.ums.account.dto.RoleGroupSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,7 @@ import java.util.Set;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-roleGroup", path = "/ums/account/role/group",
         configuration = DeFaultFeignConfig.class)
-public interface UmsAccountRoleGroupFeignService extends BaseFeignService<RoleGroup, java.lang.Long> {
+public interface UmsAccountRoleGroupFeignService extends BaseFeignService<RoleGroupSearchDto, RoleGroupRequest, Long> {
 
     /**
      * 获取所有租户的所有角色组的角色

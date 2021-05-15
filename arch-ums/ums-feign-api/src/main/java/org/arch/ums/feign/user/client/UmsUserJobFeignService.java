@@ -2,8 +2,9 @@ package org.arch.ums.feign.user.client;
 
 
 import org.arch.framework.feign.BaseFeignService;
-import org.arch.ums.user.entity.Job;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.ums.user.dto.JobRequest;
+import org.arch.ums.user.dto.JobSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,6 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-job", path = "/ums/user/job",
         configuration = DeFaultFeignConfig.class)
-public interface UmsUserJobFeignService extends BaseFeignService<Job, java.lang.Long> {
+public interface UmsUserJobFeignService extends BaseFeignService<JobSearchDto, JobRequest, Long> {
 
 }

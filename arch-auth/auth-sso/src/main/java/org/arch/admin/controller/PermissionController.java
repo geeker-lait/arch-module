@@ -2,9 +2,9 @@ package org.arch.admin.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.crud.FeignCrudController;
+import org.arch.framework.feign.FeignCrudController;
 import org.arch.ums.account.dto.PermissionRequest;
-import org.arch.ums.account.entity.Permission;
+import org.arch.ums.account.dto.PermissionSearchDto;
 import org.arch.ums.feign.account.client.UmsAccountPermissionFeignService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,18 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/role")
 @Slf4j
 @RequiredArgsConstructor
-public class PermissionController implements FeignCrudController<Permission, Long, PermissionRequest, UmsAccountPermissionFeignService> {
+public class PermissionController implements FeignCrudController<PermissionSearchDto, Long, PermissionRequest, UmsAccountPermissionFeignService> {
 
     private final UmsAccountPermissionFeignService permissionFeignService;
 
     @Override
     public UmsAccountPermissionFeignService getFeignService() {
         return this.permissionFeignService;
-    }
-
-    @Override
-    public Permission getEntity() {
-        return new Permission();
     }
 
 }

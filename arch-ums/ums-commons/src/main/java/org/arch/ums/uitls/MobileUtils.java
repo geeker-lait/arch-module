@@ -5,7 +5,8 @@ import org.arch.framework.beans.exception.constant.ArgumentStatuesCode;
 import org.arch.framework.beans.exception.constant.AuthStatusCode;
 import org.arch.framework.beans.exception.constant.CommonStatusCode;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.ums.conf.entity.MobileInfo;
+import org.arch.ums.conf.dto.MobileInfoRequest;
+import org.arch.ums.conf.dto.MobileSegmentRequest;
 import org.arch.ums.conf.entity.MobileSegment;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -73,16 +74,18 @@ public class MobileUtils {
 
     /**
      * 获取手机归属地信息列表
-     * @param delimiter         行格式分隔符
-     * @param bufferedReader    {@link BufferedReader} 手机归属地信息
-     * @param segmentMap        手机号段信息
-     * @param errorList         放置解析行格式时错误的列表
-     * @return  返回手机归属地的信息列表
+     *
+     * @param delimiter      行格式分隔符
+     * @param bufferedReader {@link BufferedReader} 手机归属地信息
+     * @param segmentMap     手机号段信息
+     * @param errorList      放置解析行格式时错误的列表
+     * @return 返回手机归属地的信息列表
      */
     @NonNull
-    public static List<MobileInfo> getMobileInfo(@NonNull String delimiter, @NonNull BufferedReader bufferedReader,
-                                                 @NonNull Map<Integer, MobileSegment> segmentMap,
-                                                 @NonNull List<String> errorList) {
+    public static List<MobileInfoRequest> getMobileInfo(@NonNull String delimiter, @NonNull BufferedReader bufferedReader,
+                                                        @NonNull Map<Integer, MobileSegment> segmentMap,
+                                                        @NonNull List<String> errorList) {
+
         // 解析手机归属地信息. 格式: 1999562	甘肃-兰州
         return bufferedReader.lines()
                              .map(line -> line.split(delimiter))
@@ -92,7 +95,7 @@ public class MobileUtils {
                                      errorList.add(Arrays.toString(arr));
                                      return null;
                                  }
-                                 MobileInfo mobileInfo = new MobileInfo();
+                                 MobileInfoRequest mobileInfo = new MobileInfoRequest();
                                  String prefix = arr[0].trim();
                                  mobileInfo.setPrefix(Integer.valueOf(prefix));
                                  if (hasText(arr[1])) {
@@ -131,17 +134,20 @@ public class MobileUtils {
                              .filter(Objects::nonNull)
                              .collect(Collectors.toList());
     }
+
     /**
      * 获取手机号段信息列表
-     * @param delimiter         行格式分隔符
-     * @param bufferedReader    {@link BufferedReader} 手机号段信息
-     * @param errorList         放置解析行格式时错误的列表
-     * @return  返回手机号段的信息列表
+     *
+     * @param delimiter      行格式分隔符
+     * @param bufferedReader {@link BufferedReader} 手机号段信息
+     * @param errorList      放置解析行格式时错误的列表
+     * @return 返回手机号段的信息列表
      */
     @NonNull
-    public static List<MobileSegment> getMobileSegment(@NonNull String delimiter,
-                                                 @NonNull BufferedReader bufferedReader,
-                                                 @NonNull List<String> errorList) {
+    public static List<MobileSegmentRequest> getMobileSegment(@NonNull String delimiter,
+                                                              @NonNull BufferedReader bufferedReader,
+                                                              @NonNull List<String> errorList) {
+
         // 解析手机号段信息. 格式: 1345   CMCC	0
         return bufferedReader.lines()
                              .map(line -> line.split(delimiter))
@@ -151,7 +157,7 @@ public class MobileUtils {
                                      errorList.add(Arrays.toString(arr));
                                      return null;
                                  }
-                                 MobileSegment mobileSegment = new MobileSegment();
+                                 MobileSegmentRequest mobileSegment = new MobileSegmentRequest();
                                  mobileSegment.setPrefix(Integer.valueOf(arr[0]));
                                  mobileSegment.setMno(arr[1]);
                                  mobileSegment.setVirtual(Integer.parseInt(arr[2]) == 0 ? Boolean.FALSE : Boolean.TRUE);

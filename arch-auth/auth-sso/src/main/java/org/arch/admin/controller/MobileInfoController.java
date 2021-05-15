@@ -6,10 +6,13 @@ import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.constant.AuthStatusCode;
 import org.arch.framework.beans.exception.constant.CommonStatusCode;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.ums.conf.entity.MobileInfo;
+import org.arch.ums.conf.dto.MobileInfoRequest;
+import org.arch.ums.conf.dto.MobileSegmentRequest;
+import org.arch.ums.conf.dto.MobileSegmentSearchDto;
 import org.arch.ums.conf.entity.MobileSegment;
 import org.arch.ums.feign.conf.client.ConfMobileInfoFeignService;
 import org.arch.ums.feign.conf.client.ConfMobileSegmentFeignService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,22 +79,27 @@ public class MobileInfoController {
                 BufferedReader bufferedReader =
                         new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
                 // 获取手机号段信息
-                Response<List<MobileSegment>> response = this.confMobileSegmentFeignService.list();
-                List<MobileSegment> segmentList = response.getSuccessData();
-                if (segmentList == null) {
+                Response<List<MobileSegmentSearchDto>> response = this.confMobileSegmentFeignService.list();
+                List<MobileSegmentSearchDto> segmentSearchDtoList = response.getSuccessData();
+                if (segmentSearchDtoList == null) {
                     return Response.failed(CommonStatusCode.QUERY_MOBILE_SEGMENT_FAILED);
                 }
-                if (segmentList.size() == 0) {
+                if (segmentSearchDtoList.size() == 0) {
                     return Response.failed(CommonStatusCode.MOBILE_SEGMENT_NOT_DATA);
                 }
                 Map<Integer, MobileSegment> segmentMap =
-                        segmentList.stream()
-                                   .collect(Collectors.toMap(MobileSegment::getPrefix,
-                                                             mobileSegment -> mobileSegment));
+                        segmentSearchDtoList.stream()
+                                            .map(dto -> {
+                                                MobileSegment mobileSegment = new MobileSegment();
+                                                BeanUtils.copyProperties(dto, mobileSegment);
+                                                return mobileSegment;
+                                            })
+                                            .collect(Collectors.toMap(MobileSegment::getPrefix,
+                                                                      mobileSegment -> mobileSegment));
                 // 存储解析错误的行信息
                 List<String> errorList = new ArrayList<>();
                 // 解析手机号段信息. 格式: 1999562	甘肃-兰州
-                List<MobileInfo> mobileInfoList = getMobileInfo(delimiter, bufferedReader, segmentMap, errorList);
+                List<MobileInfoRequest> mobileInfoList = getMobileInfo(delimiter, bufferedReader, segmentMap, errorList);
 
                 Response<Boolean> savesResponse = this.confMobileInfoFeignService.insertOnDuplicateKeyUpdate(mobileInfoList);
                 return getBooleanResponse(errorList, savesResponse,
@@ -134,9 +142,10 @@ public class MobileInfoController {
                 // 存储解析错误的行信息
                 List<String> errorList = new ArrayList<>();
                 // 解析手机归属地信息. 格式: 1345   CMCC	0
-                List<MobileSegment> mobileSegmentList = getMobileSegment(delimiter, bufferedReader, errorList);
+                List<MobileSegmentRequest> mobileSegmentList = getMobileSegment(delimiter, bufferedReader, errorList);
 
-                Response<Boolean> savesResponse = this.confMobileSegmentFeignService.insertOnDuplicateKeyUpdate(mobileSegmentList);
+                Response<Boolean> savesResponse =
+                        this.confMobileSegmentFeignService.insertOnDuplicateKeyUpdate(mobileSegmentList);
                 return getBooleanResponse(errorList, savesResponse,
                                           SAVES_MOBILE_SEGMENT_FAILED,
                                           SAVES_MOBILE_SEGMENT_PARTIAL_FAILED);

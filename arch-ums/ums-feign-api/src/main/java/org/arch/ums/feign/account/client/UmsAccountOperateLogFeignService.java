@@ -2,6 +2,8 @@ package org.arch.ums.feign.account.client;
 
 
 import org.arch.framework.feign.BaseFeignService;
+import org.arch.ums.account.dto.OperateLogRequest;
+import org.arch.ums.account.dto.OperateLogSearchDto;
 import org.arch.ums.account.entity.OperateLog;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -17,6 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-operateLog", path = "/ums/account/operate/log",
         configuration = DeFaultFeignConfig.class)
-public interface UmsAccountOperateLogFeignService extends BaseFeignService<OperateLog, java.lang.Long> {
+public interface UmsAccountOperateLogFeignService extends BaseFeignService<OperateLogSearchDto, OperateLogRequest, Long> {
 
 }

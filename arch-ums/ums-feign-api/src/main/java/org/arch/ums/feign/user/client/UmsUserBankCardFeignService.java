@@ -2,6 +2,8 @@ package org.arch.ums.feign.user.client;
 
 
 import org.arch.framework.feign.BaseFeignService;
+import org.arch.ums.user.dto.BankCardRequest;
+import org.arch.ums.user.dto.BankCardSearchDto;
 import org.arch.ums.user.entity.BankCard;
 import org.arch.framework.feign.config.DeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -17,6 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-bankCard", path = "/ums/user/bank/card",
         configuration = DeFaultFeignConfig.class)
-public interface UmsUserBankCardFeignService extends BaseFeignService<BankCard, java.lang.Long> {
+public interface UmsUserBankCardFeignService extends BaseFeignService<BankCardSearchDto, BankCardRequest, Long> {
 
 }
