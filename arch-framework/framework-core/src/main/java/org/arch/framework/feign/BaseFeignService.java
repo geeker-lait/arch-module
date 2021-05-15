@@ -1,7 +1,7 @@
 package org.arch.framework.feign;
 
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.arch.framework.api.crud.BaseSearchDto;
 import org.arch.framework.beans.Response;
 import org.arch.framework.crud.CrudController;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,24 +20,27 @@ import java.util.List;
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.2.26 15:15
+ * @param <DTO> 实体类对应的 {@link BaseSearchDto}
+ * @param <ID>  实体类的 id 类型
+ * @param <R>   实体类对应的 {@code TRequest}
  */
-public interface BaseFeignService<T extends Model<T>, ID extends Serializable> {
+public interface BaseFeignService<DTO, R, ID extends Serializable> {
 
     /**
      * 保存
-     * @param t     实体类
+     * @param request    实体类对应的 {@code TRequest}
      * @return  {@link Response}
      */
     @PostMapping
-    Response<T> save(@Valid @RequestBody T t);
+    Response<DTO> save(@Valid @RequestBody R request);
 
     /**
      * 批量保存
-     * @param entityList 实体类列表
+     * @param requestList 实体类对应的 {@code TRequest} 列表
      * @return  {@link Response}
      */
     @PostMapping("/saves")
-    Response<List<T>> saveAll(@Valid @RequestBody List<T> entityList);
+    Response<List<DTO>> saveAll(@Valid @RequestBody List<R> requestList);
 
     /**
      * 根据 id 查询对象
@@ -45,40 +48,40 @@ public interface BaseFeignService<T extends Model<T>, ID extends Serializable> {
      * @return  {@link Response}
      */
     @GetMapping(path = "/{id}")
-    Response<T> findById(@PathVariable("id") ID id);
+    Response<DTO> findById(@PathVariable("id") ID id);
 
     /**
      * 根据 entity 条件查询对象
-     * @param entity    实体类
+     * @param request    实体类对应的 {@code TRequest}
      * @return  {@link Response}
      */
     @GetMapping("/single")
-    Response<T> findOne(@RequestBody T entity);
+    Response<DTO> findOne(@RequestBody R request);
 
     /**
      * 根据 entity 条件查询对象列表
-     * @param t         实体类
+     * @param request    实体类对应的 {@code TRequest}
      * @return  {@link Response}
      */
     @GetMapping("/find")
-    Response<List<T>> find(@RequestBody T t);
+    Response<List<DTO>> find(@RequestBody R request);
 
     /**
      * 查询所有列表
      * @return  {@link Response}
      */
     @GetMapping("/list")
-    Response<List<T>> list();
+    Response<List<DTO>> list();
 
     /**
      * 分页查询
-     * @param entity        实体类
+     * @param request       实体类对应的 {@code TRequest}
      * @param pageNumber    第几页
      * @param pageSize      页大小
      * @return  {@link Response}
      */
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    Response<Page<T>> page(@RequestBody T entity,
+    Response<Page<DTO>> page(@RequestBody R request,
                            @PathVariable(value = "pageNumber") Integer pageNumber,
                            @PathVariable(value = "pageSize") Integer pageSize);
 
@@ -92,18 +95,18 @@ public interface BaseFeignService<T extends Model<T>, ID extends Serializable> {
 
     /**
      * 根据 id 更新实体
-     * @param entity    实体
+     * @param request   实体类对应的 {@code TRequest}
      * @return  true 表示更新成功
      */
     @PutMapping
-    Response<Boolean> updateById(@RequestBody T entity);
+    Response<Boolean> updateById(@RequestBody R request);
 
     /**
      * 根据 entity 条件模糊查询对象; 模糊查询的条件拼接 {@code CONCAT("%", condition ,"%")},
      * 此方法会对不为 null 的 {@link String} 类型的字段都进行模糊查询.
-     * @param entity    实体类
+     * @param request    实体类对应的 {@code TRequest}
      * @return  {@link Response}
      */
     @GetMapping("/like")
-    Response<List<T>> like(@RequestBody T entity);
+    Response<List<DTO>> like(@RequestBody R request);
 }
