@@ -36,6 +36,7 @@ public class SdkWebSecurityAutoConfigurer  {
         return new SecurityCoreAutoConfigurer();
     }
 }
+// 注意: 需要自定义配置 WebSecurityConfigurer 时可通过实现 HttpSecurityAware 接口添加.
 ```
 
 3. 添加资源服务器的 appId 与 appCode 属性, MQ 配置(权限相关)

@@ -1,4 +1,14 @@
 ums:
+  one-click-login:
+    # 一键登录是否开启, 默认 false
+    enable: true
+    # 一键登录请求处理 url, 默认 /authentication/one-click
+    login-processing-url: /authentication/one-click
+    # token 参数名称, 默认: accessToken
+    token-param-name: accessToken
+    # 其他请求参数名称列表(包括请求头名称), 此参数会传递到 OneClickLoginService.callback(String, Map)
+    # 与 UserDetailsRegisterService.registerUser(String, Map); 默认为: 空
+    other-param-names:
   # ================ 第三方授权登录相关配置 ================
   oauth:
     # 是否支持第三方授权登录功能, 默认: 空, 必须明确配置是否支持
