@@ -8,7 +8,10 @@ import org.arch.auth.sso.properties.FileProperties;
 import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.utils.ConverUtils;
 import org.arch.framework.utils.SecurityUtils;
+import org.arch.ums.conf.dto.FileInfoRequest;
+import org.arch.ums.conf.dto.FileInfoSearchDto;
 import org.arch.ums.conf.entity.FileInfo;
 import org.arch.ums.feign.conf.client.ConfFileInfoFeignService;
 import org.slf4j.Logger;
@@ -100,7 +103,7 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
     @NonNull
     private FileInfoDto saveFileInfo(@NonNull FileInfoDto fileInfoDto, @NonNull String uploadType, boolean save) {
         if (save) {
-            FileInfo fileInfo = new FileInfo();
+            FileInfoRequest fileInfo = new FileInfoRequest();
             BeanUtil.copyProperties(fileInfoDto, fileInfo);
             try {
                 TokenInfo currentUser = SecurityUtils.getCurrentUser();
@@ -113,13 +116,13 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
             fileInfo.setStorageType(this.imageClient.getStorageType());
             fileInfo.setTenantId(Integer.valueOf(this.tenantContextHolder.getTenantId()));
             fileInfo.setDeleted(Boolean.FALSE);
-            FileInfo successData;
+            FileInfoSearchDto successData;
             try {
-                Response<FileInfo> response = this.confFileInfoFeignService.save(fileInfo);
+                Response<FileInfoSearchDto> response = this.confFileInfoFeignService.save(fileInfo);
                 successData = response.getSuccessData();
                 if (isNull(successData)) {
                     if (DUPLICATE_KEY.getCode() == response.getCode()) {
-                        log.warn("{}, event: {}", response.getMsg(), fileInfo.toString());
+                        log.warn("{}, event: {}", response.getMsg(), fileInfo);
                     }
                     else {
                         String traceId = getTraceId();
@@ -131,7 +134,7 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
                                           new Class[] {FileInfo.class},
                                           fileInfo);
                     }
-                    successData = fileInfo;
+                    successData = ConverUtils.copyProperties(fileInfo, FileInfoSearchDto.class);
                 }
 
             }
@@ -145,7 +148,7 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
                                   "save",
                                   new Class[] {FileInfo.class},
                                   fileInfo);
-                successData = fileInfo;
+                successData = ConverUtils.copyProperties(fileInfo, FileInfoSearchDto.class);
             }
             BeanUtil.copyProperties(successData, fileInfoDto);
         }
@@ -161,11 +164,11 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
     protected boolean removeFile(@NonNull String filePath, @NonNull String uploadType) {
         boolean removeFile = this.imageClient.removeFile(filePath);
         if (removeFile) {
-            FileInfo successData;
+            FileInfoSearchDto successData;
             try {
                 // 这里不关心对象存储信息是否删除成功, 因为不影响业务逻辑, 对象存储信息的一致性可通过定时任务进行补偿
-                Response<FileInfo> response = this.confFileInfoFeignService.deleteByFilePathAndUploadType(filePath,
-                                                                                                          uploadType);
+                Response<FileInfoSearchDto> response =
+                        this.confFileInfoFeignService.deleteByFilePathAndUploadType(filePath, uploadType);
                 successData = response.getSuccessData();
                 if (isNull(successData)) {
                     String traceId = getTraceId();
