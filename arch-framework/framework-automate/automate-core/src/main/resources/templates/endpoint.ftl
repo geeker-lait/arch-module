@@ -16,12 +16,14 @@ package ${package!""};
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ${basePkg!""}.dto.${(name?cap_first)!""}Request;
 import ${basePkg!""}.dto.${(name?cap_first)!""}SearchDto;
 import ${basePkg!""}.entity.${(name?cap_first)!""};
 import ${basePkg!""}.service.${(name?cap_first)!""}Service;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.beans.Response;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +36,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import javax.validation.Valid;
 import java.util.List;
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 <#if _pkType??>
@@ -51,17 +52,17 @@ import ${_pkType}
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/${(name?uncap_first)!""}")
-public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(name?cap_first)!""}, ${_pkType!""}, ${
-(name?cap_first)!""}SearchDto, ${(name?cap_first)!""}Service> {
+@RequestMapping("<#if basePkg??>/${basePkg?keep_after_last(".")}</#if>/${(name?uncap_first)!""}")
+public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(name?cap_first)!""}Request, ${(name?cap_first)!""}, ${_pkType!""}, ${(name?cap_first)!""}SearchDto, ${(name?cap_first)!""}Service> {
 
     private final TenantContextHolder tenantContextHolder;
     private final ${(name?cap_first)!""}${suffix!""} ${(name?uncap_first)!""}${suffix!""};
 
     @Override
-    public ${(name?cap_first)!""} resolver(TokenInfo token, ${(name?cap_first)!""} ${(name?uncap_first)!""}) {
-        if (isNull(${(name?uncap_first)!""}) {
-            ${(name?uncap_first)!""} =  new ${(name?cap_first)!""}();
+    public ${(name?cap_first)!""} resolver(TokenInfo token, ${(name?cap_first)!""}Request request) {
+        ${(name?cap_first)!""} ${(name?uncap_first)!""} = new ${(name?cap_first)!""};
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, ${(name?uncap_first)!""});
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             ${(name?uncap_first)!""}.setTenantId(token.getTenantId());
@@ -85,19 +86,19 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
     /**
     * 根据 entity 条件查询对象.
     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-    * @param entity    实体类
+    * @param entity    实体的 request 类型
     * @param token     token info
     * @return  {@link Response}
     */
     @Override
     @NonNull
     @GetMapping("/single")
-    public Response<${(name?cap_first)!""}> findOne(@RequestBody ${(name?cap_first)!""} entity, TokenInfo token) {
+    public Response<${(name?cap_first)!""}SearchDto> findOne(@RequestBody @Valid ${(name?cap_first)!""}Request request, TokenInfo token) {
         try {
-            resolver(token, entity);
-            ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(entity);
-            ${(name?cap_first)!""} t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
-            return Response.success(t);
+            ${(name?cap_first)!""} ${(name?uncap_first)!""} = resolver(token, request);
+            ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(${(name?uncap_first)!""});
+            ${(name?cap_first)!""} result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            return Response.success(convertSearchDto(result));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             if (e instanceof IncorrectResultSizeDataAccessException) {
@@ -111,18 +112,19 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
     /**
     * 根据 entity 条件查询对象列表.
     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-    * @param t         实体类
+    * @param t         实体的 request 类型
     * @param token     token info
     * @return  {@link Response}
     */
     @Override
     @NonNull
     @GetMapping("/find")
-    public Response<List<${(name?cap_first)!""}>> find(@RequestBody ${(name?cap_first)!""} t, TokenInfo token) {
-        resolver(token, t);
-        ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(t);
+    public Response<List<${(name?cap_first)!""}SearchDto>> find(@RequestBody @Valid ${(name?cap_first)!""}Request request, TokenInfo token) {
+        ${(name?cap_first)!""} ${(name?uncap_first)!""} = resolver(token, request);
+        ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(${(name?uncap_first)!""});
         try {
-            return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+        List<${(name?cap_first)!""}> ${(name?uncap_first)!""}List = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+        return Response.success(${(name?uncap_first)!""}List.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -133,7 +135,7 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
     /**
     * 分页查询.
     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-    * @param entity        实体类
+    * @param entity        实体的 request 类型
     * @param pageNumber    第几页
     * @param pageSize      页大小
     * @param token         token info
@@ -142,14 +144,15 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
     @Override
     @NonNull
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    public Response<IPage<${(name?cap_first)!""}>> page(@RequestBody ${(name?cap_first)!""} entity,
+    public Response<IPage<${(name?cap_first)!""}SearchDto>> page(@RequestBody @Valid ${(name?cap_first)!""}Request request,
                                                     @PathVariable(value = "pageNumber") Integer pageNumber,
                                                     @PathVariable(value = "pageSize") Integer pageSize,
                                                     TokenInfo token) {
-        resolver(token, entity);
-        ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(entity);
+        ${(name?cap_first)!""} ${(name?uncap_first)!""} = resolver(token, request);
+        ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(${(name?uncap_first)!""});
         try {
-            return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+            IPage<${(name?cap_first)!""}> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
