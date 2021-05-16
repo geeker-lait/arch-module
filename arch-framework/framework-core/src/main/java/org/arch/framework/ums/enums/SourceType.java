@@ -8,7 +8,7 @@ package org.arch.framework.ums.enums;
  */
 public enum SourceType {
     /**
-     * 用户推荐, 存储使用 00 accountId_relationshipId_rsOrg_rsDeep_rsSeq,
+     * 用户推荐, 003_3: 00 为 SourceType 业务前缀, 3_3 为 rsId(rs=Relationship)_memberLevelId
      */
     USER("00", "_"),
     /**

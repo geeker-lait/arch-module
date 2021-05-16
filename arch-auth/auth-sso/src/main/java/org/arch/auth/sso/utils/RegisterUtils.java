@@ -5,8 +5,8 @@ import me.zhyd.oauth.model.AuthToken;
 import me.zhyd.oauth.model.AuthUser;
 import org.arch.auth.sso.properties.SsoProperties;
 import org.arch.framework.ums.enums.AccountType;
+import org.arch.ums.account.dto.OauthTokenRequest;
 import org.arch.ums.account.entity.Identifier;
-import org.arch.ums.account.entity.OauthToken;
 import org.slf4j.MDC;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
@@ -138,13 +138,13 @@ public class RegisterUtils {
      * @param timeout      {@link HttpConfig#getTimeout()}
      */
     @NonNull
-    public static OauthToken toOauthToken(@NonNull AuthUser authUser, @NonNull String tenantId,
-                                          @NonNull Long identifierId, int timeout) {
+    public static OauthTokenRequest toOauthToken(@NonNull AuthUser authUser, @NonNull String tenantId,
+                                                 @NonNull Long identifierId, int timeout) {
 
         // 添加到 account_auth_token 表
         // 获取 AuthTokenPo
         AuthToken token = authUser.getToken();
-        OauthToken oauthToken = new OauthToken();
+        OauthTokenRequest oauthToken = new OauthTokenRequest();
         BeanUtils.copyProperties(token, oauthToken);
         oauthToken.setProviderId(authUser.getSource())
                   .setAccountIdentifierId(identifierId)

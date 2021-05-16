@@ -5,6 +5,14 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.auth.rbac.service.AuthoritiesService;
+import org.arch.framework.utils.ConverUtils;
+import org.arch.ums.account.dto.MenuSearchDto;
+import org.arch.ums.account.dto.PermissionSearchDto;
+import org.arch.ums.account.dto.ResourceSearchDto;
+import org.arch.ums.account.dto.RoleMenuSearchDto;
+import org.arch.ums.account.dto.RolePermissionSearchDto;
+import org.arch.ums.account.dto.RoleResourceSearchDto;
+import org.arch.ums.account.dto.RoleSearchDto;
 import org.arch.ums.account.entity.Menu;
 import org.arch.ums.account.entity.Permission;
 import org.arch.ums.account.entity.Resource;
@@ -37,6 +45,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
@@ -160,15 +169,25 @@ public class NativeAuthoritiesServiceImpl implements AuthoritiesService {
                                         .eq(Role::getDeleted, Boolean.FALSE);
         Wrapper<RoleMenu> roleMenuWrapper = Wrappers.<RoleMenu>lambdaQuery()
                                         .eq(RoleMenu::getDeleted, Boolean.FALSE);
-        CompletableFuture<List<Menu>> menuCompletableFuture =
+        CompletableFuture<List<MenuSearchDto>> menuCompletableFuture =
                 CompletableFuture.supplyAsync(() -> ofNullable(menuService.findAllBySpec(menuWrapper))
-                        .orElse(new ArrayList<>(0)));
-        CompletableFuture<List<Role>> roleCompletableFuture =
+                        .orElse(new ArrayList<>(0))
+                        .stream()
+                        .map(menu -> ConverUtils.copyProperties(menu, MenuSearchDto.class))
+                        .collect(Collectors.toList()));
+
+        CompletableFuture<List<RoleSearchDto>> roleCompletableFuture =
                 CompletableFuture.supplyAsync(() -> ofNullable(roleService.findAllBySpec(roleWrapper))
-                        .orElse(new ArrayList<>(0)));
-        CompletableFuture<List<RoleMenu>> roleMenuCompletableFuture =
+                        .orElse(new ArrayList<>(0))
+                        .stream()
+                        .map(role -> ConverUtils.copyProperties(role, RoleSearchDto.class))
+                        .collect(Collectors.toList()));
+        CompletableFuture<List<RoleMenuSearchDto>> roleMenuCompletableFuture =
                 CompletableFuture.supplyAsync(() -> ofNullable(roleMenuService.findAllBySpec(roleMenuWrapper))
-                        .orElse(new ArrayList<>(0)));
+                        .orElse(new ArrayList<>(0))
+                        .stream()
+                        .map(roleMenu -> ConverUtils.copyProperties(roleMenu, RoleMenuSearchDto.class))
+                        .collect(Collectors.toList()));
 
         final String mdcTraceId = MDC.get(MDC_KEY);
         CompletableFuture<Map<String, Map<String, Map<MenuVo, Set<MenuVo>>>>> resultCompletableFuture =
@@ -209,9 +228,12 @@ public class NativeAuthoritiesServiceImpl implements AuthoritiesService {
                                             .in(Menu::getId, menuIds)
                                             .eq(Menu::getDeleted, Boolean.FALSE);
 
-        CompletableFuture<List<Menu>> menuCompletableFuture =
+        CompletableFuture<List<MenuSearchDto>> menuCompletableFuture =
                 CompletableFuture.supplyAsync(() -> ofNullable(menuService.findAllBySpec(menuWrapper))
-                        .orElse(new ArrayList<>(0)));
+                        .orElse(new ArrayList<>(0))
+                        .stream()
+                        .map(menu -> ConverUtils.copyProperties(menu, MenuSearchDto.class))
+                        .collect(Collectors.toList()));
 
         CompletableFuture<Role> roleCompletableFuture =
                 CompletableFuture.supplyAsync(() -> roleService.findById(roleId));
@@ -246,13 +268,25 @@ public class NativeAuthoritiesServiceImpl implements AuthoritiesService {
                 .eq(Role::getDeleted, Boolean.FALSE);
         Wrapper<RoleResource> roleResourceWrapper = Wrappers.<RoleResource>lambdaQuery()
                 .eq(RoleResource::getDeleted, Boolean.FALSE);
-        CompletableFuture<List<Resource>> resourceCompletableFuture =
-                CompletableFuture.supplyAsync(() -> resourceService.findAllBySpec(resourceWrapper));
-
-        CompletableFuture<List<Role>> roleCompletableFuture =
-                CompletableFuture.supplyAsync(() -> roleService.findAllBySpec(roleWrapper));
-        CompletableFuture<List<RoleResource>> roleResourceCompletableFuture =
-                CompletableFuture.supplyAsync(() -> roleResourceService.findAllBySpec(roleResourceWrapper));
+        CompletableFuture<List<ResourceSearchDto>> resourceCompletableFuture =
+                CompletableFuture.supplyAsync(() ->
+                     resourceService.findAllBySpec(resourceWrapper)
+                                    .stream()
+                                    .map(resource -> ConverUtils.copyProperties(resource, ResourceSearchDto.class))
+                                    .collect(Collectors.toList()));
+        CompletableFuture<List<RoleSearchDto>> roleCompletableFuture =
+                CompletableFuture.supplyAsync(() ->
+                      roleService.findAllBySpec(roleWrapper)
+                                 .stream()
+                                 .map(role -> ConverUtils.copyProperties(role, RoleSearchDto.class))
+                                 .collect(Collectors.toList()));
+        CompletableFuture<List<RoleResourceSearchDto>> roleResourceCompletableFuture =
+                CompletableFuture.supplyAsync(() ->
+                      roleResourceService.findAllBySpec(roleResourceWrapper)
+                                         .stream()
+                                         .map(roleResource -> ConverUtils.copyProperties(roleResource,
+                                                                                         RoleResourceSearchDto.class))
+                                         .collect(Collectors.toList()));
 
         final String mdcTraceId = MDC.get(MDC_KEY);
         CompletableFuture<Map<String, Map<String, Map<String, Set<String>>>>> resultCompletableFuture =
@@ -283,13 +317,26 @@ public class NativeAuthoritiesServiceImpl implements AuthoritiesService {
                 .eq(Role::getDeleted, Boolean.FALSE);
         Wrapper<RolePermission> rolePermissionWrapper = Wrappers.<RolePermission>lambdaQuery()
                 .eq(RolePermission::getDeleted, Boolean.FALSE);
-        CompletableFuture<List<Permission>> permissionCompletableFuture =
-                CompletableFuture.supplyAsync(() -> permissionService.findAllBySpec(permissionWrapper));
+        CompletableFuture<List<PermissionSearchDto>> permissionCompletableFuture =
+                CompletableFuture.supplyAsync(() ->
+                  permissionService.findAllBySpec(permissionWrapper)
+                                 .stream()
+                                 .map(permission -> ConverUtils.copyProperties(permission, PermissionSearchDto.class))
+                                 .collect(Collectors.toList()));
 
-        CompletableFuture<List<Role>> roleCompletableFuture =
-                CompletableFuture.supplyAsync(() -> roleService.findAllBySpec(roleWrapper));
-        CompletableFuture<List<RolePermission>> rolePermissionCompletableFuture =
-                CompletableFuture.supplyAsync(() -> rolePermissionService.findAllBySpec(rolePermissionWrapper));
+        CompletableFuture<List<RoleSearchDto>> roleCompletableFuture =
+                CompletableFuture.supplyAsync(() ->
+                              roleService.findAllBySpec(roleWrapper)
+                                       .stream()
+                                       .map(role -> ConverUtils.copyProperties(role, RoleSearchDto.class))
+                                       .collect(Collectors.toList()));
+        CompletableFuture<List<RolePermissionSearchDto>> rolePermissionCompletableFuture =
+            CompletableFuture.supplyAsync(() ->
+                rolePermissionService.findAllBySpec(rolePermissionWrapper)
+                                     .stream()
+                                     .map(rolePermission -> ConverUtils.copyProperties(rolePermission,
+                                                                                       RolePermissionSearchDto.class))
+                                     .collect(Collectors.toList()));
 
         final String mdcTraceId = MDC.get(MDC_KEY);
         CompletableFuture<Map<String, Map<String, Map<String, Set<String>>>>> resultCompletableFuture =
@@ -335,7 +382,8 @@ public class NativeAuthoritiesServiceImpl implements AuthoritiesService {
                                                                            .eq(Resource::getDeleted, Boolean.FALSE);
                                                            return resourceService.findAllBySpec(resourceWrapper);
                                                        },
-                                                       () -> roleService.findById(roleId),
+                                                       () -> ConverUtils.copyProperties(roleService.findById(roleId),
+                                                                                        RoleSearchDto.class),
                                                        toMap(Resource::getResourcePath,
                                                              resource -> string2Set(resource.getResourceVal(),
                                                                                     AUTHORITY_SEPARATOR),
@@ -361,7 +409,8 @@ public class NativeAuthoritiesServiceImpl implements AuthoritiesService {
                                                                            .eq(Permission::getDeleted, Boolean.FALSE);
                                                            return permissionService.findAllBySpec(permissionWrapper);
                                                        },
-                                                       () -> roleService.findById(roleId),
+                                                       () -> ConverUtils.copyProperties(roleService.findById(roleId),
+                                                                                        RoleSearchDto.class),
                                                        toMap(Permission::getPermissionUri,
                                                              resource -> string2Set(resource.getPermissionVal(),
                                                                                     AUTHORITY_SEPARATOR),

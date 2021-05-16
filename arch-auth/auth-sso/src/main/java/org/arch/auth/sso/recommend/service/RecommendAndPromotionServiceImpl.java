@@ -10,12 +10,15 @@ import org.arch.framework.beans.utils.StringUtils;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.SourceType;
 import org.arch.framework.utils.SecurityUtils;
-import org.arch.ums.account.entity.Member;
+import org.arch.ums.account.dto.MemberSearchDto;
+import org.arch.ums.account.dto.RelationshipRequest;
+import org.arch.ums.account.dto.RelationshipSearchDto;
 import org.arch.ums.account.entity.Relationship;
 import org.arch.ums.feign.account.client.UmsAccountMemberFeignService;
 import org.arch.ums.feign.account.client.UmsAccountRelationshipFeignService;
 import org.arch.ums.feign.user.client.UmsUserPhoneFeignService;
-import org.arch.ums.user.entity.Phone;
+import org.arch.ums.user.dto.PhoneRequest;
+import org.arch.ums.user.dto.PhoneSearchDto;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -60,15 +63,15 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
                                         "生成用户推荐码失败, 不是会员账号: userId=" + currentUser.getUserId());
         }
 
-        Relationship relationship = new Relationship();
+        RelationshipRequest relationship = new RelationshipRequest();
         relationship.setToUserId(currentUser.getAccountId());
         relationship.setFromUserId(-1L);
         try {
             // 前提: Relationship toUserId fromUserId 必须记录唯一
-            Response<Relationship> response = this.umsAccountRelationshipFeignService.findOne(relationship);
-            Relationship successData = response.getSuccessData();
+            Response<RelationshipSearchDto> response = this.umsAccountRelationshipFeignService.findOne(relationship);
+            RelationshipSearchDto successData = response.getSuccessData();
             if (isNull(successData)) {
-                Phone phone = getPhone(currentUser);
+                PhoneSearchDto phone = getPhone(currentUser);
                 // 新建推荐关系
                 relationship.setPid(-1L);
                 // org 通过 sql max(org) + 1 自增.
@@ -77,7 +80,7 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
                 relationship.setToUserName(currentUser.getNickName());
                 relationship.setToUserPhone(phone.getPhoneNo());
                 relationship.setDeleted(Boolean.FALSE);
-                Response<Relationship> saveResponse = this.umsAccountRelationshipFeignService.save(relationship);
+                Response<RelationshipSearchDto> saveResponse = this.umsAccountRelationshipFeignService.save(relationship);
                 successData = saveResponse.getSuccessData();
                 if (isNull(successData)) {
                     throw new BusinessException(CommonStatusCode.GENERATE_USER_RECOMMEND_CODE_FAILED, new Object[0],
@@ -85,7 +88,7 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
                 }
             }
 
-            Member member = umsAccountMemberFeignService.findById(successData.getToUserId()).getSuccessData();
+            MemberSearchDto member = umsAccountMemberFeignService.findById(successData.getToUserId()).getSuccessData();
             if (isNull(member)) {
                 throw new BusinessException(CommonStatusCode.QUERY_MEMBER_INFO_FAILED, new Object[0],
                                             "获取会员信息失败: memberId=" + successData.getToUserId());
@@ -214,10 +217,7 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
             return false;
         }
         String bizPrefix = userId.substring(0, 1);
-        if (IdKey.UMS_MEMBER_ID.getBizPrefix().equals(bizPrefix)) {
-            return true;
-        }
-        return false;
+        return IdKey.UMS_MEMBER_ID.getBizPrefix().equals(bizPrefix);
     }
 
     private boolean userRecommendationHandler(String decodeRecommendationCode) {
@@ -232,16 +232,16 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
                                         "提取 USER 推荐码失败");
         }
 
-        Response<Relationship> response = this.umsAccountRelationshipFeignService.findById(Long.valueOf(splits[0]));
-        Relationship successData = response.getSuccessData();
+        Response<RelationshipSearchDto> response = this.umsAccountRelationshipFeignService.findById(Long.valueOf(splits[0]));
+        RelationshipSearchDto successData = response.getSuccessData();
         if (isNull(successData)) {
         	throw new BusinessException(QUERY_USER_RECOMMEND_CODE_FAILED, new Object[]{recommendCode},
                                         "查询 USER 推荐码失败");
         }
         TokenInfo currentUser = SecurityUtils.getCurrentUser();
-        Phone phone = getPhone(currentUser);
+        PhoneSearchDto phone = getPhone(currentUser);
 
-        Relationship toUserRelationship = new Relationship();
+        RelationshipRequest toUserRelationship = new RelationshipRequest();
         toUserRelationship.setPid(successData.getId());
         toUserRelationship.setOrg(successData.getOrg());
         // seq 通过 sql max(seq) + 1 自增.
@@ -254,7 +254,7 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
         toUserRelationship.setToUserName(currentUser.getNickName());
         toUserRelationship.setToUserPhone(phone.getPhoneNo());
         toUserRelationship.setDeleted(Boolean.FALSE);
-        Response<Relationship> saveResponse = this.umsAccountRelationshipFeignService.save(toUserRelationship);
+        Response<RelationshipSearchDto> saveResponse = this.umsAccountRelationshipFeignService.save(toUserRelationship);
         successData = saveResponse.getSuccessData();
         if (isNull(successData)) {
             String traceId = getTraceId();
@@ -283,7 +283,7 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
      * @return  pseq(2,4,5,6 | 2 | 2,4)
      */
     @NonNull
-    private String getPseq(@NonNull Relationship relationship) {
+    private String getPseq(@NonNull RelationshipSearchDto relationship) {
         String pseq = relationship.getPseq();
         if (isNull(pseq)) {
             return relationship.getSeq().toString();
@@ -308,11 +308,11 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
     }
 
     @NonNull
-    private Phone getPhone(@NonNull TokenInfo currentUser) {
-        Phone phone = new Phone();
+    private PhoneSearchDto getPhone(@NonNull TokenInfo currentUser) {
+        PhoneRequest phone = new PhoneRequest();
         phone.setUserId(currentUser.getAccountId());
-        Response<Phone> phoneResponse = this.umsUserPhoneFeignService.findOne(phone);
-        Phone phoneSuccessData = phoneResponse.getSuccessData();
+        Response<PhoneSearchDto> phoneResponse = this.umsUserPhoneFeignService.findOne(phone);
+        PhoneSearchDto phoneSuccessData = phoneResponse.getSuccessData();
         if (isNull(phoneSuccessData)) {
             throw new BusinessException(CommonStatusCode.SERVER_BUSY, new Object[0],
                                         "查询用户电话信息失败: accountId=" + currentUser.getAccountId());

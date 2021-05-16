@@ -22,7 +22,6 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-rbac</artifactId>
-            <scope>compile</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.cloud</groupId>
@@ -52,13 +51,14 @@
         <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-commons</artifactId>
-            <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-rbac</artifactId>
-            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-jwt</artifactId>
         </dependency>
 
         <dependency>

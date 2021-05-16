@@ -1,12 +1,15 @@
 package org.arch.auth.rbac.service;
 
-import org.arch.ums.account.entity.Menu;
+import org.arch.ums.account.dto.MenuSearchDto;
+import org.arch.ums.account.dto.PermissionSearchDto;
+import org.arch.ums.account.dto.ResourceSearchDto;
+import org.arch.ums.account.dto.RoleMenuSearchDto;
+import org.arch.ums.account.dto.RolePermissionSearchDto;
+import org.arch.ums.account.dto.RoleResourceSearchDto;
+import org.arch.ums.account.dto.RoleSearchDto;
 import org.arch.ums.account.entity.Permission;
 import org.arch.ums.account.entity.Resource;
 import org.arch.ums.account.entity.Role;
-import org.arch.ums.account.entity.RoleMenu;
-import org.arch.ums.account.entity.RolePermission;
-import org.arch.ums.account.entity.RoleResource;
 import org.arch.ums.account.vo.MenuVo;
 import org.slf4j.Logger;
 import org.slf4j.MDC;
@@ -160,7 +163,7 @@ public interface AuthoritiesService {
                                             @NonNull Integer tenantId,
                                             @NonNull Long roleId,
                                             @NonNull Supplier<List<P>> permissionSupplier,
-                                            @NonNull Supplier<Role> roleSupplier,
+                                            @NonNull Supplier<RoleSearchDto> roleSupplier,
                                             @NonNull Collector<P, ?, Map<String, Set<String>>> permissionMapCollector,
                                             @NonNull String errorMsg,
                                             @NonNull Logger log) {
@@ -169,7 +172,7 @@ public interface AuthoritiesService {
         CompletableFuture<List<P>> permissionCompletableFuture =
                 CompletableFuture.supplyAsync(permissionSupplier);
 
-        CompletableFuture<Role> roleCompletableFuture =
+        CompletableFuture<RoleSearchDto> roleCompletableFuture =
                 CompletableFuture.supplyAsync(roleSupplier);
 
         final String mdcTraceId = MDC.get(MDC_KEY);
@@ -214,7 +217,7 @@ public interface AuthoritiesService {
      * @param log                   log
      * @return  Map(Menu[level,sorted], Set(Menu[sorted])), 中括号中的排序字段.
      */
-    default Map<MenuVo, Set<MenuVo>> groupingOfFindMenu(CompletableFuture<List<Menu>> menuCompletableFuture,
+    default Map<MenuVo, Set<MenuVo>> groupingOfFindMenu(CompletableFuture<List<MenuSearchDto>> menuCompletableFuture,
                                                         String mdcTraceId, Logger log) {
         try {
             // MenuId 全局主键唯一, 忽略根据多租户分组
@@ -254,24 +257,27 @@ public interface AuthoritiesService {
 
     /**
      * 子类 {@code listAllMenuOfAllTenant} 私有方法专用.
+     *
      * @param menuCompletableFuture     menu CompletableFuture
      * @param roleCompletableFuture     role CompletableFuture
      * @param roleMenuCompletableFuture roleMenu CompletableFuture
      * @param mdcTraceId                mdc trace id
      * @param log                       log
-     * @return  Map(tenantAuthority, Map(roleAuthority, Map(Menu[level,sorted], Set(Menu[sorted])))), 中括号中的排序字段.
+     * @return Map(tenantAuthority, Map ( roleAuthority, Map ( Menu[level, sorted], Set ( Menu[sorted])))), 中括号中的排序字段.
      */
-    default Map<String, Map<String, Map<MenuVo, Set<MenuVo>>>> groupingOfListAllMenu(CompletableFuture<List<Menu>> menuCompletableFuture,
-                                                                                     CompletableFuture<List<Role>> roleCompletableFuture,
-                                                                                     CompletableFuture<List<RoleMenu>> roleMenuCompletableFuture,
-                                                                                     String mdcTraceId,
-                                                                                     Logger log) {
+    default Map<String, Map<String, Map<MenuVo, Set<MenuVo>>>> groupingOfListAllMenu(
+                                            CompletableFuture<List<MenuSearchDto>> menuCompletableFuture,
+                                            CompletableFuture<List<RoleSearchDto>> roleCompletableFuture,
+                                            CompletableFuture<List<RoleMenuSearchDto>> roleMenuCompletableFuture,
+                                            String mdcTraceId,
+                                            Logger log) {
+
         //@formatter:off
         try {
             // RoleId 与 MenuId 全局主键唯一, 忽略根据多租户分组
-            final Map<Long, Role> roleMap =
+            final Map<Long, RoleSearchDto> roleMap =
                     roleCompletableFuture.get().stream()
-                                         .collect(toMap(Role::getId, role -> role));
+                                         .collect(toMap(RoleSearchDto::getId, role -> role));
             final Map<Long, MenuVo> menuVoMap =
                     menuCompletableFuture.get().stream()
                                          .map(menu -> {
@@ -325,21 +331,21 @@ public interface AuthoritiesService {
      * @return Map(tenantAuthority, Map(roleAuthority, map(uri/path, Set(permission)))
      */
     default Map<String, Map<String, Map<String, Set<String>>>> groupingOfListAllResource(
-                                                    CompletableFuture<List<Resource>> resourceCompletableFuture,
-                                                    CompletableFuture<List<Role>> roleCompletableFuture,
-                                                    CompletableFuture<List<RoleResource>> roleResourceCompletableFuture,
-                                                    String mdcTraceId,
-                                                    Logger log) {
+                                        CompletableFuture<List<ResourceSearchDto>> resourceCompletableFuture,
+                                        CompletableFuture<List<RoleSearchDto>> roleCompletableFuture,
+                                        CompletableFuture<List<RoleResourceSearchDto>> roleResourceCompletableFuture,
+                                        String mdcTraceId,
+                                        Logger log) {
 
         //@formatter:off
         try {
             // RoleId 与 resourceId 全局主键唯一, 忽略根据多租户分组
-            final Map<Long, Role> roleMap =
+            final Map<Long, RoleSearchDto> roleMap =
                     roleCompletableFuture.get().stream()
-                                         .collect(toMap(Role::getId, role -> role));
-            final Map<Long, Resource> resourceMap =
+                                         .collect(toMap(RoleSearchDto::getId, role -> role));
+            final Map<Long, ResourceSearchDto> resourceMap =
                     resourceCompletableFuture.get().stream()
-                                         .collect(toMap(Resource::getId, resource -> resource));
+                                         .collect(toMap(ResourceSearchDto::getId, resource -> resource));
             // Map(tenantAuthority, Map(roleAuthority, map(uri/path, Set(permission)))
             //noinspection UnnecessaryLocalVariable
             Map<String, Map<String, Map<String, Set<String>>>> result =
@@ -352,7 +358,7 @@ public interface AuthoritiesService {
                                                                                                       .getResourceId())
                                                                                          .getResourcePath(),
                                                               roleResource -> {
-                                                                  Resource resource =
+                                                                  ResourceSearchDto resource =
                                                                           resourceMap.get(roleResource.getResourceId());
                                                                   return string2Set(resource.getResourceVal(),
                                                                                     AUTHORITY_SEPARATOR);
@@ -384,21 +390,21 @@ public interface AuthoritiesService {
      * @return Map(tenantAuthority, Map(roleAuthority, map(uri/path, Set(permission)))
      */
     default Map<String, Map<String, Map<String, Set<String>>>> groupingOfListAllPermission(
-                                                    CompletableFuture<List<Permission>> permissionCompletableFuture,
-                                                    CompletableFuture<List<Role>> roleCompletableFuture,
-                                                    CompletableFuture<List<RolePermission>> rolePermissionCompletableFuture,
-                                                    String mdcTraceId,
-                                                    Logger log) {
+                                    CompletableFuture<List<PermissionSearchDto>> permissionCompletableFuture,
+                                    CompletableFuture<List<RoleSearchDto>> roleCompletableFuture,
+                                    CompletableFuture<List<RolePermissionSearchDto>> rolePermissionCompletableFuture,
+                                    String mdcTraceId,
+                                    Logger log) {
 
         //@formatter:off
         try {
             // RoleId 与 permissionId 全局主键唯一, 忽略根据多租户分组
-            final Map<Long, Role> roleMap =
+            final Map<Long, RoleSearchDto> roleMap =
                     roleCompletableFuture.get().stream()
-                                         .collect(toMap(Role::getId, role -> role));
-            final Map<Long, Permission> permissionMap =
+                                         .collect(toMap(RoleSearchDto::getId, role -> role));
+            final Map<Long, PermissionSearchDto> permissionMap =
                     permissionCompletableFuture.get().stream()
-                                         .collect(toMap(Permission::getId, permission -> permission));
+                                         .collect(toMap(PermissionSearchDto::getId, permission -> permission));
             // Map(tenantAuthority, Map(roleAuthority, map(uri/path, Set(permission)))
             //noinspection UnnecessaryLocalVariable
             Map<String, Map<String, Map<String, Set<String>>>> result =
@@ -411,7 +417,7 @@ public interface AuthoritiesService {
                                                                                                       .getPermissionId())
                                                                                          .getPermissionUri(),
                                                               rolePermission -> {
-                                                                  Permission permission =
+                                                                  PermissionSearchDto permission =
                                                                           permissionMap.get(rolePermission
                                                                                                     .getPermissionId());
                                                                   return string2Set(permission.getPermissionVal(),
