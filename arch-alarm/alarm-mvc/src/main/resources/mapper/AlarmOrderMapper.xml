@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghui.ofs.alarm.center.mapper.AlarmOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.arch.alarm.mvc.entity.AlarmOrderEntity">
+        <id column="id" property="id"/>
+        <result column="store_no" property="storeNo"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="order_type" property="orderType"/>
+        <result column="order_channel" property="orderChannel"/>
+        <result column="reg_key" property="regKey"/>
+        <result column="reg_val" property="regVal"/>
+        <result column="reg_name" property="regName"/>
+        <result column="cur_val" property="curVal"/>
+        <result column="reg_id" property="regId"/>
+        <result column="ctime" property="ctime"/>
+        <result column="tenant_id" property="tenantId"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, store_no, order_no, order_type, order_channel, reg_key, reg_val, reg_name, cur_val, reg_id, ctime, tenant_id
+    </sql>
+
+</mapper>

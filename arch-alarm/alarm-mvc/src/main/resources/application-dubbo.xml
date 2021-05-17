@@ -1,0 +1,42 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+<!--       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"-->
+<!--       xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.2.xsd-->
+<!--	 http://code.alibabatech.com/schema/dubbo	http://code.alibabatech.com/schema/dubbo/dubbo.xsd"-->
+<!--       default-lazy-init="true">-->
+
+<!--    <description>Dubbo Provider配置</description>-->
+
+<!--    <dubbo:consumer check="false"/>-->
+
+<!--    <dubbo:application name="${dubbo.application.name}"/>-->
+
+<!--    <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" id="zookeeper"/>-->
+
+<!--    <dubbo:protocol name="dubbo" port="${dubbo.application.port}" dispather="all" threadpool="cached" threads="5000"/>-->
+
+<!--    &lt;!&ndash;define dubbo service&ndash;&gt;-->
+<!--    <dubbo:service interface="com.yonghui.ofs.alarm.center.api.AlarmParamsService" ref="alarmParamsService"-->
+<!--                   version="1.0" registry="zookeeper" owner="lait.zhang" timeout="600000"/>-->
+
+<!--    <dubbo:service interface="com.yonghui.ofs.alarm.center.api.RegComputerService" ref="regComputerService"-->
+<!--                   version="1.0" registry="zookeeper" owner="lait.zhang" timeout="600000"/>-->
+
+<!--    <dubbo:service interface="com.yonghui.ofs.alarm.center.api.AlarmDicService" ref="alarmDicService"-->
+<!--                   version="1.0" registry="zookeeper" owner="lait.zhang" timeout="600000"/>-->
+
+<!--    <dubbo:service interface="com.yonghui.ofs.alarm.center.api.AlarmChannelService" ref="alarmChannelService"-->
+<!--                   version="1.0" registry="zookeeper" owner="lait.zhang" timeout="600000"/>-->
+
+<!--    <dubbo:service interface="com.yonghui.ofs.alarm.center.api.AlarmTemplateService" ref="alarmTemplateService"-->
+<!--                   version="1.0" registry="zookeeper" owner="lait.zhang" timeout="600000"/>-->
+
+<!--    <dubbo:service interface="com.yonghui.ofs.alarm.center.api.AlarmNoticeService" ref="alarmNoticeService"-->
+<!--                   version="1.0" registry="zookeeper" owner="lait.zhang" timeout="600000"/>-->
+
+<!--    <dubbo:service interface="com.yonghui.ofs.alarm.center.api.AlarmRegService" ref="alarmRegService"-->
+<!--                   version="1.0" registry="zookeeper" owner="lait.zhang" timeout="600000"/>-->
+
+<!--    <dubbo:service interface="com.yonghui.ofs.alarm.center.api.AlarmCatService" ref="alarmCatService"-->
+<!--                   version="1.0" registry="zookeeper" owner="lait.zhang" timeout="600000"/>-->
+<!--</beans>-->

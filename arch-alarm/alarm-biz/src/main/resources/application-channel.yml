@@ -1,0 +1,21 @@
+spring:
+  alarm:
+    channels:
+      - name: 企业微信
+        code: weixin
+        url: http://fp.yonghuivip.com/message/push
+        sign: b80f85a58f1b7992d91111fa18225209
+        appkey:
+        seckey:
+      - name: 邮箱
+        code: email
+        url: smtp.163.com
+        sign: #签名 无
+        appkey: lifetaster@163.com
+        seckey: ZWEGGKKSBLDDNTQS
+      - name: 短信
+        code: sms
+        url:
+        sign:
+        appid:
+        secret:
