@@ -12,7 +12,7 @@
     <dependencies>
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>alarm-mvc</artifactId>
+            <artifactId>alarm-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba.rocketmq</groupId>

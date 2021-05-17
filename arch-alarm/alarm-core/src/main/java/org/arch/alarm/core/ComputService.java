@@ -1,12 +1,11 @@
-package org.arch.alarm.mvc.service;
+package org.arch.alarm.core;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.arch.alarm.api.AlarmComputerService;
 import org.arch.alarm.api.dto.AlarmParamsDto;
-import org.arch.alarm.api.pojo.biz.AlarmRegData;
 import org.arch.alarm.api.pojo.ComputResult;
+import org.arch.alarm.api.pojo.biz.AlarmRegData;
 import org.arch.alarm.core.computer.RegComputable;
 import org.arch.alarm.core.computer.impl.ExpressionComputer;
 import org.arch.alarm.mvc.dao.AlarmRegDao;
@@ -27,11 +26,10 @@ import java.util.stream.Collectors;
 @Service("regComputerService")
 @Slf4j
 @AllArgsConstructor
-public class FRegComputerService implements AlarmComputerService {
+public class ComputService {
     private final ApplicationContext applicationContext;
     private final AlarmRegDao alarmRegDao;
 
-    @Override
     public ComputResult compute(List<AlarmParamsDto> alarmParamsDtos, List<? extends AlarmRegData> alarmDatas) {
         ComputResult computResult = new ComputResult();
         /**

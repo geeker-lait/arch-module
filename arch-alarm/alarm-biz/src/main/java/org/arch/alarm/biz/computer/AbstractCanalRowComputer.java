@@ -3,16 +3,16 @@ package org.arch.alarm.biz.computer;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.arch.alarm.api.AlarmComputerService;
 import org.arch.alarm.api.AlarmNoticeService;
 import org.arch.alarm.api.dto.*;
 import org.arch.alarm.api.enums.MsgNotifier;
 import org.arch.alarm.api.pojo.AlarmMsgData;
-import org.arch.alarm.api.pojo.biz.AlarmRegData;
 import org.arch.alarm.api.pojo.ComputResult;
+import org.arch.alarm.api.pojo.biz.AlarmRegData;
 import org.arch.alarm.biz.AlarmDataService;
 import org.arch.alarm.biz.CanalRowComputable;
 import org.arch.alarm.biz.MsgNoticeable;
+import org.arch.alarm.core.ComputService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -31,7 +31,7 @@ import java.util.Map;
 @Slf4j
 public abstract class AbstractCanalRowComputer<T extends AlarmRegData> implements CanalRowComputable<T>, ApplicationContextAware {
     @Autowired
-    protected AlarmComputerService regComputerService;
+    protected ComputService computService;
     @Autowired
     protected AlarmNoticeService alarmNoticeService;
     @Autowired
@@ -42,7 +42,7 @@ public abstract class AbstractCanalRowComputer<T extends AlarmRegData> implement
     @Override
     public void comput(AlarmRegDto alarmRegDto, List<AlarmParamsDto> alarmParamsDtos, List<T> alarmRegDatas) {
         // todo 远程计算
-        ComputResult computerResult = regComputerService.compute(alarmParamsDtos, alarmRegDatas);
+        ComputResult computerResult = computService.compute(alarmParamsDtos, alarmRegDatas);
         log.info("{} comput result : {}", this.getClass().getSimpleName(), JSONObject.toJSONString(computerResult));
         // todo 根据计算结果决定是否继续作业
         if (!computerResult.isSuccess() || !Boolean.TRUE.equals(computerResult.getResult())) {
@@ -71,7 +71,7 @@ public abstract class AbstractCanalRowComputer<T extends AlarmRegData> implement
             }
             MsgNotifier msgNotifier = MsgNotifier.valueOf(alarmChannelDto.getChannelCode().toUpperCase());
             if (null != msgNotifier) {
-                NOTIFIER_MAP.get(msgNotifier).notice(alarmTemplateDto, alarmChannelDto, and,alarmMsgData);
+                NOTIFIER_MAP.get(msgNotifier).notice(alarmTemplateDto, alarmChannelDto, and, alarmMsgData);
             }
         });
     }
