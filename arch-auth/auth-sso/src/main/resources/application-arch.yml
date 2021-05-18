@@ -21,6 +21,17 @@ arch:
   app:
     client-id: "001"
     client-secret: "001"
+  encrypt:
+    fpe:
+      password: 8CE4A06235DACD71AD9CA11C5AF21B8C
+      salt: F6011E95C2EB4B8F
+      radix: 10
+    b-crypt:
+      password: 2BAFEA66D3CFBC6D CBCBDFCFDFA9B5D
+      salt: E6074A55EDB4C63A
+    text-encryptor:
+      password: AA2DB91EED5CA9F4C1D2DFBFA592666C
+      salt: 6B2EDFD8C0BB6C03
 
   file:
     # 图片文件存放的 url. 默认: ""
