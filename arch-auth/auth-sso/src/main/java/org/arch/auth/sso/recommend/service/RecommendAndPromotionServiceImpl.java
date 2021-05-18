@@ -95,7 +95,7 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
             }
 
             String delimiter = USER.getDelimiter();
-            // 003_3: 00 为 SourceType 业务前缀, 3_3 为 rsId(rs=Relationship)_memberLevelId
+            // 005L3: 00 为 SourceType 业务前缀, 5L3 为 5=rsId(rs=Relationship), 3=memberLevelId
             String recommendCode = USER.getPrefix() +
                     successData.getId() +
                     delimiter +

@@ -8,9 +8,9 @@ package org.arch.framework.ums.enums;
  */
 public enum SourceType {
     /**
-     * 用户推荐, 003_3: 00 为 SourceType 业务前缀, 3_3 为 rsId(rs=Relationship)_memberLevelId
+     * 用户推荐, 005L3: 00 为 SourceType 业务前缀, 5L3 为 5=rsId(rs=Relationship), 3=memberLevelId
      */
-    USER("00", "_"),
+    USER("00", "L"),
     /**
      *  百度
      */
