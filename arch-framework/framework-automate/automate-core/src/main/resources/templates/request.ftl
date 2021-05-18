@@ -3,12 +3,12 @@ package ${package!""};
 import org.arch.framework.api.crud.BaseRequestDto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -23,8 +23,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class ${(name?cap_first)!""}${suffix!""} extends BaseRequestDto {
+public class ${(name?cap_first)!""}${suffix!""} implements Serializable  {
 
     /**
      *

@@ -91,7 +91,7 @@ spring:
               #              suspendCurrentQueueTimeMillis: 1000
 ```
 
-4. 开发时: account_auth_client 添加记录
+4. 开发时: account_auth_client 添加记录: 注意, 暂时用字符串, 启用数据字典后用对于的数据字典 id.
 ```sql
 insert into `account_auth_client` (`client_id`, `client_secret`, `scopes`, `client_type`) values('006', '006', 'AUTH,
 OAUTH2,

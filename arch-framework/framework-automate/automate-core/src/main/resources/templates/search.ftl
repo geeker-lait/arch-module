@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
+import java.time.LocalDateTime;
 
 /**
  * ${comment!""}(${(name?cap_first)!""}) search dto
@@ -25,6 +26,9 @@ public class ${(name?cap_first)!""}${suffix!""} extends BaseSearchDto{
     /**
      * ${column.comment}
      */
+    <#if column?? && ((column == "appId") || (column == "storeId") || (column == "rev"))>
+    @JsonIgnore
+    </#if>
     // TODO 增加对列(xx_xx)转换为驼峰类型字段, 不能获取数据库类型对应的 JavaType
     private ${column.type} ${column.name!""};
 
