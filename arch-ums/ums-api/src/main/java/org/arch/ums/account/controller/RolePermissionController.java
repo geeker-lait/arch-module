@@ -88,7 +88,7 @@ public class RolePermissionController implements CrudController<RolePermissionRe
         try {
             RolePermission rolePermission = resolver(token, request);
             RolePermissionSearchDto searchDto = convertSearchDto(rolePermission);
-            RolePermission result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            RolePermission result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -117,7 +117,7 @@ public class RolePermissionController implements CrudController<RolePermissionRe
         RolePermission rolePermission = resolver(token, request);
         RolePermissionSearchDto searchDto = convertSearchDto(rolePermission);
         try {
-            List<RolePermission> rolePermissionList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<RolePermission> rolePermissionList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(rolePermissionList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -146,7 +146,7 @@ public class RolePermissionController implements CrudController<RolePermissionRe
         RolePermission rolePermission = resolver(token, request);
         RolePermissionSearchDto searchDto = convertSearchDto(rolePermission);
         try {
-            IPage<RolePermission> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<RolePermission> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

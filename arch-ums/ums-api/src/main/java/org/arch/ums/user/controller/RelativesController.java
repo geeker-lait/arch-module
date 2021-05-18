@@ -83,7 +83,7 @@ public class RelativesController implements CrudController<RelativesRequest, Rel
         try {
             Relatives relatives = resolver(token, request);
             RelativesSearchDto searchDto = convertSearchDto(relatives);
-            Relatives result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Relatives result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class RelativesController implements CrudController<RelativesRequest, Rel
         Relatives relatives = resolver(token, request);
         RelativesSearchDto searchDto = convertSearchDto(relatives);
         try {
-            List<Relatives> relativesList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Relatives> relativesList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(relativesList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class RelativesController implements CrudController<RelativesRequest, Rel
         Relatives relatives = resolver(token, request);
         RelativesSearchDto searchDto = convertSearchDto(relatives);
         try {
-            IPage<Relatives> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Relatives> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

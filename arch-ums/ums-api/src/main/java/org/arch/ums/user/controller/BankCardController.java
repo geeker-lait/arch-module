@@ -83,7 +83,7 @@ public class BankCardController implements CrudController<BankCardRequest, BankC
         try {
             BankCard bankCard = resolver(token, request);
             BankCardSearchDto searchDto = convertSearchDto(bankCard);
-            BankCard result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            BankCard result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class BankCardController implements CrudController<BankCardRequest, BankC
         BankCard bankCard = resolver(token, request);
         BankCardSearchDto searchDto = convertSearchDto(bankCard);
         try {
-            List<BankCard> bankCardList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<BankCard> bankCardList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(bankCardList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class BankCardController implements CrudController<BankCardRequest, BankC
         BankCard bankCard = resolver(token, request);
         BankCardSearchDto searchDto = convertSearchDto(bankCard);
         try {
-            IPage<BankCard> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<BankCard> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

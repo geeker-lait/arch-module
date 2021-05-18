@@ -83,7 +83,7 @@ public class TicketController implements CrudController<TicketRequest, Ticket, j
         try {
             Ticket ticket = resolver(token, request);
             TicketSearchDto searchDto = convertSearchDto(ticket);
-            Ticket result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Ticket result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class TicketController implements CrudController<TicketRequest, Ticket, j
         Ticket ticket = resolver(token, request);
         TicketSearchDto searchDto = convertSearchDto(ticket);
         try {
-            List<Ticket> ticketList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Ticket> ticketList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(ticketList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class TicketController implements CrudController<TicketRequest, Ticket, j
         Ticket ticket = resolver(token, request);
         TicketSearchDto searchDto = convertSearchDto(ticket);
         try {
-            IPage<Ticket> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Ticket> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

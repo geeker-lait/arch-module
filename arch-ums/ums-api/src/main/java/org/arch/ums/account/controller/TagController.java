@@ -83,7 +83,7 @@ public class TagController implements CrudController<TagRequest, Tag, java.lang.
         try {
             Tag tag = resolver(token, request);
             TagSearchDto searchDto = convertSearchDto(tag);
-            Tag result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Tag result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class TagController implements CrudController<TagRequest, Tag, java.lang.
         Tag tag = resolver(token, request);
         TagSearchDto searchDto = convertSearchDto(tag);
         try {
-            List<Tag> tagList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Tag> tagList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(tagList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class TagController implements CrudController<TagRequest, Tag, java.lang.
         Tag tag = resolver(token, request);
         TagSearchDto searchDto = convertSearchDto(tag);
         try {
-            IPage<Tag> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Tag> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

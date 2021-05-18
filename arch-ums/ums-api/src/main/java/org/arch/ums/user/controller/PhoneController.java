@@ -83,7 +83,7 @@ public class PhoneController implements CrudController<PhoneRequest, Phone, java
         try {
             Phone phone = resolver(token, request);
             PhoneSearchDto searchDto = convertSearchDto(phone);
-            Phone result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Phone result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class PhoneController implements CrudController<PhoneRequest, Phone, java
         Phone phone = resolver(token, request);
         PhoneSearchDto searchDto = convertSearchDto(phone);
         try {
-            List<Phone> phoneList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Phone> phoneList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(phoneList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class PhoneController implements CrudController<PhoneRequest, Phone, java
         Phone phone = resolver(token, request);
         PhoneSearchDto searchDto = convertSearchDto(phone);
         try {
-            IPage<Phone> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Phone> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

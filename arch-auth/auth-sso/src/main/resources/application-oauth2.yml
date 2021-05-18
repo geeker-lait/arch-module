@@ -55,17 +55,7 @@ ums:
 
     # ================ start: 定时刷新 access token 定时任务相关配置 ================
 
-    # 是否支持定时刷新 AccessToken 定时任务, 考虑到很多应用都有自己的定时任务应用, 默认: false. RefreshTokenJob 接口的实现已注入 IOC 容器, 方便自定义定时任务接口时调用.
-    # 支持分布式(分布式 IOC 容器中必须有 RedisConnectionFactory, 也就是说, 是否分布式执行依据 IOC 容器中是否有 RedisConnectionFactory)
     enableRefreshTokenJob: false
-    # A cron-like expression. 0 * 2 * * ? 分别对应: second/minute/hour/day of month/month/day of week,
-    # 默认为: "0 * 2 * * ?", 凌晨 2 点启动定时任务, 支持分布式(分布式 IOC 容器中必须有 {@link RedisConnectionFactory},
-    # 也就是说, 是否分布式执行依据 IOC 容器中是否有 {@link RedisConnectionFactory})
-    refresh-token-job-cron: 0 0 2 * * ?
-    # 定时刷新 accessToken 任务时, 批处理数据库的记录数. 注意: 分布式应用时, 此配置不同服务器配置必须是一样的. batchCount 大小需要根据实际生产环境进行优化
-    batch-count: 1000
-    # accessToken 的剩余有效期内进行刷新 accessToken, 默认: 24, 单位: 小时. 注意: 需要根据实际生产环境进行优化
-    remaining-expire-in: 24
 
     # ================ start: 定时刷新 access token 定时任务相关配置 ================
 
@@ -143,26 +133,6 @@ ums:
       rejected-execution-handler-policy: abort
       # 线程池关闭过程的超时时间, 默认: PT10S
       executor-shutdown-timeout: PT10S
-    # 更新第三方授权登录用户的 accessToken 的执行逻辑, 向本地数据库 auth_token 表获取过期或在一定时间内过期的 token 记录,
-    # 用 refreshToken 向第三方服务商更新 accessToken 信息的 Executor 属性,
-    # 注意: 定时刷新 accessToken 的执行逻辑是多线程的, 需要根据实际生产环境进行优化
-    refresh-token:
-      # 程池中空闲时保留的线程数, 默认: 0
-      core-pool-size: 0
-      # 最大线程数, 默认: 本机核心数
-      maximum-pool-size: 8
-      # keep alive time, 默认: 5
-      keep-alive-time: 5
-      # keepAliveTime 时间单位, 默认: 秒
-      time-unit: seconds
-      # blocking queue capacity, 默认: maximumPoolSize * 2
-      blocking-queue-capacity: 16
-      # 线程池名称, 默认: refreshToken
-      pool-name: refreshToken
-      # 拒绝策略, 默认: CALLER_RUNS 注意: 一般情况下不要更改默认设置, 没有实现 RefreshToken 逻辑被拒绝执行后的处理逻辑, 除非自己实现RefreshTokenJob.refreshTokenJob() 对 RefreshToken 逻辑被拒绝执行后的处理逻辑.
-      rejected-execution-handler-policy: caller_runs
-      # 线程池关闭过程的超时时间, 默认: 10 秒
-      executor-shutdown-timeout: PT10S
     # 第三方授权登录时, 异步更新用户的第三方授权用户信息与 token 信息的 Executor 属性,
     # 注意: 第三方授权登录时是异步更新第三方用户信息与 token 信息到本地数据库时使用此配置, 需要根据实际生产环境进行优化
     user-connection-update:
@@ -187,14 +157,8 @@ ums:
 
   # =============== start: user_connection repository 配置 ===============
   repository:
-    # 第三方登录用户数据库表的字段 accessToken 与 refreshToken 加密专用密码
-    text-encryptor-password: 7ca5d913a17b4942942d16a974e3fecc
-    # 第三方登录用户数据库表的字段 accessToken 与 refreshToken 加密专用 salt
-    text-encryptor-salt: cd538b1b077542aca5f86942b6507fe2
     # 是否在启动时检查并自动创建 userConnectionTableName 与 authTokenTableName, 默认: TRUE
     enable-start-up-initialize-table: false
-    # 其他的有: 数据库表名称, 字段名称, curd sql 语句 等设置, 一般不需要更改,
-    # 如果要添加字段: 具体查看 RepositoryProperties 与 Auth2JdbcUsersConnectionRepository
   # =============== end: user_connection repository 配置 ===============
 
 

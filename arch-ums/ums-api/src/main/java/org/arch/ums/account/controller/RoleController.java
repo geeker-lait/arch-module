@@ -85,7 +85,7 @@ public class RoleController implements CrudController<RoleRequest, Role, java.la
         try {
             Role role = resolver(token, request);
             RoleSearchDto searchDto = convertSearchDto(role);
-            Role result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Role result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -114,7 +114,7 @@ public class RoleController implements CrudController<RoleRequest, Role, java.la
         Role role = resolver(token, request);
         RoleSearchDto searchDto = convertSearchDto(role);
         try {
-            List<Role> roleList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Role> roleList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(roleList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -143,7 +143,7 @@ public class RoleController implements CrudController<RoleRequest, Role, java.la
         Role role = resolver(token, request);
         RoleSearchDto searchDto = convertSearchDto(role);
         try {
-            IPage<Role> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Role> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

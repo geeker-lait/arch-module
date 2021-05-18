@@ -83,7 +83,7 @@ public class MemberController implements CrudController<MemberRequest, Member, j
         try {
             Member member = resolver(token, request);
             MemberSearchDto searchDto = convertSearchDto(member);
-            Member result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Member result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class MemberController implements CrudController<MemberRequest, Member, j
         Member member = resolver(token, request);
         MemberSearchDto searchDto = convertSearchDto(member);
         try {
-            List<Member> memberList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Member> memberList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(memberList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class MemberController implements CrudController<MemberRequest, Member, j
         Member member = resolver(token, request);
         MemberSearchDto searchDto = convertSearchDto(member);
         try {
-            IPage<Member> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Member> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

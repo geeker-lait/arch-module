@@ -83,7 +83,7 @@ public class CategoryController implements CrudController<CategoryRequest, Categ
         try {
             Category category = resolver(token, request);
             CategorySearchDto searchDto = convertSearchDto(category);
-            Category result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Category result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class CategoryController implements CrudController<CategoryRequest, Categ
         Category category = resolver(token, request);
         CategorySearchDto searchDto = convertSearchDto(category);
         try {
-            List<Category> categoryList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Category> categoryList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(categoryList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class CategoryController implements CrudController<CategoryRequest, Categ
         Category category = resolver(token, request);
         CategorySearchDto searchDto = convertSearchDto(category);
         try {
-            IPage<Category> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Category> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

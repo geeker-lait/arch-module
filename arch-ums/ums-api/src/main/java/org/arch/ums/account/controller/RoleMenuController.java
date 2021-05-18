@@ -88,7 +88,7 @@ public class RoleMenuController implements CrudController<RoleMenuRequest, RoleM
         try {
             RoleMenu roleMenu = resolver(token, request);
             RoleMenuSearchDto searchDto = convertSearchDto(roleMenu);
-            RoleMenu result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            RoleMenu result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -117,7 +117,7 @@ public class RoleMenuController implements CrudController<RoleMenuRequest, RoleM
         RoleMenu roleMenu = resolver(token, request);
         RoleMenuSearchDto searchDto = convertSearchDto(roleMenu);
         try {
-            List<RoleMenu> roleMenuList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<RoleMenu> roleMenuList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(roleMenuList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -146,7 +146,7 @@ public class RoleMenuController implements CrudController<RoleMenuRequest, RoleM
         RoleMenu roleMenu = resolver(token, request);
         RoleMenuSearchDto searchDto = convertSearchDto(roleMenu);
         try {
-            IPage<RoleMenu> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<RoleMenu> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

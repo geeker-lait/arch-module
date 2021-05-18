@@ -56,13 +56,13 @@ public class RbacCategoryController implements CrudController<RbacCategoryReques
 
     @GetMapping("query")
     public Response testQuery(RbacCategorySearchDto rbacCategorySearchDto) {
-        return Response.success(rbacCategoryService.findAllByMapParams(rbacCategorySearchDto.getSearchParams()));
+        return Response.success(rbacCategoryService.findAllByMapParams(rbacCategorySearchDto.searchParams()));
     }
 
 
     @GetMapping("page")
     public Response testPage(RbacCategorySearchDto rbacCategorySearchDto, int pageSize, int pageNo) {
-        return Response.success(rbacCategoryService.findPage(rbacCategorySearchDto.getSearchParams(), pageNo, pageSize));
+        return Response.success(rbacCategoryService.findPage(rbacCategorySearchDto.searchParams(), pageNo, pageSize));
     }*/
 
     @Override

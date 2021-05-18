@@ -83,7 +83,7 @@ public class IdCardController implements CrudController<IdCardRequest, IdCard, j
         try {
             IdCard idCard = resolver(token, request);
             IdCardSearchDto searchDto = convertSearchDto(idCard);
-            IdCard result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            IdCard result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class IdCardController implements CrudController<IdCardRequest, IdCard, j
         IdCard idCard = resolver(token, request);
         IdCardSearchDto searchDto = convertSearchDto(idCard);
         try {
-            List<IdCard> idCardList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<IdCard> idCardList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(idCardList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class IdCardController implements CrudController<IdCardRequest, IdCard, j
         IdCard idCard = resolver(token, request);
         IdCardSearchDto searchDto = convertSearchDto(idCard);
         try {
-            IPage<IdCard> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<IdCard> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

@@ -2,6 +2,7 @@ package org.arch.framework.api.crud;
 
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
  * 搜索参数的基类
  */
 @Accessors(chain = true)
-public interface BaseSearchDto {
+public interface BaseSearchDto extends Serializable {
     /**
      * 是否逻辑删除: 0 未删除, 1 已删除; 默认: 0
      */
@@ -19,7 +20,7 @@ public interface BaseSearchDto {
     /**
      * 获取查询条件与值
      */
-    default Map<String, Object> getSearchParams() {
+    default Map<String, Object> searchParams() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("EQ_deleted", DELETED);
         buildSearchParams(map);

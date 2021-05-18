@@ -83,7 +83,7 @@ public class NameController implements CrudController<NameRequest, Name, java.la
         try {
             Name name = resolver(token, request);
             NameSearchDto searchDto = convertSearchDto(name);
-            Name result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Name result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class NameController implements CrudController<NameRequest, Name, java.la
         Name name = resolver(token, request);
         NameSearchDto searchDto = convertSearchDto(name);
         try {
-            List<Name> nameList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Name> nameList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(nameList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class NameController implements CrudController<NameRequest, Name, java.la
         Name name = resolver(token, request);
         NameSearchDto searchDto = convertSearchDto(name);
         try {
-            IPage<Name> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Name> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

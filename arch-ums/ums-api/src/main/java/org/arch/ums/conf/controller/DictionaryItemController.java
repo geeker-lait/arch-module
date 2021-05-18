@@ -83,7 +83,7 @@ public class DictionaryItemController implements CrudController<DictionaryItemRe
         try {
             DictionaryItem dictionaryItem = resolver(token, request);
             DictionaryItemSearchDto searchDto = convertSearchDto(dictionaryItem);
-            DictionaryItem result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            DictionaryItem result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class DictionaryItemController implements CrudController<DictionaryItemRe
         DictionaryItem dictionaryItem = resolver(token, request);
         DictionaryItemSearchDto searchDto = convertSearchDto(dictionaryItem);
         try {
-            List<DictionaryItem> dictionaryItemList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<DictionaryItem> dictionaryItemList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(dictionaryItemList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class DictionaryItemController implements CrudController<DictionaryItemRe
         DictionaryItem dictionaryItem = resolver(token, request);
         DictionaryItemSearchDto searchDto = convertSearchDto(dictionaryItem);
         try {
-            IPage<DictionaryItem> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<DictionaryItem> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

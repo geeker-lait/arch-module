@@ -104,7 +104,7 @@ public class RelationshipController implements CrudController<RelationshipReques
         try {
             Relationship relationship = resolver(token, request);
             RelationshipSearchDto searchDto = convertSearchDto(relationship);
-            Relationship result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Relationship result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -133,7 +133,7 @@ public class RelationshipController implements CrudController<RelationshipReques
         Relationship relationship = resolver(token, request);
         RelationshipSearchDto searchDto = convertSearchDto(relationship);
         try {
-            List<Relationship> relationshipList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Relationship> relationshipList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(relationshipList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -162,7 +162,7 @@ public class RelationshipController implements CrudController<RelationshipReques
         Relationship relationship = resolver(token, request);
         RelationshipSearchDto searchDto = convertSearchDto(relationship);
         try {
-            IPage<Relationship> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Relationship> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

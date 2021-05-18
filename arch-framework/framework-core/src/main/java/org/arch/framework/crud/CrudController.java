@@ -162,7 +162,7 @@ public interface CrudController<R, T extends Model<T>, ID extends Serializable,
         try {
             T entity = resolver(token, request);
             DTO searchDto = convertSearchDto(entity);
-            T t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            T t = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(t));
         } catch (Exception e) {
             log.error(e.getMessage(),e);
@@ -185,7 +185,7 @@ public interface CrudController<R, T extends Model<T>, ID extends Serializable,
         try {
             T entity = resolver(token, request);
             DTO searchDto = convertSearchDto(entity);
-            List<T> tList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<T> tList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(tList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -220,7 +220,7 @@ public interface CrudController<R, T extends Model<T>, ID extends Serializable,
         try {
             T entity = resolver(token, request);
             DTO searchDto = convertSearchDto(entity);
-            IPage<T> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<T> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

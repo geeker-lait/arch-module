@@ -83,7 +83,7 @@ public class AddressController implements CrudController<AddressRequest, Address
         try {
             Address address = resolver(token, request);
             AddressSearchDto searchDto = convertSearchDto(address);
-            Address result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Address result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class AddressController implements CrudController<AddressRequest, Address
         Address address = resolver(token, request);
         AddressSearchDto searchDto = convertSearchDto(address);
         try {
-            List<Address> addressList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Address> addressList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(addressList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class AddressController implements CrudController<AddressRequest, Address
         Address address = resolver(token, request);
         AddressSearchDto searchDto = convertSearchDto(address);
         try {
-            IPage<Address> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Address> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

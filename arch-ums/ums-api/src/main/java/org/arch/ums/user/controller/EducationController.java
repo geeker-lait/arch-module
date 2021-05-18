@@ -83,7 +83,7 @@ public class EducationController implements CrudController<EducationRequest, Edu
         try {
             Education education = resolver(token, request);
             EducationSearchDto searchDto = convertSearchDto(education);
-            Education result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Education result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class EducationController implements CrudController<EducationRequest, Edu
         Education education = resolver(token, request);
         EducationSearchDto searchDto = convertSearchDto(education);
         try {
-            List<Education> educationList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Education> educationList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(educationList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class EducationController implements CrudController<EducationRequest, Edu
         Education education = resolver(token, request);
         EducationSearchDto searchDto = convertSearchDto(education);
         try {
-            IPage<Education> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Education> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

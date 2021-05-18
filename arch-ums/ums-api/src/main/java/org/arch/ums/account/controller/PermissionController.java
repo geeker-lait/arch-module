@@ -85,7 +85,7 @@ public class PermissionController implements CrudController<PermissionRequest, P
         try {
             Permission permission = resolver(token, request);
             PermissionSearchDto searchDto = convertSearchDto(permission);
-            Permission result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Permission result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -114,7 +114,7 @@ public class PermissionController implements CrudController<PermissionRequest, P
         Permission permission = resolver(token, request);
         PermissionSearchDto searchDto = convertSearchDto(permission);
         try {
-            List<Permission> permissionList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Permission> permissionList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(permissionList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -143,7 +143,7 @@ public class PermissionController implements CrudController<PermissionRequest, P
         Permission permission = resolver(token, request);
         PermissionSearchDto searchDto = convertSearchDto(permission);
         try {
-            IPage<Permission> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Permission> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

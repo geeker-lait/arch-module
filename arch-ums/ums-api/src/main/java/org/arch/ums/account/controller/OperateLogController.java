@@ -83,7 +83,7 @@ public class OperateLogController implements CrudController<OperateLogRequest, O
         try {
             OperateLog operateLog = resolver(token, request);
             OperateLogSearchDto searchDto = convertSearchDto(operateLog);
-            OperateLog result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            OperateLog result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class OperateLogController implements CrudController<OperateLogRequest, O
         OperateLog operateLog = resolver(token, request);
         OperateLogSearchDto searchDto = convertSearchDto(operateLog);
         try {
-            List<OperateLog> operateLogList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<OperateLog> operateLogList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(operateLogList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class OperateLogController implements CrudController<OperateLogRequest, O
         OperateLog operateLog = resolver(token, request);
         OperateLogSearchDto searchDto = convertSearchDto(operateLog);
         try {
-            IPage<OperateLog> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<OperateLog> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

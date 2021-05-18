@@ -85,7 +85,7 @@ public class ResourceController implements CrudController<ResourceRequest, Resou
         try {
             Resource resource = resolver(token, request);
             ResourceSearchDto searchDto = convertSearchDto(resource);
-            Resource result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Resource result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -114,7 +114,7 @@ public class ResourceController implements CrudController<ResourceRequest, Resou
         Resource resource = resolver(token, request);
         ResourceSearchDto searchDto = convertSearchDto(resource);
         try {
-            List<Resource> resourceList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Resource> resourceList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(resourceList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -143,7 +143,7 @@ public class ResourceController implements CrudController<ResourceRequest, Resou
         Resource resource = resolver(token, request);
         ResourceSearchDto searchDto = convertSearchDto(resource);
         try {
-            IPage<Resource> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Resource> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

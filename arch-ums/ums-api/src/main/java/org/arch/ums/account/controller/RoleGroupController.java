@@ -88,7 +88,7 @@ public class RoleGroupController implements CrudController<RoleGroupRequest, Rol
         try {
             RoleGroup roleGroup = resolver(token, request);
             RoleGroupSearchDto searchDto = convertSearchDto(roleGroup);
-            RoleGroup result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            RoleGroup result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -117,7 +117,7 @@ public class RoleGroupController implements CrudController<RoleGroupRequest, Rol
         RoleGroup roleGroup = resolver(token, request);
         RoleGroupSearchDto searchDto = convertSearchDto(roleGroup);
         try {
-            List<RoleGroup> roleGroupList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<RoleGroup> roleGroupList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(roleGroupList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -146,7 +146,7 @@ public class RoleGroupController implements CrudController<RoleGroupRequest, Rol
         RoleGroup roleGroup = resolver(token, request);
         RoleGroupSearchDto searchDto = convertSearchDto(roleGroup);
         try {
-            IPage<RoleGroup> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<RoleGroup> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

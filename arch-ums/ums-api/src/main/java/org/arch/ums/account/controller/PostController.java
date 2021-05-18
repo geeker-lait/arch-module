@@ -83,7 +83,7 @@ public class PostController implements CrudController<PostRequest, Post, java.la
         try {
             Post post = resolver(token, request);
             PostSearchDto searchDto = convertSearchDto(post);
-            Post result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Post result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class PostController implements CrudController<PostRequest, Post, java.la
         Post post = resolver(token, request);
         PostSearchDto searchDto = convertSearchDto(post);
         try {
-            List<Post> postList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Post> postList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(postList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class PostController implements CrudController<PostRequest, Post, java.la
         Post post = resolver(token, request);
         PostSearchDto searchDto = convertSearchDto(post);
         try {
-            IPage<Post> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Post> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

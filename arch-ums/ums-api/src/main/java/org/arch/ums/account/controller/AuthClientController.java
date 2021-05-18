@@ -130,7 +130,7 @@ public class AuthClientController implements CrudController<AuthClientRequest, A
         try {
             AuthClient authClient = resolver(token, request);
             AuthClientSearchDto searchDto = convertSearchDto(authClient);
-            AuthClient result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            AuthClient result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -159,7 +159,7 @@ public class AuthClientController implements CrudController<AuthClientRequest, A
         AuthClient authClient = resolver(token, request);
         AuthClientSearchDto searchDto = convertSearchDto(authClient);
         try {
-            List<AuthClient> authClientList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<AuthClient> authClientList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(authClientList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -188,7 +188,7 @@ public class AuthClientController implements CrudController<AuthClientRequest, A
         AuthClient authClient = resolver(token, request);
         AuthClientSearchDto searchDto = convertSearchDto(authClient);
         try {
-            IPage<AuthClient> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<AuthClient> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

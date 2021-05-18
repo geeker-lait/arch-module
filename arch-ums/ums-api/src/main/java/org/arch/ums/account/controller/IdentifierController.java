@@ -342,7 +342,7 @@ public class IdentifierController implements CrudController<IdentifierRequest, I
         try {
             Identifier identifier = resolver(token, request);
             IdentifierSearchDto searchDto = convertSearchDto(identifier);
-            Identifier result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Identifier result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -371,7 +371,7 @@ public class IdentifierController implements CrudController<IdentifierRequest, I
         Identifier identifier = resolver(token, request);
         IdentifierSearchDto searchDto = convertSearchDto(identifier);
         try {
-            List<Identifier> identifierList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Identifier> identifierList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(identifierList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -400,7 +400,7 @@ public class IdentifierController implements CrudController<IdentifierRequest, I
         Identifier identifier = resolver(token, request);
         IdentifierSearchDto searchDto = convertSearchDto(identifier);
         try {
-            IPage<Identifier> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Identifier> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

@@ -83,7 +83,7 @@ public class JobController implements CrudController<JobRequest, Job, java.lang.
         try {
             Job job = resolver(token, request);
             JobSearchDto searchDto = convertSearchDto(job);
-            Job result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Job result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class JobController implements CrudController<JobRequest, Job, java.lang.
         Job job = resolver(token, request);
         JobSearchDto searchDto = convertSearchDto(job);
         try {
-            List<Job> jobList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Job> jobList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(jobList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class JobController implements CrudController<JobRequest, Job, java.lang.
         Job job = resolver(token, request);
         JobSearchDto searchDto = convertSearchDto(job);
         try {
-            IPage<Job> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Job> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

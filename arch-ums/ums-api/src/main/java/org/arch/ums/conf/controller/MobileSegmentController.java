@@ -92,7 +92,7 @@ public class MobileSegmentController implements CrudController<MobileSegmentRequ
         try {
             MobileSegment mobileSegment = resolver(token, request);
             MobileSegmentSearchDto searchDto = convertSearchDto(mobileSegment);
-            MobileSegment result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            MobileSegment result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -121,7 +121,7 @@ public class MobileSegmentController implements CrudController<MobileSegmentRequ
         MobileSegment mobileSegment = resolver(token, request);
         MobileSegmentSearchDto searchDto = convertSearchDto(mobileSegment);
         try {
-            List<MobileSegment> mobileSegmentList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<MobileSegment> mobileSegmentList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(mobileSegmentList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -150,7 +150,7 @@ public class MobileSegmentController implements CrudController<MobileSegmentRequ
         MobileSegment mobileSegment = resolver(token, request);
         MobileSegmentSearchDto searchDto = convertSearchDto(mobileSegment);
         try {
-            IPage<MobileSegment> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<MobileSegment> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

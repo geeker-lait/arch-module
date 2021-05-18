@@ -101,7 +101,7 @@ public class OauthTokenController implements CrudController<OauthTokenRequest, O
         try {
             OauthToken oauthToken = resolver(token, request);
             OauthTokenSearchDto searchDto = convertSearchDto(oauthToken);
-            OauthToken result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            OauthToken result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -130,7 +130,7 @@ public class OauthTokenController implements CrudController<OauthTokenRequest, O
         OauthToken oauthToken = resolver(token, request);
         OauthTokenSearchDto searchDto = convertSearchDto(oauthToken);
         try {
-            List<OauthToken> oauthTokenList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<OauthToken> oauthTokenList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(oauthTokenList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -159,7 +159,7 @@ public class OauthTokenController implements CrudController<OauthTokenRequest, O
         OauthToken oauthToken = resolver(token, request);
         OauthTokenSearchDto searchDto = convertSearchDto(oauthToken);
         try {
-            IPage<OauthToken> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<OauthToken> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

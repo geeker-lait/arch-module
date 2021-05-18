@@ -85,7 +85,7 @@ public class MenuController implements CrudController<MenuRequest, Menu, java.la
         try {
             Menu menu = resolver(token, request);
             MenuSearchDto searchDto = convertSearchDto(menu);
-            Menu result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Menu result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -114,7 +114,7 @@ public class MenuController implements CrudController<MenuRequest, Menu, java.la
         Menu menu = resolver(token, request);
         MenuSearchDto searchDto = convertSearchDto(menu);
         try {
-            List<Menu> menuList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Menu> menuList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(menuList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -143,7 +143,7 @@ public class MenuController implements CrudController<MenuRequest, Menu, java.la
         Menu menu = resolver(token, request);
         MenuSearchDto searchDto = convertSearchDto(menu);
         try {
-            IPage<Menu> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Menu> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

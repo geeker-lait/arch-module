@@ -83,7 +83,7 @@ public class DictionaryController implements CrudController<DictionaryRequest, D
         try {
             Dictionary dictionary = resolver(token, request);
             DictionarySearchDto searchDto = convertSearchDto(dictionary);
-            Dictionary result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            Dictionary result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class DictionaryController implements CrudController<DictionaryRequest, D
         Dictionary dictionary = resolver(token, request);
         DictionarySearchDto searchDto = convertSearchDto(dictionary);
         try {
-            List<Dictionary> dictionaryList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<Dictionary> dictionaryList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(dictionaryList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class DictionaryController implements CrudController<DictionaryRequest, D
         Dictionary dictionary = resolver(token, request);
         DictionarySearchDto searchDto = convertSearchDto(dictionary);
         try {
-            IPage<Dictionary> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<Dictionary> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {
