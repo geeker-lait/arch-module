@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RestController
+@RestController("adminOperateLogController")
 @RequestMapping("/account/operate/log")
 public class OperateLogController implements FeignCrudController<OperateLogSearchDto, java.lang.Long, OperateLogRequest, AccountOperateLogFeignService> {
 

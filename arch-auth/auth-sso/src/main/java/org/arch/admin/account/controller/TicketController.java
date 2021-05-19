@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RestController
+@RestController("adminTicketController")
 @RequestMapping("/account/ticket")
 public class TicketController implements FeignCrudController<TicketSearchDto, java.lang.Long, TicketRequest, AccountTicketFeignService> {
 

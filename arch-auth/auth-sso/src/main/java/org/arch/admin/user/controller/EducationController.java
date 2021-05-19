@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RestController
+@RestController("adminEducationController")
 @RequestMapping("/user/education")
 public class EducationController implements FeignCrudController<EducationSearchDto, java.lang.Long, EducationRequest, UserEducationFeignService> {
 

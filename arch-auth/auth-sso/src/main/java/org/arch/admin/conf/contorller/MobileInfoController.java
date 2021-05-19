@@ -47,7 +47,7 @@ import static org.arch.ums.uitls.MobileUtils.getMobileSegment;
  * @weixin z56133
  * @since 2021.3.15 21:28
  */
-@RestController
+@RestController("adminMobileInfoController")
 @RequestMapping("/conf")
 @Slf4j
 @RequiredArgsConstructor

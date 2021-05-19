@@ -33,7 +33,7 @@ import static org.springframework.util.StringUtils.hasText;
  * @weixin z56133
  * @since 2021.3.24 13:33
  */
-@RestController
+@RestController("adminRbacController")
 @RequestMapping("/rbac")
 @Slf4j
 @RequiredArgsConstructor

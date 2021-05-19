@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RestController
+@RestController("adminJobController")
 @RequestMapping("/user/job")
 public class JobController implements FeignCrudController<JobSearchDto, java.lang.Long, JobRequest, UserJobFeignService> {
 

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RestController
+@RestController("adminPostController")
 @RequestMapping("/account/post")
 public class PostController implements FeignCrudController<PostSearchDto, java.lang.Long, PostRequest, AccountPostFeignService> {
 

@@ -1,6 +1,5 @@
 package org.arch.auth.sso;
 
-import org.arch.framework.beans.utils.IpUtils;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -18,11 +17,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @ComponentScan(basePackages = {"org.arch.admin", "org.arch.auth.sso"})
 @EnableAsync
 @EnableAspectJAutoProxy
-@EnableFeignClients(basePackages = {"org.arch.ums.feign"})
+@EnableFeignClients(basePackages = {"org.arch.ums.*.client"})
 public class SsoApplication {
     public static void main(String[] args) {
         new SpringApplicationBuilder(SsoApplication.class)
-                .properties("REAL-MAC:" + IpUtils.getMACAddress())
                 .run(args);
     }
 }

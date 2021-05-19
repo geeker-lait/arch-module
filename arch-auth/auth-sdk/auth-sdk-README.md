@@ -89,9 +89,26 @@ spring:
               orderly: false
               delayLeveLWhenNextConsume: 3
               #              suspendCurrentQueueTimeMillis: 1000
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+ums:
+  # RBAC 权限访问控制, 开发模式放行所以权限.
+  rbac:
+    access-exp: permitAll()
+    restful-access-exp: permitAll()
+    enable-restful-api: true
+    role-hierarchy:
+      - ROLE_ADMIN > ROLE_USER
+      - ROLE_USER > ROLE_VOTE
 ```
 
-4. 开发时: account_auth_client 添加记录: 注意, 暂时用字符串, 启用数据字典后用对于的数据字典 id.
+4. 开发时: account_auth_client 添加记录: 注意, 暂时用字符串, 启用数据字典后用相应的数据字典 id.
 ```sql
 insert into `account_auth_client` (`client_id`, `client_secret`, `scopes`, `client_type`) values('006', '006', 'AUTH,
 OAUTH2,

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RestController
+@RestController("adminDictionaryController")
 @RequestMapping("/conf/dictionary")
 public class DictionaryController implements FeignCrudController<DictionarySearchDto, java.lang.Long, DictionaryRequest, ConfDictionaryFeignService> {
 

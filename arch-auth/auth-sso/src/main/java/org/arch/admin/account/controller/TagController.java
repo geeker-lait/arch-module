@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RestController
+@RestController("adminTagController")
 @RequestMapping("/account/tag")
 public class TagController implements FeignCrudController<TagSearchDto, java.lang.Long, TagRequest, AccountTagFeignService> {
 

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @weixin z56133
  * @since 2021.3.24 13:33
  */
-@RestController
+@RestController("adminResourceController")
 @RequestMapping("/rbac/resource")
 @Slf4j
 @RequiredArgsConstructor

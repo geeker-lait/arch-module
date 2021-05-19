@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RestController
+@RestController("adminCategoryController")
 @RequestMapping("/account/category")
 public class CategoryController implements FeignCrudController<CategorySearchDto, java.lang.Long, CategoryRequest, AccountCategoryFeignService> {
 

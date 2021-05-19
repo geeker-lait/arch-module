@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RestController
+@RestController("adminFileInfoController")
 @RequestMapping("/conf/file/info")
 public class FileInfoController implements FeignCrudController<FileInfoSearchDto, java.lang.Long, FileInfoRequest, ConfFileInfoFeignService> {
 
