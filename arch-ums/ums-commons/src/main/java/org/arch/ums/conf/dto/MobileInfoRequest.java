@@ -1,10 +1,11 @@
 package org.arch.ums.conf.dto;
 
-import java.time.LocalDateTime;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 手机号归属地信息(MobileInfo) request
@@ -16,7 +17,8 @@ import lombok.experimental.Accessors;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class MobileInfoRequest {
+public class MobileInfoRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * 手机号归属地信息id

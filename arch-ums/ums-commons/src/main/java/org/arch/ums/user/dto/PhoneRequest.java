@@ -1,11 +1,13 @@
 package org.arch.ums.user.dto;
 
-import java.time.LocalDateTime;
-
-import org.arch.framework.ums.enums.Mno;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.arch.framework.ums.enums.Mno;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 用户电话信息(Phone) request
@@ -17,7 +19,8 @@ import lombok.experimental.Accessors;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class PhoneRequest {
+public class PhoneRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * 用户电话信息表ID
@@ -62,16 +65,19 @@ public class PhoneRequest {
     /**
      * 应用 id
      */
+    @JsonIgnore
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @JsonIgnore
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @JsonIgnore
     private Integer rev;
 
     /**

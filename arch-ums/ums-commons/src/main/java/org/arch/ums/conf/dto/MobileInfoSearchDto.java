@@ -20,6 +20,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class MobileInfoSearchDto implements BaseSearchDto {
 
+    private static final long serialVersionUID = 1L;
     /**
      * 手机号归属地信息id
      */

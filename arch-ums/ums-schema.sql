@@ -54,7 +54,8 @@ CREATE TABLE `account_group` (
   `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
   PRIMARY KEY (`id`),
-  KEY `IDX_GROUP_PID_AND_SORTED` (`group_pid`,`sorted`)
+  KEY `IDX_TENANT_ID_AND_GROUP_PID_AND_SORTED` (`tenant_id`, `group_pid`,`sorted`),
+  KEY `IDX_TENANT_ID_AND_GROUP_CODE` (`tenant_id`, `group_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-组织机构';
 
 /*Table structure for table `account_identifier` */
@@ -432,6 +433,8 @@ CREATE TABLE `account_tag` (
   KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-标签';
 
+
+
 /*Table structure for table `account_ticket` */
 
 DROP TABLE IF EXISTS `account_ticket`;
@@ -451,6 +454,7 @@ CREATE TABLE `account_ticket` (
   PRIMARY KEY (`id`),
   KEY `IDX_TENANT_ID_AND_ACCOUNT_ID` (`tenant_id`, `account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号-券';
+
 
 /*===================== user ==========================*/
 
@@ -623,6 +627,67 @@ CREATE TABLE `user_relatives` (
   KEY `IDX_TENANT_ID_AND_USER_ID_AND_SORTED` (`tenant_id`, `user_id`, `sorted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户亲朋信息';
 
+/*===================== member ==========================*/
+
+/*Table structure for table `member_Level` */
+
+DROP TABLE IF EXISTS `member_Level`;
+
+CREATE TABLE `member_Level` (
+  `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '会员级别ID',
+  `member_name` varchar(36) NOT NULL COMMENT '会员名称',
+  `growth_value` bigint(19) DEFAULT '0' COMMENT '成长值, 默认0',
+  `referrer_num` bigint(19) DEFAULT '0' COMMENT '推荐人数量, 默认0',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+  PRIMARY KEY (`id`),
+  KEY `INX_TENANT_ID` (`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='会员级别';
+
+/*Table structure for table `member_rights` */
+
+DROP TABLE IF EXISTS `member_rights`;
+
+CREATE TABLE `member_rights` (
+  `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '会员权益ID',
+  `member_level_id` bigint(19) NOT NULL COMMENT '会员级别ID',
+  `rights_typ` int(2) DEFAULT '0' COMMENT '权益类型, 默认: 0 为基础权益',
+  `rights_name` varchar(36) DEFAULT NULL COMMENT '权益名称',
+  `rights_value` int(11) DEFAULT NULL COMMENT '权益值',
+  `rights_code` varchar(24) DEFAULT NULL COMMENT '权益码',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+  PRIMARY KEY (`id`),
+  KEY `INX_TENANT_ID` (`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='会员权益';
+
+/*Table structure for table `member_life` */
+
+DROP TABLE IF EXISTS `member_life`;
+
+CREATE TABLE `member_life` (
+  `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '会员生命周期ID',
+  `member_level_id` bigint(19) NOT NULL COMMENT '会员级别ID',
+  `member_dues` bigint(19) DEFAULT NULL COMMENT '会费',
+  `duration` bigint(19) DEFAULT NULL COMMENT '会员时长, 单位: 小时',
+  `tenant_id` int NOT NULL COMMENT '租户 id',
+  `app_id` int(11) DEFAULT NULL COMMENT '应用 id',
+  `store_id` int(11) DEFAULT NULL COMMENT '店铺 id',
+  `rev` int(11) DEFAULT '0' COMMENT '乐观锁, 默认: 0',
+  `dt` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间戳/创建时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0',
+  PRIMARY KEY (`id`),
+  KEY `INX_TENANT_ID` (`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='会员生命周期';
+
 /*===================== conf ==========================*/
 
 /*Table structure for table `conf_file_info` */
@@ -632,7 +697,7 @@ DROP TABLE IF EXISTS `conf_file_info`;
 CREATE TABLE `conf_file_info` (
     `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '对象存储文件信息id',
     `aid` bigint(19) DEFAULT NULL COMMENT '账号ID/用户ID/会员ID/商户ID',
-    `storage_type` varchar(20) NOT NULL COMMENT '存储类型: aws/aliyun/minio/tencent/qiniu/local/nginx',
+    `storage_type` int(2) NOT NULL COMMENT '存储类型: aws/aliyun/minio/tencent/qiniu/local/nginx',
     `original_file_name` varchar(255) DEFAULT NULL COMMENT '原始文件名称',
     `size` bigint(19) NOT NULL COMMENT '文件大小',
     `suffix` varchar(20) DEFAULT NULL COMMENT '文件后缀',

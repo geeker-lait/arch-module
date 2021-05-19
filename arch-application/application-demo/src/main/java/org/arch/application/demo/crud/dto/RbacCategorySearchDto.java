@@ -17,6 +17,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class RbacCategorySearchDto implements BaseSearchDto {
 
+    private static final long serialVersionUID = 1L;
     private Long id;
     /**
      * 父节点_i_d

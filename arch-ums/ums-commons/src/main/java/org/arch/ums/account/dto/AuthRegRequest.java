@@ -6,6 +6,7 @@ import lombok.Data;
 import org.arch.framework.ums.enums.LoginType;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 /**
@@ -42,11 +43,11 @@ public class AuthRegRequest implements Serializable {
     private String identifier;
     /**
      * 站内账号是密码, 第三方是 accessToken, 手机登录是空字符串或指定字符串. 对应账号-标识 credential<br>
-     * 注意: {@link #loginType} 为 {@link LoginType#PHONE} 时有后端赋值 "空字符串或指定字符串"
+     * 注意: 为 {@link LoginType#PHONE} 时由后端赋值 "空字符串或指定字符串"
      */
-    @NotNull(message = "密码不能为空")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9*/+.~!@#$%^&()]{8,16}$", message =
+            "至少包含数字跟大小写字母，可以有*/+.~!@#$%^&()字符, 密码长度必须在 8-16 位之间")
     private String credential;
-
     /**
      * 用户权限.
      */

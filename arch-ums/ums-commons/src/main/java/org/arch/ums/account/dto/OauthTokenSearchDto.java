@@ -21,6 +21,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class OauthTokenSearchDto implements BaseSearchDto {
 
+    private static final long serialVersionUID = 1L;
     /**
      * account_oauth_token id
      */

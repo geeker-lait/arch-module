@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.member.mapper.MemberRightsMapper">
+
+    <resultMap type="org.arch.ums.member.entity.MemberRights" id="MemberRightsMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="memberLevelId" column="member_level_id" jdbcType="INTEGER"/>
+        <result property="rightsTyp" column="rights_typ" jdbcType="INTEGER"/>
+        <result property="rightsName" column="rights_name" jdbcType="VARCHAR"/>
+        <result property="rightsValue" column="rights_value" jdbcType="INTEGER"/>
+        <result property="rightsCode" column="rights_code" jdbcType="VARCHAR"/>
+        <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
+        <result property="appId" column="app_id" jdbcType="INTEGER"/>
+        <result property="storeId" column="store_id" jdbcType="INTEGER"/>
+        <result property="rev" column="rev" jdbcType="INTEGER"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <sql id="tableName">
+        `member_rights`
+    </sql>
+
+    <sql id="baseColumn">
+        `id`, `member_level_id`, `rights_typ`, `rights_name`, `rights_value`, `rights_code`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
+    </sql>
+
+</mapper>

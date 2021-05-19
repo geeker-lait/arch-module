@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
 import org.arch.framework.ums.enums.LoginType;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -21,6 +21,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class IdentifierSearchDto implements BaseSearchDto {
 
+    private static final long serialVersionUID = 1L;
     /**
      * AccountIdentifier ID
      */
@@ -59,16 +60,19 @@ public class IdentifierSearchDto implements BaseSearchDto {
     /**
      * 应用 id
      */
+    @JsonIgnore
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @JsonIgnore
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @JsonIgnore
     private Integer rev;
 
     /**
