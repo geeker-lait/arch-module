@@ -97,7 +97,7 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
         try {
             ${(name?cap_first)!""} ${(name?uncap_first)!""} = resolver(token, request);
             ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(${(name?uncap_first)!""});
-            ${(name?cap_first)!""} result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            ${(name?cap_first)!""} result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -123,7 +123,7 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
         ${(name?cap_first)!""} ${(name?uncap_first)!""} = resolver(token, request);
         ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(${(name?uncap_first)!""});
         try {
-        List<${(name?cap_first)!""}> ${(name?uncap_first)!""}List = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+        List<${(name?cap_first)!""}> ${(name?uncap_first)!""}List = getCrudService().findAllByMapParams(searchDto.searchParams());
         return Response.success(${(name?uncap_first)!""}List.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -151,7 +151,7 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
         ${(name?cap_first)!""} ${(name?uncap_first)!""} = resolver(token, request);
         ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(${(name?uncap_first)!""});
         try {
-            IPage<${(name?cap_first)!""}> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<${(name?cap_first)!""}> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

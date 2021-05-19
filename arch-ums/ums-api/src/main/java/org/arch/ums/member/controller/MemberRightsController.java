@@ -83,7 +83,7 @@ public class MemberRightsController implements CrudController<MemberRightsReques
         try {
             MemberRights memberRights = resolver(token, request);
             MemberRightsSearchDto searchDto = convertSearchDto(memberRights);
-            MemberRights result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            MemberRights result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class MemberRightsController implements CrudController<MemberRightsReques
         MemberRights memberRights = resolver(token, request);
         MemberRightsSearchDto searchDto = convertSearchDto(memberRights);
         try {
-            List<MemberRights> memberRightsList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<MemberRights> memberRightsList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(memberRightsList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class MemberRightsController implements CrudController<MemberRightsReques
         MemberRights memberRights = resolver(token, request);
         MemberRightsSearchDto searchDto = convertSearchDto(memberRights);
         try {
-            IPage<MemberRights> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<MemberRights> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

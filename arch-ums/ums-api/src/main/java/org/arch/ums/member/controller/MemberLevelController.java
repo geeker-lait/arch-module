@@ -83,7 +83,7 @@ public class MemberLevelController implements CrudController<MemberLevelRequest,
         try {
             MemberLevel memberLevel = resolver(token, request);
             MemberLevelSearchDto searchDto = convertSearchDto(memberLevel);
-            MemberLevel result = getCrudService().findOneByMapParams(searchDto.getSearchParams());
+            MemberLevel result = getCrudService().findOneByMapParams(searchDto.searchParams());
             return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
@@ -112,7 +112,7 @@ public class MemberLevelController implements CrudController<MemberLevelRequest,
         MemberLevel memberLevel = resolver(token, request);
         MemberLevelSearchDto searchDto = convertSearchDto(memberLevel);
         try {
-            List<MemberLevel> memberLevelList = getCrudService().findAllByMapParams(searchDto.getSearchParams());
+            List<MemberLevel> memberLevelList = getCrudService().findAllByMapParams(searchDto.searchParams());
             return Response.success(memberLevelList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
@@ -141,7 +141,7 @@ public class MemberLevelController implements CrudController<MemberLevelRequest,
         MemberLevel memberLevel = resolver(token, request);
         MemberLevelSearchDto searchDto = convertSearchDto(memberLevel);
         try {
-            IPage<MemberLevel> page = getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize);
+            IPage<MemberLevel> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
             return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {

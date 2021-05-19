@@ -22,7 +22,6 @@ import java.util.Map;
 public class MemberLifeSearchDto implements BaseSearchDto {
 
     private static final long serialVersionUID = 1L;
-    private static final long serialVersionUID = 1L;
     /**
      * 会员生命周期ID
      */
