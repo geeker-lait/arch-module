@@ -49,6 +49,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
 import static org.arch.framework.utils.SecurityUtils.ifExpiredOfJwtThenClearAuthentication;
 import static org.springframework.util.StringUtils.hasText;
@@ -368,7 +369,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                              .identifier(username)
                              .credential(passwordEncoder.encode(ssoProperties.getDefaultPassword()))
                              .authorities(authorities)
-                             .avatar(authUser.getAvatar())
+                             .avatar(ofNullable(authUser.getAvatar()).orElse(ssoProperties.getDefaultAvatar()))
                              .loginType(LoginType.OAUTH2)
                              .nickName(authUser.getUsername())
                              .source(source)
