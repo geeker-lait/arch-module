@@ -13,7 +13,7 @@ import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.conf.dto.FileInfoRequest;
 import org.arch.ums.conf.dto.FileInfoSearchDto;
 import org.arch.ums.conf.entity.FileInfo;
-import org.arch.ums.feign.conf.client.ConfFileInfoFeignService;
+import org.arch.ums.conf.client.ConfFileInfoFeignService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;

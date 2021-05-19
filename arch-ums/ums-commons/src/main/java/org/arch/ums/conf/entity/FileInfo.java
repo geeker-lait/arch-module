@@ -1,6 +1,5 @@
 package org.arch.ums.conf.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -97,7 +96,7 @@ public class FileInfo extends CrudEntity<FileInfo> {
     private String fileHash;
 
     /**
-     * 上次的类型
+     * 上传文件类型
      */
     @TableField(value = "`upload_type`")
     private String uploadType;

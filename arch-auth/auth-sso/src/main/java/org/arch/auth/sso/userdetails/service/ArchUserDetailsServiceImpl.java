@@ -16,8 +16,8 @@ import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
-import org.arch.ums.feign.account.client.UmsAccountIdentifierFeignService;
-import org.arch.ums.feign.account.client.UmsAccountOauthTokenFeignService;
+import org.arch.ums.account.client.AccountIdentifierFeignService;
+import org.arch.ums.account.client.AccountOauthTokenFeignService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -76,9 +76,9 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
     private final IdService idService;
     private final SsoProperties ssoProperties;
     private final TenantContextHolder tenantContextHolder;
-    private final UmsAccountIdentifierFeignService umsAccountIdentifierFeignService;
+    private final AccountIdentifierFeignService accountIdentifierFeignService;
     private final Auth2Properties auth2Properties;
-    private final UmsAccountOauthTokenFeignService umsAccountAuthTokenFeignService;
+    private final AccountOauthTokenFeignService umsAccountAuthTokenFeignService;
     private final Auth2StateCoder auth2StateCoder;
     /**
      * 授权服务器的时钟与资源服务器的时钟可能存在偏差, 设置时钟偏移量以消除不同服务器间的时钟偏差的影响, 通过属性 ums.jwt.clockSkew 设置.
@@ -105,7 +105,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
         try {
             // 根据用户名获取用户信息
             AuthLoginDto authLoginDto;
-            final Response<AuthLoginDto> response = umsAccountIdentifierFeignService.loadAccountByIdentifier(userId);
+            final Response<AuthLoginDto> response = accountIdentifierFeignService.loadAccountByIdentifier(userId);
             authLoginDto = response.getSuccessData();
 
             if (isNull(authLoginDto)) {
@@ -294,7 +294,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
         List<String> usernameList = Arrays.stream(usernames).collect(Collectors.toList());
         Response<List<Boolean>> response;
         try {
-            response = umsAccountIdentifierFeignService.exists(usernameList);
+            response = accountIdentifierFeignService.exists(usernameList);
         }
         catch (FeignException e) {
             throw new IOException("查询用户名是否存在时 IO 异常");
@@ -336,7 +336,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
     private AuthLoginDto registerUserAndGetAuthLoginDto(@NonNull AuthRegRequest authRegRequest) {
         Response<AuthLoginDto> response;
         try {
-            response = umsAccountIdentifierFeignService.register(authRegRequest);
+            response = accountIdentifierFeignService.register(authRegRequest);
         }
         catch (FeignException e) {
             log.error(e.getMessage(), e);

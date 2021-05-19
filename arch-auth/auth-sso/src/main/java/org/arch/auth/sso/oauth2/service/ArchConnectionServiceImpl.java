@@ -23,8 +23,8 @@ import org.arch.ums.account.dto.IdentifierSearchDto;
 import org.arch.ums.account.dto.OauthTokenRequest;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.entity.OauthToken;
-import org.arch.ums.feign.account.client.UmsAccountIdentifierFeignService;
-import org.arch.ums.feign.account.client.UmsAccountOauthTokenFeignService;
+import org.arch.ums.account.client.AccountIdentifierFeignService;
+import org.arch.ums.account.client.AccountOauthTokenFeignService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -76,14 +76,14 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 @Slf4j
 public class ArchConnectionServiceImpl implements ConnectionService, ApplicationContextAware {
 
-    private final UmsAccountIdentifierFeignService umsAccountIdentifierFeignService;
+    private final AccountIdentifierFeignService accountIdentifierFeignService;
     private final UmsUserDetailsService umsUserDetailsService;
     private final SsoProperties ssoProperties;
     private final TenantContextHolder tenantContextHolder;
     private final PasswordEncoder passwordEncoder;
     private final IdService idService;
     private final Auth2Properties auth2Properties;
-    private final UmsAccountOauthTokenFeignService umsAccountAuthTokenFeignService;
+    private final AccountOauthTokenFeignService umsAccountAuthTokenFeignService;
     private ApplicationContext applicationContext;
 
     @NonNull
@@ -194,7 +194,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
                                                                             @NonNull String providerUserId) {
         try {
             String identifier = RegisterUtils.getIdentifierForOauth2(providerId, providerUserId);
-            Response<AuthLoginDto> response = umsAccountIdentifierFeignService.loadAccountByIdentifier(identifier);
+            Response<AuthLoginDto> response = accountIdentifierFeignService.loadAccountByIdentifier(identifier);
             final AuthLoginDto authLoginDto = response.getSuccessData();
             if (isNull(authLoginDto)) {
                 return null;
@@ -221,7 +221,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
     @Override
     public MultiValueMap<String, ConnectionDto> listAllConnections(@NonNull String userId) {
         Response<Map<String, List<Auth2ConnectionDto>>> response =
-                umsAccountIdentifierFeignService.listAllConnections(Long.valueOf(userId));
+                accountIdentifierFeignService.listAllConnections(Long.valueOf(userId));
         Map<String, List<Auth2ConnectionDto>> allConnections = response.getSuccessData();
         if (isNull(allConnections)) {
         	return new LinkedMultiValueMap<>(0);
@@ -274,7 +274,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
             IdentifierRequest identifierRequest = new IdentifierRequest();
             identifierRequest.setAid(currentUser.getAccountId());
             identifierRequest.setTenantId(currentUser.getTenantId());
-            Response<List<IdentifierSearchDto>> listResponse = umsAccountIdentifierFeignService.find(identifierRequest);
+            Response<List<IdentifierSearchDto>> listResponse = accountIdentifierFeignService.find(identifierRequest);
             List<IdentifierSearchDto> identifierList = listResponse.getSuccessData();
             if (isEmpty(identifierList)) {
                 log.debug("用户 {} 进行解绑操作时, 获取用户信息失败; providerId: {}, providerUserId: {}",
@@ -306,8 +306,8 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
             }
 
             // 2. 解绑
-            Response<Boolean> response = umsAccountIdentifierFeignService.unbinding(unbindingIdentifier.getAid(),
-                                                                                    unbindingIdentifier.getIdentifier());
+            Response<Boolean> response = accountIdentifierFeignService.unbinding(unbindingIdentifier.getAid(),
+                                                                                 unbindingIdentifier.getIdentifier());
             Boolean successData = response.getSuccessData();
             if (isNull(successData) || !successData) {
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_ERROR, userId);
@@ -326,7 +326,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
         try {
             // 1. 获取 principal 对应的 Identifier 相关信息.
             ArchUser archUser = (ArchUser) principal;
-            Response<AuthLoginDto> authLoginDtoResponse = umsAccountIdentifierFeignService.loadAccountByIdentifier(archUser.getUsername());
+            Response<AuthLoginDto> authLoginDtoResponse = accountIdentifierFeignService.loadAccountByIdentifier(archUser.getUsername());
             AuthLoginDto authLoginDto = authLoginDtoResponse.getSuccessData();
             if (isNull(authLoginDto)) {
                 log.warn("用户 {} 进行绑定操作时, 获取用户信息失败; providerId: {}, providerUserId: {}",
@@ -372,7 +372,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
                     .setLoginType(OAUTH2);
             // 绑定
             try {
-                umsAccountIdentifierFeignService.save(identifierRequest);
+                accountIdentifierFeignService.save(identifierRequest);
             }
             catch (Exception e) {
                 log.error(e.getMessage(), e);
@@ -427,7 +427,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
         log.warn(errorMsg + "traceId={}", traceId);
         publishRetryEvent(this.applicationContext, traceId,
                           this.umsAccountAuthTokenFeignService,
-                          UmsAccountOauthTokenFeignService.class,
+                          AccountOauthTokenFeignService.class,
                           methodName,
                           new Class[]{OauthToken.class},
                           oauthToken);

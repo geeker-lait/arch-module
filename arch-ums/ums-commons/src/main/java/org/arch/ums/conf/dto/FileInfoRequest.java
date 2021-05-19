@@ -79,7 +79,7 @@ public class FileInfoRequest implements Serializable {
     private String fileHash;
 
     /**
-     * 上次的类型
+     * 上传文件类型
      */
     private String uploadType;
 

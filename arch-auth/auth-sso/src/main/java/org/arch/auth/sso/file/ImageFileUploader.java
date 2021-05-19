@@ -3,7 +3,7 @@ package org.arch.auth.sso.file;
 import org.arch.auth.sso.exception.GlobalFileException;
 import org.arch.auth.sso.file.image.ImageClient;
 import org.arch.auth.sso.properties.FileProperties;
-import org.arch.ums.feign.conf.client.ConfFileInfoFeignService;
+import org.arch.ums.conf.client.ConfFileInfoFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;

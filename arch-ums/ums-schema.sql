@@ -706,7 +706,7 @@ CREATE TABLE `conf_file_info` (
     `file_path` varchar(255) NOT NULL COMMENT '文件路径(不带域名)',
     `full_file_path` varchar(255) NOT NULL COMMENT '文件全路径(带域名)',
     `file_hash` varchar(255) DEFAULT NULL COMMENT '文件hash',
-    `upload_type` varchar(255) NOT NULL COMMENT '上次的类型',
+    `upload_type` varchar(255) NOT NULL COMMENT '上传文件类型',
     `upload_start_time` timestamp NULL DEFAULT NULL COMMENT '文件上传开始的时间',
     `upload_end_time` timestamp NULL DEFAULT NULL COMMENT '文件上传结束的时间',
     `tenant_id` int(11) NOT NULL COMMENT '租户 id',

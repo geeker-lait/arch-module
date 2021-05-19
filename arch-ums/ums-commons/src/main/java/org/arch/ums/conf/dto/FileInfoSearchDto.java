@@ -80,7 +80,7 @@ public class FileInfoSearchDto implements BaseSearchDto {
     private String fileHash;
 
     /**
-     * 上次的类型
+     * 上传文件类型
      */
     private String uploadType;
 

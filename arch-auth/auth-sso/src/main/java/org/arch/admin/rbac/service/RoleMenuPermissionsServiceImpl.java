@@ -3,7 +3,7 @@ package org.arch.admin.rbac.service;
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
 import org.arch.ums.account.entity.Menu;
-import org.arch.ums.feign.account.client.UmsAccountRoleMenuFeignService;
+import org.arch.ums.account.client.AccountRoleMenuFeignService;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
@@ -36,7 +36,7 @@ import static java.util.Arrays.asList;
 @RequiredArgsConstructor
 public class RoleMenuPermissionsServiceImpl implements RolePermissionsService<Menu> {
 
-    private final UmsAccountRoleMenuFeignService roleMenuFeignService;
+    private final AccountRoleMenuFeignService roleMenuFeignService;
     private final TenantContextHolder tenantContextHolder;
 
     @Override
