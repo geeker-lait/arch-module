@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2021.3.24 13:33
  */
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/rbac/group")
 @Slf4j
 @RequiredArgsConstructor
 public class GroupController implements FeignCrudController<GroupSearchDto, Long, GroupRequest, AccountGroupFeignService> {

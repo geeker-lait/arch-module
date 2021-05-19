@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2021.3.24 13:33
  */
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/rbac/permission")
 @Slf4j
 @RequiredArgsConstructor
 public class PermissionController implements FeignCrudController<PermissionSearchDto, Long, PermissionRequest, AccountPermissionFeignService> {

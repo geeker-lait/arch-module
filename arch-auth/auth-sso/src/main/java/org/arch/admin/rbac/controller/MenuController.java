@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2021.3.24 13:33
  */
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/rbac/menu")
 @Slf4j
 @RequiredArgsConstructor
 public class MenuController implements FeignCrudController<MenuSearchDto, Long, MenuRequest, AccountMenuFeignService> {

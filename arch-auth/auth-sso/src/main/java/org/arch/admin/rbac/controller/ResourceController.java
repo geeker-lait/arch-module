@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2021.3.24 13:33
  */
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/rbac/resource")
 @Slf4j
 @RequiredArgsConstructor
 public class ResourceController implements FeignCrudController<ResourceSearchDto, Long, ResourceRequest, AccountResourceFeignService> {
