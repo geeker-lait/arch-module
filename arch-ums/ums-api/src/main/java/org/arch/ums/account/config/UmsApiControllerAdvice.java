@@ -1,11 +1,9 @@
-package org.arch.auth.sso.advice;
+package org.arch.ums.account.config;
 
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.exceptions.TooManyResultsException;
-import org.arch.auth.sso.exception.GlobalFileException;
-import org.arch.auth.sso.exception.LocalUploadFileException;
 import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.ArgumentException;
 import org.arch.framework.beans.exception.AuthenticationException;
@@ -40,7 +38,7 @@ import static top.dcenter.ums.security.common.consts.SecurityConstants.CONTROLLE
 @Order(CONTROLLER_ADVICE_ORDER_DEFAULT_VALUE + 6)
 @ControllerAdvice
 @Slf4j
-public class SsoControllerAdvice {
+public class UmsApiControllerAdvice {
 
     @ExceptionHandler(AuthenticationException.class)
     @ResponseBody
@@ -90,22 +88,6 @@ public class SsoControllerAdvice {
         return Response.error(FAILED);
     }
 
-    @ExceptionHandler(LocalUploadFileException.class)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Response<String> localUploadFileException(LocalUploadFileException e){
-        log.error(e.getMessage(),e);
-        return Response.error(FAILED.getCode(), e.getMessage());
-    }
-
-    @ExceptionHandler(GlobalFileException.class)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Response<String> globalFileException(GlobalFileException e){
-        log.error(e.getMessage(),e);
-        return Response.error(FAILED.getCode(), e.getMessage());
-    }
-
     @ExceptionHandler(FeignCallException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -120,6 +102,14 @@ public class SsoControllerAdvice {
     public Response<String> businessException(BusinessException e){
         log.error(e.getMessage(),e);
         return Response.error(e.getResponseCode().getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(BaseException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response<String> baseException(BaseException e){
+        log.error(e.getMessage(),e);
+        return Response.error(FAILED.getCode(), e.getMessage());
     }
 
     @ExceptionHandler(BindException.class)
@@ -139,10 +129,10 @@ public class SsoControllerAdvice {
         return response.setData(errorMap);
     }
 
-    @ExceptionHandler(BaseException.class)
+    @ExceptionHandler(Exception.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Response<String> baseException(BaseException e){
+    public Response<String> exception(Exception e){
         log.error(e.getMessage(),e);
         return Response.error(FAILED.getCode(), e.getMessage());
     }
