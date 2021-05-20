@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,36 +36,43 @@ import top.dcenter.ums.security.core.permission.config.PermissionAutoConfigurati
  */
 @Configuration
 @EnableScheduling
-@AutoConfigureAfter({ArchRbacFeignAutoConfiguration.class})
 @AutoConfigureBefore({PermissionAutoConfiguration.class})
 public class ArchRbacAutoConfiguration {
-
-    @Bean
-    @ConditionalOnMissingBean(type = "org.arch.auth.rbac.service.AuthoritiesService")
-    public AuthoritiesService authoritiesService(RoleMenuFeignService roleMenuFeignService,
-                                                 RoleGroupFeignService roleGroupFeignService,
-                                                 RoleResourceFeignService roleResourceFeignService,
-                                                 RolePermissionFeignService rolePermissionFeignService,
-                                                 MenuFeignService menuFeignService,
-                                                 RoleFeignService roleFeignService,
-                                                 PermissionFeignService permissionFeignService,
-                                                 ResourceFeignService resourceFeignService) {
-
-        return new FeignAuthoritiesServiceImpl(roleMenuFeignService,
-                                               roleGroupFeignService,
-                                               roleResourceFeignService,
-                                               rolePermissionFeignService,
-                                               menuFeignService,
-                                               roleFeignService,
-                                               permissionFeignService,
-                                               resourceFeignService);
-    }
 
     @Bean
     public AbstractUriAuthorizeService abstractUriAuthorizeService(TenantContextHolder tenantContextHolder,
                                                                    AuthoritiesService authoritiesService) {
         return new ArchRbacUriAuthorizeServiceImpl(tenantContextHolder,
                                                    authoritiesService);
+    }
+
+    @Configuration
+    @ConditionalOnMissingBean(type = "org.arch.auth.rbac.service.AuthoritiesService")
+    @EnableFeignClients(basePackageClasses = {RoleResourceFeignService.class, RolePermissionFeignService.class,
+            RoleMenuFeignService.class, RoleGroupFeignService.class, MenuFeignService.class,
+            PermissionFeignService.class, ResourceFeignService.class, RoleFeignService.class})
+    static class FeignAutoConfiguration {
+
+        @Bean
+        public AuthoritiesService authoritiesService(RoleMenuFeignService roleMenuFeignService,
+                                                     RoleGroupFeignService roleGroupFeignService,
+                                                     RoleResourceFeignService roleResourceFeignService,
+                                                     RolePermissionFeignService rolePermissionFeignService,
+                                                     MenuFeignService menuFeignService,
+                                                     RoleFeignService roleFeignService,
+                                                     PermissionFeignService permissionFeignService,
+                                                     ResourceFeignService resourceFeignService) {
+
+            return new FeignAuthoritiesServiceImpl(roleMenuFeignService,
+                                                   roleGroupFeignService,
+                                                   roleResourceFeignService,
+                                                   rolePermissionFeignService,
+                                                   menuFeignService,
+                                                   roleFeignService,
+                                                   permissionFeignService,
+                                                   resourceFeignService);
+        }
+
     }
 
     /**

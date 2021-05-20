@@ -3,7 +3,8 @@ package org.arch.auth.rbac.service;
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.vo.MenuVo;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import top.dcenter.ums.security.core.api.permission.service.AbstractUriAuthorizeService;
@@ -34,7 +35,8 @@ import static top.dcenter.ums.security.common.consts.TenantConstants.DEFAULT_TEN
  * @since 2020.12.29 20:21
  */
 @RequiredArgsConstructor
-public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService implements UpdateCacheOfRolesResourcesService, InitializingBean {
+public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
+        implements UpdateCacheOfRolesResourcesService, ApplicationListener<ContextRefreshedEvent> {
 
     /**
      * 所有角色 uri(资源) 权限 Map(tenantAuthority/scopeAuthority, Map(role, map(uri/path, Set(permission)))
@@ -62,7 +64,9 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
     private volatile Boolean isUpdatedOfAllMenus = Boolean.FALSE;
 
     @Override
-    public void initAllAuthorities() throws RolePermissionsException {
+    public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
+        // 缓存所有 uri(资源) 权限 Map(tenantAuthority/scopeAuthority, Map(role, map(uri/path, Set(permission)))
+        // 角色组(Group) Map(tenantAuthority, Map (groupAuthority, Set(roleAuthority)))
         // 初始化更新所有的权限
         synchronized (lock) {
             this.isUpdatedOfAllRoles = Boolean.FALSE;
@@ -230,13 +234,6 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
                                                        @NonNull String roleAuthority) {
 
         return this.allTenantsMenusMap.get(tenantAuthority).get(roleAuthority);
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        // 缓存所有 uri(资源) 权限 Map(tenantAuthority/scopeAuthority, Map(role, map(uri/path, Set(permission)))
-        // 角色组(Group) Map(tenantAuthority, Map (groupAuthority, Set(roleAuthority)))
-        initAllAuthorities();
     }
 
     @Override
