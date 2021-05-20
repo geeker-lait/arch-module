@@ -38,6 +38,4 @@ public class EntityInfo extends BaseClassInfo {
     private List<UniqueFiledInfo> uniqueFiledInfos;
 
 
-
-
 }

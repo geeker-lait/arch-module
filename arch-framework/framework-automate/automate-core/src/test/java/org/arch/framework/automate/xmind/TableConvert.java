@@ -2,13 +2,13 @@ package org.arch.framework.automate.xmind;
 
 import com.google.common.base.CaseFormat;
 import org.apache.commons.lang3.StringUtils;
-import org.arch.framework.automate.generater.service.xmind.database.Column;
-import org.arch.framework.automate.generater.service.xmind.database.Database;
-import org.arch.framework.automate.generater.service.xmind.database.Table;
-import org.arch.framework.automate.generater.service.xmind.meta.Attached;
-import org.arch.framework.automate.generater.service.xmind.meta.Children;
-import org.arch.framework.automate.generater.service.xmind.meta.JsonRootBean;
-import org.arch.framework.automate.generater.service.xmind.meta.RootTopic;
+import org.arch.framework.automate.common.database.Column;
+import org.arch.framework.automate.common.database.Database;
+import org.arch.framework.automate.common.database.Table;
+import org.arch.framework.automate.generater.reader.xmind.meta.Attached;
+import org.arch.framework.automate.generater.reader.xmind.meta.Children;
+import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;
+import org.arch.framework.automate.generater.reader.xmind.meta.RootTopic;
 
 import java.io.File;
 import java.util.ArrayList;

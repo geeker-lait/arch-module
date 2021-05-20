@@ -3,8 +3,8 @@ package org.arch.framework.automate.from.mapper;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.ibatis.annotations.Mapper;
 import org.arch.framework.automate.api.Constants;
-import org.arch.framework.crud.CrudMapper;
 import org.arch.framework.automate.from.entity.FormLayout;
+import org.arch.framework.crud.CrudMapper;
 
 /**
  * 表单布局(FormLayout) 表数据库 Mapper 层

@@ -1,7 +1,7 @@
 package org.arch.framework.automate.common.pojo;
 
 public class NumberField {
-    private final String DATA_TYPE="NUMBER";
+    private final String DATA_TYPE = "NUMBER";
     private final String COLUMN_NAME;
     private final String DATA_PRECISION;
     private final String DATA_SCALE;

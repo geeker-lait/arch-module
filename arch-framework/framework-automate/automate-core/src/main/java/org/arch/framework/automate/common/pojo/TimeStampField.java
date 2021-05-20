@@ -1,7 +1,7 @@
 package org.arch.framework.automate.common.pojo;
 
 public class TimeStampField {
-    private final String DATA_TYPE="TIMESTAMP(0)";
+    private final String DATA_TYPE = "TIMESTAMP(0)";
     private final String COLUMN_NAME;
     private final String DATA_DEFAULT;
     private final String NULLABLE;

@@ -27,7 +27,6 @@ public abstract class AbstractEntityParser implements EntityParseable {
     }
 
 
-
     @Override
     public List<FieldInfo> parseField(Class<?> clazz) {
         List<FieldInfo> fields = new ArrayList<>();

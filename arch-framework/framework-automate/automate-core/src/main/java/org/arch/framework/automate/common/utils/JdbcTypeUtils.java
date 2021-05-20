@@ -43,7 +43,7 @@ public class JdbcTypeUtils {
     }
 
     public static Class getFieldType(String columnType) {
-        if(StringUtils.isEmpty(columnType)){
+        if (StringUtils.isEmpty(columnType)) {
             return null;
         }
         Class aClass = sqlFieldTypeMapping.get(columnType);

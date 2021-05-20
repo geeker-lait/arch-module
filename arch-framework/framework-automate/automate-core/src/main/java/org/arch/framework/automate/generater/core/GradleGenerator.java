@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.properties.PomProperties;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 /**
@@ -24,7 +23,7 @@ public class GradleGenerator extends AbstractGenerator {
 
 
     @Override
-    public void buildModule(Path path, PomProperties pomProperties, SchemaMetadata schemaData) {
+    public void buildModule(Path path, PomProperties pomProperties, SchemaData schemaData) {
 
     }
 }

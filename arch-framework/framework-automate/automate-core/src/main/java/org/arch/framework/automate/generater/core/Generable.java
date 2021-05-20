@@ -23,6 +23,7 @@ public interface Generable {
     List<String> SRC_DIR = Arrays.asList(MAIN_JAVA, MAIN_RESOURCES, TEST_JAVA, TEST_RESOURCES);
 
     BuildToolsName getBuildTools();
+
     /**
      * 根据GeneratorConfig 构建项目
      *

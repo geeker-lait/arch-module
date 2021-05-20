@@ -3,11 +3,11 @@ package org.arch.framework.automate;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveException;
-import org.arch.framework.automate.generater.service.xmind.database.Database;
-import org.arch.framework.automate.generater.service.xmind.meta.JsonRootBean;
-import org.arch.framework.automate.generater.service.xmind.module.Project;
-import org.arch.framework.automate.generater.service.xmind.parser.XmindParser;
-import org.arch.framework.automate.generater.service.xmind.utils.FreeMarkerUtil;
+import org.arch.framework.automate.common.database.Database;
+import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;
+import org.arch.framework.automate.common.module.Project;
+import org.arch.framework.automate.generater.reader.xmind.parser.XmindParser;
+import org.arch.framework.automate.generater.reader.xmind.utils.FreeMarkerUtil;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +17,7 @@ import org.springframework.core.io.Resource;
 import java.io.File;
 import java.io.IOException;
 
-import static org.arch.framework.automate.generater.service.xmind.utils.XmindUtils.generate;
+import static org.arch.framework.automate.generater.reader.xmind.utils.XmindUtils.generate;
 import static org.springframework.util.StringUtils.hasText;
 
 /**

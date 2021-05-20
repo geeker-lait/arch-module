@@ -13,7 +13,7 @@ import java.nio.file.Path;
  * @weixin PN15855012581
  * @date 2/22/2021 6:17 PM
  */
-public interface Buildable {
+public interface Buildable<T extends SchemaData> {
     /**
      * 获取模板名称
      *
@@ -29,5 +29,5 @@ public interface Buildable {
      * @param documentProperties 文档配置
      * @param schemaData         schema配置
      */
-    void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaMetadata schemaData);
+    void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, T schemaData);
 }

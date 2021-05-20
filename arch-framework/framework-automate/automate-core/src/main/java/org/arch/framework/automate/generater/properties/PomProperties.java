@@ -14,7 +14,7 @@ import java.util.List;
  * - artifactId:
  * groupId:
  * version:
- * packageTypes: entity,dao,service
+ * packageTypes: entity,dao,converter
  * dependencies:
  * - groupId:
  * artifactId:
@@ -24,12 +24,6 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 public class PomProperties implements ConfigProperties {
-    //
-    private Long id;
-    // 父节点id
-    private Long pid;
-    // 项目id
-    private Long projectId;
 
     private String groupId;
     private String artifactId;

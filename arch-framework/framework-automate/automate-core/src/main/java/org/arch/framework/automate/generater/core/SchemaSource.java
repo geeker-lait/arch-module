@@ -16,6 +16,7 @@ public enum SchemaSource {
     ;
     @Getter
     private String source;
+
     SchemaSource(String source) {
         this.source = source;
     }

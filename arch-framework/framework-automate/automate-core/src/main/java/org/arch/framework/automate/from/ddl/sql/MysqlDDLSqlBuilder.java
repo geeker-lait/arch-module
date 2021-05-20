@@ -23,6 +23,7 @@ public class MysqlDDLSqlBuilder {
 
     /**
      * 获取 判断数据库是否存在 sql
+     *
      * @param database
      * @return
      */
@@ -35,6 +36,7 @@ public class MysqlDDLSqlBuilder {
 
     /**
      * 获取 创建数据库 sql
+     *
      * @param database
      * @return
      */
@@ -45,6 +47,7 @@ public class MysqlDDLSqlBuilder {
 
     /**
      * 获取 删除指定数据库 sql
+     *
      * @param database
      * @return
      */
@@ -55,6 +58,7 @@ public class MysqlDDLSqlBuilder {
 
     /**
      * 获取 判断指定库下表是否存在 sql
+     *
      * @param database
      * @param tableName
      * @return
@@ -69,6 +73,7 @@ public class MysqlDDLSqlBuilder {
 
     /**
      * 获取 删除表 sql
+     *
      * @param database
      * @param tableName
      * @return
@@ -81,6 +86,7 @@ public class MysqlDDLSqlBuilder {
 
     /**
      * 获取 创建 table sql
+     *
      * @param record
      * @return
      */
@@ -137,7 +143,8 @@ public class MysqlDDLSqlBuilder {
 
     /**
      * 获取 指定库下所有的表 sql
-     *  只返回 完整的sql, 不做任何替换，jdbc执行的时候通过PreparedStatement设置对应的值
+     * 只返回 完整的sql, 不做任何替换，jdbc执行的时候通过PreparedStatement设置对应的值
+     *
      * @return
      */
     public static String getDatabaseTablesSql() {
@@ -149,7 +156,8 @@ public class MysqlDDLSqlBuilder {
 
     /**
      * 获取 指定库下的指定表的所有字段信息 sql
-     *  只返回 完整的sql, 不做任何替换，jdbc执行的时候通过PreparedStatement设置对应的值
+     * 只返回 完整的sql, 不做任何替换，jdbc执行的时候通过PreparedStatement设置对应的值
+     *
      * @return
      */
     public static String getTableDetailSql() {

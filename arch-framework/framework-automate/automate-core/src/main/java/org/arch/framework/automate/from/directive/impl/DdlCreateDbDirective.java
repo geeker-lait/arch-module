@@ -5,12 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arch.framework.automate.api.DirectiveResponse;
 import org.arch.framework.automate.api.dto.DirectiveRequestDto;
-import org.arch.framework.automate.from.ddl.DDLOperate;
 import org.arch.framework.automate.from.directive.SqlDirective;
 import org.arch.framework.automate.from.directive.SqlDirectiveCode;
 import org.arch.framework.automate.from.utils.DefinitionTableUtil;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,13 +28,13 @@ public class DdlCreateDbDirective extends AbstractDirective implements SqlDirect
             log.info("database name is null");
             return null;
         }
-        DatabaseProperties properties = null;
-        if (directiveRequest.getDataSource() != null) {
-            properties = new DatabaseProperties();
-            BeanUtils.copyProperties(directiveRequest.getDataSource(), properties);
-        }
-        DDLOperate ddlOperate = DDLOperate.selectDDLOperate(properties);
-        ddlOperate.createDatabase(properties, databaseName);
+//        DatabaseProperties properties = null;
+//        if (directiveRequest.getDataSource() != null) {
+//            properties = new DatabaseProperties();
+//            BeanUtils.copyProperties(directiveRequest.getDataSource(), properties);
+//        }
+//        DDLOperate ddlOperate = DDLOperate.selectDDLOperate(properties);
+//        ddlOperate.createDatabase(properties, databaseName);
         return null;
     }
 

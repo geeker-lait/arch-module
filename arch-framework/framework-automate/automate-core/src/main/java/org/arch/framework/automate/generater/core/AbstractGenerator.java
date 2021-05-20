@@ -29,10 +29,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractGenerator implements Generable/*, ApplicationContextAware */ {
 
-    protected final static Map<String, DocumentProperties> documentsMap = new HashMap<>();
-    protected final static Map<String, Buildable> builderMap = new HashMap<>();
-    protected final static Map<String, SchemaReadable> readerMap = new HashMap<>();
-    protected final static Map<String, Generable> buildToolsMap = new HashMap<>();
+    protected final static Map<String, DocumentProperties> DOCUMENT_MAP = new HashMap<>();
+    protected final static Map<String, Buildable> BUILDER_MAP = new HashMap<>();
+    protected final static Map<String, SchemaReadable> READER_MAP = new HashMap<>();
+    protected final static Map<String, Generable> BUILD_TOOLS_MAP = new HashMap<>();
     protected final static ThreadLocal<List<DependencieProterties>> DEPS = new ThreadLocal<>();
 
     protected TemplateEngine engine;
@@ -59,10 +59,10 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
         engine = TemplateUtil.createEngine(templateConfig);
 
 
-        documentsMap.putAll(generatorConfig.getDocuments().stream().collect(Collectors.toMap(DocumentProperties::getType, Function.identity())));
-        builderMap.putAll(builders.stream().collect(Collectors.toMap(b -> b.getTemplateName().getTemplate(), Function.identity())));
-        readerMap.putAll(schemaReadables.stream().collect(Collectors.toMap(s -> s.getTyp().name().toLowerCase(), Function.identity())));
-        buildToolsMap.putAll(generables.stream().collect(Collectors.toMap(s -> s.getBuildTools().name().toLowerCase(), Function.identity())));
+        DOCUMENT_MAP.putAll(generatorConfig.getDocuments().stream().collect(Collectors.toMap(DocumentProperties::getType, Function.identity())));
+        BUILDER_MAP.putAll(builders.stream().collect(Collectors.toMap(b -> b.getTemplateName().getTemplate(), Function.identity())));
+        READER_MAP.putAll(schemaReadables.stream().collect(Collectors.toMap(s -> s.getTyp().name().toLowerCase(), Function.identity())));
+        BUILD_TOOLS_MAP.putAll(generables.stream().collect(Collectors.toMap(s -> s.getBuildTools().name().toLowerCase(), Function.identity())));
 
         cover = generatorConfig.getProject().getCover();
         buildTool = generatorConfig.getBuildTool();
@@ -88,19 +88,22 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
         Path rootPath = projectProperties.getProjectRootPath();
         Files.createDirectories(rootPath);
         generatorConfig.getSchemas().forEach(s -> {
-            List<SchemaMetadata> schemaDatas = readerMap.get(s.getTyp()).read(s);
-            if (schemaDatas != null) {
-                schemaDatas.forEach(d -> {
-                    // 创建项目模块
-                    buildModule(rootPath, generatorConfig.getProject().getPom(), d);
-                    pomBuildOnce = false;
-                });
+            SchemaReadable readable = READER_MAP.get(s.getTyp());
+            if (readable != null) {
+                List<SchemaData> schemaDatas = readable.read(s);
+                if (schemaDatas != null) {
+                    schemaDatas.forEach(sd -> {
+                        // 创建项目模块
+                        buildModule(rootPath, generatorConfig.getProject().getPom(), sd);
+                        pomBuildOnce = false;
+                    });
+                }
             }
         });
         DEPS.remove();
     }
 
 
-    public abstract void buildModule(Path path, PomProperties pomProperties, SchemaMetadata schemaData);
+    public abstract void buildModule(Path path, PomProperties pomProperties, SchemaData schemaData);
 
 }

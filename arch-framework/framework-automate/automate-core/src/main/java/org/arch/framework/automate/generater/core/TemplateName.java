@@ -13,7 +13,7 @@ public enum TemplateName {
     DAO("dao.ftl"),
     MAPPER("mapper.ftl"),
     MAPPER_XML("mapper-xml.ftl"),
-    SERVICE("service.ftl"),
+    SERVICE("converter.ftl"),
     BIZ("biz.ftl"),
     CONTROLLER("controller.ftl"),
     SEARCH("search.ftl"),

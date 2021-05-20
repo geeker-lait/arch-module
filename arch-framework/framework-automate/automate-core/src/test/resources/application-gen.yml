@@ -24,9 +24,9 @@ spring:
         modules:
           - artifactId: test-api
             pattern: api
-            documentTypes: api,yml,docker
+            documentTypes: pom,api,yml,docker
           - artifactId: test-core1
-            documentTypes: yml,entity,dao,application,ddl,docker,mapper,service
+            documentTypes: pom,yml,entity,dao,application,ddl,docker,mapper,converter
           - artifactId: arch-gen-common
             dependencies:
               - groupId: org.arch.projects
@@ -35,7 +35,7 @@ spring:
               - artifactId: arch-gen-common-a
                 groupId:
                 version:
-                documentTypes: dao
+                documentTypes: pom,dao
               - artifactId: arch-gen-common-b
                 groupId:
                 version:
@@ -43,7 +43,7 @@ spring:
                   - artifactId: arch-gen-common-b-1
                     groupId:
                     version:
-                    documentTypes: entity,dao,service,mapper
+                    documentTypes: pom,entity,dao,converter,mapper
                   - artifactId: arch-gen-common-b-2
                     groupId:
                     version:
@@ -61,9 +61,9 @@ spring:
         template: dao.ftl
         suffix: Dao
         ext: .java
-      - type: service
-        pkg: service
-        template: service.ftl
+      - type: converter
+        pkg: converter
+        template: converter.ftl
         suffix: Service
       - type: controller
         pkg:
@@ -99,35 +99,19 @@ spring:
         template: api.ftl
         ext: .java
         suffix: Client
+      - type: pom
+        ext:
+        template: pom.ftl
+        suffix:
 
     schemas:
       - typ: xmind
         patterns: api,mvc
-        resources: classpath:WMS.xmind
-        project:
-          name: test
-          pkg: org.arch.pms
-          modules:
-            - name: api
-              apis:
-                - name:
-                  pkg:
-                  descr:
-                  inputs:
-                    - javaTyp:
-                      name:
-                      descr:
-                    - javaTyp:
-                      name:
-                      descr:
-                  output:
-                    javaTyp:
-                    name:
-                    descr:
+        resources: classpath:minds/xmind-example.xmind
 
       - typ: excel
         patterns: mvc
-        resources: classpath:uni-life-ums.xlsx
+        resources: classpath:xls/uni-life-ums.xlsx
         configuration: {
           table: "表名/Table",
           column: "列名/Column",
@@ -142,7 +126,7 @@ spring:
         }
       - typ: database
         patterns: mvc
-        resources: arch_module,
+        resources: arch_module
         configuration: {
           driver: "com.mysql.cj.jdbc.Driver",
           url: "jdbc:mysql://localhost:3306?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai",
@@ -151,7 +135,7 @@ spring:
         }
       - typ: database
         patterns: api
-        resources: arch_module_api,
+        resources: arch_module_api
         configuration: {
           driver: "com.mysql.cj.jdbc.Driver",
           url: "jdbc:mysql://localhost:3306?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai",

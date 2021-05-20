@@ -1,7 +1,5 @@
 package org.arch.framework.automate.generater.core;
 
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.properties.DependencieProterties;
@@ -10,15 +8,10 @@ import org.arch.framework.automate.generater.properties.PomProperties;
 import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author lait.zhang@gmail.com
@@ -31,7 +24,7 @@ import java.util.Optional;
 public class MavenGenerator extends AbstractGenerator {
 
     @Override
-    public void buildModule(Path path, PomProperties pomProperties, SchemaMetadata schemaData) {
+    public void buildModule(Path path, PomProperties pomProperties, SchemaData schemaData) {
         try {
             doBuild(path, pomProperties, schemaData);
         } catch (Exception e) {
@@ -39,10 +32,10 @@ public class MavenGenerator extends AbstractGenerator {
         }
     }
 
-    private void doBuild(Path path, PomProperties pomProperties, SchemaMetadata schemaData) throws Exception {
+    private void doBuild(Path path, PomProperties pomProperties, SchemaData schemaData) throws Exception {
         List<PomProperties> modules = pomProperties.getModules();
         if (modules == null || modules.size() == 0) {
-            // 创建模块src目录,可不创建最后一起创建，这里为了标准化目录创建一下
+            // 创建模块src目录,标准化目录创建
             for (String dir : SRC_DIR) {
                 Files.createDirectories(path.resolve(dir));
             }
@@ -50,17 +43,17 @@ public class MavenGenerator extends AbstractGenerator {
             if (!StringUtils.isEmpty(pomProperties.getDocumentTypes())) {
                 List<String> docTyps = Arrays.asList(pomProperties.getDocumentTypes().split(","));
                 for (String p : docTyps) {
-                    DocumentProperties documentProperties = documentsMap.get(p);
+                    DocumentProperties documentProperties = DOCUMENT_MAP.get(p);
                     // 获取模板
                     String stemplate = documentProperties.getTemplate();
-                    Buildable buildable = builderMap.get(stemplate);
+                    Buildable buildable = BUILDER_MAP.get(stemplate);
                     if (buildable == null) {
                         throw new CodegenException("buildable is null ,please implements org.arch.framework.automate.generater.core.Buildable and config it as a spring component");
                     }
                     buildable.build(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
                 }
             }
-            if (null == DEPS.get()) {
+            /*if (null == DEPS.get()) {
                 DEPS.set(new ArrayList<>());
             }
             // 收集所有生产的jar类型pom，增加到根pom进行统一版本控制
@@ -72,7 +65,7 @@ public class MavenGenerator extends AbstractGenerator {
             // 创建pom 确保pom 只构建一次
             if (pomBuildOnce) {
                 buildPom(cover, path, pomProperties);
-            }
+            }*/
             return;
         } else {
             for (PomProperties module : modules) {
@@ -98,43 +91,6 @@ public class MavenGenerator extends AbstractGenerator {
         }
     }
 
-
-    private void buildPom(boolean cover, Path path, PomProperties pomProperties) {
-        Path pomFilePath = Paths.get(path.toString().concat(File.separator).concat("pom.xml"));
-        // 写入文件
-        if (Files.exists(pomFilePath)) {
-            // 是否覆盖
-            if (!cover) {
-                log.info("skip {} due to file exists.", path);
-                return;
-            } else {
-                try {
-                    Files.delete(pomFilePath);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        if (pomProperties.isRoot()) {
-            if (null != pomProperties.getDependencyManagement()) {
-                pomProperties.getDependencyManagement().addAll(DEPS.get());
-            } else {
-                pomProperties.setDependencies(DEPS.get());
-            }
-            //DEPS.remove();
-        }
-        JSONObject jsonObject = JSONUtil.parseObj(pomProperties);
-        String dt = pomProperties.getDocumentTypes();
-        if (!StringUtils.isEmpty(dt)) {
-            Optional<String> app = Arrays.asList(dt.split(",")).stream().filter(t -> t.equalsIgnoreCase(TemplateName.APPLICATION.name())).findAny();
-            if (app.isPresent()) {
-                jsonObject.putOpt(app.get(), true);
-            }
-        }
-        // 获取并渲染模板
-        engine.getTemplate("pom.ftl").render(jsonObject, new File(pomFilePath.toString()));
-        log.info("\n\ncreate pom file in : {}\npom json :{}\n\n", pomFilePath, pomProperties);
-    }
 
     @Override
     public BuildToolsName getBuildTools() {

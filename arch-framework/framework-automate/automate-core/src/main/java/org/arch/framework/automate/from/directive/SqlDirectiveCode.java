@@ -18,7 +18,4 @@ public enum SqlDirectiveCode {
     DML_UPDATE,
 
 
-
-
-
 }

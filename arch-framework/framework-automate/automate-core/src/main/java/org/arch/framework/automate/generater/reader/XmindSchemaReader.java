@@ -1,21 +1,20 @@
 package org.arch.framework.automate.generater.reader;
 
+import cn.hutool.core.io.resource.ClassPathResource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.generater.core.SchemaMetadata;
-import org.arch.framework.automate.generater.core.SchemaPattern;
-import org.arch.framework.automate.generater.core.SchemaReadable;
-import org.arch.framework.automate.generater.core.SchemaType;
-import org.arch.framework.automate.generater.properties.MethodProperties;
+import org.arch.framework.automate.common.module.Project;
+import org.arch.framework.automate.generater.core.*;
+import org.arch.framework.automate.generater.core.configuration.XmindConfiguration;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
-import org.arch.framework.automate.generater.properties.TableProperties;
-import org.arch.framework.automate.generater.properties.XmindProperties;
-import org.arch.framework.automate.generater.service.xmind.XmindSchemaService;
+import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;
+import org.arch.framework.automate.generater.reader.xmind.parser.XmindParser;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import static org.arch.framework.automate.generater.reader.xmind.utils.XmindUtils.generate;
 
 /**
  * @author lait.zhang@gmail.com
@@ -24,11 +23,9 @@ import java.util.Map;
  * @date 2/26/2021 11:06 AM
  */
 @Slf4j
-//@Service
+@Service
 @RequiredArgsConstructor
-public class XmindSchemaReader extends AbstractSchemaReader implements SchemaReadable {
-
-    private final XmindSchemaService xmindSchemaService;
+public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> implements SchemaReadable {
 
     @Override
     public SchemaType getTyp() {
@@ -36,31 +33,63 @@ public class XmindSchemaReader extends AbstractSchemaReader implements SchemaRea
     }
 
     @Override
-    public List<SchemaMetadata> read(SchemaProperties schemaProperties) {
+    public List<SchemaData> read(SchemaProperties schemaProperties) {
         // 如果有有特殊处理，再次处理，如果没有则调用父类通用处理
         return super.doRead(schemaProperties);
     }
 
     @Override
-    protected List<SchemaMetadata> readMvc(String res, Map<String, String> configuration) {
-        // todo getTableProperties.apply 入参需要构建，暂时只用 res(为了不报错)     getTableProperties方法暂时是空实现
-        List<TableProperties> schemaMetadata = xmindSchemaService.getTableProperties().apply(res);
-        XmindProperties xmindProperties = new XmindProperties();
-        xmindProperties.setPattern(SchemaPattern.MVC.getPattern());
-        xmindProperties.setTables(schemaMetadata);
-        return Arrays.asList(xmindProperties);
+    protected List<? extends SchemaData> readDatabse(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
+        List<DatabaseSchemaData> databaseSchemaDatas = new ArrayList<>();
+        getProject(readerConfiguration).getModules().forEach(module -> {
+            module.getDatabases().forEach(db -> {
+                DatabaseSchemaData databaseSchemaData = new DatabaseSchemaData();
+                databaseSchemaData.setDatabase(db);
+                databaseSchemaData.setSchemaPattern(SchemaPattern.MVC);
+                databaseSchemaDatas.add(databaseSchemaData);
+            });
+        });
+        return databaseSchemaDatas;
     }
 
     @Override
-    protected List<SchemaMetadata> readApi(String res, Map<String, String> configuration) {
-        // todo  getApiProperties.apply 入参需要构建，暂时只用 res(为了不报错)  getApiProperties暂时是空实现
-        List<MethodProperties> methodProperties = xmindSchemaService.getApiProperties().apply(res);
-        XmindProperties xmindProperties = new XmindProperties();
-        xmindProperties.setPattern(SchemaPattern.API.getPattern());
-        xmindProperties.setApis(methodProperties);
-        //schemaMetadatas.addAll(xmindSchemaService.getApiMetadate(res, configuration));
-        return  Arrays.asList(xmindProperties);
+    protected List<? extends SchemaData> readApi(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
+        List<MethodSchemaData> methodSchemaDatas = new ArrayList<>();
+        getProject(readerConfiguration).getModules().forEach(module -> {
+            module.getInterfaces().forEach(interfac -> {
+                MethodSchemaData methodSchemaData = new MethodSchemaData();
+                methodSchemaData.setInterfac(interfac);
+                methodSchemaData.setSchemaPattern(SchemaPattern.API);
+                methodSchemaDatas.add(methodSchemaData);
+            });
+        });
+        return methodSchemaDatas;
+    }
+
+    @Override
+    protected ReaderConfiguration<XmindConfiguration> buildConvertConfiguration(String resName, SchemaProperties schemaProperties, SchemaPattern schemaPattern) {
+        ReaderConfiguration<XmindConfiguration> readerConfiguration = new ReaderConfiguration<>();
+        readerConfiguration.setConfiguration((XmindConfiguration) schemaProperties.getSchemaConfiguration());
+        readerConfiguration.setResource(resName);
+        readerConfiguration.setPattern(schemaPattern);
+        return readerConfiguration;
     }
 
 
+    private Project getProject(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
+        JsonRootBean root = null;
+        try {
+            String res = readerConfiguration.getResource();
+            // 从类路劲加载
+            if (-1 != res.indexOf("classpath:")) {
+                res = new ClassPathResource(res.split(":")[1]).getAbsolutePath();
+            }
+            root = XmindParser.parseObject(res, JsonRootBean.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Project project = new Project();
+        generate(root, project);
+        return project;
+    }
 }

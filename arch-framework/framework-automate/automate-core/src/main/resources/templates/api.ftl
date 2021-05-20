@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 * @author ${author!""}
 * @date ${.now}
 */
-@RestController
+<#--@RestController
 @ResquestMapping("${(mainClass?uncap_first)!""}")
 public interface ${(mainClass?cap_first)!""}{
     <#list apis as method>
@@ -29,4 +29,4 @@ public interface ${(mainClass?cap_first)!""}{
 
     </#list>
 
-}
+}-->

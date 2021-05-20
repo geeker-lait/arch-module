@@ -18,7 +18,7 @@ import java.nio.file.Paths;
  * - artifactId:
  * groupId:
  * version:
- * packages: entity,dao,service
+ * packages: entity,dao,converter
  * dependencies:
  * - groupId:
  * artifactId:
@@ -26,7 +26,7 @@ import java.nio.file.Paths;
  * - artifactId:
  * groupId:
  * version:
- * packages: entity,dao,service
+ * packages: entity,dao,converter
  * @weixin PN15855012581
  * @date :
  */
@@ -43,6 +43,8 @@ public class ProjectProperties implements ConfigProperties {
     private String name;
     private String basePkg;
     private Boolean domain = true;
+    // 默认开启后缀
+    private Boolean stuffixed = true;
     @NestedConfigurationProperty
     private PomProperties pom;
 
