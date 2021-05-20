@@ -90,7 +90,8 @@ spring:
               delayLeveLWhenNextConsume: 3
               #              suspendCurrentQueueTimeMillis: 1000
 
-
+rocketmq:
+  name-server: 192.168.50.2:9876
 ---
 spring:
   config:
