@@ -1,7 +1,6 @@
 package org.arch.framework.automate.generater.core;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.generater.ex.CodegenException;
 import org.arch.framework.automate.generater.properties.DependencieProterties;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;
@@ -47,25 +46,13 @@ public class MavenGenerator extends AbstractGenerator {
                     // 获取模板
                     String stemplate = documentProperties.getTemplate();
                     Buildable buildable = BUILDER_MAP.get(stemplate);
-                    if (buildable == null) {
-                        throw new CodegenException("buildable is null ,please implements org.arch.framework.automate.generater.core.Buildable and config it as a spring component");
+                    if (buildable != null) {
+                        buildable.build(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
+                    } else {
+                        log.error("buildable is null ,please implements org.arch.framework.automate.generater.core.Buildable and config it as a spring component");
                     }
-                    buildable.build(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
                 }
             }
-            /*if (null == DEPS.get()) {
-                DEPS.set(new ArrayList<>());
-            }
-            // 收集所有生产的jar类型pom，增加到根pom进行统一版本控制
-            DependencieProterties dependencieProterties = new DependencieProterties();
-            dependencieProterties.setArtifactId(pomProperties.getArtifactId());
-            dependencieProterties.setGroupId(pomProperties.getGroupId());
-            dependencieProterties.setVersion("${project.version}");
-            DEPS.get().add(dependencieProterties);
-            // 创建pom 确保pom 只构建一次
-            if (pomBuildOnce) {
-                buildPom(cover, path, pomProperties);
-            }*/
             return;
         } else {
             for (PomProperties module : modules) {
