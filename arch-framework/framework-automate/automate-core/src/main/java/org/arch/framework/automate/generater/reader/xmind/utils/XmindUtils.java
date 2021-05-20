@@ -3,7 +3,12 @@ package org.arch.framework.automate.generater.reader.xmind.utils;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
 import com.google.common.base.CaseFormat;
-import org.arch.framework.automate.common.api.*;
+import org.arch.framework.automate.common.api.Annot;
+import org.arch.framework.automate.common.api.AnnotVal;
+import org.arch.framework.automate.common.api.Curl;
+import org.arch.framework.automate.common.api.Entity;
+import org.arch.framework.automate.common.api.Interfac;
+import org.arch.framework.automate.common.api.Param;
 import org.arch.framework.automate.common.database.Column;
 import org.arch.framework.automate.common.database.Database;
 import org.arch.framework.automate.common.database.Table;
@@ -14,7 +19,12 @@ import org.arch.framework.automate.generater.reader.xmind.meta.Attached;
 import org.arch.framework.automate.generater.reader.xmind.meta.Children;
 import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;
 import org.arch.framework.automate.generater.reader.xmind.meta.RootTopic;
-import org.arch.framework.automate.generater.reader.xmind.nodespace.*;
+import org.arch.framework.automate.generater.reader.xmind.nodespace.Annotation;
+import org.arch.framework.automate.generater.reader.xmind.nodespace.ColumnProperty;
+import org.arch.framework.automate.generater.reader.xmind.nodespace.ColumnType;
+import org.arch.framework.automate.generater.reader.xmind.nodespace.ParamProperty;
+import org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType;
+import org.arch.framework.automate.generater.reader.xmind.nodespace.TiTleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -22,7 +32,11 @@ import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -33,9 +47,13 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
 import static org.arch.framework.automate.generater.reader.xmind.nodespace.ColumnType.BIGINT;
 import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamProperty.ARRAY_TYP;
-import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.ENTITY;
 import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.*;
-import static org.arch.framework.automate.generater.reader.xmind.nodespace.TiTleType.*;
+import static org.arch.framework.automate.generater.reader.xmind.nodespace.TiTleType.API;
+import static org.arch.framework.automate.generater.reader.xmind.nodespace.TiTleType.INTERFACE;
+import static org.arch.framework.automate.generater.reader.xmind.nodespace.TiTleType.MODULE;
+import static org.arch.framework.automate.generater.reader.xmind.nodespace.TiTleType.PKG;
+import static org.arch.framework.automate.generater.reader.xmind.nodespace.TiTleType.PROJECT;
+import static org.arch.framework.automate.generater.reader.xmind.nodespace.TiTleType.TABLE;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -252,26 +270,65 @@ public class XmindUtils {
      */
     public static void generate(@NonNull JsonRootBean root, @NonNull Project project) {
         try {
-            TiTleType tiTleType = TiTleType.valueOf(root.getTitle().trim().toUpperCase());
-            if (!SHEET.equals(tiTleType)) {
+            String title = root.getTitle().trim();
+            TiTleType tiTleType = getTiTleType(title);
+            if (isNull(tiTleType)) {
+                generateOfRoot(root.getRootTopic(), project, tiTleType);
                 return;
             }
-            generateOfRoot(root.getRootTopic(), project);
+            if (PROJECT.equals(tiTleType)) {
+                String[] splits = splitInto3Parts(title);
+                project.setName(splits[1].trim());
+                project.setDescr(removeNewlines(splits[2].trim()));
+                generateOfRoot(root.getRootTopic(), project, tiTleType);
+            }
+            else if (MODULE.equals(tiTleType)) {
+                String[] splits = splitInto3Parts(title);
+                Module module = new Module();
+                module.setTyp(splits[0].trim());
+                module.setName(splits[1].trim());
+                module.setComment(removeNewlines(splits[2].trim()));
+                project.getModules().add(module);
+                generateOfRoot(root.getRootTopic(), project, tiTleType);
+            }
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            generateOfRoot(root.getRootTopic(), project, null);
         }
     }
 
-    private static void generateOfRoot(@NonNull RootTopic rootTopic, @NonNull Project project) {
+    private static void generateOfRoot(@NonNull RootTopic rootTopic, @NonNull Project project,
+                                       @Nullable TiTleType pTiTleType) {
         String title = rootTopic.getTitle().trim();
         TiTleType tiTleType = getTiTleType(title);
-        if (nonNull(tiTleType) && PROJECT.equals(tiTleType)) {
-            String[] splits = splitInto3Parts(title);
-            project.setName(splits[1].trim());
-            project.setDescr(removeNewlines(splits[2].trim()));
+        if (isNull(pTiTleType)) {
+            if (nonNull(tiTleType) && PROJECT.equals(tiTleType)) {
+                String[] splits = splitInto3Parts(title);
+                project.setName(splits[1].trim());
+                project.setDescr(removeNewlines(splits[2].trim()));
+            }
+            Children children = rootTopic.getChildren();
+            generate(children, project.getModules(), title, tiTleType);
+            return;
         }
-        Children children = rootTopic.getChildren();
-        generate(children, project.getModules(), title, tiTleType);
+        if (PROJECT.equals(pTiTleType)) {
+            if (nonNull(tiTleType) && MODULE.equals(tiTleType)) {
+                Module module = new Module();
+                project.getModules().add(module);
+                Children children = rootTopic.getChildren();
+                if (isNull(children)) {
+                    generate(children, project.getModules(), title, tiTleType);
+                    return;
+                }
+                generateOfChildren(children, project.getModules(), module, MODULE, title);
+            }
+        }
+        else if (MODULE.equals(pTiTleType)) {
+            Children children = rootTopic.getChildren();
+            if (nonNull(children)) {
+                List<Module> modules = project.getModules();
+                generateOfChildren(children, modules, modules.get(0));
+            }
+        }
     }
 
     /**
@@ -291,11 +348,11 @@ public class XmindUtils {
     }
 
     private static void generate(@Nullable Children children, @NonNull List<Module> moduleList,
-                                 @NonNull String title, @Nullable TiTleType tiTleType) {
+                                 @NonNull String title, @Nullable TiTleType pTiTleType) {
         if (isNull(children)) {
             return;
         }
-        if (nonNull(tiTleType) && MODULE.equals(tiTleType)) {
+        if (nonNull(pTiTleType) && MODULE.equals(pTiTleType)) {
             Module module = new Module();
             moduleList.add(module);
             generateOfChildren(children, moduleList, module, MODULE, title);

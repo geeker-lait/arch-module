@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.arch.framework.automate.common.database.Database;
-import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;
 import org.arch.framework.automate.common.module.Project;
+import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;
 import org.arch.framework.automate.generater.reader.xmind.parser.XmindParser;
 import org.arch.framework.automate.generater.reader.xmind.utils.FreeMarkerUtil;
 import org.dom4j.DocumentException;
@@ -37,6 +37,7 @@ public class XmindTest {
         //        String fileName = "minds\\ofs-alarm-er.xmind";
 //        String fileName = "minds"+ File.separator +"ofs-alarm-center3.xmind";
         String fileName = "minds"+ File.separator +"ofs-alarm-center.xmind";
+//        String fileName = "minds"+ File.separator +"xmind-example.xmind";
         Resource resource = new ClassPathResource(fileName);
         String absolutePath = resource.getFile().getAbsolutePath();
 

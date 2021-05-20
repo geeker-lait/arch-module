@@ -8,10 +8,6 @@ package org.arch.framework.automate.generater.reader.xmind.nodespace;
  */
 public enum TiTleType {
     /**
-     * Xmind 脑图
-     */
-    SHEET,
-    /**
      * 项目
      */
     PROJECT,
