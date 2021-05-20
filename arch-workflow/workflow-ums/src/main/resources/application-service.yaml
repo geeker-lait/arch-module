@@ -1,0 +1,24 @@
+logging:
+  name: workflow-ums
+     
+     
+---
+
+#生产环境
+spring:
+  config:
+    activate:
+      on-profile: workflow-pro
+
+---
+
+#开发环境
+spring:
+  config:
+    activate:
+      on-profile: workflow-dev
+  
+server:
+  port : 8082
+
+  

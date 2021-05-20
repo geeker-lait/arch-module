@@ -13,6 +13,11 @@
         <java.version>1.8</java.version>
         <spring-security.version>5.4.2</spring-security.version>
         <spring.version>5.2.9.RELEASE</spring.version>
+        <commons-io.version>2.7</commons-io.version>
+        <commons-lang3.version>3.5</commons-lang3.version>
+        <jsonwebtoken.version>0.5.1</jsonwebtoken.version>
+        <guava.version>[24.1.1,)</guava.version>
+        <flowable.version>6.6.0</flowable.version>
         <dcenter-ums.version>2.2.29</dcenter-ums.version>
     </properties>
 
@@ -29,6 +34,7 @@
         <module>arch-pms</module>
         <module>arch-rule</module>
         <module>arch-ums</module>
+        <module>arch-workflow</module>
     </modules>
 
 
@@ -203,7 +209,11 @@
             </dependency>
 
 
-
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jsonwebtoken.version}</version>
+            </dependency>
 
             <!-- spring -->
             <dependency>

@@ -1,0 +1,79 @@
+spring:
+  profiles:
+    active: dev
+    include: workflow
+  datasource:
+    driver-class-name : com.mysql.jdbc.Driver
+    separator : $$
+    initialize: true
+    sql-script-encoding: UTF-8
+  jpa:
+    database : MYSQL
+    show-sql : true
+    hibernate:  
+      ddl-auto : none
+    properties:
+      hibernate:
+        dialect : org.hibernate.dialect.MySQL5InnoDBDialect
+  jackson:
+    time-zone : GMT+8
+    date-format : yyyy-MM-dd HH:mm:ss
+  rest:
+    connectionTimeout : 5000
+    readTimeout : 5000
+    connectionRequestTimeout : 200
+    pool.maxTotal : 50
+    pool.defaultMaxPerRoute : 25
+  async:
+    maxPoolSize : 100
+    corePoolSize : 20
+    threadNamePrefix : arch-workflow-
+  scheduler:
+    poolSize : 20
+    threadNamePrefix : arch-workflow-
+    awaitTerminationSeconds : 60
+    waitForTasksToCompleteOnShutdown : true
+
+       
+  
+logging:
+  name: workflow-common
+  config: classpath:logback-spring.xml
+
+
+---
+
+#生产环境
+spring:
+  config:
+    activate:
+      on-profile: pro
+    location: workflow-pro
+    include:
+  datasource:
+    url : jdbc:mysql://mysql:3306?useUnicode=true&characterEncoding=UTF-8
+    username : root
+    password : root
+    
+
+serviceUrl:
+    identity-service: http://127.0.0.1/ums-converter
+        
+server:
+  port : 8080
+  
+---
+#开发环境
+spring:
+  config:
+    activate:
+      on-profile: dev
+    location: workflow-dev
+
+  datasource:
+    url : jdbc:mysql://localhost:3306?useUnicode=true&characterEncoding=UTF-8
+    username : root
+    password : root
+
+serviceUrl:
+    identity-service: http://localhost:8088/ums-converter

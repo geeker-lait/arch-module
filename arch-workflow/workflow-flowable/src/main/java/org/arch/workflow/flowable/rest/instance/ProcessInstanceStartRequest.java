@@ -1,0 +1,74 @@
+package org.arch.workflow.flowable.rest.instance;
+
+import org.apache.commons.lang3.StringUtils;
+import org.arch.workflow.flowable.rest.variable.RestVariable;
+
+import java.util.List;
+
+/**
+ * 流程实例启动请求类
+ *
+ * @author lait.zhang@gmail.com
+ * @date 2018/12/6
+ */
+public class ProcessInstanceStartRequest {
+    private String processDefinitionId;
+    private String processDefinitionKey;
+    private String businessKey;
+    private List<RestVariable> variables;
+    private boolean autoCommitTask = false;
+    private String tenantId;
+
+    public String getProcessDefinitionId() {
+        return processDefinitionId;
+    }
+
+    public void setProcessDefinitionId(String processDefinitionId) {
+        this.processDefinitionId = processDefinitionId;
+    }
+
+    public String getProcessDefinitionKey() {
+        return processDefinitionKey;
+    }
+
+    public void setProcessDefinitionKey(String processDefinitionKey) {
+        this.processDefinitionKey = processDefinitionKey;
+    }
+
+    public String getBusinessKey() {
+        return businessKey;
+    }
+
+    public void setBusinessKey(String businessKey) {
+        this.businessKey = businessKey;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public List<RestVariable> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(List<RestVariable> variables) {
+        this.variables = variables;
+    }
+
+    public boolean isCustomTenantSet() {
+        return tenantId != null && !StringUtils.isEmpty(tenantId);
+    }
+
+    public boolean isAutoCommitTask() {
+        return autoCommitTask;
+    }
+
+    public void setAutoCommitTask(boolean autoCommitTask) {
+        this.autoCommitTask = autoCommitTask;
+    }
+
+}
