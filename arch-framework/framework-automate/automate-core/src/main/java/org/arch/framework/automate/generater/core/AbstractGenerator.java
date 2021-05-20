@@ -33,14 +33,12 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
     protected final static Map<String, Buildable> BUILDER_MAP = new HashMap<>();
     protected final static Map<String, SchemaReadable> READER_MAP = new HashMap<>();
     protected final static Map<String, Generable> BUILD_TOOLS_MAP = new HashMap<>();
-    protected final static ThreadLocal<List<DependencieProterties>> DEPS = new ThreadLocal<>();
 
     protected TemplateEngine engine;
     protected ProjectProperties projectProperties;
     protected String buildTool;
     protected List<String> schemaTyps;
     protected Boolean cover;
-    protected boolean pomBuildOnce = true;
 
     @Autowired
     private List<Buildable> builders;
@@ -95,12 +93,10 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
                     schemaDatas.forEach(sd -> {
                         // 创建项目模块
                         buildModule(rootPath, generatorConfig.getProject().getPom(), sd);
-                        pomBuildOnce = false;
                     });
                 }
             }
         });
-        DEPS.remove();
     }
 
 
