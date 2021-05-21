@@ -10,7 +10,11 @@ spring:
     settings:
       classic_compatible: true
   jackson:
-    time-zone: GMT+
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  mvc:
+    converters:
+      preferred-json-mapper: jackson
 
   cloud:
     nacos:
@@ -20,6 +24,7 @@ spring:
   profiles:
     include: db,redis,arch,rocketmq,feign
     active: ${profile:dev}
+
 
 logging:
   config: classpath:logback-spring.xml
