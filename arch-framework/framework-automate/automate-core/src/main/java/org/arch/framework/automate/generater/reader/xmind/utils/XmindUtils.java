@@ -1777,10 +1777,14 @@ public class XmindUtils {
             return;
         }
         String defValue = columnType.getDefValue();
-        Column column = new Column().setTyp(columnType.getType())
-                .setLength(ofNullable(defValue).orElse(null))
-                .setName(columnName)
-                .setComment(comment);
+        String type = columnType.getType();
+        if (!hasText(type)) {
+            type = null;
+        }
+        Column column = new Column().setTyp(type)
+                                    .setLength(ofNullable(defValue).orElse(null))
+                                    .setName(columnName)
+                                    .setComment(comment);
 
         table.getColumns().add(column);
 
