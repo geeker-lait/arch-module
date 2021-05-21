@@ -1776,17 +1776,15 @@ public class XmindUtils {
             generateOfAttachedWithModule(attached, moduleList, module);
             return;
         }
-        String typ;
         String defValue = columnType.getDefValue();
-        if (hasText(defValue)) {
-            typ = columnType.getType().concat("(").concat(columnType.getDefValue()).concat(")");
-        } else {
-            typ = columnType.getType();
+        String type = columnType.getType();
+        if (!hasText(type)) {
+            type = null;
         }
-        Column column = new Column().setTyp(typ)
-                .setLength(ofNullable(defValue).orElse(null))
-                .setName(columnName)
-                .setComment(comment);
+        Column column = new Column().setTyp(type)
+                                    .setLength(ofNullable(defValue).orElse(null))
+                                    .setName(columnName)
+                                    .setComment(comment);
 
         table.getColumns().add(column);
 
@@ -1825,7 +1823,6 @@ public class XmindUtils {
                 case LEN:
                 case LENGTH:
                     if (hasText(propValue)) {
-                        column.setTyp(columnType.getType().concat("(").concat(propValue).concat(")"));
                         column.setLength(propValue);
                     }
                     break;
