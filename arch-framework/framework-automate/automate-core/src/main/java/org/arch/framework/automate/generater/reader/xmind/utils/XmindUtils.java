@@ -1776,14 +1776,8 @@ public class XmindUtils {
             generateOfAttachedWithModule(attached, moduleList, module);
             return;
         }
-        String typ;
         String defValue = columnType.getDefValue();
-        if (hasText(defValue)) {
-            typ = columnType.getType().concat("(").concat(columnType.getDefValue()).concat(")");
-        } else {
-            typ = columnType.getType();
-        }
-        Column column = new Column().setTyp(typ)
+        Column column = new Column().setTyp(columnType.getType())
                 .setLength(ofNullable(defValue).orElse(null))
                 .setName(columnName)
                 .setComment(comment);
@@ -1825,7 +1819,6 @@ public class XmindUtils {
                 case LEN:
                 case LENGTH:
                     if (hasText(propValue)) {
-                        column.setTyp(columnType.getType().concat("(").concat(propValue).concat(")"));
                         column.setLength(propValue);
                     }
                     break;
