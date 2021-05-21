@@ -47,7 +47,7 @@ public abstract class AbstractSchemaReader<T extends SchemaConfiguration> {
             if (pattern == SchemaPattern.MVC) {
                 Arrays.stream(schemaProperties.getResources().split(",")).forEach(res -> {
                     ReaderConfiguration configuration = buildConvertConfiguration(res, schemaProperties, SchemaPattern.MVC);
-                    schemaDatas.addAll(readDatabse(configuration));
+                    schemaDatas.addAll(readMvc(configuration));
                 });
             }
             if (pattern == SchemaPattern.API) {
@@ -67,7 +67,7 @@ public abstract class AbstractSchemaReader<T extends SchemaConfiguration> {
      * @param readerConfiguration
      * @return
      */
-    protected abstract List<? extends SchemaData> readDatabse(ReaderConfiguration<T> readerConfiguration);
+    protected abstract List<? extends SchemaData> readMvc(ReaderConfiguration<T> readerConfiguration);
 
 
     /**

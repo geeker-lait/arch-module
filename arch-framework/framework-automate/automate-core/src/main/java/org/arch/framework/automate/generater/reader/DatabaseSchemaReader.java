@@ -33,7 +33,7 @@ public class DatabaseSchemaReader extends AbstractSchemaReader<DatabaseConfigura
     }
 
     @Override
-    protected List<? extends SchemaData> readDatabse(ReaderConfiguration<DatabaseConfiguration> readerConfiguration) {
+    protected List<? extends SchemaData> readMvc(ReaderConfiguration<DatabaseConfiguration> readerConfiguration) {
         return null;
     }
 

@@ -3,7 +3,7 @@ package org.arch.framework.automate.generater.builder;
 import cn.hutool.extra.template.TemplateEngine;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.Buildable;
-import org.arch.framework.automate.generater.core.DatabaseSchemaData;
+import org.arch.framework.automate.generater.core.SchemaData;
 import org.arch.framework.automate.generater.core.TemplateName;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;
@@ -14,7 +14,7 @@ import java.nio.file.Path;
 
 @Slf4j
 @Component
-public class EntityBuilder extends AbstractBuilder implements Buildable<DatabaseSchemaData> {
+public class EntityBuilder extends AbstractBuilder implements Buildable {
 
     @Override
     public TemplateName getTemplateName() {
@@ -23,9 +23,8 @@ public class EntityBuilder extends AbstractBuilder implements Buildable<Database
 
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties,
-                      PomProperties pomProperties, DocumentProperties documentProperties, DatabaseSchemaData schemaData) {
+                      PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
         buildPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
-
 
 
     }

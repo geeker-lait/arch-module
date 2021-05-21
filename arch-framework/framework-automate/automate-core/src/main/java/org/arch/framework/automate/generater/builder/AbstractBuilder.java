@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.common.database.Table;
+import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;
@@ -135,7 +136,8 @@ public abstract class AbstractBuilder {
             if (schemaData.getSchemaPattern() == SchemaPattern.MVC) {
                 Files.createDirectories(packPath);
                 for (Table table : schemaData.getDatabase().getTables()) {
-                    String fileName = buildFileName(documentProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, table.getName()), projectProperties.getStuffixed());
+                    tableSchemaToCamel(table);
+                    String fileName = buildFileName(documentProperties, table.getName(), projectProperties.getStuffixed());
                     String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
                     Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));
                     // 创建文件
@@ -154,66 +156,13 @@ public abstract class AbstractBuilder {
         }
     }
 
-    /**
-     * 创建包文件
-     *
-     * @param cover
-     * @param path
-     * @param templateEngine
-     * @param projectProperties
-     * @param documentProperties
-     * @param schemaPatternable
-     * @throws IOException
-     */
-//    protected void buildPackageFile(boolean cover, Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaPatternable schemaPatternable) {
-//        // 设置默认包和后缀名
-//        String pkg = (null == documentProperties.getPkg() ? documentProperties.getType() : documentProperties.getPkg());
-//        String currentPkg;
-//        // 领域化
-//        if (projectProperties.getDomain()) {
-//            currentPkg = projectProperties.getBasePkg().concat("." + schemaPatternable.getSchemaName().toLowerCase()).concat("." + pkg);
-//        } else {
-//            currentPkg = projectProperties.getBasePkg().concat("." + pkg).concat("." + schemaPatternable.getSchemaName().toLowerCase());
-//        }
-//        Path packPath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
-//
-//
-//        try {
-//            Files.createDirectories(packPath);
-//            // 写入文件
-//            for (MethodProperties api : schemaPatternable.getApis()) {
-//                //Files.createDirectories(packPath);
-//                String fileName = buildFileName(documentProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, schemaPatternable.getSchemaName()), true);
-//                String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
-//                Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));
-//                // 创建文件
-//                buildFile(cover, filePath);
-//                Map<String, Object> dataMap = buildData(projectProperties, documentProperties, api);
-//                dataMap.put("package", currentPkg);
-//                dataMap.put("mainClass", fileName);
-//                // 获取模板并渲染
-//                String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
-//                // 写入文件
-//                Files.write(filePath, code.getBytes());
-//            }
-//
-//            for (TableProperties tableProperties : schemaPatternable.getTables()) {
-//                String fileName = buildFileName(documentProperties, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, tableProperties.getName()), true);
-//                String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
-//                Path filePath = Paths.get(packPath.toString().concat(File.separator).concat(fileName).concat(ext));
-//                // 创建文件
-//                buildFile(cover, filePath);
-//                Map<String, Object> dataMap = buildData(projectProperties, documentProperties, tableProperties);
-//                dataMap.put("package", currentPkg);
-//                dataMap.put("mainClass", fileName);
-//                // 获取模板并渲染
-//                String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
-//                // 写入文件
-//                Files.write(filePath, code.getBytes());
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
+    protected Table tableSchemaToCamel(Table table) {
+        table.setName(StringUtils.toCapitalizeCamelCase(table.getName()));
+        table.getColumns().forEach(c -> {
+            c.setName(StringUtils.toCamelCase(c.getName()));
+            c.setTyp(JdbcTypeUtils.getFieldType(c.getTyp()).getSimpleName());
+        });
+        return null;
+    }
 }

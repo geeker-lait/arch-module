@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Accessors(chain = true)
 @TableName
-public class ${(name?cap_first)!""}${suffix!""} extends CrudEntity<${(name?cap_first)!""}>{
+public class ${(name?cap_first)!""}${suffix!""} extends CrudEntity<${(name?cap_first)!""}${suffix!""}>{
 <#if columns?? && (columns?size >0)>
     <#list columns as column >
     /**

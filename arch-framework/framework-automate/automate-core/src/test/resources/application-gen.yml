@@ -107,7 +107,7 @@ spring:
     schemas:
       - typ: xmind
         patterns: api,mvc
-        resources: classpath:minds/xmind-example.xmind
+        resources: classpath:minds/ofs-alarm-center-1.xmind
 
       - typ: excel
         patterns: mvc

@@ -37,10 +37,8 @@ public class SchemaProperties implements ConfigProperties {
     // 资源为excel时做转化/数据源，当typ 为database时链接数据库
     private Map<String, String> configuration = new HashMap<>();
 
-    @Getter
-    private SchemaConfiguration schemaConfiguration;
 
-    public SchemaProperties() {
+    public SchemaConfiguration getSchemaConfiguration() {
         // 转化为database配置
         if (SchemaType.DATABASE.name().equalsIgnoreCase(typ)) {
             DatabaseConfiguration databaseConfiguration = new DatabaseConfiguration();
@@ -48,18 +46,23 @@ public class SchemaProperties implements ConfigProperties {
             databaseConfiguration.setPassword(configuration.get("password"));
             databaseConfiguration.setUrl(configuration.get("url"));
             databaseConfiguration.setUsername(configuration.get("username"));
-            this.schemaConfiguration = databaseConfiguration;
+            return databaseConfiguration;
             // 转换为excle配置
         } else if (SchemaType.EXCEL.name().equalsIgnoreCase(typ)) {
             ExcelFiledConfiguration excelFiledConfiguration = new ExcelFiledConfiguration();
             excelFiledConfiguration.getHeader().putAll(configuration);
-            this.schemaConfiguration = excelFiledConfiguration;
+            return excelFiledConfiguration;
             // 转化为xmind配置
         } else if (SchemaType.XMIND.name().equalsIgnoreCase(typ)) {
             // 暂时无转换
             XmindConfiguration xmindConfiguration = new XmindConfiguration();
-            this.schemaConfiguration = xmindConfiguration;
+            return xmindConfiguration;
         }
+        return null;
+    }
+
+    public SchemaProperties() {
+
     }
 
 

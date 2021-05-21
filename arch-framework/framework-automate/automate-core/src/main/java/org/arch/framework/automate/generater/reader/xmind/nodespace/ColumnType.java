@@ -2,6 +2,10 @@ package org.arch.framework.automate.generater.reader.xmind.nodespace;
 
 import org.springframework.lang.NonNull;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+
 /**
  * database column type
  *
@@ -49,6 +53,7 @@ public enum ColumnType {
      * java 类型
      */
     private final String javaType;
+    private final static DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
 
     ColumnType(String type, String defValue, String javaType) {
         this.type = type;
@@ -81,6 +86,26 @@ public enum ColumnType {
                 BINARY.name().equalsIgnoreCase(columnType) ||
                 VARBINARY.name().equalsIgnoreCase(columnType) ||
                 LONGBLOB.name().equalsIgnoreCase(columnType);
+    }
+
+    public static Object convert(String type, String val) {
+        if (val == null || val.isEmpty()) {
+            return null;
+        }
+        if (type.contains(BIGINT.getType())) {
+            return Long.valueOf(val);
+        } else if (type.contains(INT.getType())) {
+            return Integer.valueOf(val);
+        } else if (type.contains(DATETIME.getType())) {
+            try {
+                return LocalDateTime.parse(val, DTF).toInstant(ZoneOffset.of("+8")).toEpochMilli();
+            } catch (Exception e) {
+                return LocalDateTime.parse(val).toInstant(ZoneOffset.of("+8")).toEpochMilli();
+            }
+        } else if (type.contains(VARCHAR.getType())) {
+            return val;
+        }
+        return null;
     }
 
 }

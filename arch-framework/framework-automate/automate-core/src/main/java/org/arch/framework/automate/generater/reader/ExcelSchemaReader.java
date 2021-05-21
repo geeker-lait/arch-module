@@ -47,8 +47,8 @@ public class ExcelSchemaReader extends AbstractSchemaReader<ExcelFiledConfigurat
     }
 
     @Override
-    protected List<? extends SchemaData> readDatabse(ReaderConfiguration<ExcelFiledConfiguration> readerConfiguration) {
-        return getDatabase(readerConfiguration);
+    protected List<? extends SchemaData> readMvc(ReaderConfiguration<ExcelFiledConfiguration> readerConfiguration) {
+        return getMvc(readerConfiguration);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ExcelSchemaReader extends AbstractSchemaReader<ExcelFiledConfigurat
     }
 
 
-    protected List<? extends SchemaData> getDatabase(ReaderConfiguration<ExcelFiledConfiguration> readerConfiguration) {
+    protected List<? extends SchemaData> getMvc(ReaderConfiguration<ExcelFiledConfiguration> readerConfiguration) {
         String res = readerConfiguration.getResource();
         // 从类路劲加载
         if (-1 != res.indexOf("classpath:")) {
