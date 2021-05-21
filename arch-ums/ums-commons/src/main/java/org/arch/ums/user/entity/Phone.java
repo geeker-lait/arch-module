@@ -1,14 +1,15 @@
 package org.arch.ums.user.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
+import org.arch.framework.encrypt.EncryptField;
 import org.arch.framework.ums.enums.Mno;
 
 import java.io.Serializable;
@@ -45,6 +46,7 @@ public class Phone extends CrudEntity<Phone> {
      * 手机号
      */
     @TableField(value = "`phone_no`")
+    @EncryptField(encryptType = "FPE")
     private String phoneNo;
 
     /**

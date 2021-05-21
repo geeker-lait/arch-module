@@ -82,6 +82,21 @@ public class SecurityUtils {
     }
 
     /**
+     * 获取 jwt token value
+     * @return jwt token value
+     */
+    @Nullable
+    public static String getJwtString() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        final Authentication authentication = context.getAuthentication();
+        if (authentication instanceof AbstractOAuth2TokenAuthenticationToken) {
+            return ((AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token>) authentication).getToken()
+                                                                                                 .getTokenValue();
+        }
+        return null;
+    }
+
+    /**
      * 获取当前账号的 {@link AccountType}
      * @return  {@link AccountType}
      */

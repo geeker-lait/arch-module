@@ -1,4 +1,4 @@
-package org.arch.framework.ums.ff3;
+package org.arch.framework.encrypt;
 /*
  * Format-Preserving Encryption for FF3
  *

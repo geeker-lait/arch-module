@@ -3,4 +3,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.arch.framework.ums.config.AppPropertiesAutoConfiguration,\
   org.arch.framework.ums.config.ErrorHttpSecurityAware,\
   org.arch.framework.id.config.ArchIdServiceAutoConfiguration,\
+  org.arch.framework.encrypt.config.ColumnEncryptAutoConfiguration,\
   org.arch.framework.ums.config.ArchBaseAutoConfiguration

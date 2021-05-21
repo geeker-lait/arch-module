@@ -2,12 +2,16 @@ package org.arch.framework.ums.properties;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.arch.framework.encrypt.TOTP;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.boot.convert.DurationUnit;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+
 /**
- * NIST认可的Java格式保留加密（ FPE ）FF3算法的实现
+ * 算法的属性
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.5.18 19:39
@@ -23,9 +27,9 @@ public class EncryptProperties {
     private FF3Properties fpe = new FF3Properties();
 
     /**
-     * {@link BCryptPasswordEncoder} 算法的属性
+     * {@link TOTP} 基于时间的动态密码算法属性
      */
-    private EncryptorProperties bCrypt = new EncryptorProperties();
+    private TOTPProperties totp = new TOTPProperties();
     /**
      * {@link TextEncryptor} 算法的属性
      */
@@ -34,7 +38,7 @@ public class EncryptProperties {
 
     @Getter
     @Setter
-    static class EncryptorProperties {
+    public static class EncryptorProperties {
         /**
          * password
          */
@@ -45,21 +49,44 @@ public class EncryptProperties {
         private String salt = "F6011E95C2EB4B8F";
     }
 
+    @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
     @Getter
     @Setter
-    static class FF3Properties {
+    public static class FF3Properties {
         /**
-         * password
+         * password must be 16, 24, or 32 bytes
          */
         private String password = "8CE4A06235DACD71AD9CA11C5AF21B8C";
         /**
-         * salt
+         * tweak, used in each round and split into right and left sides; fixed length: 16.
          */
-        private String salt = "F6011E95C2EB4B8F";
+        private String tweak = "D9C4BC2E11C8FBAA";
         /**
          * radix: 10(数字), 26(数字加前16个小写字母), 36(数字加26个小写字母)
          */
         private Integer radix = 10;
+    }
+
+    @Getter
+    @Setter
+    public static class TOTPProperties {
+        /**
+         * hash 算法的 key, 可以未 null, null 值时使用 crypto 的算法对用户的 (token)进行 hash.
+         */
+        private String key;
+        /**
+         * 支持 hash 算法类型:  HmacSHA1  HmacSHA512   HmacSHA256
+         */
+        private String crypto = "HmacSHA1";
+        /**
+         * 返回几位数的动态密码, 默认 8 位.
+         */
+        private Integer returnDigits = 8;
+        /**
+         * TOTP 算法的滑动时间窗口长度, 单位: 秒, 默认: 30 秒
+         */
+        @DurationUnit(ChronoUnit.SECONDS)
+        private Duration slidingWindow = Duration.ofSeconds(30);
     }
 
 }

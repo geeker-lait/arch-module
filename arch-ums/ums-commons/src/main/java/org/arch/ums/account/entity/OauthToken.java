@@ -1,14 +1,15 @@
 package org.arch.ums.account.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
+import org.arch.framework.encrypt.EncryptField;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
  * @date 2021-03-17 21:25:28
  * @since 1.0.0
  */
+@SuppressWarnings("jol")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -62,6 +64,7 @@ public class OauthToken extends CrudEntity<OauthToken> {
      * accessToken
      */
     @TableField(value = "`access_token`")
+    @EncryptField(encryptType = "TEXT_ENCRYPT")
     private String accessToken;
 
     /**
@@ -80,6 +83,7 @@ public class OauthToken extends CrudEntity<OauthToken> {
      * refreshToken
      */
     @TableField(value = "`refresh_token`")
+    @EncryptField(encryptType = "TEXT_ENCRYPT")
     private String refreshToken;
 
     /**
@@ -98,6 +102,7 @@ public class OauthToken extends CrudEntity<OauthToken> {
      * dingTalk, taobao 附带属性
      */
     @TableField(value = "`access_code`")
+    @EncryptField(encryptType = "TEXT_ENCRYPT")
     private String accessCode;
 
     /**
@@ -152,6 +157,7 @@ public class OauthToken extends CrudEntity<OauthToken> {
      * Twitter附带属性
      */
     @TableField(value = "`oauth_token_secret`")
+    @EncryptField(encryptType = "TEXT_ENCRYPT")
     private String oauthTokenSecret;
 
     /**

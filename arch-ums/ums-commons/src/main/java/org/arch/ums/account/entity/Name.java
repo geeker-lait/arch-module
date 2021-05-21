@@ -4,11 +4,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
+import org.arch.framework.encrypt.EncryptClass;
+import org.arch.framework.encrypt.EncryptField;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -25,6 +28,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Accessors(chain = true)
 @TableName("account_name")
+@EncryptClass
 public class Name extends CrudEntity<Name> {
     private static final long serialVersionUID = 1L;
 
@@ -44,6 +48,7 @@ public class Name extends CrudEntity<Name> {
      * 用户昵称可随机生成
      */
     @TableField(value = "`nick_name`")
+    @EncryptField(encryptType = "FPE", filterRegx = "\\d{11}")
     private String nickName;
 
     /**

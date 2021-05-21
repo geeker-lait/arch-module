@@ -1,19 +1,19 @@
 package org.arch.ums.user.entity;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
+import org.arch.framework.encrypt.EncryptField;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 用户身份证表(IdCard) 实体类
@@ -46,6 +46,7 @@ public class IdCard extends CrudEntity<IdCard> {
      * 身份证号
      */
     @TableField(value = "`id_card`")
+    @EncryptField(encryptType = "FPE", idCard = true)
     private String idCard;
 
     /**

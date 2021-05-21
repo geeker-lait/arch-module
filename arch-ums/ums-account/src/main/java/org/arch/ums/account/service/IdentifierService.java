@@ -141,7 +141,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
                                .aid(authRegRequest.getAid())
                                .tenantId(authRegRequest.getTenantId())
                                .identifier(authRegRequest.getIdentifier())
-                               .credential(authRegRequest.getCredential())
+                               .credential("[PROTECTED]")
                                .loginType(authRegRequest.getLoginType())
                                .authorities(authRegRequest.getAuthorities())
                                .nickName(authRegRequest.getNickName())

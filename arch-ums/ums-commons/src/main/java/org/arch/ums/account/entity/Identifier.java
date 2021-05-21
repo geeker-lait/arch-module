@@ -4,11 +4,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
+import org.arch.framework.encrypt.EncryptClass;
+import org.arch.framework.encrypt.EncryptField;
 import org.arch.framework.ums.enums.LoginType;
 
 import java.io.Serializable;
@@ -27,6 +30,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Accessors(chain = true)
 @TableName("account_identifier")
+@EncryptClass
 public class Identifier extends CrudEntity<Identifier> {
     private static final long serialVersionUID = 1L;
 
@@ -52,6 +56,7 @@ public class Identifier extends CrudEntity<Identifier> {
      * 授权凭证【CREDENTIAL】：站内账号是密码、第三方登录是Token；
      */
     @TableField(value = "`credential`")
+    @EncryptField(encryptType = "bcrypt")
     private String credential;
 
     /**

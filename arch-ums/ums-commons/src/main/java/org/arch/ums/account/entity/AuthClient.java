@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
+import org.arch.framework.encrypt.EncryptField;
 import org.arch.framework.ums.enums.ClientType;
 
 import java.io.Serializable;
@@ -45,6 +46,7 @@ public class AuthClient extends CrudEntity<AuthClient> {
      * 客户端 secret
      */
     @TableField(value = "`client_secret`")
+    @EncryptField(encryptType = "BCRYPT")
     private String clientSecret;
 
     /**
