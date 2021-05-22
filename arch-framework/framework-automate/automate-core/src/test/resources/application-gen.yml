@@ -98,7 +98,7 @@ spring:
         pkg:
         template: api.ftl
         ext: .java
-        suffix: Client
+        suffix: Api
       - type: pom
         ext:
         template: pom.ftl

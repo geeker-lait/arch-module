@@ -3,13 +3,7 @@ package org.arch.framework.automate.generater.reader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.common.module.Project;
-import org.arch.framework.automate.generater.core.DatabaseSchemaData;
-import org.arch.framework.automate.generater.core.MethodSchemaData;
-import org.arch.framework.automate.generater.core.ReaderConfiguration;
-import org.arch.framework.automate.generater.core.SchemaData;
-import org.arch.framework.automate.generater.core.SchemaPattern;
-import org.arch.framework.automate.generater.core.SchemaReadable;
-import org.arch.framework.automate.generater.core.SchemaType;
+import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.core.configuration.XmindConfiguration;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.arch.framework.automate.generater.reader.xmind.utils.XmindUtils;
@@ -31,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> implements SchemaReadable {
 
     private final ConcurrentHashMap<ReaderConfiguration<XmindConfiguration>, Project> configProjectMap =
-                                                                                            new ConcurrentHashMap<>();
+            new ConcurrentHashMap<>();
 
     @Override
     public SchemaType getTyp() {
@@ -58,20 +52,19 @@ public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> 
         return databaseSchemaDatas;
     }
 
+
     @Override
     protected List<? extends SchemaData> readApi(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
-        List<MethodSchemaData> methodSchemaDatas = new ArrayList<>();
+        List<ApiSchemaData> apiSchemaDatas = new ArrayList<>();
         XmindUtils.getProject(readerConfiguration, this.configProjectMap).getModules().forEach(module -> {
             module.getApis().forEach(api -> {
-                api.getInterfaces().forEach(interfac -> {
-                    MethodSchemaData methodSchemaData = new MethodSchemaData();
-                    methodSchemaData.setInterfac(interfac);
-                    methodSchemaData.setSchemaPattern(SchemaPattern.API);
-                    methodSchemaDatas.add(methodSchemaData);
-                });
+                ApiSchemaData apiSchemaData = new ApiSchemaData();
+                apiSchemaData.setApi(api);
+                apiSchemaData.setSchemaPattern(SchemaPattern.API);
+                apiSchemaDatas.add(apiSchemaData);
             });
         });
-        return methodSchemaDatas;
+        return apiSchemaDatas;
     }
 
     @Override

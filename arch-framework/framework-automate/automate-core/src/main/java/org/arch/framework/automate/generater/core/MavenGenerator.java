@@ -6,7 +6,6 @@ import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ public class MavenGenerator extends AbstractGenerator {
             List<DependencieProterties> dependenciesPropertiesList = new ArrayList<>();
             doBuild(path, pomProperties, dependenciesPropertiesList, schemaData);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 

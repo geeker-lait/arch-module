@@ -13,20 +13,21 @@ import org.springframework.web.bind.annotation.RestController;
 * @author ${author!""}
 * @date ${.now}
 */
-<#--@RestController
-@ResquestMapping("${(mainClass?uncap_first)!""}")
-public interface ${(mainClass?cap_first)!""}{
-    <#list apis as method>
+@RestController
+@ResquestMapping("${(name?uncap_first)!""}")
+public interface ${(name?cap_first)!""}${suffix!""}{
+    <#list curls as curl>
     /**
-     * ${method.descr}
-     * return ${(method.output.javaTyp)!""} ${(method.output.descr)!""}
-     **/
+     * ${curl.descr}
+     *<#list curl.inputs as inp>
+     * @param ${(inp.typ?cap_first)!""} ${inp.descr!""}</#list>
+     * @return ${(curl.output.typ)!""} ${(curl.output.descr)!""}
+     */
     <#if client??>
     @Client()
     </#if>
-    @${method.httpMethod}("${(method.name?uncap_first)!""}")
-    ${(method.output.javaTyp?cap_first)!""} ${(method.name?uncap_first)!""}(<#list method.input as inp>${(inp.javaTyp?cap_first)!""} ${(inp.javaTyp?uncap_first)!""}</#list>);
-
+    ${curl.httpMethod}("${(curl.name?uncap_first)!""}")
+    ${(curl.output.typ?cap_first)!"void"} ${(curl.name?uncap_first)!""}(<#list curl.inputs as inp>${(inp.typ?cap_first)!""} ${(inp.name?uncap_first)!""}<#if inp_has_next>, </#if></#list>);
     </#list>
 
-}-->
+}

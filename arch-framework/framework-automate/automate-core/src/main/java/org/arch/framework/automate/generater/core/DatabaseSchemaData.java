@@ -1,7 +1,7 @@
 package org.arch.framework.automate.generater.core;
 
 import lombok.Data;
-import org.arch.framework.automate.common.api.Interfac;
+import org.arch.framework.automate.common.api.Api;
 import org.arch.framework.automate.common.database.Database;
 
 @Data
@@ -11,7 +11,7 @@ public class DatabaseSchemaData implements SchemaData {
     private SchemaPattern schemaPattern = SchemaPattern.MVC;
 
     @Override
-    public Interfac getInterfac() {
+    public Api getApi() {
         return null;
     }
 }

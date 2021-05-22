@@ -1231,7 +1231,7 @@ public class XmindUtils {
             generateOfAttachedWithModule(paramAttached, moduleList, module);
             return;
         }
-        List<Param> inputParams = curl.getInputParams();
+        List<Param> inputParams = curl.getInputs();
         if (!ENTITY.equals(paramType) && !GENERIC.equals(paramType)) {
             String type = paramType.getType();
             // 不是 entity/generic 类型时, 没有类型值则
@@ -1246,7 +1246,7 @@ public class XmindUtils {
         if (inOrOut) {
             inputParams.add(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
         } else {
-            curl.setOutputParam(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
+            curl.setOutput(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
         }
     }
 

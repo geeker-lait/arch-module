@@ -5,7 +5,7 @@
 //import org.arch.framework.automate.generater.converter.AbstractSchemaService;
 //import org.arch.framework.automate.generater.core.ReaderConfiguration;
 //import org.arch.framework.automate.generater.converter.SchemaConvertable;
-//import org.arch.framework.automate.generater.core.MethodSchemaData;
+//import org.arch.framework.automate.generater.core.ApiSchemaData;
 //import org.arch.framework.automate.generater.core.DatabaseSchemaData;
 //import org.arch.framework.automate.generater.properties.MethodProperties;
 //import org.arch.framework.automate.generater.properties.TableProperties;
@@ -39,7 +39,7 @@
 //
 //
 //    @Override
-//    public Function<ReaderConfiguration, List<MethodSchemaData>> convertMethod() {
+//    public Function<ReaderConfiguration, List<ApiSchemaData>> convertMethod() {
 //        return null;
 //    }
 //}

@@ -4,7 +4,7 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.json.JSONUtil;
 import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.common.api.Curl;
+import org.arch.framework.automate.common.api.Interfac;
 import org.arch.framework.automate.common.database.Table;
 import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.generater.core.*;
@@ -94,7 +94,7 @@ public abstract class AbstractBuilder {
         String currentPkg;
         String domain = "";
         if (schemaData.getSchemaPattern() == SchemaPattern.API) {
-            domain = schemaData.getInterfac().getName().toLowerCase();
+            domain = schemaData.getApi().getName().toLowerCase();
         }
         if (schemaData.getSchemaPattern() == SchemaPattern.MVC) {
             domain = schemaData.getDatabase().getName().toLowerCase();
@@ -147,8 +147,8 @@ public abstract class AbstractBuilder {
                 String currentPkg = buildAndGetCurrentPkg(path, projectProperties, documentProperties, schemaData);
                 Path cpath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
                 // 写入文件
-                for (Curl curl : schemaData.getInterfac().getCurls()) {
-                    String fileName = buildFileName(documentProperties, curl.getName(), projectProperties.getStuffixed());
+                for (Interfac interfac : schemaData.getApi().getInterfaces()) {
+                    String fileName = buildFileName(documentProperties, interfac.getName(), projectProperties.getStuffixed());
                     String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
                     Path filePath = Paths.get(cpath.toString().concat(File.separator).concat(fileName).concat(ext));
                     // 创建文件
@@ -156,9 +156,8 @@ public abstract class AbstractBuilder {
                     Map<String, Object> dataMap = new HashMap<>();
                     dataMap.putAll(JSONUtil.parseObj(projectProperties));
                     dataMap.putAll(JSONUtil.parseObj(documentProperties));
-                    dataMap.putAll(JSONUtil.parseObj(schemaData));
+                    dataMap.putAll(JSONUtil.parseObj(interfac));
                     dataMap.put("package", currentPkg);
-                    dataMap.put("mainClass", fileName);
                     dataMap.put("author", projectProperties.getAuthor());
                     dataMap.put("cover", projectProperties.getCover());
                     // 获取模板并渲染

@@ -53,7 +53,7 @@ public class XmindTest {
         project.getModules().forEach(module -> {
             String pkg = module.getPkg();
             if (hasText(pkg)) {
-                module.modulePkgPostHandle(pkg, null, false);
+                //module.modulePkgPostHandle(pkg, null, false);
             }
         });
         Database database = project.getModules().get(0).getDatabases().get(0);

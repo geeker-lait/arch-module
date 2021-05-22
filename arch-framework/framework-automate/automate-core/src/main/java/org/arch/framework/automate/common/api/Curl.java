@@ -1,12 +1,11 @@
 package org.arch.framework.automate.common.api;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.arch.framework.automate.generater.core.HttpMethod;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author lait.zhang@gmail.com
@@ -40,13 +39,23 @@ public class Curl {
     /**
      * 方法请求入参
      */
-    private final List<Param> inputParams = new ArrayList<>();
+    private final List<Param> inputs = new ArrayList<>();
     /**
      * 方法返回值或出参
      */
-    private Param outputParam;
+    private Param output;
     /**
      * 方法注释
      */
     private final Set<Annot> annotations = new HashSet<>();
+
+    @JSONField(serialize = false)
+    public Curl setHttpMethod(String httpMethod) {
+        HttpMethod hm = Arrays.stream(HttpMethod.values()).filter(h -> h.name().equalsIgnoreCase(httpMethod)).findAny().orElse(null);
+        if (null != hm) {
+            this.httpMethod = hm.getMethod();
+        }
+        return this;
+    }
+
 }
