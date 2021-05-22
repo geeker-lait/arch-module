@@ -2,11 +2,13 @@ package org.arch.framework.automate.generater.reader;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.common.database.Database;
 import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.core.configuration.DatabaseConfiguration;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,17 +36,40 @@ public class DatabaseSchemaReader extends AbstractSchemaReader<DatabaseConfigura
 
     @Override
     protected List<? extends SchemaData> readMvc(ReaderConfiguration<DatabaseConfiguration> readerConfiguration) {
-        return null;
+        List<DatabaseSchemaData> databaseSchemaDatas = new ArrayList<>();
+        // 获取数据库配置
+        DatabaseConfiguration databaseConfiguration = readerConfiguration.getConfiguration();
+
+        Database database = new Database();
+        database.setName(databaseConfiguration.getDatabase());
+
+        // 动态链接数据库
+
+        // 获取数据库的table
+        //List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(params.getDatabaseProperties(), params.getDatabaseName());
+        //return CollectionUtils.isEmpty(tableProperties) ? Lists.newArrayList() : tableProperties;
+        // 获取数据库的table
+        //List<TableProperties> tableProperties = databaseSchemaService.getTableProperties().apply(new DatabaseTablePropertiesParam(databaseProperties, res));
+        //databaseProperties.setName(res);
+        //databaseProperties.setTables(tableProperties);
+        //databaseProperties.setPattern(SchemaPattern.MVC.getPattern());
+        return databaseSchemaDatas;
     }
 
     @Override
     protected List<? extends SchemaData> readApi(ReaderConfiguration<DatabaseConfiguration> readerConfiguration) {
-        return null;
+        List<MethodSchemaData> methodSchemaDatas = new ArrayList<>();
+
+        return methodSchemaDatas;
     }
 
     @Override
     protected ReaderConfiguration<DatabaseConfiguration> buildConvertConfiguration(String resName, SchemaProperties schemaProperties, SchemaPattern schemaPattern) {
-        return null;
+        ReaderConfiguration<DatabaseConfiguration> readerConfiguration = new ReaderConfiguration<>();
+        readerConfiguration.setConfiguration((DatabaseConfiguration) schemaProperties.getSchemaConfiguration());
+        readerConfiguration.setResource(resName);
+        readerConfiguration.setPattern(schemaPattern);
+        return readerConfiguration;
     }
 //
 //    @Override
@@ -73,7 +98,6 @@ public class DatabaseSchemaReader extends AbstractSchemaReader<DatabaseConfigura
 //
 //        return Arrays.asList(databaseProperties);
 //    }
-
 
 
 }
