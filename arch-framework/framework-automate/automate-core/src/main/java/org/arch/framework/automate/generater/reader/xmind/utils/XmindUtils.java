@@ -5,8 +5,9 @@ import com.github.stuxuhai.jpinyin.PinyinHelper;
 import com.google.common.base.CaseFormat;
 import org.arch.framework.automate.common.api.Annot;
 import org.arch.framework.automate.common.api.AnnotVal;
+import org.arch.framework.automate.common.api.Api;
 import org.arch.framework.automate.common.api.Curl;
-import org.arch.framework.automate.common.api.Entity;
+import org.arch.framework.automate.common.api.Model;
 import org.arch.framework.automate.common.api.Interfac;
 import org.arch.framework.automate.common.api.Param;
 import org.arch.framework.automate.common.database.Column;
@@ -454,7 +455,7 @@ public class XmindUtils {
                 generateApi(children, moduleList, module, pTiTleType, pTitle);
                 return;
             case ENTITY:
-                generateEntity(children, moduleList, module, pTitle, null);
+                generateModel(children, moduleList, module, pTitle, null);
                 return;
             case PKG:
                 generatePkg(children, moduleList, module, pTitle, pTiTleType);
@@ -699,7 +700,9 @@ public class XmindUtils {
             return;
         }
         String[] apiTokens = splitInto3Parts(pTitle);
-        String apiName = firstLetterToLower(apiTokens[1].trim());
+        String apiName = firstLetterToLower(underscoreToCamel(apiTokens[1].trim()));
+        Api api = new Api().setName(apiName).setDescr(removeNewlines(apiTokens[2].trim()));
+        module.addApi(api);
         List<Attached> apiAttachedList = children.getAttached();
         for (Attached interfaceAttached : apiAttachedList) {
             String title = interfaceAttached.getTitle().trim();
@@ -714,7 +717,7 @@ public class XmindUtils {
                 // add inteface
                 Children interfaceChildren = interfaceAttached.getChildren();
                 if (nonNull(interfaceChildren)) {
-                    generateInterface(interfaceChildren, moduleList, module, splits, apiName);
+                    generateInterface(interfaceChildren, moduleList, module, api, splits, apiName);
                 }
             } else {
                 generateOfAttachedWithModule(interfaceAttached, moduleList, module);
@@ -723,14 +726,14 @@ public class XmindUtils {
     }
 
     private static void generateInterface(@NonNull Children children, @NonNull List<Module> moduleList,
-                                          @NonNull Module module, @NonNull String[] tokens,
+                                          @NonNull Module module, @NonNull Api api, @NonNull String[] tokens,
                                           @NonNull String apiName) {
         // add interface
         String orgName = tokens[1].trim();
         String interfaceName = strToUpperCamelWithPinYin(orgName);
         String comment = removeNewlines(tokens[2].trim());
         Interfac interfac = new Interfac().setName(interfaceName).setDescr(comment).setApi(apiName);
-        module.addInterface(interfac);
+        api.addInterface(interfac);
 
         // 遍历 interface 的方法
         Set<Annot> interfaceAnnotations = interfac.getAnnotations();
@@ -1209,7 +1212,7 @@ public class XmindUtils {
     //  ------------------------------- entity -------------------------------
 
     /**
-     * 生成 {@link Entity}
+     * 生成 {@link Model}
      *
      * @param children   {@link Children}
      * @param moduleList {@link Module} 列表
@@ -1218,9 +1221,9 @@ public class XmindUtils {
      * @param pImport    {@link Import}
      */
     @Nullable
-    private static void generateEntity(@NonNull Children children, @NonNull List<Module> moduleList,
-                                       @NonNull Module module, @NonNull String pTitle,
-                                       @Nullable Import pImport) {
+    private static void generateModel(@NonNull Children children, @NonNull List<Module> moduleList,
+                                      @NonNull Module module, @NonNull String pTitle,
+                                      @Nullable Import pImport) {
         String[] splits = splitInto3Parts(pTitle);
         if (splits.length != 3) {
             LOG.debug("title [" + pTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
@@ -1232,20 +1235,20 @@ public class XmindUtils {
         String commentStr = removeNewlines(splits[2].trim());
         String entityName = strToUpperCamelWithPinYin(name);
 
-        // 新增 entity
-        Entity entity = new Entity().setName(entityName)
-                .setDescr(commentStr);
+        // 新增 model
+        Model model = new Model().setName(entityName)
+                                 .setDescr(commentStr);
 
-        if (pImport instanceof Entity) {
-            entity.setApi(((Entity) pImport).getApi());
+        if (pImport instanceof Model) {
+            model.setApi(((Model) pImport).getApi());
         }
         // 是否新建对象
         boolean isNewCreatedEntity = false;
 
-        // 遍历 entity 字段
-        Set<String> imports = entity.getImports();
-        Set<Annot> annotSet = entity.getAnnotations();
-        List<Param> entityFields = entity.getFields();
+        // 遍历 model 字段
+        Set<String> imports = model.getImports();
+        Set<Annot> annotSet = model.getAnnotations();
+        List<Param> entityFields = model.getFields();
         List<Attached> attachedList = children.getAttached();
         if (isNull(attachedList) || attachedList.size() == 0) {
             return;
@@ -1276,10 +1279,10 @@ public class XmindUtils {
                 Children fieldChildren = attached.getChildren();
                 if (nonNull(fieldChildren)) {
                     // 生成 annots/generic/genericTyp
-                    generateAnnotAndGeneric(fieldChildren, moduleList, module, null, entity, field);
+                    generateAnnotAndGeneric(fieldChildren, moduleList, module, null, model, field);
                 }
             } else if (ParamType.ENTITY.equals(paramType)) {
-                Param entityParam = generateParam(attached, moduleList, module, splits, paramType, entity);
+                Param entityParam = generateParam(attached, moduleList, module, splits, paramType, model);
                 if (nonNull(entityParam)) {
                     entityFields.add(entityParam);
                     isNewCreatedEntity = true;
@@ -1292,7 +1295,7 @@ public class XmindUtils {
                     if (nonNull(pImport)) {
                         generateAnnotes(annotesChildren, moduleList, module, pImport, annotSet);
                     } else {
-                        generateAnnotes(annotesChildren, moduleList, module, entity, annotSet);
+                        generateAnnotes(annotesChildren, moduleList, module, model, annotSet);
                     }
                 }
             } else if (ANNOT.equals(paramType) || ANNOTATION.equals(paramType)) {
@@ -1300,32 +1303,32 @@ public class XmindUtils {
                 if (nonNull(pImport)) {
                     annotation = generateAnnot(attached, moduleList, module, splits, pImport);
                 } else {
-                    annotation = generateAnnot(attached, moduleList, module, splits, entity);
+                    annotation = generateAnnot(attached, moduleList, module, splits, model);
                 }
                 annotSet.add(annotation);
             } else if (ANNOT_E.equals(paramType)) {
-                Annot annotation = generateAnnot(attached, moduleList, module, splits, entity);
+                Annot annotation = generateAnnot(attached, moduleList, module, splits, model);
                 annotSet.add(annotation);
             } else if (GENERIC_TYP_E.equals(paramType)) {
                 String genericTyp = firstLetterToUpper(orgName);
-                entity.setGenericTyp(genericTyp);
+                model.setGenericTyp(genericTyp);
                 Children attachedChildren = attached.getChildren();
                 if (nonNull(attachedChildren)) {
-                    generateImport(attachedChildren, moduleList, module, entity);
+                    generateImport(attachedChildren, moduleList, module, model);
                 }
             } else if (GENERIC_TYP.equals(paramType) && isNull(pImport)) {
                 String genericTyp = firstLetterToUpper(orgName);
-                entity.setGenericTyp(genericTyp);
+                model.setGenericTyp(genericTyp);
                 Children attachedChildren = attached.getChildren();
                 if (nonNull(attachedChildren)) {
-                    generateImport(attachedChildren, moduleList, module, entity);
+                    generateImport(attachedChildren, moduleList, module, model);
                 }
             } else {
                 String paramTypePkg = paramType.getPkg();
                 if (hasText(paramTypePkg)) {
                     imports.add(paramTypePkg);
                 }
-                Param fieldParam = generateParam(attached, moduleList, module, splits, paramType, entity);
+                Param fieldParam = generateParam(attached, moduleList, module, splits, paramType, model);
                 if (nonNull(fieldParam)) {
                     entityFields.add(fieldParam);
                     isNewCreatedEntity = true;
@@ -1333,17 +1336,17 @@ public class XmindUtils {
             }
         }
         if (isNewCreatedEntity) {
-            module.addEntity(entity);
+            module.addEntity(model);
             // 缓存包后置处理信息
-            if (pImport instanceof Entity) {
-                module.getEntityImports().put(entity.getName(), ((Entity) pImport));
+            if (pImport instanceof Model) {
+                module.getEntityImports().put(model.getName(), ((Model) pImport));
             }
         }
 
         if (pImport instanceof Interfac) {
-            entity.setApi(((Interfac) pImport).getApi());
+            model.setApi(((Interfac) pImport).getApi());
             // 缓存包后置处理信息
-            module.getApiImports().put(entity.getName(), ((Interfac) pImport));
+            module.getApiImports().put(model.getName(), ((Interfac) pImport));
         }
 
     }
@@ -1373,9 +1376,7 @@ public class XmindUtils {
                                                  @NonNull String[] tokens, @NonNull Import importObj) {
         if (IMPORT.equals(paramType)) {
             String pkg = firstLetterToLower(tokens[1].trim());
-            String entityName = org.apache.commons.lang3.StringUtils.substringAfterLast(pkg, ".");
             importObj.getImports().add(pkg);
-            module.getOtherImports().put(entityName, pkg);
             Children attachedChildren = attached.getChildren();
             if (nonNull(attachedChildren)) {
                 generateOfChildren(attachedChildren, moduleList, module);
@@ -1467,10 +1468,10 @@ public class XmindUtils {
             case ENTITY:
                 Children children = attached.getChildren();
                 if (nonNull(children)) {
-                    if (pImport instanceof Entity) {
-                        generateEntity(children, moduleList, module, attached.getTitle(), pImport);
+                    if (pImport instanceof Model) {
+                        generateModel(children, moduleList, module, attached.getTitle(), pImport);
                     } else if (pImport instanceof Interfac) {
-                        generateEntity(children, moduleList, module, attached.getTitle(), pImport);
+                        generateModel(children, moduleList, module, attached.getTitle(), pImport);
                     }
                 }
                 if (orgType.contains("[")) {
@@ -1569,8 +1570,8 @@ public class XmindUtils {
                     generateOfChildren(children, moduleList, module);
                 }
                 // 给对象添加泛型值
-                if (pImport instanceof Entity) {
-                    ((Entity) pImport).setGenericTyp(genericVal);
+                if (pImport instanceof Model) {
+                    ((Model) pImport).setGenericTyp(genericVal);
                 } else if (pImport instanceof Interfac) {
                     ((Interfac) pImport).setGenericTyp(genericVal);
                 }

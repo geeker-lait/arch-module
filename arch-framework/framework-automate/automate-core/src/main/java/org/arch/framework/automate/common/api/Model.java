@@ -16,7 +16,7 @@ import java.util.Set;
  */
 @Data
 @Accessors(chain = true)
-public class Entity implements Import {
+public class Model implements Import {
 
     private String name;
     private String descr;

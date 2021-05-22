@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Objects.nonNull;
 import static org.arch.framework.automate.generater.reader.xmind.utils.XmindUtils.generate;
 
 /**
@@ -26,6 +27,8 @@ import static org.arch.framework.automate.generater.reader.xmind.utils.XmindUtil
 @Service
 @RequiredArgsConstructor
 public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> implements SchemaReadable {
+
+    private volatile Project project;
 
     @Override
     public SchemaType getTyp() {
@@ -56,11 +59,13 @@ public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> 
     protected List<? extends SchemaData> readApi(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
         List<MethodSchemaData> methodSchemaDatas = new ArrayList<>();
         getProject(readerConfiguration).getModules().forEach(module -> {
-            module.getInterfaces().forEach(interfac -> {
-                MethodSchemaData methodSchemaData = new MethodSchemaData();
-                methodSchemaData.setInterfac(interfac);
-                methodSchemaData.setSchemaPattern(SchemaPattern.API);
-                methodSchemaDatas.add(methodSchemaData);
+            module.getApis().forEach(api -> {
+                api.getInterfaces().forEach(interfac -> {
+                    MethodSchemaData methodSchemaData = new MethodSchemaData();
+                    methodSchemaData.setInterfac(interfac);
+                    methodSchemaData.setSchemaPattern(SchemaPattern.API);
+                    methodSchemaDatas.add(methodSchemaData);
+                });
             });
         });
         return methodSchemaDatas;
@@ -76,7 +81,10 @@ public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> 
     }
 
 
-    private Project getProject(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
+    private synchronized Project getProject(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
+        if (nonNull(this.project)) {
+            return this.project;
+        }
         JsonRootBean root = null;
         try {
             String res = readerConfiguration.getResource();
@@ -86,10 +94,13 @@ public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> 
             }
             root = XmindParser.parseObject(res, JsonRootBean.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         Project project = new Project();
-        generate(root, project);
+        if (nonNull(root)) {
+            generate(root, project);
+        }
+        this.project = project;
         return project;
     }
 }
