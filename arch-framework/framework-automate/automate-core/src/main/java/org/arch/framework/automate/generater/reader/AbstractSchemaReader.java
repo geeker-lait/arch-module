@@ -1,5 +1,6 @@
 package org.arch.framework.automate.generater.reader;
 
+import org.arch.framework.automate.common.module.Project;
 import org.arch.framework.automate.generater.core.ReaderConfiguration;
 import org.arch.framework.automate.generater.core.SchemaConfiguration;
 import org.arch.framework.automate.generater.core.SchemaData;
@@ -11,7 +12,10 @@ import org.arch.framework.beans.Assert;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 /**
  * @author lait.zhang@gmail.com
@@ -44,18 +48,34 @@ public abstract class AbstractSchemaReader<T extends SchemaConfiguration> {
             /**
              * excel/database 文档只能匹配一个,不能同时匹配，即要么api 要么 mvc， xmind 支持同时匹配
              */
-            if (pattern == SchemaPattern.MVC) {
-                Arrays.stream(schemaProperties.getResources().split(",")).forEach(res -> {
-                    ReaderConfiguration configuration = buildConvertConfiguration(res, schemaProperties, SchemaPattern.MVC);
+            String[] resources = schemaProperties.getResources().split(",");
+            ConcurrentHashMap<String, Project> resourceProjectMap = null;
+            for (String resource : resources) {
+                if (pattern == SchemaPattern.MVC) {
+                    ReaderConfiguration configuration = buildConvertConfiguration(resource, schemaProperties, SchemaPattern.MVC);
+                    // 设置缓存
+                    if (nonNull(resourceProjectMap)) {
+                    	configuration.setResourceProjectMap(resourceProjectMap);
+                    }
                     schemaDatas.addAll(readMvc(configuration));
-                });
-            }
-            if (pattern == SchemaPattern.API) {
-                // 我们不是真的渴望旅行，我们不是真正渴望看山、看水、看风景，只是这灵魂，被城市束缚，捆绑太久，我们需要找回最本真的自己，这大概便是旅行的意义
-                Arrays.stream(schemaProperties.getResources().split(",")).forEach(res -> {
-                    ReaderConfiguration configuration = buildConvertConfiguration(res, schemaProperties, SchemaPattern.API);
+                    // 如果 readMvc(configuration) -> XmindUtils.getProject(configuration) -> 缓存(resourceProjectMap)
+                    if (nonNull(configuration.getResourceProjectMap())) {
+                        resourceProjectMap = configuration.getResourceProjectMap();
+                    }
+                }
+                if (pattern == SchemaPattern.API) {
+                    // 我们不是真的渴望旅行，我们不是真正渴望看山、看水、看风景，只是这灵魂，被城市束缚，捆绑太久，我们需要找回最本真的自己，这大概便是旅行的意义
+                    // 设置缓存
+                    ReaderConfiguration configuration = buildConvertConfiguration(resource, schemaProperties, SchemaPattern.API);
+                    if (nonNull(resourceProjectMap)) {
+                        configuration.setResourceProjectMap(resourceProjectMap);
+                    }
                     schemaDatas.addAll(readApi(configuration));
-                });
+                    // 如果 readApi(configuration) -> XmindUtils.getProject(configuration) -> 缓存(resourceProjectMap)
+                    if (nonNull(configuration.getResourceProjectMap())) {
+                        resourceProjectMap = configuration.getResourceProjectMap();
+                    }
+                }
             }
         });
         return schemaDatas;
