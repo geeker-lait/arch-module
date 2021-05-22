@@ -4,13 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.properties.DependencieProterties;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;
-import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author lait.zhang@gmail.com
@@ -25,35 +25,38 @@ public class MavenGenerator extends AbstractGenerator {
     @Override
     public void buildModule(Path path, PomProperties pomProperties, SchemaData schemaData) {
         try {
-            doBuild(path, pomProperties, schemaData);
+            List<DependencieProterties> dependenciesPropertiesList = new ArrayList<>();
+            doBuild(path, pomProperties, dependenciesPropertiesList, schemaData);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void doBuild(Path path, PomProperties pomProperties, SchemaData schemaData) throws Exception {
-        List<PomProperties> modules = pomProperties.getModules();
+    private void doBuild(Path path, PomProperties pomProperties, List<DependencieProterties> dependenciesPropertiesList, SchemaData schemaData) throws Exception {
+        Set<PomProperties> modules = pomProperties.getModules();
         if (modules == null || modules.size() == 0) {
-            // 创建模块src目录,标准化目录创建
-            for (String dir : SRC_DIR) {
-                Files.createDirectories(path.resolve(dir));
-            }
             pomProperties.setPackaging("jar");
-            if (!StringUtils.isEmpty(pomProperties.getDocumentTypes())) {
-                List<String> docTyps = Arrays.asList(pomProperties.getDocumentTypes().split(","));
-                for (String p : docTyps) {
-                    DocumentProperties documentProperties = DOCUMENT_MAP.get(p);
-                    // 获取模板
-                    String stemplate = documentProperties.getTemplate();
-                    Buildable buildable = BUILDER_MAP.get(stemplate);
-                    if (buildable != null) {
-                        buildable.build(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
-                    } else {
-                        log.error("buildable is null ,please implements org.arch.framework.automate.generater.core.Buildable and config it as a spring component");
-                    }
+            /**
+             * 设置manage
+             */
+            DependencieProterties dependencieProterties = new DependencieProterties();
+            dependencieProterties.setGroupId(pomProperties.getGroupId());
+            dependencieProterties.setArtifactId(pomProperties.getArtifactId());
+            dependencieProterties.setVersion(pomProperties.getVersion());
+            dependencieProterties.setModule(true);
+            dependenciesPropertiesList.add(dependencieProterties);
+            // 根据doc typ构建文件
+            pomProperties.getDocumentTyps().forEach(docTyp -> {
+                DocumentProperties documentProperties = DOCUMENT_MAP.get(docTyp);
+                // 获取模板
+                String stemplate = documentProperties.getTemplate();
+                Buildable buildable = BUILDER_MAP.get(stemplate);
+                if (buildable != null) {
+                    buildable.build(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
+                } else {
+                    log.error("buildable is null ,please implements org.arch.framework.automate.generater.core.Buildable and config it as a spring component");
                 }
-            }
-            return;
+            });
         } else {
             for (PomProperties module : modules) {
                 pomProperties.setPackaging("pom");
@@ -72,10 +75,20 @@ public class MavenGenerator extends AbstractGenerator {
                 module.setVersion(pomProperties.getVersion());
                 module.setParent(parent);
 
-                Path subPath = path.resolve(module.getArtifactId());
-                doBuild(subPath, module, schemaData);
+                /**
+                 * 创建pom
+                 */
+                BUILDER_MAP.get("pom.ftl").build(path, engine, projectProperties, pomProperties, DOCUMENT_MAP.get("pom"), schemaData);
+                doBuild(path.resolve(module.getArtifactId()), module, dependenciesPropertiesList, schemaData);
+            }
+            if (pomProperties.isRoot()) {
+                /**
+                 * 设置dependencyManagement 统一版本管理
+                 */
+                pomProperties.getDependencyManagement().addAll(dependenciesPropertiesList);
             }
         }
+
     }
 
 

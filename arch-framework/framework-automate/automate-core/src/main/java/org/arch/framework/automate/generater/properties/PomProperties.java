@@ -1,13 +1,17 @@
 package org.arch.framework.automate.generater.properties;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.arch.framework.automate.generater.core.ConfigProperties;
+import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * poms:
@@ -24,7 +28,6 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 public class PomProperties implements ConfigProperties {
-
     private String groupId;
     private String artifactId;
     private String version;
@@ -42,12 +45,21 @@ public class PomProperties implements ConfigProperties {
     private DependencieProterties parent;
     // 子模块
     @NestedConfigurationProperty
-    private List<PomProperties> modules;
+    private final Set<PomProperties> modules = new HashSet<>();
     // 依赖
     @NestedConfigurationProperty
-    private List<DependencieProterties> dependencies;
+    private final Set<DependencieProterties> dependencies = new HashSet<>();
     // 依赖管理
     @NestedConfigurationProperty
-    private List<DependencieProterties> dependencyManagement;
+    private final Set<DependencieProterties> dependencyManagement = new HashSet<>();
 
+    @JSONField(serialize = false)
+    public Set<String> getDocumentTyps() {
+        Set<String> sets = new HashSet<>();
+        sets.add("pom");
+        if (StringUtils.isNoneBlank(documentTypes)) {
+            sets.addAll(Arrays.asList(documentTypes.split(",")));
+        }
+        return sets;
+    }
 }

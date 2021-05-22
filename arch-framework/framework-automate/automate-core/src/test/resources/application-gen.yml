@@ -11,7 +11,7 @@ spring:
       path: ../
       basePkg: org.arch.gen
       pom:
-        artifactId: arch-test1
+        artifactId: arch-test
         groupId: org.arch.projects
         version: 0.0.1
         root: true
@@ -24,9 +24,9 @@ spring:
         modules:
           - artifactId: test-api
             pattern: api
-            documentTypes: pom,api,yml,docker
-          - artifactId: test-core1
-            documentTypes: pom,yml,entity,dao,application,ddl,docker,mapper,converter
+            documentTypes: api
+          - artifactId: test-core
+            documentTypes: entity,mapper,dao,service,application,ddl,docker,yml
           - artifactId: arch-gen-common
             dependencies:
               - groupId: org.arch.projects
@@ -43,7 +43,7 @@ spring:
                   - artifactId: arch-gen-common-b-1
                     groupId:
                     version:
-                    documentTypes: pom,entity,dao,converter,mapper
+                    documentTypes: entity,mapper,dao,service
                   - artifactId: arch-gen-common-b-2
                     groupId:
                     version:
@@ -61,9 +61,9 @@ spring:
         template: dao.ftl
         suffix: Dao
         ext: .java
-      - type: converter
-        pkg: converter
-        template: converter.ftl
+      - type: service
+        pkg: service
+        template: service.ftl
         suffix: Service
       - type: controller
         pkg:
@@ -111,7 +111,7 @@ spring:
 
       - typ: excel
         patterns: mvc
-        resources: classpath:xls/uni-life-ums.xlsx
+        resources: classpath:xls/uni-life-pms.xlsx
         configuration: {
           table: "表名/Table",
           column: "列名/Column",

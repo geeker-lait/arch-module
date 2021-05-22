@@ -1,6 +1,7 @@
 package org.arch.framework.automate.common.database;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.arch.framework.automate.generater.core.Metadata;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @date 4/26/2021 10:53 AM
  */
 @Data
+@EqualsAndHashCode
 @Accessors(chain = true)
 public class Table implements Metadata {
     private String name;

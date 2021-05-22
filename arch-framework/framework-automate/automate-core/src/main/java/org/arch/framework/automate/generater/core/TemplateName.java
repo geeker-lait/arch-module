@@ -13,7 +13,7 @@ public enum TemplateName {
     DAO("dao.ftl"),
     MAPPER("mapper.ftl"),
     MAPPER_XML("mapper-xml.ftl"),
-    SERVICE("converter.ftl"),
+    SERVICE("service.ftl"),
     BIZ("biz.ftl"),
     CONTROLLER("controller.ftl"),
     SEARCH("search.ftl"),
@@ -24,7 +24,9 @@ public enum TemplateName {
     APPLICATION("application.ftl"),
     DOCKER("docker.ftl"),
     API("api.ftl"),
-    ;
+    HTML("html.ftl"),
+    REBBITMQ("mq.ftl"),
+    REDIS("redis.ftl");
     @Getter
     private String template;
 

@@ -10,10 +10,10 @@
     <artifactId>automate-core</artifactId>
 
     <dependencies>
-        <!--<dependency>
+        <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-core</artifactId>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-beans</artifactId>
@@ -136,6 +136,7 @@
             <artifactId>json</artifactId>
             <version>20210307</version>
         </dependency>
+
 
         <!--<dependency>
             <groupId>com.github.eljah</groupId>

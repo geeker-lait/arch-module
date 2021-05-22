@@ -48,7 +48,7 @@ public class JdbcTypeUtils {
         }
         Class aClass = sqlFieldTypeMapping.get(columnType.toUpperCase());
         if (aClass == null) {
-            return sqlFieldTypeMapping.get(columnType.toUpperCase());
+            return String.class;
         }
         return aClass;
     }

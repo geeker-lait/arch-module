@@ -1,12 +1,16 @@
 package org.arch.framework.automate.generater.builder;
 
+import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
+import org.arch.framework.automate.generater.core.Buildable;
+import org.arch.framework.automate.generater.core.SchemaData;
 import org.arch.framework.automate.generater.core.TemplateName;
+import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;
-import org.arch.framework.beans.utils.StringUtils;
+import org.arch.framework.automate.generater.properties.ProjectProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author lait.zhang@gmail.com
@@ -28,19 +31,23 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class PomBuilder {
+public class PomBuilder extends AbstractBuilder implements Buildable {
 
     @Autowired
     private GeneratorConfig generatorConfig;
 
-    //private List<PomProperties> pomList = new ArrayList();
 
-    /*public PomBuilder(List<PomProperties> pomList) {
-        this.pomList = pomList;
-    }*/
+    @Override
+    public TemplateName getTemplateName() {
+        return TemplateName.POM;
+    }
 
+    @Override
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
+        buildPom(projectProperties.getCover(), path, pomProperties, engine);
+    }
 
-    private void buildPom(boolean cover, Path path, PomProperties pomProperties) {
+    private void buildPom(boolean cover, Path path, PomProperties pomProperties, TemplateEngine engine) {
         Path pomFilePath = Paths.get(path.toString().concat(File.separator).concat("pom.xml"));
         // 写入文件
         if (Files.exists(pomFilePath)) {
@@ -65,15 +72,13 @@ public class PomBuilder {
             //DEPS.remove();
         }
         JSONObject jsonObject = JSONUtil.parseObj(pomProperties);
-        String dt = pomProperties.getDocumentTypes();
-        if (!StringUtils.isEmpty(dt)) {
-            Optional<String> app = Arrays.asList(dt.split(",")).stream().filter(t -> t.equalsIgnoreCase(TemplateName.APPLICATION.name())).findAny();
-            if (app.isPresent()) {
-                jsonObject.putOpt(app.get(), true);
-            }
+        Set<String> dt = pomProperties.getDocumentTyps();
+        String appname = dt.stream().filter(t -> t.equalsIgnoreCase(TemplateName.APPLICATION.name())).findAny().orElse(null);
+        if (null != appname) {
+            jsonObject.putOpt(appname, true);
         }
         // 获取并渲染模板
-        //engine.getTemplate("pom.ftl").render(jsonObject, new File(pomFilePath.toString()));
+        engine.getTemplate("pom.ftl").render(jsonObject, new File(pomFilePath.toString()));
         log.info("\n\ncreate pom file in : {}\npom json :{}\n\n", pomFilePath, pomProperties);
     }
 
@@ -137,19 +142,21 @@ public class PomBuilder {
         List<PomProperties> result = new ArrayList<>();
         for (PomProperties pom : pomList) {
             result.add(pom);
-            List<PomProperties> child = pom.getModules();
+            Set<PomProperties> child = pom.getModules();
             if (child != null && child.size() > 0) {
-                List<PomProperties> entityList = this.treeNodeToList(child);
-                result.addAll(entityList);
+                //List<PomProperties> entityList = this.treeNodeToList(child);
+                //result.addAll(entityList);
             }
         }
         if (result.size() > 0) {
             for (PomProperties pom : result) {
-                pom.setModules(null);
+               // pom.setModules(null);
             }
         }
         return result;
     }
+
+
 //
 //    /**
 //     * list->tree

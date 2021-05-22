@@ -15,6 +15,6 @@ import org.springframework.stereotype.Repository;
 @Slf4j
 @RequiredArgsConstructor
 @Repository
-public class ${(name?cap_first)!""}${suffix!""} extends CrudServiceImpl<${(name?cap_first)!""}Mapper, ${(name?cap_first)!""}> implements CrudDao<${(name?cap_first)!""}>{
+public class ${(name?cap_first)!""}${suffix!""} extends CrudServiceImpl<${(name?cap_first)!""}Mapper, ${(name?cap_first)!""}Entity> implements CrudDao<${(name?cap_first)!""}Entity>{
     private final ${(name?cap_first)!""}Mapper ${name!""}Mapper;
 }

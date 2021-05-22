@@ -24,20 +24,7 @@ public class EntityBuilder extends AbstractBuilder implements Buildable {
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties,
                       PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
-        buildPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
-
-
+        log.info("EntityBuilder build: {}", path);
+        buildMvcPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
     }
-
-//    @Override
-//    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
-//        buildPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
-//    }
-//
-//    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaPatternable databaseProperties) {
-//        log.info("EntityBuilder build: {}", path);
-//        buildPackageFile(projectProperties.getCover(), path, templateEngine, projectProperties, documentProperties, databaseProperties);
-//    }
-
-
 }

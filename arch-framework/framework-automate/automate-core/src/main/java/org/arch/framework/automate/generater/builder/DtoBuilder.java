@@ -12,24 +12,18 @@ import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
 
-/**
- * @author lait.zhang@gmail.com
- * @description: TODO
- * @weixin PN15855012581
- * @date :
- */
 @Slf4j
 @Component
-public class HtmlBuilder extends AbstractBuilder implements Buildable {
+public class DtoBuilder extends AbstractBuilder implements Buildable {
+
     @Override
     public TemplateName getTemplateName() {
-        return TemplateName.HTML;
+        return TemplateName.DTO;
     }
 
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
 
     }
-
 
 }
