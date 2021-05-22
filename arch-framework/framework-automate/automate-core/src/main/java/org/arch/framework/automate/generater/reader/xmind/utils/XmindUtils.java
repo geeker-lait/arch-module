@@ -1,5 +1,6 @@
 package org.arch.framework.automate.generater.reader.xmind.utils;
 
+import cn.hutool.core.io.resource.ClassPathResource;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
 import com.google.common.base.CaseFormat;
@@ -7,14 +8,16 @@ import org.arch.framework.automate.common.api.Annot;
 import org.arch.framework.automate.common.api.AnnotVal;
 import org.arch.framework.automate.common.api.Api;
 import org.arch.framework.automate.common.api.Curl;
-import org.arch.framework.automate.common.api.Model;
 import org.arch.framework.automate.common.api.Interfac;
+import org.arch.framework.automate.common.api.Model;
 import org.arch.framework.automate.common.api.Param;
 import org.arch.framework.automate.common.database.Column;
 import org.arch.framework.automate.common.database.Database;
 import org.arch.framework.automate.common.database.Table;
 import org.arch.framework.automate.common.module.Module;
 import org.arch.framework.automate.common.module.Project;
+import org.arch.framework.automate.generater.core.ReaderConfiguration;
+import org.arch.framework.automate.generater.core.SchemaConfiguration;
 import org.arch.framework.automate.generater.reader.xmind.Import;
 import org.arch.framework.automate.generater.reader.xmind.meta.Attached;
 import org.arch.framework.automate.generater.reader.xmind.meta.Children;
@@ -26,6 +29,7 @@ import org.arch.framework.automate.generater.reader.xmind.nodespace.ColumnType;
 import org.arch.framework.automate.generater.reader.xmind.nodespace.ParamProperty;
 import org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType;
 import org.arch.framework.automate.generater.reader.xmind.nodespace.TiTleType;
+import org.arch.framework.automate.generater.reader.xmind.parser.XmindParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -38,6 +42,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -70,7 +75,43 @@ public class XmindUtils {
     public static final String SEPARATOR = "/";
     public static final String COLUMN_PROPERTY_SEPARATOR = "_";
     public static final String PIN_YIN_SEPARATOR = " ";
+    public static final String CLASS_PATH = "classpath:";
     public static final Logger LOG = LoggerFactory.getLogger(XmindUtils.class);
+
+    /**
+     * 根据 read config 获取 {@link Project}, 先从 configProjectMap 中获取, 没有时再根据 readerConfiguration
+     * 读取解析成 {@link Project}, 先 put 到 configProjectMap 中再返回.
+     * @param readerConfiguration   reader configuration
+     * @param configProjectMap      用于缓存 {@link ReaderConfiguration} 与 {@link Project} 的 {@link ConcurrentHashMap}.
+     * @param <T> {@link SchemaConfiguration}
+     * @return  {@link Project}
+     */
+    public static <T extends SchemaConfiguration> Project getProject(
+            @NonNull ReaderConfiguration<T> readerConfiguration,
+            @NonNull ConcurrentHashMap<ReaderConfiguration<T>, Project> configProjectMap) {
+
+        if (configProjectMap.containsKey(readerConfiguration)) {
+            return configProjectMap.get(readerConfiguration);
+        }
+        JsonRootBean root = null;
+        try {
+            String res = readerConfiguration.getResource();
+            // 从类路劲加载
+            if (hasText(res) && res.startsWith(CLASS_PATH)) {
+                res = new ClassPathResource(res.split(":")[1]).getAbsolutePath();
+            }
+            root = XmindParser.parseObject(res, JsonRootBean.class);
+        }
+        catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        Project project = new Project();
+        if (nonNull(root)) {
+            generate(root, project);
+        }
+        configProjectMap.put(readerConfiguration, project);
+        return project;
+    }
 
 
     /**

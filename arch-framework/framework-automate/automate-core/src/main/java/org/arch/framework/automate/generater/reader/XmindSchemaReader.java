@@ -1,21 +1,23 @@
 package org.arch.framework.automate.generater.reader;
 
-import cn.hutool.core.io.resource.ClassPathResource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.common.module.Project;
-import org.arch.framework.automate.generater.core.*;
+import org.arch.framework.automate.generater.core.DatabaseSchemaData;
+import org.arch.framework.automate.generater.core.MethodSchemaData;
+import org.arch.framework.automate.generater.core.ReaderConfiguration;
+import org.arch.framework.automate.generater.core.SchemaData;
+import org.arch.framework.automate.generater.core.SchemaPattern;
+import org.arch.framework.automate.generater.core.SchemaReadable;
+import org.arch.framework.automate.generater.core.SchemaType;
 import org.arch.framework.automate.generater.core.configuration.XmindConfiguration;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
-import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;
-import org.arch.framework.automate.generater.reader.xmind.parser.XmindParser;
+import org.arch.framework.automate.generater.reader.xmind.utils.XmindUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Objects.nonNull;
-import static org.arch.framework.automate.generater.reader.xmind.utils.XmindUtils.generate;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author lait.zhang@gmail.com
@@ -28,7 +30,8 @@ import static org.arch.framework.automate.generater.reader.xmind.utils.XmindUtil
 @RequiredArgsConstructor
 public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> implements SchemaReadable {
 
-    private volatile Project project;
+    private final ConcurrentHashMap<ReaderConfiguration<XmindConfiguration>, Project> configProjectMap =
+                                                                                            new ConcurrentHashMap<>();
 
     @Override
     public SchemaType getTyp() {
@@ -44,7 +47,7 @@ public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> 
     @Override
     protected List<? extends SchemaData> readMvc(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
         List<DatabaseSchemaData> databaseSchemaDatas = new ArrayList<>();
-        getProject(readerConfiguration).getModules().forEach(module -> {
+        XmindUtils.getProject(readerConfiguration, this.configProjectMap).getModules().forEach(module -> {
             module.getDatabases().forEach(db -> {
                 DatabaseSchemaData databaseSchemaData = new DatabaseSchemaData();
                 databaseSchemaData.setDatabase(db);
@@ -58,7 +61,7 @@ public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> 
     @Override
     protected List<? extends SchemaData> readApi(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
         List<MethodSchemaData> methodSchemaDatas = new ArrayList<>();
-        getProject(readerConfiguration).getModules().forEach(module -> {
+        XmindUtils.getProject(readerConfiguration, this.configProjectMap).getModules().forEach(module -> {
             module.getApis().forEach(api -> {
                 api.getInterfaces().forEach(interfac -> {
                     MethodSchemaData methodSchemaData = new MethodSchemaData();
@@ -80,27 +83,4 @@ public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> 
         return readerConfiguration;
     }
 
-
-    private synchronized Project getProject(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
-        if (nonNull(this.project)) {
-            return this.project;
-        }
-        JsonRootBean root = null;
-        try {
-            String res = readerConfiguration.getResource();
-            // 从类路劲加载
-            if (-1 != res.indexOf("classpath:")) {
-                res = new ClassPathResource(res.split(":")[1]).getAbsolutePath();
-            }
-            root = XmindParser.parseObject(res, JsonRootBean.class);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        Project project = new Project();
-        if (nonNull(root)) {
-            generate(root, project);
-        }
-        this.project = project;
-        return project;
-    }
 }

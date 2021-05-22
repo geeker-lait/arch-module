@@ -2,13 +2,14 @@ package org.arch.framework.automate.generater.reader;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.common.database.Database;
+import org.arch.framework.automate.generater.core.DatabaseSchemaData;
+import org.arch.framework.automate.generater.core.MethodSchemaData;
 import org.arch.framework.automate.generater.core.ReaderConfiguration;
 import org.arch.framework.automate.generater.core.SchemaData;
 import org.arch.framework.automate.generater.core.SchemaPattern;
 import org.arch.framework.automate.generater.core.SchemaReadable;
 import org.arch.framework.automate.generater.core.SchemaType;
-import org.arch.framework.automate.common.database.Database;
-import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.core.configuration.DatabaseConfiguration;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.springframework.stereotype.Service;
@@ -76,6 +77,7 @@ public class DatabaseSchemaReader extends AbstractSchemaReader<DatabaseConfigura
         readerConfiguration.setPattern(schemaPattern);
         return readerConfiguration;
     }
+
 //
 //    @Override
 //    protected List<SchemaPatternable> readMvc(String res, Map<String, String> configuration) {
