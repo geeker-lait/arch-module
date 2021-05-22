@@ -5,6 +5,7 @@ import org.arch.framework.automate.generater.core.SchemaConfiguration;
 
 @Data
 public class DatabaseConfiguration implements SchemaConfiguration {
+    private String database;
     private String driver;
     private String url;
     private String username;
