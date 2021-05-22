@@ -36,6 +36,10 @@ public class Interfac implements Metadata, Import {
      */
     private String api;
     /**
+     * api 类似于模块包描述
+     */
+    private String apiDescr;
+    /**
      * 泛型类型: String -> <String>, String, Object -> <String, Object>, Map<String, Object> -> <Map<String, Object>>
      */
     private String genericTyp;
