@@ -8,7 +8,7 @@ spring:
       cover: true
       author: lait
       domain: true
-      path: ../
+      path: ../../
       basePkg: org.arch.gen
       pom:
         artifactId: arch-test

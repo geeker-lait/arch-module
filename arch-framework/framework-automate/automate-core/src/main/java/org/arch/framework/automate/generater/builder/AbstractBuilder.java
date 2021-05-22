@@ -90,7 +90,7 @@ public abstract class AbstractBuilder {
             Files.createDirectories(path.resolve(dir));
         }
         // 设置默认包和后缀名
-        String pkg = (null == documentProperties.getPkg() ? documentProperties.getType() : documentProperties.getPkg());
+        String pkg = StringUtils.isNoneBlank(documentProperties.getPkg()) ? documentProperties.getPkg() : documentProperties.getType();
         String currentPkg;
         String domain = "";
         if (schemaData.getSchemaPattern() == SchemaPattern.API) {
@@ -99,6 +99,7 @@ public abstract class AbstractBuilder {
         if (schemaData.getSchemaPattern() == SchemaPattern.MVC) {
             domain = schemaData.getDatabase().getName().toLowerCase();
         }
+        domain = domain.replaceAll("-", "");
         // 领域化
         if (projectProperties.getDomain()) {
             currentPkg = projectProperties.getBasePkg().concat("." + domain).concat("." + pkg);
@@ -127,7 +128,7 @@ public abstract class AbstractBuilder {
                     buildFile(projectProperties.getCover(), filePath);
                     Map<String, Object> dataMap = buildData(projectProperties, documentProperties, table);
                     dataMap.put("package", currentPkg);
-                    dataMap.put("mainClass", fileName);
+
                     // 获取模板并渲染
                     String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
                     // 写入文件
@@ -158,8 +159,6 @@ public abstract class AbstractBuilder {
                     dataMap.putAll(JSONUtil.parseObj(documentProperties));
                     dataMap.putAll(JSONUtil.parseObj(interfac));
                     dataMap.put("package", currentPkg);
-                    dataMap.put("author", projectProperties.getAuthor());
-                    dataMap.put("cover", projectProperties.getCover());
                     // 获取模板并渲染
                     String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
                     // 写入文件
