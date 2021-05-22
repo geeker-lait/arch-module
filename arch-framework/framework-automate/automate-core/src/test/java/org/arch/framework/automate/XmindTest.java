@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.arch.framework.automate.generater.reader.xmind.utils.XmindUtils.generate;
-import static org.springframework.util.StringUtils.hasText;
 
 /**
  * @ClassName XmindTest
@@ -50,12 +49,6 @@ public class XmindTest {
 
         generate(root, project);
 
-        project.getModules().forEach(module -> {
-            String pkg = module.getPkg();
-            if (hasText(pkg)) {
-                //module.modulePkgPostHandle(pkg, null, false);
-            }
-        });
         Database database = project.getModules().get(0).getDatabases().get(0);
         FreeMarkerUtil.geneFile("ddl","templates","ddl.sql", database);
         System.out.println(JSON.toJSONString(project));

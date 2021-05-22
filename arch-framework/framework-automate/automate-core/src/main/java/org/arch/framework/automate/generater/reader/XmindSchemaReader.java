@@ -41,7 +41,7 @@ public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> 
     @Override
     protected List<? extends SchemaData> readMvc(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
         List<DatabaseSchemaData> databaseSchemaDatas = new ArrayList<>();
-        XmindUtils.getProject(readerConfiguration, this.configProjectMap).getModules().forEach(module -> {
+        XmindUtils.getProject(readerConfiguration,this.configProjectMap).getModules().forEach(module -> {
             module.getDatabases().forEach(db -> {
                 DatabaseSchemaData databaseSchemaData = new DatabaseSchemaData();
                 databaseSchemaData.setDatabase(db);

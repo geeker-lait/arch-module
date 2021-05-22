@@ -79,23 +79,24 @@ public class XmindUtils {
     public static final Logger LOG = LoggerFactory.getLogger(XmindUtils.class);
 
     /**
-     * 根据 read config 获取 {@link Project}, 先从 configProjectMap 中获取, 没有时再根据 readerConfiguration
-     * 读取解析成 {@link Project}, 先 put 到 configProjectMap 中再返回.
+     * 根据 read config 获取 {@link Project}, 先从 readerConfiguration.resourceProjectMap 中获取,
+     * 没有时再根据 readerConfiguration.resource 读取解析成 {@link Project}, 先 put 到 readerConfiguration.resourceProjectMap
+     * 再返回.
      * @param readerConfiguration   reader configuration
-     * @param configProjectMap      用于缓存 {@link ReaderConfiguration} 与 {@link Project} 的 {@link ConcurrentHashMap}.
      * @param <T> {@link SchemaConfiguration}
      * @return  {@link Project}
      */
-    public static <T extends SchemaConfiguration> Project getProject(
-            @NonNull ReaderConfiguration<T> readerConfiguration,
-            @NonNull ConcurrentHashMap<ReaderConfiguration<T>, Project> configProjectMap) {
+    public static <T extends SchemaConfiguration> Project getProject(@NonNull ReaderConfiguration<T> readerConfiguration) {
+        // 从缓存中读取
+        ConcurrentHashMap<String, Project> resourceProjectMap = readerConfiguration.getResourceProjectMap();
+        String res = readerConfiguration.getResource();
+        if (nonNull(resourceProjectMap) && resourceProjectMap.containsKey(res)) {
 
-        if (configProjectMap.containsKey(readerConfiguration)) {
-            return configProjectMap.get(readerConfiguration);
+            return resourceProjectMap.get(res);
         }
+        // 解析文件
         JsonRootBean root = null;
         try {
-            String res = readerConfiguration.getResource();
             // 从类路劲加载
             if (hasText(res) && res.startsWith(CLASS_PATH)) {
                 res = new ClassPathResource(res.split(":")[1]).getAbsolutePath();
@@ -109,7 +110,12 @@ public class XmindUtils {
         if (nonNull(root)) {
             generate(root, project);
         }
-        configProjectMap.put(readerConfiguration, project);
+        // 缓存
+        if (isNull(resourceProjectMap)) {
+        	resourceProjectMap = new ConcurrentHashMap<>(16);
+        }
+        resourceProjectMap.put(res, project);
+        readerConfiguration.setResourceProjectMap(resourceProjectMap);
         return project;
     }
 
@@ -758,7 +764,7 @@ public class XmindUtils {
                 // add inteface
                 Children interfaceChildren = interfaceAttached.getChildren();
                 if (nonNull(interfaceChildren)) {
-                    generateInterface(interfaceChildren, moduleList, module, api, splits, apiName);
+                    generateInterface(interfaceChildren, moduleList, module, api, splits);
                 }
             } else {
                 generateOfAttachedWithModule(interfaceAttached, moduleList, module);
@@ -767,13 +773,13 @@ public class XmindUtils {
     }
 
     private static void generateInterface(@NonNull Children children, @NonNull List<Module> moduleList,
-                                          @NonNull Module module, @NonNull Api api, @NonNull String[] tokens,
-                                          @NonNull String apiName) {
+                                          @NonNull Module module, @NonNull Api api, @NonNull String[] tokens) {
         // add interface
         String orgName = tokens[1].trim();
         String interfaceName = strToUpperCamelWithPinYin(orgName);
         String comment = removeNewlines(tokens[2].trim());
-        Interfac interfac = new Interfac().setName(interfaceName).setDescr(comment).setApi(apiName);
+        Interfac interfac = new Interfac().setName(interfaceName).setDescr(comment)
+                                          .setApi(api.getName()).setApiDescr(api.getDescr());
         api.addInterface(interfac);
 
         // 遍历 interface 的方法
