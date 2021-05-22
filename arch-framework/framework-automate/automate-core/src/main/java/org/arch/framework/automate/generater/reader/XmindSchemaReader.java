@@ -2,7 +2,6 @@ package org.arch.framework.automate.generater.reader;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.common.module.Project;
 import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.core.configuration.XmindConfiguration;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author lait.zhang@gmail.com
@@ -23,9 +21,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @RequiredArgsConstructor
 public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> implements SchemaReadable {
-
-    private final ConcurrentHashMap<ReaderConfiguration<XmindConfiguration>, Project> configProjectMap =
-            new ConcurrentHashMap<>();
 
     @Override
     public SchemaType getTyp() {
@@ -41,7 +36,7 @@ public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> 
     @Override
     protected List<? extends SchemaData> readMvc(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
         List<DatabaseSchemaData> databaseSchemaDatas = new ArrayList<>();
-        XmindUtils.getProject(readerConfiguration,this.configProjectMap).getModules().forEach(module -> {
+        XmindUtils.getProject(readerConfiguration).getModules().forEach(module -> {
             module.getDatabases().forEach(db -> {
                 DatabaseSchemaData databaseSchemaData = new DatabaseSchemaData();
                 databaseSchemaData.setDatabase(db);
@@ -56,7 +51,7 @@ public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> 
     @Override
     protected List<? extends SchemaData> readApi(ReaderConfiguration<XmindConfiguration> readerConfiguration) {
         List<ApiSchemaData> apiSchemaDatas = new ArrayList<>();
-        XmindUtils.getProject(readerConfiguration, this.configProjectMap).getModules().forEach(module -> {
+        XmindUtils.getProject(readerConfiguration).getModules().forEach(module -> {
             module.getApis().forEach(api -> {
                 ApiSchemaData apiSchemaData = new ApiSchemaData();
                 apiSchemaData.setApi(api);
