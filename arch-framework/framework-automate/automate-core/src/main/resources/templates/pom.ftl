@@ -51,7 +51,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
         </dependency>
         </#if>
         <#if dependencies ?? && (dependencies?size >0)>

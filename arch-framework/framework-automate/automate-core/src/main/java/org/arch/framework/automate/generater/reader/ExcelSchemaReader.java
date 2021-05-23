@@ -13,7 +13,7 @@ import org.arch.framework.automate.common.database.Table;
 import org.arch.framework.automate.common.utils.ExcelUtils;
 import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.generater.core.*;
-import org.arch.framework.automate.generater.core.configuration.ExcelFiledConfiguration;
+import org.arch.framework.automate.common.configuration.ExcelFiledConfiguration;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.springframework.stereotype.Service;
 

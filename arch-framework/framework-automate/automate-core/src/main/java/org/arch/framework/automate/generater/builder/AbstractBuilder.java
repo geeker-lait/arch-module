@@ -2,16 +2,19 @@ package org.arch.framework.automate.generater.builder;
 
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.common.api.Interfac;
 import org.arch.framework.automate.common.database.Table;
 import org.arch.framework.automate.common.utils.JdbcTypeUtils;
+import org.arch.framework.automate.generater.config.GeneratorConfig;
 import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
 import org.arch.framework.beans.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +33,8 @@ import java.util.regex.Matcher;
  */
 @Slf4j
 public abstract class AbstractBuilder {
+    @Autowired
+    private GeneratorConfig generatorConfig;
     /**
      * 获取包命名
      *
@@ -78,6 +83,7 @@ public abstract class AbstractBuilder {
         dataMap.putAll(JSONUtil.parseObj(projectProperties));
         dataMap.putAll(JSONUtil.parseObj(documentProperties));
         dataMap.putAll(JSONUtil.parseObj(metadata));
+        dataMap.put("documents",generatorConfig.getDocuments());
         dataMap.put("author", projectProperties.getAuthor());
         dataMap.put("cover", projectProperties.getCover());
         return dataMap;
@@ -90,7 +96,7 @@ public abstract class AbstractBuilder {
             Files.createDirectories(path.resolve(dir));
         }
         // 设置默认包和后缀名
-        String pkg = (null == documentProperties.getPkg() ? documentProperties.getType() : documentProperties.getPkg());
+        String pkg = StringUtils.isNoneBlank(documentProperties.getPkg()) ? documentProperties.getPkg() : documentProperties.getType();
         String currentPkg;
         String domain = "";
         if (schemaData.getSchemaPattern() == SchemaPattern.API) {
@@ -99,6 +105,7 @@ public abstract class AbstractBuilder {
         if (schemaData.getSchemaPattern() == SchemaPattern.MVC) {
             domain = schemaData.getDatabase().getName().toLowerCase();
         }
+        domain = domain.replaceAll("-", "");
         // 领域化
         if (projectProperties.getDomain()) {
             currentPkg = projectProperties.getBasePkg().concat("." + domain).concat("." + pkg);
@@ -127,7 +134,7 @@ public abstract class AbstractBuilder {
                     buildFile(projectProperties.getCover(), filePath);
                     Map<String, Object> dataMap = buildData(projectProperties, documentProperties, table);
                     dataMap.put("package", currentPkg);
-                    dataMap.put("mainClass", fileName);
+
                     // 获取模板并渲染
                     String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
                     // 写入文件
@@ -158,8 +165,6 @@ public abstract class AbstractBuilder {
                     dataMap.putAll(JSONUtil.parseObj(documentProperties));
                     dataMap.putAll(JSONUtil.parseObj(interfac));
                     dataMap.put("package", currentPkg);
-                    dataMap.put("author", projectProperties.getAuthor());
-                    dataMap.put("cover", projectProperties.getCover());
                     // 获取模板并渲染
                     String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
                     // 写入文件
