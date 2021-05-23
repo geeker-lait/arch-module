@@ -9,6 +9,6 @@ import org.apache.ibatis.annotations.Mapper;
 * @date ${.now}
 */
 @Mapper
-public interface ${(name?cap_first)!""}${suffix!""} extends CrudMapper<${(name?cap_first)!""}> {
+public interface ${(name?cap_first)!""}${suffix!""} extends CrudMapper<${(name?cap_first)!""}<#list documents as doc><#if doc.type == "entity">${(doc.type)?cap_first}</#if></#list>> {
 
 }

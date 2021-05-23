@@ -2,16 +2,19 @@ package org.arch.framework.automate.generater.builder;
 
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.common.api.Interfac;
 import org.arch.framework.automate.common.database.Table;
 import org.arch.framework.automate.common.utils.JdbcTypeUtils;
+import org.arch.framework.automate.generater.config.GeneratorConfig;
 import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
 import org.arch.framework.beans.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +33,8 @@ import java.util.regex.Matcher;
  */
 @Slf4j
 public abstract class AbstractBuilder {
+    @Autowired
+    private GeneratorConfig generatorConfig;
     /**
      * 获取包命名
      *
@@ -78,6 +83,7 @@ public abstract class AbstractBuilder {
         dataMap.putAll(JSONUtil.parseObj(projectProperties));
         dataMap.putAll(JSONUtil.parseObj(documentProperties));
         dataMap.putAll(JSONUtil.parseObj(metadata));
+        dataMap.put("documents",generatorConfig.getDocuments());
         dataMap.put("author", projectProperties.getAuthor());
         dataMap.put("cover", projectProperties.getCover());
         return dataMap;

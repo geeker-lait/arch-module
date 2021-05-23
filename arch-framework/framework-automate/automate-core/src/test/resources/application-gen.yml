@@ -18,7 +18,12 @@ spring:
         dependencyManagement:
           - artifactId: spring-boot-dependencies
             groupId: org.springframework.boot
-            version: 2.4.1
+            version: 2.4.2
+            type: pom
+            scope: import
+          - artifactId: spring-boot-aaa
+            groupId: org.springframework.boot
+            version: 2.4.2
             type: pom
             scope: import
         modules:
@@ -28,14 +33,11 @@ spring:
           - artifactId: test-core
             documentTypes: entity,mapper,dao,service,application,ddl,docker,yml
           - artifactId: arch-gen-common
-            dependencies:
-              - groupId: org.arch.projects
-                artifactId: arch-gen-core
             modules:
               - artifactId: arch-gen-common-a
                 groupId:
                 version:
-                documentTypes: pom,dao
+                documentTypes: dao
               - artifactId: arch-gen-common-b
                 groupId:
                 version:
