@@ -64,16 +64,17 @@ public class XmindParamParser {
             }
         }
         if (inOrOut) {
-            inputParams.add(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
+            inputParams.add(generateParam(paramAttached, moduleList, module, splits, paramType, interfac, inOrOut));
         } else {
-            curl.setOutput(generateParam(paramAttached, moduleList, module, splits, paramType, interfac));
+            curl.setOutput(generateParam(paramAttached, moduleList, module, splits, paramType, interfac, inOrOut));
         }
     }
 
     @Nullable
     static Param generateParam(@NonNull Attached attached, @NonNull List<Module> moduleList,
-                                       @NonNull Module module, @NonNull String[] tokens,
-                                       @NonNull ParamType pParamType, @NonNull Import pImport) {
+                               @NonNull Module module, @NonNull String[] tokens,
+                               @NonNull ParamType pParamType, @NonNull Import pImport,
+                               @Nullable Boolean inOrOut) {
 
         // 新增 param
         String typ = pParamType.getType();
@@ -87,9 +88,9 @@ public class XmindParamParser {
                 Children children = attached.getChildren();
                 if (nonNull(children)) {
                     if (pImport instanceof Model) {
-                        generateModel(children, moduleList, module, attached.getTitle(), pImport);
+                        generateModel(children, moduleList, module, attached.getTitle(), pImport, inOrOut);
                     } else if (pImport instanceof Interfac) {
-                        generateModel(children, moduleList, module, attached.getTitle(), pImport);
+                        generateModel(children, moduleList, module, attached.getTitle(), pImport, inOrOut);
                     }
                 }
                 if (orgType.contains("[")) {

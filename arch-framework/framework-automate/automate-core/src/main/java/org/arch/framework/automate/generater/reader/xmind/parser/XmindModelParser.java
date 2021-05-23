@@ -63,13 +63,15 @@ public class XmindModelParser {
      * @param module     {@link Module}
      * @param pTitle     上级节点 title
      * @param pImport    {@link Import}
+     * @param inOrOut    inOrOut: true 表示 {@link ParamType#IN}, false 表示 {@link ParamType#OUT}.
      */
     @SuppressWarnings("AlibabaMethodTooLong")
     @Nullable
     static void generateModel(@NonNull Children children, @NonNull List<Module> moduleList,
                               @NonNull Module module, @NonNull String pTitle,
-                              @Nullable Import pImport) {
+                              @Nullable Import pImport, @Nullable Boolean inOrOut) {
         String[] splits = splitInto3Parts(pTitle);
+        //noinspection AlibabaUndefineMagicConstant
         if (splits.length != 3) {
             LOG.debug("title [" + pTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
             generateOfChildren(children, moduleList, module, null, pTitle);
@@ -127,7 +129,7 @@ public class XmindModelParser {
                     generateAnnotAndGeneric(fieldChildren, moduleList, module, null, model, field);
                 }
             } else if (ParamType.ENTITY.equals(paramType)) {
-                Param entityParam = generateParam(attached, moduleList, module, splits, paramType, model);
+                Param entityParam = generateParam(attached, moduleList, module, splits, paramType, model, inOrOut);
                 if (nonNull(entityParam)) {
                     entityFields.add(entityParam);
                     isNewCreatedEntity = true;
@@ -173,7 +175,7 @@ public class XmindModelParser {
                 if (hasText(paramTypePkg)) {
                     imports.add(paramTypePkg);
                 }
-                Param fieldParam = generateParam(attached, moduleList, module, splits, paramType, model);
+                Param fieldParam = generateParam(attached, moduleList, module, splits, paramType, model, inOrOut);
                 if (nonNull(fieldParam)) {
                     entityFields.add(fieldParam);
                     isNewCreatedEntity = true;
@@ -181,17 +183,22 @@ public class XmindModelParser {
             }
         }
         if (isNewCreatedEntity) {
-            module.addEntity(model);
-            // 缓存包后置处理信息
+            module.addModel(model);
+            // 存储从 Param 中解析出的字段 Model 类型
             if (pImport instanceof Model) {
-                module.getEntityImports().put(model.getName(), ((Model) pImport));
+                ((Model) pImport).getParamModels().add(model);
             }
         }
 
         if (pImport instanceof Interfac) {
             model.setApi(((Interfac) pImport).getApi());
-            // 缓存包后置处理信息
-            module.getApiImports().put(model.getName(), ((Interfac) pImport));
+            // 存储从出入参数中解析出的字段 Model 类型
+            if (nonNull(inOrOut) && inOrOut) {
+                ((Interfac) pImport).getInModels().add(model);
+            }
+            else if (nonNull(inOrOut)) {
+                ((Interfac) pImport).getOutModels().add(model);
+            }
         }
 
     }

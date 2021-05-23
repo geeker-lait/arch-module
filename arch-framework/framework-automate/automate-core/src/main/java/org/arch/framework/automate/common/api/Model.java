@@ -32,5 +32,9 @@ public class Model implements Import {
     private final Set<Annot> annotations = new HashSet<>();
     private final List<Param> fields = new ArrayList<>();
     private final Set<String> imports = new HashSet<>();
+    /**
+     * 从 {@link Param} 中解析出的字段 {@link Model} 类型
+     */
+    private final Set<Model> paramModels = new HashSet<>();
 
 }

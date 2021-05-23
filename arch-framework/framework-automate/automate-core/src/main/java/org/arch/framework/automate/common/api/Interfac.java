@@ -55,4 +55,12 @@ public class Interfac implements Metadata, Import {
      * 请求方法
      */
     private final List<Curl> curls = new ArrayList<>();
+    /**
+     * 存储从入参数中解析出的字段 Model 类型
+     */
+    private final Set<Model> inModels = new HashSet<>();
+    /**
+     * 存储从出参数中解析出的字段 Model 类型
+     */
+    private final Set<Model> outModels = new HashSet<>();
 }

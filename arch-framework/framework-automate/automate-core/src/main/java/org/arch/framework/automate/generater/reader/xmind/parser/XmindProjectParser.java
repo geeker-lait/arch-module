@@ -229,7 +229,7 @@ public class XmindProjectParser {
                 generateApi(children, moduleList, module, pTiTleType, pTitle);
                 return;
             case ENTITY:
-                generateModel(children, moduleList, module, pTitle, null);
+                generateModel(children, moduleList, module, pTitle, null, null);
                 return;
             case PKG:
                 generatePkg(children, moduleList, module, pTitle, pTiTleType);

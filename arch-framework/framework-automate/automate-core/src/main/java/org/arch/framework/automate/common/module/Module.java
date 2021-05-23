@@ -1,13 +1,10 @@
 package org.arch.framework.automate.common.module;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.arch.framework.automate.common.api.Api;
-import org.arch.framework.automate.common.api.Interfac;
 import org.arch.framework.automate.common.api.Model;
 import org.arch.framework.automate.common.database.Database;
 
@@ -41,16 +38,6 @@ public class Module {
     private final List<Database> databases = new ArrayList<>();
     private final List<Api> apis = new ArrayList<>();
     private final Set<Model> models = new HashSet<>();
-    /**
-     * 缓存需要包后置处理 {@link Model}
-     * map(entityName, Model): key 为 {@link Model} name, value 为需要导入 import 的 {@link Model}
-     */
-    private transient final Multimap<String, Model> entityImports = HashMultimap.create();
-    /**
-     * 缓存需要包后置处理 {@link Interfac}
-     * map(entityName, Interfac): key 为 {@link Model} name, value 为需要导入 import 的 {@link Interfac}
-     */
-    private transient final Multimap<String, Interfac> apiImports = HashMultimap.create();
 
     public void addDatabase(Database database) {
         this.databases.add(database);
@@ -60,12 +47,8 @@ public class Module {
         this.apis.add(api);
     }
 
-    public void addEntity(Model model) {
+    public void addModel(Model model) {
         this.models.add(model);
-    }
-
-    public void addEntity(List<Model> entities) {
-        this.models.addAll(entities);
     }
 
     @Override
@@ -98,10 +81,7 @@ public class Module {
         if (!models.equals(module.models)) {
             return false;
         }
-        if (!entityImports.equals(module.entityImports)) {
-            return false;
-        }
-        return apiImports.equals(module.apiImports);
+        return models.equals(module.models);
     }
 
     @Override
@@ -113,8 +93,6 @@ public class Module {
         result = 31 * result + databases.hashCode();
         result = 31 * result + apis.hashCode();
         result = 31 * result + models.hashCode();
-        result = 31 * result + entityImports.hashCode();
-        result = 31 * result + apiImports.hashCode();
         return result;
     }
 
@@ -128,8 +106,6 @@ public class Module {
                 ", databases=" + databases +
                 ", apis=" + apis +
                 ", models=" + models +
-                ", entityImports=" + entityImports +
-                ", apiImports=" + apiImports +
                 '}';
     }
 }
