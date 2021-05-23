@@ -3,7 +3,7 @@ package org.arch.framework.automate.generater.reader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.*;
-import org.arch.framework.automate.generater.core.configuration.XmindConfiguration;
+import org.arch.framework.automate.common.configuration.XmindConfiguration;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.arch.framework.automate.generater.reader.xmind.utils.XmindUtils;
 import org.springframework.stereotype.Service;

@@ -131,18 +131,20 @@ spring:
         resources: arch_module
         configuration: {
           driver: "com.mysql.cj.jdbc.Driver",
-          url: "jdbc:mysql://localhost:3306?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai",
+          url: "139.224.225.88",
+          port: 3306,
           username: "root",
-          password: "root"
+          password: "late856147"
         }
       - typ: database
         patterns: api
         resources: arch_module_api
         configuration: {
           driver: "com.mysql.cj.jdbc.Driver",
-          url: "jdbc:mysql://localhost:3306?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai",
+          url: "139.224.225.88",
+          port: 3306,
           username: "root",
-          password: "root"
+          password: "late856147"
         }
 
 

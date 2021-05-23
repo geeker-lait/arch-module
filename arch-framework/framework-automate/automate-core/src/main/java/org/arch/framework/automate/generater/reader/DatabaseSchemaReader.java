@@ -1,11 +1,14 @@
 package org.arch.framework.automate.generater.reader;
 
+import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.arch.framework.automate.common.configuration.DatabaseConfiguration;
 import org.arch.framework.automate.common.database.Database;
+import org.arch.framework.automate.common.database.Table;
+import org.arch.framework.automate.from.service.DatabaseService;
 import org.arch.framework.automate.generater.core.*;
-import org.arch.framework.automate.generater.core.ApiSchemaData;
-import org.arch.framework.automate.generater.core.configuration.DatabaseConfiguration;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DatabaseSchemaReader extends AbstractSchemaReader<DatabaseConfiguration> implements SchemaReadable {
 
-    //private final DatabaseSchemaService databaseSchemaService;
+    private final DatabaseService databaseService;
 
     @Override
     public SchemaType getTyp() {
@@ -40,21 +43,16 @@ public class DatabaseSchemaReader extends AbstractSchemaReader<DatabaseConfigura
         List<DatabaseSchemaData> databaseSchemaDatas = new ArrayList<>();
         // 获取数据库配置
         DatabaseConfiguration databaseConfiguration = readerConfiguration.getConfiguration();
-
         Database database = new Database();
         database.setName(databaseConfiguration.getDatabase());
-
-        // 动态链接数据库
-
         // 获取数据库的table
-        //List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(params.getDatabaseProperties(), params.getDatabaseName());
-        //return CollectionUtils.isEmpty(tableProperties) ? Lists.newArrayList() : tableProperties;
-        // 获取数据库的table
-        //List<TableProperties> tableProperties = databaseSchemaService.getTableProperties().apply(new DatabaseTablePropertiesParam(databaseProperties, res));
-        //databaseProperties.setName(res);
-        //databaseProperties.setTables(tableProperties);
-        //databaseProperties.setPattern(SchemaPattern.MVC.getPattern());
-        return databaseSchemaDatas;
+        List<Table> tables = databaseService.getDatabaseTablesInfo(databaseConfiguration, readerConfiguration.getResource());
+        database.getTables().addAll(tables);
+        DatabaseSchemaData databaseSchemaData = new DatabaseSchemaData();
+        databaseSchemaData.setDatabase(database);
+        databaseSchemaData.setSchemaPattern(SchemaPattern.MVC);
+        databaseSchemaDatas.add(databaseSchemaData);
+        return CollectionUtils.isEmpty(tables) ? Lists.newArrayList() : databaseSchemaDatas;
     }
 
     @Override
@@ -72,34 +70,4 @@ public class DatabaseSchemaReader extends AbstractSchemaReader<DatabaseConfigura
         readerConfiguration.setPattern(schemaPattern);
         return readerConfiguration;
     }
-
-//
-//    @Override
-//    protected List<SchemaPatternable> readMvc(String res, Map<String, String> configuration) {
-//
-//        // 获取数据库的table
-////            List<TableProperties> tableProperties = databaseService.getDatabaseTablesInfo(params.getDatabaseProperties(), params.getDatabaseName());
-////            return CollectionUtils.isEmpty(tableProperties) ? Lists.newArrayList() : tableProperties;
-//        DatabaseProperties databaseProperties = BeanUtil.toBean(configuration, DatabaseProperties.class);
-//        // 获取数据库的table
-//        List<TableProperties> tableProperties = databaseSchemaService.getTableProperties().apply(new DatabaseTablePropertiesParam(databaseProperties, res));
-//        databaseProperties.setName(res);
-//        databaseProperties.setTables(tableProperties);
-//        databaseProperties.setPattern(SchemaPattern.MVC.getPattern());
-//        return Arrays.asList(databaseProperties);
-//    }
-//
-//    @Override
-//    protected List<SchemaPatternable> readApi(String res, Map<String, String> configuration) {
-//        DatabaseProperties databaseProperties = BeanUtil.toBean(configuration, DatabaseProperties.class);
-//        // todo getApiProperties.apply 入参需要构建，暂时只用 res(为了不报错)   getApiProperties暂时是空实现
-//        List<MethodProperties> tableProperties = databaseSchemaService.getApiProperties().apply(res);
-//        databaseProperties.setName(res);
-//        databaseProperties.setApis(tableProperties);
-//        databaseProperties.setPattern(SchemaPattern.API.getPattern());
-//
-//        return Arrays.asList(databaseProperties);
-//    }
-
-
 }

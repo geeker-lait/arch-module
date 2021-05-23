@@ -1,6 +1,5 @@
-package org.arch.framework.automate.generater.core.configuration;
+package org.arch.framework.automate.common.configuration;
 
-import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import org.arch.framework.automate.generater.core.SchemaConfiguration;
 

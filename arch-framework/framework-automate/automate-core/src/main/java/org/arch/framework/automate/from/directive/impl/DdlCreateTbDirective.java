@@ -9,12 +9,15 @@ import org.arch.framework.automate.api.dto.DefinitionTableDto;
 import org.arch.framework.automate.api.dto.DirectiveRequestDto;
 import org.arch.framework.automate.api.dto.FormDefinitionJsonDto;
 import org.arch.framework.automate.api.response.CreateTableResponse;
+import org.arch.framework.automate.common.configuration.DatabaseConfiguration;
+import org.arch.framework.automate.from.ddl.DDLOperate;
 import org.arch.framework.automate.from.directive.SqlDirective;
 import org.arch.framework.automate.from.directive.SqlDirectiveCode;
 import org.arch.framework.automate.from.entity.FormDefinition;
 import org.arch.framework.automate.from.service.FormDefinitionService;
 import org.arch.framework.automate.from.utils.DefinitionTableUtil;
 import org.arch.framework.crud.Direction;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -40,12 +43,12 @@ public class DdlCreateTbDirective extends AbstractDirective implements SqlDirect
         if (StringUtils.isBlank(databaseName) || StringUtils.isBlank(tableName)) {
             return null;
         }
-//        DatabaseProperties properties = null;
-//        if (directiveRequest.getDataSource() != null) {
-//            properties = new DatabaseProperties();
-//            BeanUtils.copyProperties(directiveRequest.getDataSource(), properties);
-//        }
-//        DDLOperate ddlOperate = DDLOperate.selectDDLOperate(properties);
+        DatabaseConfiguration properties = null;
+        if (directiveRequest.getDataSource() != null) {
+            properties = new DatabaseConfiguration();
+            BeanUtils.copyProperties(directiveRequest.getDataSource(), properties);
+        }
+        DDLOperate ddlOperate = DDLOperate.selectDDLOperate(properties);
         FormDefinition formDefinition = new FormDefinition();
         formDefinition.setTableName(tableName);
         // 根据table 查询 数据

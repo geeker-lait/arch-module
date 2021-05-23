@@ -6,9 +6,9 @@ import lombok.ToString;
 import org.arch.framework.automate.generater.core.ConfigProperties;
 import org.arch.framework.automate.generater.core.SchemaConfiguration;
 import org.arch.framework.automate.generater.core.SchemaType;
-import org.arch.framework.automate.generater.core.configuration.DatabaseConfiguration;
-import org.arch.framework.automate.generater.core.configuration.ExcelFiledConfiguration;
-import org.arch.framework.automate.generater.core.configuration.XmindConfiguration;
+import org.arch.framework.automate.common.configuration.DatabaseConfiguration;
+import org.arch.framework.automate.common.configuration.ExcelFiledConfiguration;
+import org.arch.framework.automate.common.configuration.XmindConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +45,9 @@ public class SchemaProperties implements ConfigProperties {
             databaseConfiguration.setDriver(configuration.get("driver"));
             databaseConfiguration.setPassword(configuration.get("password"));
             databaseConfiguration.setUrl(configuration.get("url"));
+            databaseConfiguration.setPort(configuration.get("port"));
             databaseConfiguration.setUsername(configuration.get("username"));
+            databaseConfiguration.setDatabase(resources);
             return databaseConfiguration;
             // 转换为excle配置
         } else if (SchemaType.EXCEL.name().equalsIgnoreCase(typ)) {

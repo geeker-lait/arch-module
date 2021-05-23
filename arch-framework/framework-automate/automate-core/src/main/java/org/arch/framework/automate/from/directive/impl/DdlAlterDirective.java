@@ -1,17 +1,23 @@
 package org.arch.framework.automate.from.directive.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.arch.framework.automate.api.dto.DefinitionTableDto;
 import org.arch.framework.automate.api.dto.DirectiveRequestDto;
+import org.arch.framework.automate.api.dto.FormDefinitionJsonDto;
 import org.arch.framework.automate.api.response.AlterTableResponse;
+import org.arch.framework.automate.common.configuration.DatabaseConfiguration;
+import org.arch.framework.automate.from.ddl.DDLOperate;
 import org.arch.framework.automate.from.directive.SqlDirective;
 import org.arch.framework.automate.from.directive.SqlDirectiveCode;
 import org.arch.framework.automate.from.entity.FormDefinition;
 import org.arch.framework.automate.from.service.FormDefinitionService;
 import org.arch.framework.automate.from.utils.DefinitionTableUtil;
 import org.arch.framework.crud.Direction;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -33,12 +39,12 @@ public class DdlAlterDirective extends AbstractDirective implements SqlDirective
     public AlterTableResponse exec(DirectiveRequestDto directiveRequest) {
         String databaseName = DefinitionTableUtil.camelToUnderscore(directiveRequest.getDatabaseName());
         String tableName = DefinitionTableUtil.camelToUnderscore(directiveRequest.getTableName());
-//        DatabaseProperties properties = null;
-//        if (directiveRequest.getDataSource() != null) {
-//            properties = new DatabaseProperties();
-//            BeanUtils.copyProperties(directiveRequest.getDataSource(), properties);
-//        }
-//        DDLOperate ddlOperate = DDLOperate.selectDDLOperate(properties);
+        DatabaseConfiguration properties = null;
+        if (directiveRequest.getDataSource() != null) {
+            properties = new DatabaseConfiguration();
+            BeanUtils.copyProperties(directiveRequest.getDataSource(), properties);
+        }
+        DDLOperate ddlOperate = DDLOperate.selectDDLOperate(properties);
         if (StringUtils.isBlank(tableName) || StringUtils.isBlank(databaseName)) {
             return null;
         }
@@ -51,12 +57,12 @@ public class DdlAlterDirective extends AbstractDirective implements SqlDirective
         }
         String latestVersionJson = searchResult.getRecords().get(0).getDefinitionJson();
         // 修改表 时先 drop table 然后 create
-//        ddlOperate.dropTable(properties, databaseName, tableName);
-//        DefinitionTableDto definitionTableDto = DefinitionTableUtil.buildCreateParams(JSONObject.parseObject(latestVersionJson, FormDefinitionJsonDto.class));
-//        if (definitionTableDto == null) {
-//            return null;
-//        }
-//        ddlOperate.createTable(properties, definitionTableDto);
+        ddlOperate.dropTable(properties, databaseName, tableName);
+        DefinitionTableDto definitionTableDto = DefinitionTableUtil.buildCreateParams(JSONObject.parseObject(latestVersionJson, FormDefinitionJsonDto.class));
+        if (definitionTableDto == null) {
+            return null;
+        }
+        ddlOperate.createTable(properties, definitionTableDto);
         return null;
     }
 
