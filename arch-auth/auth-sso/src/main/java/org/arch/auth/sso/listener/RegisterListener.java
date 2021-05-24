@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.auth.sso.recommend.service.RecommendAndPromotionService;
 import org.arch.framework.event.RegisterEvent;
+import org.arch.framework.ums.enums.AccountType;
 import org.arch.framework.ums.userdetails.ArchUser;
+import org.arch.framework.utils.SecurityUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -37,7 +39,7 @@ public class RegisterListener implements ApplicationListener<RegisterEvent>, App
         // 记录日志
         log.info("用户注册成功: 租户: {}, identifier: {}, aid: {}, loginType: {}, source: {}",
                  archUser.getTenantId(), archUser.getUsername(), archUser.getAccountId(),
-                 archUser.getLoginType().name(), event.getSource());
+                 archUser.getLoginType(), event.getSource());
 
         // 用户推荐 或 推广统计
         userRecommendationOrPromotion(event.getSource());

@@ -25,7 +25,7 @@ public class AuthClientVo {
     private String clientSecret;
 
     /**
-     * openid/userinfo/token/code/资源服务器标识等
+     * scope id 列表, 如: openid/userinfo/token/code/资源服务器标识等
      */
     private String scopes;
 

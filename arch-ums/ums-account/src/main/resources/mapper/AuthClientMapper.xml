@@ -6,9 +6,9 @@
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="clientId" column="client_id" jdbcType="VARCHAR"/>
         <result property="clientSecret" column="client_secret" jdbcType="VARCHAR"/>
-        <result property="scopes" column="scopes" jdbcType="VARCHAR"/>
-        <result property="roleIds" column="role_ids" jdbcType="VARCHAR"/>
-        <result property="clientType" column="client_type" jdbcType="VARCHAR"/>
+        <result property="scopes" column="scopes" jdbcType="LONGVARCHAR"/>
+        <result property="roleIds" column="role_ids" jdbcType="LONGVARCHAR"/>
+        <result property="clientType" column="client_type" jdbcType="INTEGER"/>
         <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
         <result property="appId" column="app_id" jdbcType="INTEGER"/>
         <result property="storeId" column="store_id" jdbcType="INTEGER"/>

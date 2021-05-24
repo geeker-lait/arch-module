@@ -3,7 +3,6 @@ package org.arch.framework.ums.bean;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.arch.framework.ums.enums.LoginType;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
@@ -21,7 +20,7 @@ public class TokenInfo implements Serializable {
 
     @Builder
     public TokenInfo(Long identifierId, Long accountId, Integer tenantId, String accountName, String nickName, String avatar,
-                     LoginType loginType, Collection<GrantedAuthority> authorities) {
+                     Integer loginType, Collection<GrantedAuthority> authorities) {
         this.identifierId = identifierId;
         this.accountId = accountId;
         this.tenantId = tenantId;
@@ -60,7 +59,7 @@ public class TokenInfo implements Serializable {
     /**
      * 登录类型
      */
-    private LoginType loginType;
+    private Integer loginType;
 
     private Collection<GrantedAuthority> authorities;
 

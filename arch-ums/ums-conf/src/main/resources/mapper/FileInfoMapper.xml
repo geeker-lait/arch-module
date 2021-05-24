@@ -5,7 +5,7 @@
     <resultMap type="org.arch.ums.conf.entity.FileInfo" id="FileInfoMap">
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="aid" column="aid" jdbcType="INTEGER"/>
-        <result property="storageType" column="storage_type" jdbcType="VARCHAR"/>
+        <result property="storageType" column="storage_type" jdbcType="INTEGER"/>
         <result property="originalFileName" column="original_file_name" jdbcType="VARCHAR"/>
         <result property="size" column="size" jdbcType="INTEGER"/>
         <result property="suffix" column="suffix" jdbcType="VARCHAR"/>

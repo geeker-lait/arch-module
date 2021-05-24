@@ -57,7 +57,7 @@ public class BankCardSearchDto implements BaseSearchDto {
     /**
      * 卡类型:0: 储蓄卡, 1: 借记卡
      */
-    private String cardType;
+    private Integer cardType;
 
     /**
      * 基于user_id的顺序

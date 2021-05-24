@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
-import org.arch.framework.ums.enums.LoginType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -56,7 +55,7 @@ public class Identifier extends CrudEntity<Identifier> {
     /**
      * 登录类型：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
      */
-    private LoginType loginType;
+    private Integer loginType;
 
     /**
      * 租户 id

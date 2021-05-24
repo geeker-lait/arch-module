@@ -8,9 +8,9 @@ package org.arch.framework.ums.enums;
  */
 public enum LoginType {
     /**
-     * 本系统用户, 账号密码方式登录类型
+     * 用户名密码方式登录类型
      */
-    ACCOUNT,
+    USERNAME,
     /**
      * email 账号登录类型
      */

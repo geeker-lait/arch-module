@@ -36,7 +36,7 @@ public class OperateLogSearchDto implements BaseSearchDto {
     /**
      * 操作类型(crud)
      */
-    private OperatorType operatorType;
+    private Integer operatorType;
 
     /**
      * 操作时间

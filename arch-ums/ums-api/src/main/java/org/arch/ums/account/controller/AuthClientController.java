@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -59,6 +60,12 @@ public class AuthClientController implements CrudController<AuthClientRequest, A
         }
         else {
             authClient.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+        }
+        if (isNull(authClient.getScopes())) {
+            authClient.setScopes("");
+        }
+        if (isNull(authClient.getRoleIds())) {
+            authClient.setScopes("");
         }
         return authClient;
     }

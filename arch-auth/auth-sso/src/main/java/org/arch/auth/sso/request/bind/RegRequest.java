@@ -46,10 +46,10 @@ public class RegRequest implements Serializable {
     private String authorities;
 
     /**
-     * 登录类型: 站内用户(ACCOUNT), 邮箱(EMAIL), 手机(PHONE), 第三方(OAUTH2),
+     * 登录类型: 用户名密码(USERNAME), 邮箱(EMAIL), 手机(PHONE), 第三方(OAUTH2),
      * 由后端赋值
      */
-    private LoginType loginType;
+    private Integer loginType;
     /**
      * 头像
      */

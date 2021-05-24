@@ -82,7 +82,7 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
     @NonNull
     private Boolean hasPermissionOfApp(@NonNull HttpServletRequest request) {
         Set<String> scopeSet = getScopes(request);
-        return scopeSet.contains(ScopesType.JWK.name());
+        return scopeSet.contains("" + ScopesType.JWK.ordinal());
     }
 
     @NonNull

@@ -62,7 +62,7 @@ public class Permission extends CrudEntity<Permission> {
      * 权限类型：0->目录；1->菜单；2->按钮（接口绑定权限）, 4->链接
      */
     @TableField(value = "`resource_type`")
-    private ResourceType resourceType;
+    private Integer resourceType;
 
     /**
      * 排序

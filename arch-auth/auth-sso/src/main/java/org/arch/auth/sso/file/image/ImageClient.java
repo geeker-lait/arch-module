@@ -51,5 +51,5 @@ public interface ImageClient {
      * 获取云存储类型
      * @return  {@link StorageType}
      */
-    StorageType getStorageType();
+    Integer getStorageType();
 }

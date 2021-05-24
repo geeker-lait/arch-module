@@ -5,9 +5,9 @@
     <resultMap type="org.arch.ums.account.entity.OperateLog" id="OperateLogMap">
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="accountId" column="account_id" jdbcType="INTEGER"/>
-        <result property="operatorType" column="operator_type" jdbcType="VARCHAR"/>
+        <result property="operatorType" column="operator_type" jdbcType="INTEGER"/>
         <result property="operatorTime" column="operator_time" jdbcType="TIMESTAMP"/>
-        <result property="recordVal" column="record_val" jdbcType="VARCHAR"/>
+        <result property="recordVal" column="record_val" jdbcType="LONGVARCHAR"/>
         <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
         <result property="appId" column="app_id" jdbcType="INTEGER"/>
         <result property="storeId" column="store_id" jdbcType="INTEGER"/>

@@ -53,7 +53,6 @@ import top.dcenter.ums.security.core.oauth.properties.Auth2Properties;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -294,7 +293,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
                           userId, providerId, providerUserId);
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_ILLEGAL, userId);
             }
-            if (!Objects.equals(unbindingIdentifier.getLoginType(), OAUTH2)) {
+            if (!unbindingIdentifier.getLoginType().equals(OAUTH2.ordinal())) {
                 log.debug("用户 {} 进行解绑操作时, 只能解绑第三方的账号; providerId: {}, providerUserId: {}",
                           userId, providerId, providerUserId);
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_NOT_OAUTH2, userId);
@@ -369,7 +368,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
                     .setIdentifier(identifier)
                     .setCredential(passwordEncoder.encode(ssoProperties.getDefaultPassword()))
                     .setAuthorities(authorities)
-                    .setLoginType(OAUTH2);
+                    .setLoginType(OAUTH2.ordinal());
             // 绑定
             try {
                 accountIdentifierFeignService.save(identifierRequest);

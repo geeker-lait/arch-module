@@ -1,7 +1,6 @@
 package org.arch.framework.ums.userdetails;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.ums.enums.LoginType;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -68,7 +67,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
     /**
      * 登录类型【IDENTITY TYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
      */
-    private final LoginType loginType;
+    private final Integer loginType;
     /**
      * 昵称
      */
@@ -101,7 +100,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      */
     public ArchUser(String username, String password,
                     Long identifierId,
-                    Long accountId, Integer tenantId, LoginType loginType,
+                    Long accountId, Integer tenantId, Integer loginType,
                     String nickName, String avatar,
                     Collection<? extends GrantedAuthority> authorities) {
         this(username, password, identifierId, accountId, tenantId, loginType, nickName, avatar,
@@ -136,7 +135,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      */
     public ArchUser(String username, String password,
                     Long identifierId,
-                    Long accountId, Integer tenantId, LoginType loginType,
+                    Long accountId, Integer tenantId, Integer loginType,
                     String nickName, String avatar,
                     boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired,
                     boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
@@ -181,7 +180,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
 
     public Integer getTenantId() { return tenantId; }
 
-    public LoginType getLoginType() {
+    public Integer getLoginType() {
         return loginType;
     }
 
@@ -302,7 +301,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
         sb.append("AccountId: ").append(this.accountId.toString()).append("; ");
         sb.append("IdentifierId: ").append(this.identifierId.toString()).append("; ");
         sb.append("TenantId: ").append(this.tenantId.toString()).append("; ");
-        sb.append("LoginType: ").append(this.loginType.name()).append("; ");
+        sb.append("LoginType: ").append(this.loginType).append("; ");
         sb.append("Username: ").append(this.username).append("; ");
         sb.append("Password: [PROTECTED]; ");
         sb.append("Enabled: ").append(this.enabled).append("; ");
@@ -438,7 +437,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
         private Long identifierId;
         private Long accountId;
         private Integer tenantId;
-        private LoginType loginType;
+        private Integer loginType;
         private String nickName;
         private String avatar;
         private String username;
@@ -501,7 +500,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
          * @return the {@link ArchUser.UserBuilder} for method chaining (i.e. to populate
          * additional attributes for this user)
          */
-        public ArchUser.UserBuilder loginType(LoginType loginType) {
+        public ArchUser.UserBuilder loginType(Integer loginType) {
             Assert.notNull(loginType, "loginType cannot be null");
             this.loginType = loginType;
             return this;

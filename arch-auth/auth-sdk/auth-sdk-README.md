@@ -109,9 +109,8 @@ ums:
       - ROLE_USER > ROLE_VOTE
 ```
 
-4. 开发时: account_auth_client 添加记录: 注意, 暂时用字符串, 启用数据字典后用相应的数据字典 id.
+4. 开发时: account_auth_client 添加记录: 
 ```sql
-insert into `account_auth_client` (`client_id`, `client_secret`, `scopes`, `client_type`) values('006', '006', 'AUTH,
-OAUTH2,
-OSS,UMS,ACCOUNT,USER,MEMBER,MERCHANT,PMS,OMS,JWK,PAY,MARKETING,WATCHDOG', 'ums-api');
+insert into `account_auth_client` (`client_id`, `client_secret`, `scopes`, `client_type`) 
+values('006', '006', '0,1,2,3,4,5,6,7,8,9,10,11,12,13', 3);
 ```

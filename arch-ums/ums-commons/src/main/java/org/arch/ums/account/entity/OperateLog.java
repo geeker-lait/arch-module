@@ -1,6 +1,5 @@
 package org.arch.ums.account.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -9,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
-import org.arch.framework.ums.enums.OperatorType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -45,7 +43,7 @@ public class OperateLog extends CrudEntity<OperateLog> {
      * 操作类型(crud)
      */
     @TableField(value = "`operator_type`")
-    private OperatorType operatorType;
+    private Integer operatorType;
 
     /**
      * 操作时间

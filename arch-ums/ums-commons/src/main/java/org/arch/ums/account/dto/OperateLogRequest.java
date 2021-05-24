@@ -35,7 +35,7 @@ public class OperateLogRequest implements Serializable {
     /**
      * 操作类型(crud)
      */
-    private OperatorType operatorType;
+    private Integer operatorType;
 
     /**
      * 操作时间

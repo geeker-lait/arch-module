@@ -1,12 +1,13 @@
 package code.entity;
 
-import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * 账号-授权客户端(account_oauth_client)实体类
@@ -36,7 +37,7 @@ public class AccountOauthClient extends Model<AccountOauthClient> implements Ser
      */
     private String appCode;
     /**
-     * openid/userinfo/token/code/资源服务器标识等
+     * scope id 列表, 如: openid/userinfo/token/code/资源服务器标识等
      */
     private String scopes;
     /**

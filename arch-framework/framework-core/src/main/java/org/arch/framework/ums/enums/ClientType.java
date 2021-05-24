@@ -26,5 +26,9 @@ public enum ClientType {
     /**
      * 第三方
      */
-    THIRD_PART
+    THIRD_PART,
+    /**
+     * 网页
+     */
+    WEB
 }

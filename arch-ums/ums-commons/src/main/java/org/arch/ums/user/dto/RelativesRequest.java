@@ -36,7 +36,7 @@ public class RelativesRequest implements Serializable {
     /**
      * 亲朋类型: 1. 家属, 2. 朋友
      */
-    private RelativesType relativesType;
+    private Integer relativesType;
 
     /**
      * 亲朋名称: 哥哥, 妹妹, 父亲, 母亲, 弟弟, 朋友, 同学

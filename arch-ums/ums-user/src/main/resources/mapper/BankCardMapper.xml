@@ -9,7 +9,7 @@
         <result property="cardBin" column="card_bin" jdbcType="VARCHAR"/>
         <result property="cardCode" column="card_code" jdbcType="VARCHAR"/>
         <result property="cvv" column="cvv" jdbcType="VARCHAR"/>
-        <result property="cardType" column="card_type" jdbcType="VARCHAR"/>
+        <result property="cardType" column="card_type" jdbcType="INTEGER"/>
         <result property="sorted" column="sorted" jdbcType="INTEGER"/>
         <result property="validity" column="validity" jdbcType="DATE"/>
         <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>

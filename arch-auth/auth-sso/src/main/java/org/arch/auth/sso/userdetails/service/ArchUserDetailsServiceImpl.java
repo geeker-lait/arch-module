@@ -370,7 +370,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                              .credential(passwordEncoder.encode(ssoProperties.getDefaultPassword()))
                              .authorities(authorities)
                              .avatar(ofNullable(authUser.getAvatar()).orElse(ssoProperties.getDefaultAvatar()))
-                             .loginType(LoginType.OAUTH2)
+                             .loginType(LoginType.OAUTH2.ordinal())
                              .nickName(authUser.getUsername())
                              .source(source)
                              .build();
@@ -394,7 +394,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                              .credential(passwordEncoder.encode(ssoProperties.getDefaultPassword()))
                              .authorities(authorities)
                              .avatar(ssoProperties.getDefaultAvatar())
-                             .loginType(LoginType.PHONE)
+                             .loginType(LoginType.PHONE.ordinal())
                              .nickName(mobile)
                              .source(source)
                              .build();
@@ -424,7 +424,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                              .credential(passwordEncoder.encode(regRequest.getPassword()))
                              .authorities(authorities)
                              .avatar(avatar)
-                             .loginType(LoginType.ACCOUNT)
+                             .loginType(LoginType.USERNAME.ordinal())
                              .nickName(regRequest.getNickName())
                              .source(source)
                              .build();

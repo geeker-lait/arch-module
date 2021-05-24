@@ -167,7 +167,7 @@ public class SecurityUtils {
         Optional<AccountType> accountTypeOpt =
                 Arrays.stream(AccountType.values())
                       .filter(type -> {
-                          int idLengthNonBizPrefix = type.getIdLength();
+                          int idLengthNonBizPrefix = type.getIdLengthNonBizPrefix();
                           int end = id.length() - idLengthNonBizPrefix;
                           if (end < 1) {
                               throw new BusinessException(EXTRACT_ACCOUNT_TYPE, new Object[]{aid}, "提取账号类型失败");
@@ -203,7 +203,7 @@ public class SecurityUtils {
         Long accountId = Long.valueOf(jwt.getClaimAsString(JwtArchClaimNames.ACCOUNT_ID.getClaimName()));
         Long identifierId = Long.valueOf(jwt.getClaimAsString(JwtArchClaimNames.IDENTIFIER_ID.getClaimName()));
         Integer tenantId = Integer.valueOf(jwt.getClaimAsString(JwtArchClaimNames.TENANT_ID.getClaimName()));
-        LoginType loginType = LoginType.valueOf(jwt.getClaimAsString(JwtArchClaimNames.LOGIN_TYPE.getClaimName()));
+        Integer loginType = Integer.valueOf(jwt.getClaimAsString(JwtArchClaimNames.LOGIN_TYPE.getClaimName()));
         return TokenInfo.builder()
                         .identifierId(identifierId)
                         .accountId(accountId)

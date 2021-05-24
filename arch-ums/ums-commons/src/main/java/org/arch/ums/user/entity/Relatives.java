@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
-import org.arch.framework.ums.enums.RelativesType;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -45,7 +44,7 @@ public class Relatives extends CrudEntity<Relatives> {
      * 亲朋类型: 1. 家属, 2. 朋友
      */
     @TableField(value = "`relatives_type`")
-    private RelativesType relativesType;
+    private Integer relativesType;
 
     /**
      * 亲朋名称: 哥哥, 妹妹, 父亲, 母亲, 弟弟, 朋友, 同学

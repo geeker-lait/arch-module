@@ -61,7 +61,7 @@ public class ArchUsernamePasswordAuthenticationProvider extends UsernamePassword
 
     private boolean isValidLoginType(ArchUser archUser) {
         // 是否是密码校验类型, 非密码校验类型(PHONE/OAUTH2) 则返回 false
-        return LoginType.ACCOUNT.equals(archUser.getLoginType())
-               || LoginType.EMAIL.equals(archUser.getLoginType());
+        return archUser.getLoginType().equals(LoginType.USERNAME.ordinal())
+               || archUser.getLoginType().equals(LoginType.EMAIL.ordinal());
     }
 }

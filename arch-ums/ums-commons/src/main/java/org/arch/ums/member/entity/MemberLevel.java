@@ -1,7 +1,5 @@
 package org.arch.ums.member.entity;
 
-import java.time.LocalDateTime;
-
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -12,6 +10,7 @@ import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 会员级别(MemberLevel) 实体类
@@ -41,13 +40,13 @@ public class MemberLevel extends CrudEntity<MemberLevel> {
     private String memberName;
 
     /**
-     * 成长值, 默认0
+     * 成长值
      */
     @TableField(value = "`growth_value`")
     private Long growthValue;
 
     /**
-     * 推荐人数量, 默认0
+     * 推荐人数量
      */
     @TableField(value = "`referrer_num`")
     private Long referrerNum;

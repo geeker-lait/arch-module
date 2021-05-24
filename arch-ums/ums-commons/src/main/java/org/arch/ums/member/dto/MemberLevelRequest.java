@@ -32,12 +32,12 @@ public class MemberLevelRequest implements Serializable {
     private String memberName;
 
     /**
-     * 成长值, 默认0
+     * 成长值
      */
     private Long growthValue;
 
     /**
-     * 推荐人数量, 默认0
+     * 推荐人数量
      */
     private Long referrerNum;
 

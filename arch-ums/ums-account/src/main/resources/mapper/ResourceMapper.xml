@@ -7,7 +7,7 @@
         <result property="categoryId" column="category_id" jdbcType="INTEGER"/>
         <result property="resourceName" column="resource_name" jdbcType="VARCHAR"/>
         <result property="resourceCode" column="resource_code" jdbcType="VARCHAR"/>
-        <result property="resourceType" column="resource_type" jdbcType="VARCHAR"/>
+        <result property="resourceType" column="resource_type" jdbcType="INTEGER"/>
         <result property="resourceVal" column="resource_val" jdbcType="VARCHAR"/>
         <result property="resourcePath" column="resource_path" jdbcType="VARCHAR"/>
         <result property="resourceIcon" column="resource_icon" jdbcType="VARCHAR"/>

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
 import org.arch.framework.encrypt.EncryptField;
-import org.arch.framework.ums.enums.ClientType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -50,7 +49,7 @@ public class AuthClient extends CrudEntity<AuthClient> {
     private String clientSecret;
 
     /**
-     * openid/userinfo/token/code/资源服务器标识等
+     * scope id 列表, 如: openid/userinfo/token/code/资源服务器标识等
      */
     @TableField(value = "`scopes`")
     private String scopes;
@@ -65,7 +64,7 @@ public class AuthClient extends CrudEntity<AuthClient> {
      * 客户端类型: web, 安卓, ios, 小程序…
      */
     @TableField(value = "`client_type`")
-    private ClientType clientType;
+    private Integer clientType;
 
     /**
      * 租户 id

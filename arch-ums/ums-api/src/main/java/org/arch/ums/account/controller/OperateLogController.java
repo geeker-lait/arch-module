@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -54,6 +55,10 @@ public class OperateLogController implements CrudController<OperateLogRequest, O
         }
         else {
             operateLog.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+        }
+        // 如果 recordVal 为 null , recordVal 设置默认值 ""
+        if (isNull(operateLog.getRecordVal())) {
+            operateLog.setRecordVal("");
         }
         return operateLog;
     }

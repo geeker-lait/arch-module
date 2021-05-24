@@ -16,7 +16,7 @@ public enum AddressType {
      */
     HOME,
     /**
-     * 收获地址
+     * 收货地址
      */
     RECEIVE
 

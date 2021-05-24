@@ -35,7 +35,7 @@ public class TicketRequest implements Serializable {
     /**
      * 券类型：打折，优惠，抵用....
      */
-    private TicketType ticketType;
+    private Integer ticketType;
 
     /**
      * 券号

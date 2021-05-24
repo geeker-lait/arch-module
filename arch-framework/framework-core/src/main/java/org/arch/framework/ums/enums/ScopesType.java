@@ -14,7 +14,7 @@ public enum ScopesType {
     /**
      * 访问认证服务模块的 服务权限
      */
-    AUTH,
+    SSO,
     /**
      * 访问统一认证系统的 服务权限
      */

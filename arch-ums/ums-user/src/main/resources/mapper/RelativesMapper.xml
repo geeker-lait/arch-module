@@ -5,7 +5,7 @@
     <resultMap type="org.arch.ums.user.entity.Relatives" id="RelativesMap">
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
-        <result property="relativesType" column="relatives_type" jdbcType="VARCHAR"/>
+        <result property="relativesType" column="relatives_type" jdbcType="INTEGER"/>
         <result property="relativesName" column="relatives_name" jdbcType="VARCHAR"/>
         <result property="relativesSex" column="relatives_sex" jdbcType="INTEGER"/>
         <result property="sorted" column="sorted" jdbcType="INTEGER"/>

@@ -45,7 +45,7 @@ public class FileInfo extends CrudEntity<FileInfo> {
      * 存储类型: aws/aliyun/minio/tencent/qiniu/local/nginx
      */
     @TableField(value = "`storage_type`")
-    private StorageType storageType;
+    private Integer storageType;
 
     /**
      * 原始文件名称

@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
-import org.arch.framework.ums.enums.RelativesType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,7 +36,7 @@ public class RelativesSearchDto implements BaseSearchDto {
     /**
      * 亲朋类型: 1. 家属, 2. 朋友
      */
-    private RelativesType relativesType;
+    private Integer relativesType;
 
     /**
      * 亲朋名称: 哥哥, 妹妹, 父亲, 母亲, 弟弟, 朋友, 同学

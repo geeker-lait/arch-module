@@ -87,7 +87,7 @@ public class ArchJwtCacheTransformServiceImpl implements JwtCacheTransformServic
                             .accountId(Long.valueOf(jwt.getClaimAsString(ACCOUNT_ID.getClaimName())))
                             .tenantId(Integer.valueOf(jwt.getClaimAsString(TENANT_ID.getClaimName())))
                             .accountName(jwt.getClaimAsString(principalClaimName))
-                            .loginType(LoginType.valueOf(jwt.getClaimAsString(LOGIN_TYPE.getClaimName())))
+                            .loginType(Integer.valueOf(jwt.getClaimAsString(LOGIN_TYPE.getClaimName())))
                             .nickName(jwt.getClaimAsString(NICK_NAME.getClaimName()))
                             .avatar(jwt.getClaimAsString(AVATAR.getClaimName()))
                             .authorities(authorities)

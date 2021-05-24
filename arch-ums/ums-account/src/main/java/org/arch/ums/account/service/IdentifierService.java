@@ -207,7 +207,6 @@ public class IdentifierService extends CrudService<Identifier, Long> {
         Map<String, Object> params = new LinkedHashMap<>(3, 1.F);
         params.put("tenant_id", tenantId);
         params.put("identifier", identifier);
-        params.put("login_type", LoginType.OAUTH2);
         params.put("deleted", 0);
 
         Wrapper<Identifier> queryWrapper = Wrappers.<Identifier>query().allEq(params);
@@ -274,7 +273,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
         params.put("tenant_id", tenantId);
         params.put("identifier", identifier);
         params.put("aid", aid);
-        params.put("login_type", LoginType.OAUTH2);
+        params.put("login_type", LoginType.OAUTH2.ordinal());
         params.put("deleted", 0);
         Wrapper<Identifier> queryWrapper = Wrappers.<Identifier>query().allEq(params);
         Identifier accountIdentifier = findOneBySpec(queryWrapper);
@@ -404,7 +403,7 @@ public class IdentifierService extends CrudService<Identifier, Long> {
         LambdaQueryWrapper<Identifier> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(Identifier::getTenantId, tenantId)
                     .eq(Identifier::getAid, accountId)
-                    .eq(Identifier::getLoginType, LoginType.OAUTH2)
+                    .eq(Identifier::getLoginType, LoginType.OAUTH2.ordinal())
                     .eq(Identifier::getDeleted, Boolean.FALSE)
                     .select(Identifier::getId, Identifier::getAid, Identifier::getIdentifier);
         List<Identifier> identifierList = identifierDao.list(queryWrapper);

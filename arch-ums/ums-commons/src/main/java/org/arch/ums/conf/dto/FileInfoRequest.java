@@ -36,7 +36,7 @@ public class FileInfoRequest implements Serializable {
     /**
      * 存储类型: aws/aliyun/minio/tencent/qiniu/local/nginx
      */
-    private StorageType storageType;
+    private Integer storageType;
 
     /**
      * 原始文件名称

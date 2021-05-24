@@ -5,7 +5,7 @@
     <resultMap type="org.arch.ums.account.entity.Ticket" id="TicketMap">
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="accountId" column="account_id" jdbcType="INTEGER"/>
-        <result property="ticketType" column="ticket_type" jdbcType="VARCHAR"/>
+        <result property="ticketType" column="ticket_type" jdbcType="INTEGER"/>
         <result property="ticketNo" column="ticket_no" jdbcType="VARCHAR"/>
         <result property="ticketVal" column="ticket_val" jdbcType="VARCHAR"/>
         <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>

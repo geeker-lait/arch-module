@@ -1,6 +1,5 @@
 package org.arch.ums.account.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -9,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
-import org.arch.framework.ums.enums.ResourceType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -57,7 +55,7 @@ public class Resource extends CrudEntity<Resource> {
      * 类型: 1目录, 2菜单, 3按钮, 4链接
      */
     @TableField(value = "`resource_type`")
-    private ResourceType resourceType;
+    private Integer resourceType;
 
     /**
      * 资源值

@@ -39,7 +39,7 @@ public class AuthClientSearchDto implements BaseSearchDto {
     private String clientSecret;
 
     /**
-     * openid/userinfo/token/code/资源服务器标识等
+     * scope id 列表, 如: openid/userinfo/token/code/资源服务器标识等
      */
     private String scopes;
 
@@ -51,7 +51,7 @@ public class AuthClientSearchDto implements BaseSearchDto {
     /**
      * 客户端类型: web, 安卓, ios, 小程序…
      */
-    private ClientType clientType;
+    private Integer clientType;
 
     /**
      * 租户 id

@@ -1,11 +1,11 @@
 package org.arch.application.demo.ums.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
-import org.arch.framework.ums.enums.LoginType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -50,7 +50,7 @@ public class IdentifierSearchDto implements BaseSearchDto {
     /**
      * 登录类型：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
      */
-    private LoginType loginType;
+    private Integer loginType;
 
     /**
      * 租户 id

@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUtil;
 import org.arch.auth.sso.exception.GlobalFileException;
 import org.arch.auth.sso.file.FileInfoDto;
 import org.arch.auth.sso.utils.FileUtil;
-import org.arch.framework.ums.enums.StorageType;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
@@ -28,11 +27,11 @@ import static java.util.Objects.isNull;
  * @since 2021.2.27 11:51
  */
 public abstract class BaseImageClient implements ImageClient {
-    protected StorageType storageType;
+    protected Integer storageType;
     protected String newFileName;
     protected String suffix;
 
-    public BaseImageClient(StorageType storageType) {
+    public BaseImageClient(Integer storageType) {
         this.storageType = storageType;
     }
 
@@ -42,11 +41,11 @@ public abstract class BaseImageClient implements ImageClient {
         try {
             String originalFilename = file.getOriginalFilename();
             if (!StringUtils.hasText(originalFilename)) {
-                throw new GlobalFileException("[" + this.storageType.name() + "]文件上传失败：获取不到原始的文件名称");
+                throw new GlobalFileException("存储类型[" + this.storageType + "]文件上传失败：获取不到原始的文件名称");
             }
             return this.uploadImg(file.getInputStream(), originalFilename);
         } catch (IOException e) {
-            throw new GlobalFileException("[" + this.storageType.name() + "]文件上传失败：" + e.getMessage());
+            throw new GlobalFileException("存储类型[" + this.storageType + "]文件上传失败：" + e.getMessage());
         }
     }
 
@@ -57,7 +56,7 @@ public abstract class BaseImageClient implements ImageClient {
             InputStream is = new BufferedInputStream(new FileInputStream(file));
             return this.uploadImg(is, file.getName());
         } catch (FileNotFoundException e) {
-            throw new GlobalFileException("[" + this.storageType.name() + "]文件上传失败：" + e.getMessage());
+            throw new GlobalFileException("存储类型[" + this.storageType + "]文件上传失败：" + e.getMessage());
         }
     }
 
@@ -72,7 +71,8 @@ public abstract class BaseImageClient implements ImageClient {
         }
         this.suffix = FileUtil.getSuffix(fileName);
         if (!FileUtil.isPicture(this.suffix)) {
-            throw new GlobalFileException("[" + this.storageType.name() + "] 非法的图片文件[" + fileName + "]！目前只支持以下图片格式：[jpg, jpeg, png, gif, bmp]");
+            throw new GlobalFileException("存储类型[" + this.storageType + "] 非法的图片文件[" + fileName + "]！" +
+                                                  "目前只支持以下图片格式：[jpg, jpeg, png, gif, bmp]");
         }
         String newFileName = DateUtil.format(new Date(), "yyyyMMddHHmmssSSS");
         String uuid = UuidUtils.getUUID().substring(0, 6);
@@ -85,7 +85,7 @@ public abstract class BaseImageClient implements ImageClient {
     protected abstract void check();
 
     @Override
-    public StorageType getStorageType() {
+    public Integer getStorageType() {
         return this.storageType;
     }
 }

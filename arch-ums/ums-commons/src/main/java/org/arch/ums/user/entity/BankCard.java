@@ -3,7 +3,6 @@ package org.arch.ums.user.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -71,7 +70,7 @@ public class BankCard extends CrudEntity<BankCard> {
      * 卡类型:0: 储蓄卡, 1: 借记卡
      */
     @TableField(value = "`card_type`")
-    private String cardType;
+    private Integer cardType;
 
     /**
      * 基于user_id的顺序

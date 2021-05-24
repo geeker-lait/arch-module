@@ -47,7 +47,7 @@ public class ResourceSearchDto implements BaseSearchDto {
     /**
      * 类型: 1目录, 2菜单, 3按钮, 4链接
      */
-    private ResourceType resourceType;
+    private Integer resourceType;
 
     /**
      * 资源值

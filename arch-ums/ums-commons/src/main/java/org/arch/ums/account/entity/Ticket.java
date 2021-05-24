@@ -1,9 +1,5 @@
 package org.arch.ums.account.entity;
 
-import java.time.LocalDateTime;
-
-import org.arch.framework.ums.enums.TicketType;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -14,6 +10,7 @@ import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 账号-券(Ticket) 实体类
@@ -46,7 +43,7 @@ public class Ticket extends CrudEntity<Ticket> {
      * 券类型：打折，优惠，抵用....
      */
     @TableField(value = "`ticket_type`")
-    private TicketType ticketType;
+    private Integer ticketType;
 
     /**
      * 券号

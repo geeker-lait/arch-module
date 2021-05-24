@@ -46,9 +46,9 @@ public class ArchUserDeserializer extends StdDeserializer<ArchUser> {
         String loginTypeString = this.readJsonNode(jsonNode, "loginType").asText("");
         JsonNode nickName = this.readJsonNode(jsonNode, "nickName");
         JsonNode avatar = this.readJsonNode(jsonNode, "avatar");
-        LoginType loginType;
+        int loginType;
         try {
-            loginType = LoginType.valueOf(loginTypeString.trim().toUpperCase());
+            loginType = Integer.parseInt(loginTypeString.trim());
         }
         catch (Exception e) {
             throw new InvalidFormatException(jp,
