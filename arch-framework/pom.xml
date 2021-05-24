@@ -18,6 +18,8 @@
         <module>framework-core</module>
         <module>framework-utils</module>
         <module>framework-mq</module>
+        <module>framework-config</module>
+        <module>framework-spi</module>
     </modules>
 
 </project>
