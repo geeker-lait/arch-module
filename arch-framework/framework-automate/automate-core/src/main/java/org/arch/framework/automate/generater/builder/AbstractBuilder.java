@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
@@ -126,6 +128,10 @@ public abstract class AbstractBuilder {
             if (schemaData.getSchemaPattern() == SchemaPattern.MVC) {
                 String currentPkg = buildAndGetCurrentPkg(path, projectProperties, documentProperties, schemaData);
                 Path cpath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
+                List<Interfac> interfaces = new ArrayList<>();
+                if (schemaData.getApi() != null && schemaData.getApi().getInterfaces().size() > 0) {
+                    interfaces.addAll(schemaData.getApi().getInterfaces());
+                }
                 for (Table table : schemaData.getDatabase().getTables()) {
                     tableSchemaToCamel(table);
                     String fileName = buildFileName(documentProperties, table.getName(), projectProperties.getStuffixed());
@@ -135,7 +141,7 @@ public abstract class AbstractBuilder {
                     buildFile(projectProperties.getCover(), filePath);
                     Map<String, Object> dataMap = buildData(projectProperties, documentProperties, table);
                     dataMap.put("package", currentPkg);
-
+                    dataMap.put("interfaces", interfaces);
                     // 获取模板并渲染
                     String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
                     // 写入文件
@@ -154,8 +160,9 @@ public abstract class AbstractBuilder {
             if (schemaData.getSchemaPattern() == SchemaPattern.API) {
                 String currentPkg = buildAndGetCurrentPkg(path, projectProperties, documentProperties, schemaData);
                 Path cpath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
+                List<Interfac> interfaces = schemaData.getApi().getInterfaces();
                 // 写入文件
-                for (Interfac interfac : schemaData.getApi().getInterfaces()) {
+                for (Interfac interfac : interfaces) {
                     String fileName = buildFileName(documentProperties, interfac.getName(), projectProperties.getStuffixed());
                     String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
                     Path filePath = Paths.get(cpath.toString().concat(File.separator).concat(fileName).concat(ext));
