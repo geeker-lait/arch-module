@@ -35,6 +35,7 @@
         <module>arch-rule</module>
         <module>arch-ums</module>
         <module>arch-workflow</module>
+        <module>arch-sms</module>
     </modules>
 
 
