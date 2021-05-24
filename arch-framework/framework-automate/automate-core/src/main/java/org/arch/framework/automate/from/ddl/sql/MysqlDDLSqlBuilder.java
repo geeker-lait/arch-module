@@ -127,7 +127,7 @@ public class MysqlDDLSqlBuilder {
             }
         }
         // 处理 主键 设置主键
-        String pkStr = "\tPRIMARY KEY (`id`) ";
+        String pkStr = "\tPRIMARY KEY (`{0}`) ";
         String formatValue = pkIsBlank ? "id" : record.getPk();
         fieldAndIndexList.add(MessageFormat.format(pkStr, formatValue));
         stringBuilder.append(Joiner.on(",\n").skipNulls().join(fieldAndIndexList));
