@@ -15,5 +15,5 @@ public class ModuleEntity {
     private String type;
     private String scope;
     private String pattern;
-    private String documentTypes;
+    private String documentTyps;
 }

@@ -8,7 +8,7 @@ spring:
       cover: true
       author: lait
       domain: true
-      path: ../../
+      path: E:\\Workspaces\\Java\\Projects\\Geeker
       basePkg: org.arch.gen
       pom:
         artifactId: arch-test

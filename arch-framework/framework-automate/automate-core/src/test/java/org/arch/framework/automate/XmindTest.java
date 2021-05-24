@@ -17,7 +17,7 @@ import org.springframework.core.io.Resource;
 import java.io.File;
 import java.io.IOException;
 
-import static org.arch.framework.automate.generater.reader.xmind.utils.XmindUtils.generate;
+import static org.arch.framework.automate.generater.reader.xmind.parser.XmindProjectParser.generate;
 
 /**
  * @ClassName XmindTest

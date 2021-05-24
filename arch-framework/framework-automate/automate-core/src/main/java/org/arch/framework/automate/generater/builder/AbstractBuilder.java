@@ -2,10 +2,10 @@ package org.arch.framework.automate.generater.builder;
 
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.common.api.Interfac;
+import org.arch.framework.automate.common.api.Model;
 import org.arch.framework.automate.common.database.Table;
 import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
@@ -35,6 +35,7 @@ import java.util.regex.Matcher;
 public abstract class AbstractBuilder {
     @Autowired
     private GeneratorConfig generatorConfig;
+
     /**
      * 获取包命名
      *
@@ -83,7 +84,7 @@ public abstract class AbstractBuilder {
         dataMap.putAll(JSONUtil.parseObj(projectProperties));
         dataMap.putAll(JSONUtil.parseObj(documentProperties));
         dataMap.putAll(JSONUtil.parseObj(metadata));
-        dataMap.put("documents",generatorConfig.getDocuments());
+        dataMap.put("documents", generatorConfig.getDocuments());
         dataMap.put("author", projectProperties.getAuthor());
         dataMap.put("cover", projectProperties.getCover());
         return dataMap;
@@ -169,6 +170,23 @@ public abstract class AbstractBuilder {
                     String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
                     // 写入文件
                     Files.write(filePath, code.getBytes());
+
+                    // 写入input and output
+                    Map<String, Object> inMap = new HashMap<>();
+                    for (Model im : interfac.getInModels()) {
+                        Path rp = cpath;
+                        if (StringUtils.isNoneBlank(im.getPkg())) {
+                            rp = cpath.resolve(Paths.get(im.getPkg().replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
+                            inMap.put("package", currentPkg + "." + im.getPkg());
+                        } else {
+                            inMap.put("package", currentPkg);
+                        }
+                        rp = Paths.get(rp.toString().concat(File.separator).concat(im.getName()).concat(ext));
+                        inMap.put("model", im);
+                        // 获取模板并渲染
+                        String coder = templateEngine.getTemplate("dto.ftl").render(inMap);
+                        Files.write(rp, coder.getBytes());
+                    }
                 }
             }
         } catch (IOException e) {

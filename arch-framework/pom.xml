@@ -17,7 +17,7 @@
         <module>framework-beans</module>
         <module>framework-core</module>
         <module>framework-utils</module>
-        <module>framework-msg</module>
+        <module>framework-mq</module>
     </modules>
 
 </project>
