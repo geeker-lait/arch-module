@@ -28,7 +28,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.CommonStatusCode.EXTRACT_ACCOUNT_TYPE;
@@ -160,26 +162,31 @@ public class SecurityUtils {
     @NonNull
     public static AccountType extractAccountTypeByAid(@NonNull Long aid) {
         String id = aid.toString();
+        // 账号 id 必为 17 位
         // 17 = 年  日  日内的秒数 redis原子自增(20 234 86399 0000001)
-        int end = id.length() - 17;
-        if (end < 1) {
-            throw new BusinessException(EXTRACT_ACCOUNT_TYPE, new Object[]{aid}, "提取账号类型失败");
-        }
-        String bizPrefix = id.substring(0, end);
+        Optional<AccountType> accountTypeOpt =
+                Arrays.stream(AccountType.values())
+                      .filter(type -> {
+                          int idLengthNonBizPrefix = type.getIdLength();
+                          int end = id.length() - idLengthNonBizPrefix;
+                          if (end < 1) {
+                              throw new BusinessException(EXTRACT_ACCOUNT_TYPE, new Object[]{aid}, "提取账号类型失败");
+                          }
+                          String bizPrefix = id.substring(0, end);
 
-        if (bizPrefix.equals(IdKey.UMS_MEMBER_ID.getBizPrefix())) {
-            return AccountType.MEMBER;
-        }
-        if (bizPrefix.equals(IdKey.UMS_MERCHANT_ID.getBizPrefix())) {
-            return AccountType.MERCHANT;
-        }
-        if (bizPrefix.equals(IdKey.UMS_ACCOUNT_ID.getBizPrefix())) {
-            return AccountType.ACCOUNT;
-        }
-        if (bizPrefix.equals(IdKey.UMS_USER_ID.getBizPrefix())) {
-            return AccountType.USER;
+
+                          if (bizPrefix.equals(type.getIdKey().getBizPrefix())) {
+                              return true;
+                          }
+                          return false;
+                      })
+                      .findFirst();
+
+        if (accountTypeOpt.isPresent()) {
+            return accountTypeOpt.get();
         }
         throw new BusinessException(EXTRACT_ACCOUNT_TYPE, new Object[]{aid}, "提取账号类型失败");
+
     }
 
     /**
