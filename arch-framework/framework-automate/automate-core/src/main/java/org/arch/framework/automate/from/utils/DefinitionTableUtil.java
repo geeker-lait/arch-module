@@ -8,11 +8,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.arch.framework.automate.api.dto.DefinitionTableDto;
 import org.arch.framework.automate.api.dto.FormDefinitionJsonDto;
-import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,7 +20,6 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class DefinitionTableUtil {
-
 
 
     /**
@@ -43,6 +38,7 @@ public class DefinitionTableUtil {
 
     /**
      * 对 table json 数据实体进行校验
+     *
      * @param dto
      */
     public static void check(FormDefinitionJsonDto dto) {
@@ -86,17 +82,18 @@ public class DefinitionTableUtil {
                     return unique.setComment(uniqueList.getComment())
                             .setFieldList(uniqueList.getFiled().stream().map(DefinitionTableUtil::camelToUnderscore).collect(Collectors.toList()))
                             .setName(StringUtils.isNotBlank(uniqueList.getName()) ? uniqueList.getName() : "unique_" + Joiner.on("_").join(unique.getFieldList()));
-        }).collect(Collectors.toList()));
+                }).collect(Collectors.toList()));
         return definitionTableDto;
     }
 
     /**
-     *  根据最后两个版本比较 字段差异
-     * @param latestVersionDto  最新的版本数据
-     * @param lastVersionDto    上个版本数据
+     * 根据最后两个版本比较 字段差异
+     *
+     * @param latestVersionDto 最新的版本数据
+     * @param lastVersionDto   上个版本数据
      * @return list   0 新增的字段 1 需要修改的字段     2 需要删除的字段
      */
-    public static List<List<FormDefinitionJsonDto.FieldList>> findDifferenceFiled(FormDefinitionJsonDto latestVersionDto, FormDefinitionJsonDto  lastVersionDto) {
+    public static List<List<FormDefinitionJsonDto.FieldList>> findDifferenceFiled(FormDefinitionJsonDto latestVersionDto, FormDefinitionJsonDto lastVersionDto) {
         List<FormDefinitionJsonDto.FieldList> insertList = Lists.newArrayList();
         List<FormDefinitionJsonDto.FieldList> updateList = Lists.newArrayList();
         List<FormDefinitionJsonDto.FieldList> deleteList = Lists.newArrayList();
@@ -143,6 +140,7 @@ public class DefinitionTableUtil {
 
     /**
      * 将str驼峰转下划线       userName -> user_name
+     *
      * @param str
      * @return
      */
@@ -155,6 +153,7 @@ public class DefinitionTableUtil {
 
     /**
      * 将str下划线转驼峰       user_name -> userName
+     *
      * @param str
      * @return
      */

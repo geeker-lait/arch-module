@@ -7,8 +7,7 @@ import org.arch.framework.automate.generater.core.ConfigProperties;
 
 /**
  * @author lait.zhang@gmail.com
- * @description:
- * id: entity
+ * @description: id: entity
  * pkg:
  * template:
  * suffix:
@@ -22,7 +21,7 @@ public class DocumentProperties implements ConfigProperties {
     private Long id;
     // 项目id
     private Long projectId;
-    // 包类型（entity,dao,service.....）
+    // 包类型（entity,dao,converter.....）
     private String type;
     // 自定义子包，如果没有集成basePack
     private String pkg;

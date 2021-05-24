@@ -7,14 +7,21 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.arch.framework.automate.common.database.Column;
+import org.arch.framework.automate.common.database.Database;
+import org.arch.framework.automate.common.database.Table;
 import org.arch.framework.automate.common.utils.ExcelUtils;
 import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.generater.core.*;
-import org.arch.framework.automate.generater.properties.*;
+import org.arch.framework.automate.common.configuration.ExcelFiledConfiguration;
+import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -25,28 +32,44 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaReadable {
+public class ExcelSchemaReader extends AbstractSchemaReader<ExcelFiledConfiguration> implements SchemaReadable {
 
 
     @Override
-    public List<SchemaMetadata> read(SchemaProperties schemaProperties) {
+    public List<SchemaData> read(SchemaProperties schemaProperties) {
         // 如果有有特殊处理，再次处理，如果没有则调用父类通用处理
-        return super.read(schemaProperties);
+        return super.doRead(schemaProperties);
+    }
+
+    @Override
+    public SchemaType getTyp() {
+        return SchemaType.EXCEL;
+    }
+
+    @Override
+    protected List<? extends SchemaData> readMvc(ReaderConfiguration<ExcelFiledConfiguration> readerConfiguration) {
+        return getMvc(readerConfiguration);
+    }
+
+    @Override
+    protected List<? extends SchemaData> readApi(ReaderConfiguration<ExcelFiledConfiguration> readerConfiguration) {
+        return null;
+    }
+
+    @Override
+    protected ReaderConfiguration<ExcelFiledConfiguration> buildConvertConfiguration(String resName, SchemaProperties schemaProperties, SchemaPattern schemaPattern) {
+        ReaderConfiguration<ExcelFiledConfiguration> readerConfiguration = new ReaderConfiguration<>();
+        readerConfiguration.setConfiguration((ExcelFiledConfiguration) schemaProperties.getSchemaConfiguration());
+        readerConfiguration.setResource(resName);
+        readerConfiguration.setPattern(schemaPattern);
+        return readerConfiguration;
     }
 
 
-    protected List<SchemaMetadata> readApi(String res,Map<String,String> heads){
-        List<SchemaMetadata> schemaMetadata = new ArrayList<>();
-
-        return schemaMetadata;
-    }
-
-    protected List<SchemaMetadata> readMvc(String res, Map<String,String> heads) {
-        Map<String, String> swapHeads = heads.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, e -> e.getKey()));
-        List<SchemaMetadata> schemaMetadatas= new ArrayList<>();
-        Map<String, String> tableMap = new HashMap<>();
+    protected List<? extends SchemaData> getMvc(ReaderConfiguration<ExcelFiledConfiguration> readerConfiguration) {
+        String res = readerConfiguration.getResource();
         // 从类路劲加载
-        if(-1 != res.indexOf("classpath:")){
+        if (-1 != res.indexOf("classpath:")) {
             res = new ClassPathResource(res.split(":")[1]).getAbsolutePath();
         }
         Workbook workbook = null;
@@ -55,39 +78,41 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Map<String, String> swapHeads = readerConfiguration.getConfiguration().getHeader().entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, e -> e.getKey()));
+        List<DatabaseSchemaData> databaseSchemaDatas = new ArrayList<>();
         for (int i = 0, length = workbook.getNumberOfSheets(); i < length; ++i) {
-            // 存放所有table信息
-            List<TableProperties> tables = new ArrayList<>();
             Sheet sheet = workbook.getSheetAt(i);
             String dbName = sheet.getSheetName();
             // 处理sheet
             Row firstRow = sheet.getRow(sheet.getFirstRowNum());
-            List<ColumnsProperties> columns = new ArrayList<>();
+            Database database = new Database();
+            database.setName(dbName);
+            Table table = null;
+            Map<String,Table> tabMap = new HashMap<>();
             for (int j = sheet.getFirstRowNum() + 1; j <= sheet.getLastRowNum(); j++) {
                 Row row = sheet.getRow(j);
                 //存储每一行的信息
-                Map<String, Object> map = new HashMap();
-                String key;
+                Map<String, Object> fieldMap = new HashMap();
                 for (int k = firstRow.getFirstCellNum(); k < firstRow.getLastCellNum(); k++) {
-                    if (row == null) continue;
-                    TableProperties tableProperties;
+                    if (row == null) {
+                        continue;
+                    }
                     if (ExcelUtils.isMergedRegion(sheet, j, k)) {
                         Object otable = ExcelUtils.getMergedRegionValue(sheet, j, k);
                         if (otable != null) {
-                            String table = otable.toString();
-                            // 防止重名
-                            key = dbName + "." + table;
-                            String val = tableMap.get(key);
-                            if (!StringUtils.isNotBlank(val)) {
-                                tableMap.put(key, table);
-                                log.info("current table name is :{}",key);
-                                String tc[] = table.split("/");
-                                tableProperties = new TableProperties();
-                                tableProperties.setName(tc[1]);
-                                tableProperties.setComment(tc[0]);
-                                columns = new ArrayList<>();
-                                tableProperties.setColumns(columns);
-                                tables.add(tableProperties);
+                            String stable = otable.toString();
+                            if (StringUtils.isNotBlank(stable)) {
+                                log.info("current table name is :{}", stable);
+                                String tc[] = stable.split("/");
+                                table = tabMap.get(tc[1]);
+                                if(table != null){
+                                    continue;
+                                }
+                                table = new Table();
+                                table.setName(tc[1]);
+                                table.setComment(tc[0]);
+                                database.getTables().add(table);
+                                tabMap.put(tc[1],table);
                             }
                         }
                     } else {
@@ -95,38 +120,35 @@ public class ExcelSchemaReader extends AbstractSchemaReader implements SchemaRea
                         Object cv = ExcelUtils.getCellValue(row.getCell(k));
                         String name = swapHeads.get(firstRow.getCell(k).getStringCellValue());
                         if (name != null && null != cv) {
-                            map.put(name, cv);
+                            fieldMap.put(name, cv);
                         }
                     }
                 }
                 // 对每一行信息转换为对象
-                if (map.size() > 0) {
-                    Excel2Table excel2Table = BeanUtil.toBean(map, Excel2Table.class);
-                    Class c = JdbcTypeUtils.getFieldType(excel2Table.getType());
-                    if(c == null){
-                        log.info("jdbc type convert to java type is error {}",excel2Table);
+                if (fieldMap.size() > 0) {
+                    ExcelFiledConfiguration excelProperties = BeanUtil.toBean(fieldMap, ExcelFiledConfiguration.class);
+                    Class c = JdbcTypeUtils.getFieldType(excelProperties.getType());
+                    if (c == null) {
+                        log.info("jdbc type convert to java type is error {}", excelProperties);
                         continue;
                     }
-                    ColumnsProperties columnsProperties = new ColumnsProperties();
-                    columnsProperties.setName(excel2Table.getColumn());
-                    columnsProperties.setComment(excel2Table.getComment());
-                    columnsProperties.setLength(excel2Table.getLength());
-                    columnsProperties.setTyp(c.getSimpleName());
-                    columns.add(columnsProperties);
+                    Column column = new Column();
+                    column.setName(excelProperties.getColumn());
+                    column.setComment(excelProperties.getComment());
+                    column.setLength(excelProperties.getLength());
+                    column.setTyp(c.getSimpleName());
+                    if (table != null) {
+                        table.getColumns().add(column);
+                    }
                 }
             }
-
-            DatabaseProperties databaseProperties = new DatabaseProperties();
-            databaseProperties.setName(dbName);
-            databaseProperties.setTables(tables);
-            schemaMetadatas.add(databaseProperties);
+            DatabaseSchemaData databaseSchemaData = new DatabaseSchemaData();
+            databaseSchemaData.setDatabase(database);
+            databaseSchemaData.setSchemaPattern(SchemaPattern.MVC);
+            databaseSchemaDatas.add(databaseSchemaData);
         }
-        return schemaMetadatas;
+        return databaseSchemaDatas;
     }
 
 
-    @Override
-    public SchemaType getTyp() {
-        return SchemaType.EXCEL;
-    }
 }

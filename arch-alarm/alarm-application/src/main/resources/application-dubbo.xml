@@ -1,0 +1,62 @@
+<!--
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	 http://code.alibabatech.com/schema/dubbo	http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
+       default-lazy-init="true">
+
+    <description>Dubbo Provider配置</description>
+
+    <dubbo:consumer check="false"/>
+
+    <dubbo:application name="${dubbo.application.name}"/>
+
+    <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" id="zookeeper"/>
+
+    <dubbo:protocol name="dubbo" port="${dubbo.application.port}" dispather="all" threadpool="cached" threads="5000"/>
+
+    &lt;!&ndash;define dubbo service&ndash;&gt;
+    <dubbo:reference id="alarmParamsService"
+                     interface="com.yonghui.ofs.alarm.center.api.AlarmParamsService"
+                     check="false" version="1.0" url="" registry="zookeeper" protocol="dubbo" retries="0"
+                     timeout="600000"/>
+
+    <dubbo:reference id="regComputerService"
+                     interface="com.yonghui.ofs.alarm.center.api.RegComputerService"
+                     check="false" version="1.0" url="" registry="zookeeper" protocol="dubbo" retries="0"
+                     timeout="600000"/>
+
+    <dubbo:reference id="alarmDicService"
+                     interface="com.yonghui.ofs.alarm.center.api.AlarmDicService"
+                     check="false" version="1.0" url="" registry="zookeeper" protocol="dubbo" retries="0"
+                     timeout="600000"/>
+
+    <dubbo:reference id="alarmNoticeService"
+                     interface="com.yonghui.ofs.alarm.center.api.AlarmNoticeService"
+                     check="false" version="1.0" url="" registry="zookeeper" protocol="dubbo" retries="0"
+                     timeout="600000"/>
+
+    <dubbo:reference id="alarmTemplateService"
+                     interface="com.yonghui.ofs.alarm.center.api.AlarmTemplateService"
+                     check="false" version="1.0" url="" registry="zookeeper" protocol="dubbo" retries="0"
+                     timeout="600000"/>
+
+    <dubbo:reference id="alarmChannelService"
+                     interface="com.yonghui.ofs.alarm.center.api.AlarmChannelService"
+                     check="false" version="1.0" url="" registry="zookeeper" protocol="dubbo" retries="0"
+                     timeout="600000"/>
+
+    <dubbo:reference id="alarmRegService"
+                     interface="com.yonghui.ofs.alarm.center.api.AlarmRegService"
+                     check="false" version="1.0" url="" registry="zookeeper" protocol="dubbo" retries="0"
+                     timeout="600000"/>
+    <dubbo:reference id="alarmCatService"
+                     interface="com.yonghui.ofs.alarm.center.api.AlarmCatService"
+                     check="false" version="1.0" url="" registry="zookeeper" protocol="dubbo" retries="0"
+                     timeout="600000"/>
+
+    <dubbo:reference interface="com.yonghui.product.service.api.ShopService"
+                     id="shopService" check="false" version="1.0" retries="0"/>
+</beans>
+-->

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.beanmapper.BeanMapper;
 import io.beanmapper.config.BeanMapperBuilder;
+import org.arch.framework.beans.Convertable;
 import org.arch.framework.crud.utils.EnumConverter;
 import org.arch.framework.crud.utils.RequestSearchUtils;
 import org.arch.framework.crud.utils.SearchFilter;
@@ -27,7 +28,7 @@ import java.util.Map;
  * @param <T>  数据库实体
  * @param <ID> 数据库实体的主键实体
  */
-public abstract class CrudService<T, ID extends Serializable> {
+public abstract class CrudService<T, ID extends Serializable> implements Convertable {
 
     @Autowired
     protected CrudDao<T> crudDao;
@@ -106,8 +107,9 @@ public abstract class CrudService<T, ID extends Serializable> {
 
     /**
      * 根据 id 更新实体
-     * @param entity    实体
-     * @return  返回更新后的实体
+     *
+     * @param entity 实体
+     * @return 返回更新后的实体
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean updateById(T entity) {

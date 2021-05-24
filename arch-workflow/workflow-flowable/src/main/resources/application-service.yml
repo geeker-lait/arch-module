@@ -1,0 +1,32 @@
+flowable:
+  databaseSchemaUpdate : true #create-drop create false
+  cmmn:
+    enabled : true
+  dmn:
+    enabled : true
+  form:
+    enabled : true
+  databaseSchema : workflow_flowable
+
+logging:
+  name: workflow-flowable
+    
+---
+
+#生产环境
+spring:
+  config:
+    activate:
+      on-profile: workflow-pro
+
+---
+
+#开发环境
+spring:
+  config:
+    activate:
+      on-profile: workflow-dev
+
+
+server:
+  port : 8081

@@ -29,7 +29,11 @@
             <dependency>
                 <groupId>${dm.groupId!""}</groupId>
                 <artifactId>${dm.artifactId!""}</artifactId>
+                <#if dm.isModule>
+                <version>${r'${project.version}'}</version>
+                <#else>
                 <version>${dm.version!""}</version>
+                </#if>
                 <#if dm.type??>
                 <type>${dm.type!""}</type>
                 </#if>
@@ -47,7 +51,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
         </dependency>
         </#if>
         <#if dependencies ?? && (dependencies?size >0)>

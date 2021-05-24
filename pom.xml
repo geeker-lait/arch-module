@@ -12,11 +12,18 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <spring-security.version>5.4.2</spring-security.version>
-        <dcenter-ums.version>2.2.40</dcenter-ums.version>
+        <spring.version>5.2.9.RELEASE</spring.version>
+        <commons-io.version>2.7</commons-io.version>
+        <commons-lang3.version>3.5</commons-lang3.version>
+        <jsonwebtoken.version>0.5.1</jsonwebtoken.version>
+        <guava.version>[24.1.1,)</guava.version>
+        <flowable.version>6.6.0</flowable.version>
+        <dcenter-ums.version>2.2.29</dcenter-ums.version>
     </properties>
 
 
     <modules>
+        <module>arch-alarm</module>
         <module>arch-application</module>
         <module>arch-auth</module>
         <module>arch-framework</module>
@@ -27,7 +34,8 @@
         <module>arch-pms</module>
         <module>arch-rule</module>
         <module>arch-ums</module>
-        <module>arch-mps</module>
+        <module>arch-workflow</module>
+        <module>arch-sms</module>
     </modules>
 
 
@@ -62,13 +70,9 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok-maven-plugin</artifactId>
-            <version>1.18.12.0</version>
-            <type>maven-plugin</type>
-            <scope>provided</scope>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
     </dependencies>
@@ -132,6 +136,45 @@
                 <artifactId>framework-beans</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+
+            <dependency>
+                <artifactId>mq-messaging</artifactId>
+                <groupId>org.arch.projects</groupId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>framework-mq</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>mq-consumer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>mq-producer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>mq-producer-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>mq-consumer-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>framework-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>auth-sdk</artifactId>
@@ -195,7 +238,7 @@
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>ums-conf</artifactId>
+                <artifactId>ums-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -210,7 +253,11 @@
             </dependency>
 
 
-
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jsonwebtoken.version}</version>
+            </dependency>
 
             <!-- spring -->
             <dependency>
@@ -249,6 +296,13 @@
                 <artifactId>rocketmq-spring-boot-starter</artifactId>
                 <version>2.0.4</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.rocketmq</groupId>
+                <artifactId>rocketmq-client</artifactId>
+                <version>3.2.6</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
@@ -328,6 +382,11 @@
                 <artifactId>beanmapper</artifactId>
                 <version>3.1.0</version>
             </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.10.10</version>
+            </dependency>
 
             <!-- 解决: 未知的枚举常量 javax.annotation.meta.When.MAYBE -->
             <dependency>
@@ -391,11 +450,6 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>3.4.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-core</artifactId>
                 <version>3.4.1</version>
             </dependency>
             <dependency>

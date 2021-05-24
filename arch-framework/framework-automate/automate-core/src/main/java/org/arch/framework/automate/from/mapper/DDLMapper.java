@@ -20,6 +20,7 @@ public interface DDLMapper {
 
     /**
      * 判断数据库是否存在
+     *
      * @param database
      * @return
      */
@@ -27,6 +28,7 @@ public interface DDLMapper {
 
     /**
      * 创建数据库
+     *
      * @param database
      * @return
      */
@@ -34,6 +36,7 @@ public interface DDLMapper {
 
     /**
      * 删除指定数据库
+     *
      * @param database
      * @return
      */
@@ -42,6 +45,7 @@ public interface DDLMapper {
 
     /**
      * 判断指定库下表是否存在
+     *
      * @param database
      * @param tableName
      * @return
@@ -49,10 +53,10 @@ public interface DDLMapper {
     int existTable(@Param("database") String database, @Param("tableName") String tableName);
 
 
-
     /**
      * 删除表
-     * @param  database
+     *
+     * @param database
      * @param tableName
      * @return
      */
@@ -60,6 +64,7 @@ public interface DDLMapper {
 
     /**
      * 创建 table
+     *
      * @param record
      * @return
      */
@@ -67,6 +72,7 @@ public interface DDLMapper {
 
     /**
      * 获取指定库下所有的表
+     *
      * @param database
      * @return
      */
@@ -74,12 +80,12 @@ public interface DDLMapper {
 
     /**
      * 获取指定库下的指定表的所有字段信息
+     *
      * @param database
      * @param tableName
      * @return
      */
     List<Map<String, String>> getTableDetail(@Param("database") String database, @Param("tableName") String tableName);
-
 
 
 }

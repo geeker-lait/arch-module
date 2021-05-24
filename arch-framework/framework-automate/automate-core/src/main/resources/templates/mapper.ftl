@@ -13,6 +13,6 @@ import ${basePkg!""}.entity.${(name?cap_first)!""};
  * @since  1.0.0
  */
 @Mapper
-public interface ${(name?cap_first)!""}${suffix!""} extends CrudMapper<${(name?cap_first)!""}> {
+public interface ${(name?cap_first)!""}${suffix!""} extends CrudMapper<${(name?cap_first)!""}<#list documents as doc><#if doc.type == "entity">${(doc.type)?cap_first}</#if></#list>> {
 
 }

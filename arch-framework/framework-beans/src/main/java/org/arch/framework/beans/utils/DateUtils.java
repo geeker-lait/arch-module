@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 时间工具类
@@ -385,6 +386,25 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 有一个问题, 当毫秒为59999时，实际上是1分钟，但是它将被计算为59秒，并且损失了999毫秒。
+     * <p>
+     * 这是基于先前答案的修改版本，可以解决此问题
+     *
+     * @param millis
+     * @return
+     */
+    public static String formatTime(long millis) {
+        long seconds = Math.round((double) millis / 1000);
+        long hours = TimeUnit.SECONDS.toHours(seconds);
+        if (hours > 0)
+            seconds -= TimeUnit.HOURS.toSeconds(hours);
+        long minutes = seconds > 0 ? TimeUnit.SECONDS.toMinutes(seconds) : 0;
+        if (minutes > 0)
+            seconds -= TimeUnit.MINUTES.toSeconds(minutes);
+        return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds) : String.format("%02d:%02d", minutes, seconds);
     }
 }
 

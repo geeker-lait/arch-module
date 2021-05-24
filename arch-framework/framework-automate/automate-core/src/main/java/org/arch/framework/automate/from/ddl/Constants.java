@@ -2,6 +2,7 @@ package org.arch.framework.automate.from.ddl;
 
 /**
  * 常量
+ *
  * @author junboXiang
  * @version V1.0
  * 2021-02-28

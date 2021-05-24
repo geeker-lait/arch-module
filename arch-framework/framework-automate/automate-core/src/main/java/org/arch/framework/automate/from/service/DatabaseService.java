@@ -2,9 +2,10 @@ package org.arch.framework.automate.from.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.common.api.Api;
+import org.arch.framework.automate.common.configuration.DatabaseConfiguration;
+import org.arch.framework.automate.common.database.Table;
 import org.arch.framework.automate.from.ddl.DDLOperate;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
-import org.arch.framework.automate.generater.properties.TableProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,14 +23,17 @@ public class DatabaseService {
 
     /**
      * 根据数据库名称获取数 及 表相关属性数据
-     * @param source 数据源
+     *
+     * @param source   数据源
      * @param database 数据库名称，只支持单个库获取，多个库在调用外城循环
      * @return
      */
-    public List<TableProperties> getDatabaseTablesInfo(DatabaseProperties source, String database) {
+    public List<Table> getDatabaseTablesInfo(DatabaseConfiguration source, String database) {
         return DDLOperate.selectDDLOperate(source).getDatabaseProperties(source, database);
     }
 
 
-
+    public List<Api> getDatabaseApisInfo(DatabaseConfiguration databaseProperties, String res) {
+        return null;
+    }
 }

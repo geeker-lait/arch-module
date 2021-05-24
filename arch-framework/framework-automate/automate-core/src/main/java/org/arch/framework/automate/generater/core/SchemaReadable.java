@@ -13,6 +13,11 @@ import java.util.List;
  */
 public interface SchemaReadable {
 
+    /**
+     * 获取Schema类型
+     *
+     * @return
+     */
     SchemaType getTyp();
 
     /**
@@ -21,6 +26,6 @@ public interface SchemaReadable {
      * @param schemaProperties
      * @throws IOException
      */
-    List<SchemaMetadata> read(SchemaProperties schemaProperties);
+    List<SchemaData> read(SchemaProperties schemaProperties);
 
 }

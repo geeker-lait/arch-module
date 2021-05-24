@@ -1,0 +1,26 @@
+#邮件设置
+#spring.mail.host=smtp.exmail.qq.com
+#暂时改为个人邮箱smtp服务器进行测试
+spring:
+  mail:
+    #坑爹的地方：host 通道个人邮箱和企业邮箱通道不同。163的个人邮箱：smtp.163.com ，企业邮箱：smtp.qiye.163.com
+    # 腾讯的，个人smtp.qq.com， 企业的：smtp.exmail.qq.com  smtp.163.com#ZWEGGKKSBLDDNTQS
+    host: smtp.163.com
+    #服务协议
+    protocol: smtp
+    username: lifetaster@163.com
+    # 口令是QQ邮箱开通的smtp服务后得到的客户端授权码,不是你的邮箱登录密码
+    password: ZWEGGKKSBLDDNTQS
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+            port: 465
+        # 开启debug，方便查看邮件发送日志
+        #debug: true

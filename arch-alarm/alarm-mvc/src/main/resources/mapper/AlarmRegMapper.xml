@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghui.ofs.alarm.center.mapper.AlarmRegMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.arch.alarm.mvc.entity.AlarmRegEntity">
+        <id column="id" property="id"/>
+        <result column="catid" property="catid"/>
+        <result column="reg_name" property="regName"/>
+        <result column="reg_key" property="regKey"/>
+        <result column="reg_val" property="regVal"/>
+        <result column="reg_datasource" property="regDatasource"/>
+        <result column="descr" property="descr"/>
+        <result column="expression" property="expression"/>
+        <result column="computer_id" property="computerId"/>
+        <result column="computer_name" property="computerName"/>
+        <result column="param_count" property="paramCount"/>
+        <result column="placeholder_json" property="placeholderJson"/>
+        <result column="ctime" property="ctime"/>
+        <result column="tenant_id" property="tenantId"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, catid, reg_name, reg_key, reg_val, reg_datasource, descr, expression, computer_id, computer_name,param_count,splaceholder_json, ctime, tenant_id
+    </sql>
+
+</mapper>

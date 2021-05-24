@@ -4,15 +4,15 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.arch.framework.automate.api.dto.DefinitionTableDto;
+import org.arch.framework.automate.common.configuration.DatabaseConfiguration;
+import org.arch.framework.automate.common.database.Column;
+import org.arch.framework.automate.common.database.Table;
 import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.from.ddl.sql.MysqlDDLSqlBuilder;
 import org.arch.framework.automate.from.utils.DefinitionTableUtil;
-import org.arch.framework.automate.generater.properties.ColumnsProperties;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
-import org.arch.framework.automate.generater.properties.TableProperties;
 import org.arch.framework.beans.exception.BusinessException;
-import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +26,7 @@ import java.util.function.Function;
 
 /**
  * jdbc mysql jdbc ddl 操作实现
+ *
  * @author junboXiang
  * @version V1.0
  * 2021-02-27
@@ -35,17 +36,17 @@ import java.util.function.Function;
 public class MysqlDDLOperate extends DDLOperate implements InitializingBean {
 
     @Override
-    protected String getDbUrl(DatabaseProperties properties) {
-        return "JDBC:mysql://" + properties.getHost() + ":" + properties.getPort() + "?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false";
+    protected String getDbUrl(DatabaseConfiguration properties) {
+        return "JDBC:mysql://" + properties.getUrl() + ":" + properties.getPort() + "?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false";
     }
 
     @Override
-    protected String getDriver(DatabaseProperties properties) {
+    protected String getDriver(DatabaseConfiguration properties) {
         return "com.mysql.cj.jdbc.Driver";
     }
 
     @Override
-    public int createDatabase(DatabaseProperties properties, String database) {
+    public int createDatabase(DatabaseConfiguration properties, String database) {
         Function<Connection, Integer> function = connection -> {
             int existDatabase = existDatabaseOrTable(connection, database, null);
             if (existDatabase > 0) {
@@ -64,7 +65,7 @@ public class MysqlDDLOperate extends DDLOperate implements InitializingBean {
     }
 
     @Override
-    public int dropDatabase(DatabaseProperties properties, String database) {
+    public int dropDatabase(DatabaseConfiguration properties, String database) {
         Function<Connection, Integer> function = connection -> {
             try (PreparedStatement statement = connection.prepareStatement(MysqlDDLSqlBuilder.getDropDatabaseSql(database))) {
                 statement.executeUpdate();
@@ -78,7 +79,7 @@ public class MysqlDDLOperate extends DDLOperate implements InitializingBean {
     }
 
     @Override
-    public int dropTable(DatabaseProperties properties, String database, String tableName) {
+    public int dropTable(DatabaseConfiguration properties, String database, String tableName) {
         Function<Connection, Integer> function = connection -> {
             try (PreparedStatement statement = connection.prepareStatement(MysqlDDLSqlBuilder.getDropTableSql(database, tableName))) {
                 statement.executeUpdate();
@@ -92,7 +93,7 @@ public class MysqlDDLOperate extends DDLOperate implements InitializingBean {
     }
 
     @Override
-    public int createTable(DatabaseProperties properties, DefinitionTableDto record) {
+    public int createTable(DatabaseConfiguration properties, DefinitionTableDto record) {
         Function<Connection, Integer> function = connection -> {
             int existDatabase = existDatabaseOrTable(connection, record.getDatabaseName(), record.getTableName());
             if (existDatabase > 0) {
@@ -110,21 +111,21 @@ public class MysqlDDLOperate extends DDLOperate implements InitializingBean {
     }
 
     @Override
-    public List<TableProperties> getDatabaseProperties(DatabaseProperties properties, String database) {
+    public List<Table> getDatabaseProperties(DatabaseConfiguration properties, String database) {
         String databaseNameStr = DefinitionTableUtil.camelToUnderscore(database);
-        Function<Connection, List<TableProperties>> function = connection -> {
+        Function<Connection, List<Table>> function = connection -> {
             // 库不存在
             if (existDatabaseOrTable(connection, databaseNameStr, null) < 0) {
                 return null;
             }
-            List<TableProperties> tablePropertiesList = new ArrayList<>();
+            List<Table> tablePropertiesList = new ArrayList<>();
             try (PreparedStatement getTableListStatement = connection.prepareStatement(MysqlDDLSqlBuilder.getDatabaseTablesSql());
                  PreparedStatement getTableDetailStatement = connection.prepareStatement(MysqlDDLSqlBuilder.getTableDetailSql())) {
                 getTableListStatement.setString(1, databaseNameStr);
                 ResultSet resultSet = getTableListStatement.executeQuery();
                 // 1.查询指定库下所有表
                 while (resultSet.next()) {
-                    TableProperties tableProperties = new TableProperties();
+                    Table tableProperties = new Table();
                     String tableName = resultSet.getString("tableName");
                     tableProperties.setName(CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, DefinitionTableUtil.lowerUnderscoreToLowerCamel(tableName)));
                     tableProperties.setComment(resultSet.getString("tableComment"));
@@ -152,37 +153,39 @@ public class MysqlDDLOperate extends DDLOperate implements InitializingBean {
 
     /**
      * 根据表查询所有字段 数据
+     *
      * @param getTableDetailStatement
      * @param tablePropertiesList
      * @param databaseNameStr
      * @throws SQLException
      */
-    private void buildColumnsProperties(PreparedStatement getTableDetailStatement, List<TableProperties> tablePropertiesList, String databaseNameStr) throws SQLException {
-        for (TableProperties tableProperties : tablePropertiesList) {
+    private void buildColumnsProperties(PreparedStatement getTableDetailStatement, List<Table> tablePropertiesList, String databaseNameStr) throws SQLException {
+        for (Table tableProperties : tablePropertiesList) {
             getTableDetailStatement.clearParameters();
             getTableDetailStatement.setString(1, DefinitionTableUtil.camelToUnderscore(tableProperties.getName()));
             getTableDetailStatement.setString(2, databaseNameStr);
             ResultSet tableInfoResultSet = getTableDetailStatement.executeQuery();
-            List<ColumnsProperties> columnsPropertiesList = Lists.newArrayList();
+            List<Column> columnsPropertiesList = Lists.newArrayList();
             while (tableInfoResultSet.next()) {
                 String columnName = tableInfoResultSet.getString("columnName");
                 String dataType = tableInfoResultSet.getString("dataType").toUpperCase();
                 // 字段描述暂时不需要
                 String columnType = tableInfoResultSet.getString("columnType");
                 String length = columnType.indexOf("(") > 0 ? columnType.substring(columnType.indexOf("(") + 1, columnType.indexOf(")")) : null;
-                ColumnsProperties columnsProperties = new ColumnsProperties();
+                Column columnsProperties = new Column();
                 columnsProperties.setName(DefinitionTableUtil.lowerUnderscoreToLowerCamel(columnName));
                 columnsProperties.setTyp(JdbcTypeUtils.getFieldType(dataType).getSimpleName());
                 columnsProperties.setLength(length);
                 columnsProperties.setComment(tableInfoResultSet.getString("columnComment"));
                 columnsPropertiesList.add(columnsProperties);
             }
-            tableProperties.setColumns(columnsPropertiesList);
+            tableProperties.getColumns().addAll(columnsPropertiesList);
         }
     }
 
     /**
      * 判断数据库或者表是否存在，如果 只判断数据库是否存在 tableName 传null
+     *
      * @param connection
      * @param database
      * @param tableName

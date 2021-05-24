@@ -4,10 +4,10 @@ import cn.hutool.extra.template.TemplateEngine;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.Buildable;
 import org.arch.framework.automate.generater.core.Generable;
-import org.arch.framework.automate.generater.core.SchemaMetadata;
+import org.arch.framework.automate.generater.core.SchemaData;
 import org.arch.framework.automate.generater.core.TemplateName;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
+import org.arch.framework.automate.generater.properties.PomProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
 import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.stereotype.Component;
@@ -34,12 +34,11 @@ public class DockerBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
-        doBuild(path, engine, projectProperties, documentProperties, (DatabaseProperties) schemaData);
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
+        doBuild(path, engine, projectProperties, documentProperties, schemaData);
     }
 
-
-    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) {
+    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaData schemaData) {
         String fileName = buildFileName(documentProperties, "Dockerfile", false);
         String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
         Path fileDir = path.resolve(Generable.MAIN_RESOURCES);

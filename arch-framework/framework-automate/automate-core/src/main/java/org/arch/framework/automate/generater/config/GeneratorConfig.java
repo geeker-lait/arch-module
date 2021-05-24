@@ -2,7 +2,10 @@ package org.arch.framework.automate.generater.config;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.arch.framework.automate.generater.properties.*;
+import org.arch.framework.automate.generater.properties.DocumentProperties;
+import org.arch.framework.automate.generater.properties.ProjectProperties;
+import org.arch.framework.automate.generater.properties.SchemaProperties;
+import org.arch.framework.automate.generater.properties.TemplateProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
@@ -23,7 +26,7 @@ import java.util.List;
  * - artifactId:
  * groupId:
  * version:
- * packages: entity,dao,service
+ * packages: entity,dao,converter
  * dependencies:
  * - groupId:
  * artifactId:
@@ -31,7 +34,7 @@ import java.util.List;
  * - artifactId:
  * groupId:
  * version:
- * packages: entity,dao,service
+ * packages: entity,dao,converter
  * packages:
  * - id: entity
  * pkg:
@@ -45,7 +48,7 @@ import java.util.List;
  * pkg:
  * template:
  * suffix:
- * - id: service
+ * - id: converter
  * pkg:
  * template:
  * suffix:
@@ -92,27 +95,27 @@ import java.util.List;
  * "modules": [{
  * "groupId": "",
  * "artifactId": "",
- * "packages": "entity,dao,service",
+ * "packages": "entity,dao,converter",
  * "version": "",
  * "modules": [{
  * "groupId": "",
  * "artifactId": "",
- * "packages": "entity,dao,service",
+ * "packages": "entity,dao,converter",
  * "version": ""
  * }, {
  * "groupId": "",
  * "artifactId": "",
- * "packages": "entity,dao,service",
+ * "packages": "entity,dao,converter",
  * "version": "",
  * "modules": [{
  * "groupId": "",
  * "artifactId": "",
- * "packages": "entity,dao,service",
+ * "packages": "entity,dao,converter",
  * "version": ""
  * }, {
  * "groupId": "",
  * "artifactId": "",
- * "packages": "entity,dao,service",
+ * "packages": "entity,dao,converter",
  * "version": ""
  * }]
  * }],
@@ -140,7 +143,7 @@ import java.util.List;
  * "pkg": ""
  * }, {
  * "template": "",
- * "id": "service",
+ * "id": "converter",
  * "suffix": "",
  * "pkg": ""
  * }, {
@@ -169,8 +172,8 @@ public class GeneratorConfig {
      * author : lait
      * template : {"dir":"templates","resource-mode":"classpath"}
      * schema : excel
-     * project : {"path":"/Users/lait.zhang/Workspaces/Java/Projects/arch-module","basePkg":"org.arch.gen","pom":{"artifactId":"arch-gen","groupId":"org.arch.projects","version":"0.0.1","modules":[{"artifactId":"arch-gen-core","groupId":null,"version":null,"packageTypes":"entity,dao"},{"artifactId":"arch-gen-common","groupId":null,"version":null,"packageTypes":"dao","dependencies":[{"groupId":null,"artifactId":null}],"modules":[{"artifactId":"arch-gen-common-a","groupId":null,"version":null,"packageIds":"dao"},{"artifactId":"arch-gen-common-b","groupId":null,"version":null,"packageTypes":"entity,dao,service","modules":[{"artifactId":"arch-gen-common-b-1","groupId":null,"version":null,"packageTypes":"entity,dao,service"},{"artifactId":"arch-gen-common-b-2","groupId":null,"version":null,"packageTypes":null}]}]}]}}
-     * packages : [{"type":"entity","pkg":"aa.entity","template":"entity.ftl","suffix":"Entity"},{"type":"mapper","pkg":null,"template":"mapper.ftl","suffix":null},{"type":"dao","pkg":"dao","template":"dao.ftl","suffix":"Dao","ext":".java"},{"type":"service","pkg":"service","template":"service.ftl","suffix":null},{"type":"controller","pkg":null,"template":"controller.ftl","suffix":null},{"type":"dto","pkg":null,"template":"dto.ftl","suffix":null}]
+     * project : {"path":"/Users/lait.zhang/Workspaces/Java/Projects/arch-module","basePkg":"org.arch.gen","pom":{"artifactId":"arch-gen","groupId":"org.arch.projects","version":"0.0.1","modules":[{"artifactId":"arch-gen-core","groupId":null,"version":null,"packageTypes":"entity,dao"},{"artifactId":"arch-gen-common","groupId":null,"version":null,"packageTypes":"dao","dependencies":[{"groupId":null,"artifactId":null}],"modules":[{"artifactId":"arch-gen-common-a","groupId":null,"version":null,"packageIds":"dao"},{"artifactId":"arch-gen-common-b","groupId":null,"version":null,"packageTypes":"entity,dao,converter","modules":[{"artifactId":"arch-gen-common-b-1","groupId":null,"version":null,"packageTypes":"entity,dao,converter"},{"artifactId":"arch-gen-common-b-2","groupId":null,"version":null,"packageTypes":null}]}]}]}}
+     * packages : [{"type":"entity","pkg":"aa.entity","template":"entity.ftl","suffix":"Entity"},{"type":"mapper","pkg":null,"template":"mapper.ftl","suffix":null},{"type":"dao","pkg":"dao","template":"dao.ftl","suffix":"Dao","ext":".java"},{"type":"converter","pkg":"converter","template":"converter.ftl","suffix":null},{"type":"controller","pkg":null,"template":"controller.ftl","suffix":null},{"type":"dto","pkg":null,"template":"dto.ftl","suffix":null}]
      * excel : {"heads":{"表名/Table":"table","列名/Column":"column","数据类型/Type":"type","长度/Length":"length","是否为空/Null(Y,N)":"isnull","默认值/Default":"defaultValue","是否主键/Primary(Y,N)":"primaryKey","是否唯一/Unique(Y,N)":"unique","外键/Forigen(可空)":"forienKey","备注/Comment":"comment"}}
      * database : {"name":"arch","driver":"com.mysql.cj.jdbc.Driver","url":"jdbc:mysql://localhost:3306/uni?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai","username":"root","password":"root","tables":[{"name":"user","comment":"用户表","columns":[{"name":"id","typ":"bigint","length":19,"comment":"主键id"},{"name":"name","typ":"varchar","length":32,"comment":"用户名"},{"name":"age","typ":"int","length":2,"comment":"年龄"}]}]}
      */

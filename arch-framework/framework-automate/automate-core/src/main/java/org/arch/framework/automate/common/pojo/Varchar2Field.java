@@ -1,7 +1,7 @@
 package org.arch.framework.automate.common.pojo;
 
 public class Varchar2Field {
-    private final String DATA_TYPE="VARCHAR2";
+    private final String DATA_TYPE = "VARCHAR2";
     private final String COLUMN_NAME;
     private final String CHAR_LENGTH;
     private final String NULLABLE;
@@ -12,7 +12,7 @@ public class Varchar2Field {
         this.COLUMN_NAME = COLUMN_NAME;
         this.CHAR_LENGTH = CHAR_LENGTH;
         this.NULLABLE = NULLABLE;
-        this.DATA_DEFAULT = DATA_DEFAULT==null?null:"'"+DATA_DEFAULT+"'";
+        this.DATA_DEFAULT = DATA_DEFAULT == null ? null : "'" + DATA_DEFAULT + "'";
         this.COMMENTS = COMMENTS;
     }
 

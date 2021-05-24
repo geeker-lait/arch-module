@@ -9,7 +9,7 @@ import java.util.Map;
  * @date 2/26/2021 11:20 AM
  */
 public interface ConfigProperties {
-    default Map<String,Object> toDatamap(){
+    default Map<String, Object> toDatamap() {
         //this.
         return null;
     }

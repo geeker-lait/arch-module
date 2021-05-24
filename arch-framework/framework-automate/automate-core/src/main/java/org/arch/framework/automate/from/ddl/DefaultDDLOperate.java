@@ -6,12 +6,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.arch.framework.automate.api.dto.DefinitionTableDto;
+import org.arch.framework.automate.common.configuration.DatabaseConfiguration;
+import org.arch.framework.automate.common.database.Column;
+import org.arch.framework.automate.common.database.Table;
 import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.from.mapper.DDLMapper;
 import org.arch.framework.automate.from.utils.DefinitionTableUtil;
-import org.arch.framework.automate.generater.properties.ColumnsProperties;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
-import org.arch.framework.automate.generater.properties.TableProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,17 +32,17 @@ public class DefaultDDLOperate extends DDLOperate {
 
 
     @Override
-    protected String getDbUrl(DatabaseProperties properties) {
+    protected String getDbUrl(DatabaseConfiguration properties) {
         return null;
     }
 
     @Override
-    protected String getDriver(DatabaseProperties properties) {
+    protected String getDriver(DatabaseConfiguration properties) {
         return null;
     }
 
     @Override
-    public int createDatabase(DatabaseProperties properties, String database) {
+    public int createDatabase(DatabaseConfiguration properties, String database) {
         if (ddlMapper.existDatabase(database) > 0) {
             log.info("database exist databaseProperties:{} dbName:{}", properties, database);
             return 1;
@@ -51,17 +51,17 @@ public class DefaultDDLOperate extends DDLOperate {
     }
 
     @Override
-    public int dropDatabase(DatabaseProperties properties, String database) {
+    public int dropDatabase(DatabaseConfiguration properties, String database) {
         return ddlMapper.dropDatabase(database);
     }
 
     @Override
-    public int dropTable(DatabaseProperties properties, String database, String tableName) {
+    public int dropTable(DatabaseConfiguration properties, String database, String tableName) {
         return ddlMapper.dropTable(database, tableName);
     }
 
     @Override
-    public int createTable(DatabaseProperties properties, DefinitionTableDto record) {
+    public int createTable(DatabaseConfiguration properties, DefinitionTableDto record) {
         if (ddlMapper.existTable(record.getDatabaseName(), record.getTableName()) > 0) {
             log.info("table exist databaseProperties:{} definitionTableDto:{}", properties, record);
             return 1;
@@ -70,7 +70,7 @@ public class DefaultDDLOperate extends DDLOperate {
     }
 
     @Override
-    public List<TableProperties> getDatabaseProperties(DatabaseProperties properties, String database) {
+    public List<Table> getDatabaseProperties(DatabaseConfiguration properties, String database) {
         String databaseNameStr = DefinitionTableUtil.camelToUnderscore(database);
         // 查询当前库 下边有多少表
         List<Map<String, String>> databaseTables = ddlMapper.getDatabaseTables(databaseNameStr);
@@ -79,11 +79,11 @@ public class DefaultDDLOperate extends DDLOperate {
         }
         // 遍历每个表的字段数据
         return databaseTables.stream().map(tableMap -> {
-            TableProperties tableProperties = new TableProperties();
+            Table tableProperties = new Table();
             String tableName = tableMap.get("tableName");
             tableProperties.setName(CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, DefinitionTableUtil.lowerUnderscoreToLowerCamel(tableName)));
             tableProperties.setComment(tableMap.get("tableComment"));
-            tableProperties.setColumns(buildMysqlTableColumns(databaseNameStr, tableName));
+            tableProperties.getColumns().addAll(buildMysqlTableColumns(databaseNameStr, tableName));
             return tableProperties;
         }).collect(Collectors.toList());
     }
@@ -95,15 +95,16 @@ public class DefaultDDLOperate extends DDLOperate {
 
     /**
      * 获取列详情
+     *
      * @param databaseName
      * @param tableName
      * @return
      */
-    private List<ColumnsProperties> buildMysqlTableColumns(String databaseName, String tableName) {
+    private List<Column> buildMysqlTableColumns(String databaseName, String tableName) {
         List<Map<String, String>> tableDetail = ddlMapper.getTableDetail(databaseName, tableName);
-        List<ColumnsProperties> columnsPropertiesList = Lists.newArrayList();
+        List<Column> columnsPropertiesList = Lists.newArrayList();
         tableDetail.forEach(detail -> {
-            ColumnsProperties columnsProperties = new ColumnsProperties();
+            Column columnsProperties = new Column();
             String columnName = detail.get("columnName");
             String dataType = detail.get("dataType").toUpperCase();
             // 字段描述暂时不需要

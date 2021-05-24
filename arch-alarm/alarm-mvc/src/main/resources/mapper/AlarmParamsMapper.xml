@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghui.ofs.alarm.center.mapper.AlarmParamsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.arch.alarm.mvc.entity.AlarmParamsEntity">
+        <id column="id" property="id"/>
+        <result column="reg_id" property="regId"/>
+        <result column="reg_name" property="regName"/>
+        <result column="dic_id" property="dicId"/>
+        <result column="dbtb" property="dbtb"/>
+        <result column="filed_name" property="filedName"/>
+        <result column="filed_code" property="filedCode"/>
+        <result column="filed_typ" property="filedTyp"/>
+        <result column="ctime" property="ctime"/>
+        <result column="tenant_id" property="tenantId"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, reg_id, reg_name, dic_id, dbtb, filed_name, filed_code, filed_typ, ctime, tenant_id
+    </sql>
+
+</mapper>

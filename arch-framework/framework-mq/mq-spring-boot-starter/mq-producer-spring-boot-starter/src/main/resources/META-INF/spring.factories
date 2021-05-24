@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.arch.framework.mq.producer.autoconfig.RocketmqProducerAutoConfiguration

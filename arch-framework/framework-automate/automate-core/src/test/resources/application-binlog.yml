@@ -1,0 +1,14 @@
+binlog:
+  database:
+    - name: db1
+      tables:
+        - name: tb1
+          fileds: f1,f2,f3,f4,f5
+        - name: tb2
+          fileds: f21,f21,f23,f24,f25
+        - name: tb2
+          fileds: f21,f21,f23,f24,f25
+    - name: db2
+      tables:
+        - name: tb1
+          fileds: f1,f2,f3,f4,f5

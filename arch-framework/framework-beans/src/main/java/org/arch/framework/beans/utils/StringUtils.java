@@ -24,7 +24,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             return null;
         }
 
-        s = s.toLowerCase();
+        //s = s.toLowerCase();
 
         StringBuilder sb = new StringBuilder(s.length());
         boolean upperCase = false;
@@ -44,6 +44,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return sb.toString();
     }
 
+
+
+
     /**
      * 驼峰命名法工具
      *
@@ -58,6 +61,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         s = toCamelCase(s);
         return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
+
+
 
     /**
      * 驼峰命名法工具

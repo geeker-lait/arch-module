@@ -9,13 +9,13 @@ import org.arch.framework.automate.api.dto.DefinitionTableDto;
 import org.arch.framework.automate.api.dto.DirectiveRequestDto;
 import org.arch.framework.automate.api.dto.FormDefinitionJsonDto;
 import org.arch.framework.automate.api.response.AlterTableResponse;
+import org.arch.framework.automate.common.configuration.DatabaseConfiguration;
 import org.arch.framework.automate.from.ddl.DDLOperate;
 import org.arch.framework.automate.from.directive.SqlDirective;
 import org.arch.framework.automate.from.directive.SqlDirectiveCode;
 import org.arch.framework.automate.from.entity.FormDefinition;
 import org.arch.framework.automate.from.service.FormDefinitionService;
 import org.arch.framework.automate.from.utils.DefinitionTableUtil;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.crud.Direction;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -39,9 +39,9 @@ public class DdlAlterDirective extends AbstractDirective implements SqlDirective
     public AlterTableResponse exec(DirectiveRequestDto directiveRequest) {
         String databaseName = DefinitionTableUtil.camelToUnderscore(directiveRequest.getDatabaseName());
         String tableName = DefinitionTableUtil.camelToUnderscore(directiveRequest.getTableName());
-        DatabaseProperties properties = null;
+        DatabaseConfiguration properties = null;
         if (directiveRequest.getDataSource() != null) {
-            properties = new DatabaseProperties();
+            properties = new DatabaseConfiguration();
             BeanUtils.copyProperties(directiveRequest.getDataSource(), properties);
         }
         DDLOperate ddlOperate = DDLOperate.selectDDLOperate(properties);

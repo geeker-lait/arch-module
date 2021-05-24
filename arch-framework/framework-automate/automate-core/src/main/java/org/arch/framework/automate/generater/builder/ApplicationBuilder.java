@@ -3,17 +3,15 @@ package org.arch.framework.automate.generater.builder;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.formula.functions.T;
 import org.arch.framework.automate.generater.core.Buildable;
 import org.arch.framework.automate.generater.core.Generable;
-
-import org.arch.framework.automate.generater.core.SchemaMetadata;
+import org.arch.framework.automate.generater.core.SchemaData;
 import org.arch.framework.automate.generater.core.TemplateName;
-import org.arch.framework.automate.generater.properties.DatabaseProperties;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
+import org.arch.framework.automate.generater.properties.PomProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
-import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.arch.framework.beans.utils.StringUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -26,7 +24,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 @Slf4j
-@Service
+@Component
 public class ApplicationBuilder extends AbstractBuilder implements Buildable {
 
     @Override
@@ -35,15 +33,16 @@ public class ApplicationBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaMetadata schemaData) {
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
         try {
-            doBuild(path, engine, projectProperties, documentProperties, (DatabaseProperties) schemaData);
+            doBuild(path, engine, projectProperties, documentProperties, schemaData);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, DatabaseProperties databaseProperties) throws IOException {
+
+    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaData schemaData) throws IOException {
         String basePkg = null == projectProperties.getBasePkg() ? "" : projectProperties.getBasePkg();
         Path fileDir = path.resolve(Generable.MAIN_JAVA.concat(basePkg).replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
         Files.createDirectories(fileDir);
