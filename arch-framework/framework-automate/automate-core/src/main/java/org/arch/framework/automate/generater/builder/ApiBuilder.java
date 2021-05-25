@@ -11,6 +11,7 @@ import org.arch.framework.automate.generater.properties.ProjectProperties;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * @author lait.zhang@gmail.com
@@ -27,10 +28,10 @@ public class ApiBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
-        log.info("api builder building {}", schemaData);
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas) {
+        log.info("api builder building {}", schemaDatas);
         // 根据schema创建项目
-        buildApiPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
+        buildApiPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaDatas);
     }
 
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 * @date ${.now}
 */
 @RestController
-@ResquestMapping("${(name?uncap_first)!""}")
+@RequestMapping("${(name?uncap_first)!""}")
 public interface ${(name?cap_first)!""}${suffix!""}{
     <#list curls as curl>
     /**

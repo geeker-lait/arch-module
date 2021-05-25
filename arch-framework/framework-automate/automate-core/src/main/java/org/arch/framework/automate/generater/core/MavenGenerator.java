@@ -22,16 +22,16 @@ import java.util.Set;
 public class MavenGenerator extends AbstractGenerator {
 
     @Override
-    public void buildModule(Path path, PomProperties pomProperties, SchemaData schemaData) {
+    public void buildModule(Path path, PomProperties pomProperties, List<SchemaData> schemaDatas) {
         try {
             List<DependencieProterties> dependenciesPropertiesList = new ArrayList<>();
-            doBuild(path, pomProperties, dependenciesPropertiesList, schemaData);
+            doBuild(path, pomProperties, dependenciesPropertiesList, schemaDatas);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
 
-    private void doBuild(Path path, PomProperties pomProperties, List<DependencieProterties> dependenciesPropertiesList, SchemaData schemaData) throws Exception {
+    private void doBuild(Path path, PomProperties pomProperties, List<DependencieProterties> dependenciesPropertiesList, List<SchemaData> schemaDatas) throws Exception {
         Set<PomProperties> modules = pomProperties.getModules();
         if (modules == null || modules.size() == 0) {
             pomProperties.setPackaging("jar");
@@ -51,7 +51,7 @@ public class MavenGenerator extends AbstractGenerator {
                 String stemplate = documentProperties.getTemplate();
                 Buildable buildable = BUILDER_MAP.get(stemplate);
                 if (buildable != null) {
-                    buildable.build(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
+                    buildable.build(path, engine, projectProperties, pomProperties, documentProperties, schemaDatas);
                 } else {
                     log.error("buildable is null ,please implements org.arch.framework.automate.generater.core.Buildable and config it as a spring component");
                 }
@@ -77,8 +77,8 @@ public class MavenGenerator extends AbstractGenerator {
                 /**
                  * 创建pom
                  */
-                BUILDER_MAP.get("pom.ftl").build(path, engine, projectProperties, pomProperties, DOCUMENT_MAP.get("pom"), schemaData);
-                doBuild(path.resolve(module.getArtifactId()), module, dependenciesPropertiesList, schemaData);
+                BUILDER_MAP.get("pom.ftl").build(path, engine, projectProperties, pomProperties, DOCUMENT_MAP.get("pom"), schemaDatas);
+                doBuild(path.resolve(module.getArtifactId()), module, dependenciesPropertiesList, schemaDatas);
             }
             if (pomProperties.isRoot()) {
                 /**
