@@ -1,19 +1,14 @@
 package org.arch.framework.automate;
 
 import com.alibaba.fastjson.JSONObject;
-import org.arch.framework.automate.generater.core.Generable;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
+import org.arch.framework.automate.generater.core.Generable;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @ClassName MainTest
@@ -24,6 +19,7 @@ import java.util.stream.Collectors;
  * @Description //TODO
  */
 @SpringBootTest
+@ComponentScan(basePackages = "org.arch.framework.automate")
 public class GeneratorTest {
     @Autowired
     private GeneratorConfig generatorConfig;

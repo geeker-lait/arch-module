@@ -11,6 +11,7 @@ import org.arch.framework.automate.common.database.Database;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -60,40 +61,12 @@ public class Module {
             return false;
         }
         Module module = (Module) o;
-        if (!name.equals(module.name)) {
-            return false;
-        }
-        if (!typ.equals(module.typ)) {
-            return false;
-        }
-        if (!comment.equals(module.comment)) {
-            return false;
-        }
-        if (!pkg.equals(module.pkg)) {
-            return false;
-        }
-        if (!databases.equals(module.databases)) {
-            return false;
-        }
-        if (!apis.equals(module.apis)) {
-            return false;
-        }
-        if (!models.equals(module.models)) {
-            return false;
-        }
-        return models.equals(module.models);
+        return name.equals(module.name) && Objects.equals(typ, module.typ) && Objects.equals(comment, module.comment) && Objects.equals(pkg, module.pkg) && databases.equals(module.databases) && apis.equals(module.apis) && models.equals(module.models);
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + typ.hashCode();
-        result = 31 * result + comment.hashCode();
-        result = 31 * result + pkg.hashCode();
-        result = 31 * result + databases.hashCode();
-        result = 31 * result + apis.hashCode();
-        result = 31 * result + models.hashCode();
-        return result;
+        return Objects.hash(name, typ, comment, pkg, databases, apis, models);
     }
 
     @Override

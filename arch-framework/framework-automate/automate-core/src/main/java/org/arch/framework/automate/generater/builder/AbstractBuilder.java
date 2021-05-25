@@ -4,6 +4,7 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.json.JSONUtil;
 import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.automate.common.api.Api;
 import org.arch.framework.automate.common.api.Interfac;
 import org.arch.framework.automate.common.api.Model;
 import org.arch.framework.automate.common.database.Table;
@@ -25,12 +26,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Matcher;
-import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * @author lait.zhang@gmail.com
@@ -130,11 +134,15 @@ public abstract class AbstractBuilder {
     protected void buildMvcPackageFile(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties,
                                        PomProperties pomProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas) {
         try {
-            List<Interfac> interfaceList = schemaDatas.stream()
-                                                .map(SchemaData::getApi)
-                                                .filter(Objects::nonNull)
-                                                .flatMap(api -> api.getInterfaces().stream())
-                                                .collect(Collectors.toList());
+            Map<String, List<Interfac>> schemaDataInterfacesMap =
+                    schemaDatas.stream()
+                               .filter(schemaData -> {
+                                   Api api = schemaData.getApi();
+                                   return nonNull(api);
+                               })
+                               .collect(toMap(SchemaData::getIdentifier,
+                                              schemaData -> schemaData.getApi().getInterfaces())
+                               );
             for (SchemaData schemaData : schemaDatas) {
                 if (schemaData.getSchemaPattern() == SchemaPattern.MVC) {
                     String currentPkg = buildAndGetCurrentPkg(path, projectProperties, documentProperties, schemaData);
@@ -148,7 +156,9 @@ public abstract class AbstractBuilder {
                         buildFile(projectProperties.getCover(), filePath);
                         Map<String, Object> dataMap = buildData(projectProperties, documentProperties, table);
                         dataMap.put("package", currentPkg);
-                        dataMap.put("interfaces", interfaceList);
+                        dataMap.put("interfaces",
+                                    ofNullable(schemaDataInterfacesMap.get(schemaData.getIdentifier()))
+                                                                      .orElse(new ArrayList<>()));
                         // 获取模板并渲染
                         String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
                         // 写入文件

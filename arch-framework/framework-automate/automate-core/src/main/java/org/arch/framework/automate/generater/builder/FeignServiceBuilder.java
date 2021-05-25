@@ -21,7 +21,7 @@ public class FeignServiceBuilder extends AbstractBuilder implements Buildable {
 
     @Override
     public TemplateName getTemplateName() {
-        return TemplateName.SERVICE;
+        return TemplateName.FEIGN_SERVICE;
     }
 
     @Override

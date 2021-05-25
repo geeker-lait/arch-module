@@ -23,6 +23,11 @@
             <artifactId>spring-data-redis</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -99,11 +104,6 @@
             <artifactId>dom4j</artifactId>
         </dependency>
 
-   <!--     <dependency>
-            <groupId>com.github.SilenceDut</groupId>
-            <artifactId>jpinyin</artifactId>
-            <version>1.0</version>
-        </dependency>-->
         <dependency>
             <groupId>com.github.stuxuhai</groupId>
             <artifactId>jpinyin</artifactId>
