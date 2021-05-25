@@ -18,7 +18,7 @@
         <jsonwebtoken.version>0.5.1</jsonwebtoken.version>
         <guava.version>[24.1.1,)</guava.version>
         <flowable.version>6.6.0</flowable.version>
-        <dcenter-ums.version>2.2.29</dcenter-ums.version>
+        <dcenter-ums.version>2.2.40</dcenter-ums.version>
     </properties>
 
 
@@ -238,7 +238,7 @@
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>ums-config</artifactId>
+                <artifactId>ums-conf</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -455,6 +455,11 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-extension</artifactId>
+                <version>3.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-core</artifactId>
                 <version>3.4.1</version>
             </dependency>
             <dependency>
