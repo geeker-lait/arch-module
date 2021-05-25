@@ -11,6 +11,7 @@ import org.arch.framework.automate.generater.properties.ProjectProperties;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -23,8 +24,8 @@ public class ServiceBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
-        buildMvcPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas) {
+        buildMvcPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaDatas);
     }
 
 }

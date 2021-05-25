@@ -9,7 +9,11 @@ import org.arch.framework.automate.common.api.Model;
 import org.arch.framework.automate.common.database.Table;
 import org.arch.framework.automate.common.utils.JdbcTypeUtils;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
-import org.arch.framework.automate.generater.core.*;
+import org.arch.framework.automate.generater.core.AbstractGenerator;
+import org.arch.framework.automate.generater.core.Generable;
+import org.arch.framework.automate.generater.core.Metadata;
+import org.arch.framework.automate.generater.core.SchemaData;
+import org.arch.framework.automate.generater.core.SchemaPattern;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
@@ -21,11 +25,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 /**
  * @author lait.zhang@gmail.com
@@ -123,29 +128,32 @@ public abstract class AbstractBuilder {
     }
 
     protected void buildMvcPackageFile(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties,
-                                       PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
+                                       PomProperties pomProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas) {
         try {
-            if (schemaData.getSchemaPattern() == SchemaPattern.MVC) {
-                String currentPkg = buildAndGetCurrentPkg(path, projectProperties, documentProperties, schemaData);
-                Path cpath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
-                List<Interfac> interfaces = new ArrayList<>();
-                if (schemaData.getApi() != null && schemaData.getApi().getInterfaces().size() > 0) {
-                    interfaces.addAll(schemaData.getApi().getInterfaces());
-                }
-                for (Table table : schemaData.getDatabase().getTables()) {
-                    tableSchemaToCamel(table);
-                    String fileName = buildFileName(documentProperties, table.getName(), projectProperties.getStuffixed());
-                    String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
-                    Path filePath = Paths.get(cpath.toString().concat(File.separator).concat(fileName).concat(ext));
-                    // 创建文件
-                    buildFile(projectProperties.getCover(), filePath);
-                    Map<String, Object> dataMap = buildData(projectProperties, documentProperties, table);
-                    dataMap.put("package", currentPkg);
-                    dataMap.put("interfaces", interfaces);
-                    // 获取模板并渲染
-                    String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
-                    // 写入文件
-                    Files.write(filePath, code.getBytes());
+            List<Interfac> interfaceList = schemaDatas.stream()
+                                                .map(SchemaData::getApi)
+                                                .filter(Objects::nonNull)
+                                                .flatMap(api -> api.getInterfaces().stream())
+                                                .collect(Collectors.toList());
+            for (SchemaData schemaData : schemaDatas) {
+                if (schemaData.getSchemaPattern() == SchemaPattern.MVC) {
+                    String currentPkg = buildAndGetCurrentPkg(path, projectProperties, documentProperties, schemaData);
+                    Path cpath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
+                    for (Table table : schemaData.getDatabase().getTables()) {
+                        tableSchemaToCamel(table);
+                        String fileName = buildFileName(documentProperties, table.getName(), projectProperties.getStuffixed());
+                        String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
+                        Path filePath = Paths.get(cpath.toString().concat(File.separator).concat(fileName).concat(ext));
+                        // 创建文件
+                        buildFile(projectProperties.getCover(), filePath);
+                        Map<String, Object> dataMap = buildData(projectProperties, documentProperties, table);
+                        dataMap.put("package", currentPkg);
+                        dataMap.put("interfaces", interfaceList);
+                        // 获取模板并渲染
+                        String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
+                        // 写入文件
+                        Files.write(filePath, code.getBytes());
+                    }
                 }
             }
         } catch (IOException e) {
@@ -155,44 +163,46 @@ public abstract class AbstractBuilder {
 
 
     protected void buildApiPackageFile(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties,
-                                       PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
+                                       PomProperties pomProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas) {
         try {
-            if (schemaData.getSchemaPattern() == SchemaPattern.API) {
-                String currentPkg = buildAndGetCurrentPkg(path, projectProperties, documentProperties, schemaData);
-                Path cpath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
-                List<Interfac> interfaces = schemaData.getApi().getInterfaces();
-                // 写入文件
-                for (Interfac interfac : interfaces) {
-                    String fileName = buildFileName(documentProperties, interfac.getName(), projectProperties.getStuffixed());
-                    String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
-                    Path filePath = Paths.get(cpath.toString().concat(File.separator).concat(fileName).concat(ext));
-                    // 创建文件
-                    buildFile(projectProperties.getCover(), filePath);
-                    Map<String, Object> dataMap = new HashMap<>();
-                    dataMap.putAll(JSONUtil.parseObj(projectProperties));
-                    dataMap.putAll(JSONUtil.parseObj(documentProperties));
-                    dataMap.putAll(JSONUtil.parseObj(interfac));
-                    dataMap.put("package", currentPkg);
-                    // 获取模板并渲染
-                    String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
+            for (SchemaData schemaData : schemaDatas) {
+                if (schemaData.getSchemaPattern() == SchemaPattern.API) {
+                    String currentPkg = buildAndGetCurrentPkg(path, projectProperties, documentProperties, schemaData);
+                    Path cpath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
+                    List<Interfac> interfaces = schemaData.getApi().getInterfaces();
                     // 写入文件
-                    Files.write(filePath, code.getBytes());
-
-                    // 写入input and output
-                    Map<String, Object> inMap = new HashMap<>();
-                    for (Model im : interfac.getInModels()) {
-                        Path rp = cpath;
-                        if (StringUtils.isNoneBlank(im.getPkg())) {
-                            rp = cpath.resolve(Paths.get(im.getPkg().replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
-                            inMap.put("package", currentPkg + "." + im.getPkg());
-                        } else {
-                            inMap.put("package", currentPkg);
-                        }
-                        rp = Paths.get(rp.toString().concat(File.separator).concat(im.getName()).concat(ext));
-                        inMap.put("model", im);
+                    for (Interfac interfac : interfaces) {
+                        String fileName = buildFileName(documentProperties, interfac.getName(), projectProperties.getStuffixed());
+                        String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
+                        Path filePath = Paths.get(cpath.toString().concat(File.separator).concat(fileName).concat(ext));
+                        // 创建文件
+                        buildFile(projectProperties.getCover(), filePath);
+                        Map<String, Object> dataMap = new HashMap<>();
+                        dataMap.putAll(JSONUtil.parseObj(projectProperties));
+                        dataMap.putAll(JSONUtil.parseObj(documentProperties));
+                        dataMap.putAll(JSONUtil.parseObj(interfac));
+                        dataMap.put("package", currentPkg);
                         // 获取模板并渲染
-                        String coder = templateEngine.getTemplate("dto.ftl").render(inMap);
-                        Files.write(rp, coder.getBytes());
+                        String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
+                        // 写入文件
+                        Files.write(filePath, code.getBytes());
+
+                        // 写入input and output
+                        Map<String, Object> inMap = new HashMap<>();
+                        for (Model im : interfac.getInModels()) {
+                            Path rp = cpath;
+                            if (StringUtils.isNoneBlank(im.getPkg())) {
+                                rp = cpath.resolve(Paths.get(im.getPkg().replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
+                                inMap.put("package", currentPkg + "." + im.getPkg());
+                            } else {
+                                inMap.put("package", currentPkg);
+                            }
+                            rp = Paths.get(rp.toString().concat(File.separator).concat(im.getName()).concat(ext));
+                            inMap.put("model", im);
+                            // 获取模板并渲染
+                            String coder = templateEngine.getTemplate("dto.ftl").render(inMap);
+                            Files.write(rp, coder.getBytes());
+                        }
                     }
                 }
             }

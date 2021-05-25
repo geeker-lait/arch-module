@@ -5,6 +5,7 @@ import org.arch.framework.automate.generater.properties.PomProperties;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * @author lait.zhang@gmail.com
@@ -23,7 +24,7 @@ public class GradleGenerator extends AbstractGenerator {
 
 
     @Override
-    public void buildModule(Path path, PomProperties pomProperties, SchemaData schemaData) {
+    public void buildModule(Path path, PomProperties pomProperties, List<SchemaData> schemaDatas) {
 
     }
 }

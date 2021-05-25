@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -30,12 +31,12 @@ public class MapperXmlBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
-        buildMvcPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas) {
+        buildMvcPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaDatas);
     }
 
 
-    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaData schemaData) {
+    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas) {
 
         String fileName = buildFileName(documentProperties, "Mapper", true);
         String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();

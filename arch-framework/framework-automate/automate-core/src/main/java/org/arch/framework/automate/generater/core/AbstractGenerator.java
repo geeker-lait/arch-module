@@ -6,11 +6,13 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
-import org.arch.framework.automate.generater.properties.*;
+import org.arch.framework.automate.generater.properties.DocumentProperties;
+import org.arch.framework.automate.generater.properties.PomProperties;
+import org.arch.framework.automate.generater.properties.ProjectProperties;
+import org.arch.framework.automate.generater.properties.TemplateProperties;
 import org.arch.framework.beans.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -48,6 +50,7 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
     private List<Generable> generables;
 
 
+    @SuppressWarnings("AlibabaRemoveCommentedCode")
     private void init(GeneratorConfig generatorConfig) {
         //Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
         //cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
@@ -76,8 +79,9 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
      * private PomProperties pom;
      *
      * @param generatorConfig
-     * @throws IOException
+     * @throws Exception
      */
+    @SuppressWarnings("AlibabaRemoveCommentedCode")
     @Override
     public void generate(GeneratorConfig generatorConfig) throws Exception {
         // 初始化
@@ -89,17 +93,15 @@ public abstract class AbstractGenerator implements Generable/*, ApplicationConte
             SchemaReadable readable = READER_MAP.get(s.getTyp());
             if (readable != null) {
                 List<SchemaData> schemaDatas = readable.read(s);
-                if (schemaDatas != null) {
-                    schemaDatas.forEach(sd -> {
-                        // 创建项目模块
-                        buildModule(rootPath, generatorConfig.getProject().getPom(), sd);
-                    });
+                if (schemaDatas != null && schemaDatas.size() > 0) {
+                    // 创建项目模块
+                    buildModule(rootPath, generatorConfig.getProject().getPom(), schemaDatas);
                 }
             }
         });
     }
 
 
-    public abstract void buildModule(Path path, PomProperties pomProperties, SchemaData schemaData);
+    public abstract void buildModule(Path path, PomProperties pomProperties, List<SchemaData> schemaDatas);
 
 }

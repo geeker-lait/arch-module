@@ -6,6 +6,7 @@ import org.arch.framework.automate.generater.properties.PomProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;
 
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * @author lait.zhang@gmail.com
@@ -27,7 +28,7 @@ public interface Buildable {
      * @param projectProperties  项目配置
      * @param pomProperties      包配置
      * @param documentProperties 文档配置
-     * @param schemaData         schema配置
+     * @param schemaDatas        schema配置
      */
-    void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData);
+    void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas);
 }

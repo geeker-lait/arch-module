@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,16 +36,16 @@ public class YmlBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas) {
         try {
-            doBuild(path, engine, projectProperties, pomProperties, documentProperties, schemaData);
+            doBuild(path, engine, projectProperties, pomProperties, documentProperties, schemaDatas);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) throws IOException {
+    private void doBuild(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas) throws IOException {
         String fileName = buildFileName(documentProperties, "application", false);
         String ext = StringUtils.isEmpty(documentProperties.getExt()) ? "" : documentProperties.getExt();
         Path fileDir = path.resolve(Generable.MAIN_RESOURCES);

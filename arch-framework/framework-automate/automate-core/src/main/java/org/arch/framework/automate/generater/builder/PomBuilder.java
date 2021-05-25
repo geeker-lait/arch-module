@@ -43,7 +43,7 @@ public class PomBuilder extends AbstractBuilder implements Buildable {
     }
 
     @Override
-    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, SchemaData schemaData) {
+    public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas) {
         buildPom(projectProperties.getCover(), path, pomProperties, engine);
     }
 
