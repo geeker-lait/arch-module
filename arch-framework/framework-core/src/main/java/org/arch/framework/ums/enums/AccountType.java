@@ -15,12 +15,12 @@ import static org.apache.commons.lang3.StringUtils.substringAfterLast;
  * @author YongWu zheng
  * @since 2021.1.3 15:03
  */
-public enum AccountType {
+public enum AccountType implements DictionaryItemInfo {
 
     /**
-     * 系统账号
+     * 账号
      */
-    ACCOUNT {
+    ACCOUNT("账号", "") {
         @Override
         public IdKey getIdKey() {
             return IdKey.UMS_ACCOUNT_ID;
@@ -34,7 +34,7 @@ public enum AccountType {
     /**
      * 用户
      */
-    USER {
+    USER("用户", "") {
         @Override
         public IdKey getIdKey() {
             return IdKey.UMS_USER_ID;
@@ -48,7 +48,7 @@ public enum AccountType {
     /**
      * 会员
      */
-    MEMBER {
+    MEMBER("会员", "") {
         @Override
         public IdKey getIdKey() {
             return IdKey.UMS_MEMBER_ID;
@@ -62,7 +62,7 @@ public enum AccountType {
     /**
      * 商户
      */
-    MERCHANT {
+    MERCHANT("商户", "") {
         @Override
         public IdKey getIdKey() {
             return IdKey.UMS_MERCHANT_ID;
@@ -73,6 +73,40 @@ public enum AccountType {
             return getIdLengthNonBizPrefix(IdKey.UMS_MERCHANT_ID);
         }
     };
+
+    /**
+     * title
+     */
+    private final String title;
+    /**
+     * 备注
+     */
+    private final String mark;
+
+    AccountType(String title, String mark) {
+        this.title = title;
+        this.mark = mark;
+    }
+
+    @Override
+    public String getTitle() {
+        return this.title;
+    }
+
+    @Override
+    public String getVal() {
+        return this.name().toLowerCase();
+    }
+
+    @Override
+    public int getSeq() {
+        return this.ordinal();
+    }
+
+    @Override
+    public String getMark() {
+        return this.mark;
+    }
 
     /**
      * 返回对应的 {@link IdKey}

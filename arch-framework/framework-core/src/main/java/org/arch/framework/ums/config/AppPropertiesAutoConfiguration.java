@@ -15,6 +15,7 @@ import org.springframework.core.annotation.Order;
  */
 @Configuration
 @Order(98)
-@EnableConfigurationProperties({AppProperties.class, AuthClientScopesCacheProperties.class, EncryptProperties.class})
+@EnableConfigurationProperties({AppProperties.class, AuthClientScopesCacheProperties.class,
+        EncryptProperties.class})
 public class AppPropertiesAutoConfiguration {
 }

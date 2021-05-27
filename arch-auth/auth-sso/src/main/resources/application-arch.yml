@@ -21,6 +21,7 @@ arch:
   app:
     client-id: "001"
     client-secret: "001"
+    systemTenantId: "0"
   encrypt:
     fpe:
       password: 8CE4A06235DACD71AD9CA11C5AF21B8C
@@ -34,7 +35,6 @@ arch:
       crypto: HmacSHA1
       returnDigits: 8
       slidingWindow: 30S
-
   file:
     # 图片文件存放的 url. 默认: ""
     url: "http://localhost:9090/sso"
