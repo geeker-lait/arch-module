@@ -1,7 +1,7 @@
 package org.arch.framework.automate.generater.reader.xmind.parser;
 
-import org.arch.framework.automate.common.database.Database;
-import org.arch.framework.automate.common.module.Module;
+import org.arch.automate.common.database.Database;
+import org.arch.automate.common.Module;
 import org.arch.framework.automate.generater.reader.xmind.meta.Attached;
 import org.arch.framework.automate.generater.reader.xmind.meta.Children;
 import org.slf4j.Logger;

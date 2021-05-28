@@ -1,5 +1,6 @@
 package org.arch.framework.automate.generater.core;
 
+import org.arch.automate.common.enums.SchemaType;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
 
 import java.io.IOException;

@@ -1,9 +1,10 @@
 package org.arch.framework.automate.generater.core;
 
 import lombok.Data;
-import org.arch.framework.automate.common.api.Api;
-import org.arch.framework.automate.common.database.Database;
-import org.arch.framework.automate.common.module.Module;
+import org.arch.automate.common.api.Api;
+import org.arch.automate.common.database.Database;
+import org.arch.automate.common.enums.SchemaPattern;
+import org.arch.automate.common.Module;
 
 @Data
 public class ApiSchemaData implements SchemaData {

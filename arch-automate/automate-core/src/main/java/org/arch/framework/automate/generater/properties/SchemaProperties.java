@@ -4,11 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.arch.framework.automate.generater.core.ConfigProperties;
-import org.arch.framework.automate.generater.core.SchemaConfiguration;
-import org.arch.framework.automate.generater.core.SchemaType;
-import org.arch.framework.automate.common.configuration.DatabaseConfiguration;
-import org.arch.framework.automate.common.configuration.ExcelFiledConfiguration;
-import org.arch.framework.automate.common.configuration.XmindConfiguration;
+import org.arch.automate.common.configuration.SchemaConfiguration;
+import org.arch.automate.common.enums.SchemaType;
+import org.arch.automate.common.configuration.DatabaseConfiguration;
+import org.arch.automate.common.configuration.ExcelFiledConfiguration;
+import org.arch.automate.common.configuration.XmindConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,9 @@
 package org.arch.framework.automate.generater.core;
 
 import lombok.Data;
-import org.arch.framework.automate.common.module.Project;
+import org.arch.automate.common.configuration.SchemaConfiguration;
+import org.arch.automate.common.enums.SchemaPattern;
+import org.arch.automate.common.Project;
 
 import java.util.concurrent.ConcurrentHashMap;
 

@@ -2,9 +2,9 @@ package org.arch.framework.automate.xmind;
 
 import com.google.common.base.CaseFormat;
 import org.apache.commons.lang3.StringUtils;
-import org.arch.framework.automate.common.database.Column;
-import org.arch.framework.automate.common.database.Database;
-import org.arch.framework.automate.common.database.Table;
+import org.arch.automate.common.database.Column;
+import org.arch.automate.common.database.Database;
+import org.arch.automate.common.database.Table;
 import org.arch.framework.automate.generater.reader.xmind.meta.Attached;
 import org.arch.framework.automate.generater.reader.xmind.meta.Children;
 import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;

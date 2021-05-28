@@ -5,6 +5,7 @@ import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.arch.automate.common.enums.SchemaType;
 import org.arch.framework.automate.generater.config.GeneratorConfig;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;

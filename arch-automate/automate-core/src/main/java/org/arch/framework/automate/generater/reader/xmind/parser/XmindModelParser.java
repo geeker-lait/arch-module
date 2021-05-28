@@ -1,11 +1,11 @@
 package org.arch.framework.automate.generater.reader.xmind.parser;
 
-import org.arch.framework.automate.common.api.Annot;
-import org.arch.framework.automate.common.api.Interfac;
-import org.arch.framework.automate.common.api.Model;
-import org.arch.framework.automate.common.api.Param;
-import org.arch.framework.automate.common.module.Module;
-import org.arch.framework.automate.generater.reader.xmind.Import;
+import org.arch.automate.common.api.Annot;
+import org.arch.automate.common.api.Interfac;
+import org.arch.automate.common.api.Model;
+import org.arch.automate.common.api.Param;
+import org.arch.automate.common.Module;
+import org.arch.automate.common.Import;
 import org.arch.framework.automate.generater.reader.xmind.meta.Attached;
 import org.arch.framework.automate.generater.reader.xmind.meta.Children;
 import org.arch.framework.automate.generater.reader.xmind.nodespace.ColumnType;

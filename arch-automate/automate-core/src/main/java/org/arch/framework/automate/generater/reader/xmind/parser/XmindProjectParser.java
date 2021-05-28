@@ -1,8 +1,8 @@
 package org.arch.framework.automate.generater.reader.xmind.parser;
 
-import org.arch.framework.automate.common.module.Module;
-import org.arch.framework.automate.common.module.Project;
-import org.arch.framework.automate.generater.reader.xmind.Pkg;
+import org.arch.automate.common.Module;
+import org.arch.automate.common.Project;
+import org.arch.automate.common.Pkg;
 import org.arch.framework.automate.generater.reader.xmind.meta.Attached;
 import org.arch.framework.automate.generater.reader.xmind.meta.Children;
 import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;

@@ -1,11 +1,11 @@
 package org.arch.framework.automate.generater.reader;
 
-import org.arch.framework.automate.common.module.Project;
+import org.arch.automate.common.Project;
 import org.arch.framework.automate.generater.core.ReaderConfiguration;
-import org.arch.framework.automate.generater.core.SchemaConfiguration;
+import org.arch.automate.common.configuration.SchemaConfiguration;
 import org.arch.framework.automate.generater.core.SchemaData;
-import org.arch.framework.automate.generater.core.SchemaPattern;
-import org.arch.framework.automate.generater.ex.GeneratorCode;
+import org.arch.automate.common.enums.SchemaPattern;
+import org.arch.automate.common.ex.GeneratorCode;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.arch.framework.beans.Assert;
 

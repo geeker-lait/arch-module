@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.automate.generater.core.Buildable;
 import org.arch.framework.automate.generater.core.Generable;
 import org.arch.framework.automate.generater.core.SchemaData;
-import org.arch.framework.automate.generater.core.TemplateName;
+import org.arch.automate.common.enums.TemplateName;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;

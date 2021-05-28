@@ -1,7 +1,7 @@
 //package org.arch.framework.automate.generater.reader.database;
 //
 //import lombok.AllArgsConstructor;
-//import org.arch.framework.automate.from.service.DatabaseService;
+//import org.arch.automate.form.service.DatabaseService;
 //import org.arch.framework.automate.generater.converter.AbstractSchemaService;
 //import org.arch.framework.automate.generater.core.ReaderConfiguration;
 //import org.arch.framework.automate.generater.converter.SchemaConvertable;

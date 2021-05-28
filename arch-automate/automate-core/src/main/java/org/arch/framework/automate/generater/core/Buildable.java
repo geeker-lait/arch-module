@@ -1,6 +1,7 @@
 package org.arch.framework.automate.generater.core;
 
 import cn.hutool.extra.template.TemplateEngine;
+import org.arch.automate.common.enums.TemplateName;
 import org.arch.framework.automate.generater.properties.DocumentProperties;
 import org.arch.framework.automate.generater.properties.PomProperties;
 import org.arch.framework.automate.generater.properties.ProjectProperties;

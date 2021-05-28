@@ -7,13 +7,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.arch.framework.automate.common.database.Column;
-import org.arch.framework.automate.common.database.Database;
-import org.arch.framework.automate.common.database.Table;
-import org.arch.framework.automate.common.utils.ExcelUtils;
-import org.arch.framework.automate.common.utils.JdbcTypeUtils;
-import org.arch.framework.automate.generater.core.*;
-import org.arch.framework.automate.common.configuration.ExcelFiledConfiguration;
+import org.arch.automate.common.configuration.ExcelFiledConfiguration;
+import org.arch.automate.common.database.Column;
+import org.arch.automate.common.database.Database;
+import org.arch.automate.common.database.Table;
+import org.arch.automate.common.enums.SchemaPattern;
+import org.arch.automate.common.enums.SchemaType;
+import org.arch.automate.common.utils.ExcelUtils;
+import org.arch.automate.common.utils.JdbcTypeUtils;
+import org.arch.framework.automate.generater.core.DatabaseSchemaData;
+import org.arch.framework.automate.generater.core.ReaderConfiguration;
+import org.arch.framework.automate.generater.core.SchemaData;
+import org.arch.framework.automate.generater.core.SchemaReadable;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.springframework.stereotype.Service;
 
@@ -88,7 +93,7 @@ public class ExcelSchemaReader extends AbstractSchemaReader<ExcelFiledConfigurat
             Database database = new Database();
             database.setName(dbName);
             Table table = null;
-            Map<String,Table> tabMap = new HashMap<>();
+            Map<String, Table> tabMap = new HashMap<>();
             for (int j = sheet.getFirstRowNum() + 1; j <= sheet.getLastRowNum(); j++) {
                 Row row = sheet.getRow(j);
                 //存储每一行的信息
@@ -105,14 +110,14 @@ public class ExcelSchemaReader extends AbstractSchemaReader<ExcelFiledConfigurat
                                 log.info("current table name is :{}", stable);
                                 String tc[] = stable.split("/");
                                 table = tabMap.get(tc[1]);
-                                if(table != null){
+                                if (table != null) {
                                     continue;
                                 }
                                 table = new Table();
                                 table.setName(tc[1]);
                                 table.setComment(tc[0]);
                                 database.getTables().add(table);
-                                tabMap.put(tc[1],table);
+                                tabMap.put(tc[1], table);
                             }
                         }
                     } else {

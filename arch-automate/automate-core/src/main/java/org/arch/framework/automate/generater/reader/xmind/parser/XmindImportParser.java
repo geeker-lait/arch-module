@@ -1,7 +1,7 @@
 package org.arch.framework.automate.generater.reader.xmind.parser;
 
-import org.arch.framework.automate.common.module.Module;
-import org.arch.framework.automate.generater.reader.xmind.Import;
+import org.arch.automate.common.Module;
+import org.arch.automate.common.Import;
 import org.arch.framework.automate.generater.reader.xmind.meta.Attached;
 import org.arch.framework.automate.generater.reader.xmind.meta.Children;
 import org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType;

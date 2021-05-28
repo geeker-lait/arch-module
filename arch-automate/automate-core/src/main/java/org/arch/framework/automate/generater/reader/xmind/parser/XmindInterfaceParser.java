@@ -1,11 +1,11 @@
 package org.arch.framework.automate.generater.reader.xmind.parser;
 
-import org.arch.framework.automate.common.api.Annot;
-import org.arch.framework.automate.common.api.AnnotVal;
-import org.arch.framework.automate.common.api.Api;
-import org.arch.framework.automate.common.api.Curl;
-import org.arch.framework.automate.common.api.Interfac;
-import org.arch.framework.automate.common.module.Module;
+import org.arch.automate.common.api.Annot;
+import org.arch.automate.common.api.AnnotVal;
+import org.arch.automate.common.api.Api;
+import org.arch.automate.common.api.Curl;
+import org.arch.automate.common.api.Interfac;
+import org.arch.automate.common.Module;
 import org.arch.framework.automate.generater.reader.xmind.meta.Attached;
 import org.arch.framework.automate.generater.reader.xmind.meta.Children;
 import org.arch.framework.automate.generater.reader.xmind.nodespace.Annotation;

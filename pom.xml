@@ -76,6 +76,18 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -93,26 +105,16 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>framework-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>framework-automate</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>framework-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>automate-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>automate-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -122,11 +124,34 @@
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
+                <artifactId>automate-form</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>automate-mvc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
                 <artifactId>automate-rest</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
 
+
+
+
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>framework-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>framework-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>framework-utils</artifactId>
@@ -137,12 +162,15 @@
                 <artifactId>framework-beans</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>framework-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+
+
+
 
             <dependency>
                 <artifactId>mq-messaging</artifactId>
