@@ -4,8 +4,8 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.arch.framework.automate.generater.core.Metadata;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author lait.zhang@gmail.com
@@ -18,5 +18,5 @@ import java.util.List;
 public class Database implements Metadata {
     private String name;
     private String comment;
-    private final List<Table> tables = new ArrayList<>();
+    private final Set<Table> tables = new HashSet<>();
 }

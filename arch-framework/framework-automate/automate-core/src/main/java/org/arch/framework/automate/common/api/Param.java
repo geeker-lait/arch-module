@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * column/field/param
  * @author lait.zhang@gmail.com
  * @description: TODO
  * @weixin PN15855012581

@@ -5,8 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.arch.framework.automate.generater.core.Metadata;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author lait.zhang@gmail.com
@@ -27,10 +27,10 @@ public class Table implements Metadata {
     /**
      * 索引语句, 不包含末尾逗号
      */
-    private final List<String> uniquesStatements = new ArrayList<>();
+    private final Set<String> uniquesStatements = new HashSet<>();
     /**
      * 唯一索引语句, 不包含末尾逗号
      */
-    private final List<String> indexesStatements = new ArrayList<>();
-    private final List<Column> columns = new ArrayList<>();
+    private final Set<String> indexesStatements = new HashSet<>();
+    private final Set<Column> columns = new HashSet<>();
 }

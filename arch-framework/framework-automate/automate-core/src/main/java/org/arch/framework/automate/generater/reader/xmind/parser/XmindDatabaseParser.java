@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -29,12 +30,12 @@ public class XmindDatabaseParser {
 
     public static final Logger LOG = LoggerFactory.getLogger(XmindDatabaseParser.class);
 
-    static void generateDatabase(@NonNull Children children, @NonNull List<Module> moduleList,
+    static void generateDatabase(@NonNull Children children, @NonNull Set<Module> moduleSet,
                                  @NonNull Module module, @NonNull String pTitle) {
         String[] splits = splitInto3Parts(pTitle);
         if (splits.length != 3) {
             LOG.debug("title [" + pTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
-            generateOfChildren(children, moduleList, module, null, pTitle);
+            generateOfChildren(children, moduleSet, module, null, pTitle);
             return;
         }
         // 新增 database
@@ -55,13 +56,13 @@ public class XmindDatabaseParser {
             splits = splitInto3Parts(tableTitle);
             if (splits.length != 3) {
                 LOG.debug("title [" + tableTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
-                generateOfAttachedWithModule(attached, moduleList, module);
+                generateOfAttachedWithModule(attached, moduleSet, module);
                 continue;
             }
 
             Children tableChildren = attached.getChildren();
             if (nonNull(tableChildren)) {
-                XmindTableParser.generateTable(tableChildren, moduleList, module, database, splits);
+                XmindTableParser.generateTable(tableChildren, moduleSet, module, database, splits);
             }
         }
     }

@@ -3,8 +3,8 @@ package org.arch.framework.automate.common.module;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * project
@@ -18,5 +18,5 @@ import java.util.List;
 public class Project {
     private String name;
     private String descr;
-    private final List<Module> modules = new ArrayList<>();
+    private final Set<Module> modules = new HashSet<>();
 }

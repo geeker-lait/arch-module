@@ -48,7 +48,7 @@ public class XmindMethodParser {
     public static final Logger LOG = LoggerFactory.getLogger(XmindMethodParser.class);
 
     @NonNull
-    static Curl generateCurl(@NonNull List<Module> moduleList, @NonNull Module module,
+    static Curl generateCurl(@NonNull Set<Module> moduleSet, @NonNull Module module,
                              @NonNull Interfac interfac, @NonNull Attached attached,
                              @NonNull ParamType paramType, @NonNull String curlName,
                              @NonNull String curlComment, @NonNull Boolean isRestMethod) {
@@ -61,13 +61,67 @@ public class XmindMethodParser {
                               .setHttpMethod(methodName).setRestMethod(isRestMethod);
         Children attachedChildren = attached.getChildren();
         if (nonNull(attachedChildren)) {
-            resolveMethod(attached.getChildren(), moduleList, module, interfac, curl);
+            resolveMethod(attached.getChildren(), moduleSet, module, interfac, curl);
         }
+
+        // 如果没有设置 RequestMapping 类型的注解, 则自动添加
+        boolean isMappingAnnot =
+                curl.getAnnotations()
+                        .stream()
+                        .anyMatch(a -> "RequestMapping".equals(a.getName())
+                                  || "GetMapping".equals(a.getName())
+                                  || "PostMapping".equals(a.getName())
+                                  || "PutMapping".equals(a.getName())
+                                  || "DeleteMapping".equals(a.getName()));
+        if (!isMappingAnnot) {
+            Annot annot = getAnnot(interfac, curl, "");
+            Set<AnnotVal> annotValSet = annot.getAnnotateVals();
+            annotValSet.add(new AnnotVal().setKey("value").setValue("/" + curlName));
+            curl.getAnnotations().add(annot);
+        }
+
         return curl;
     }
 
+    private static Annot getAnnot(@NonNull Interfac interfac, Curl curl, String defaultMethodName) {
+        String method = curl.getHttpMethod();
+        Set<String> imports = interfac.getImports();
+        if (!hasText(method)) {
+            method = defaultMethodName;
+        }
+        String annotName;
+        switch (method) {
+            case "GET":
+                annotName = Annotation.GET_MAPPING.getAnnotName();
+                curl.setRestMethod(true);
+                imports.add(Annotation.GET_MAPPING.getPkg());
+                break;
+            case "POST":
+                annotName = Annotation.POST_MAPPING.getAnnotName();
+                curl.setRestMethod(true);
+                imports.add(Annotation.POST_MAPPING.getPkg());
+                break;
+            case "PUT":
+                annotName = Annotation.PUT_MAPPING.getAnnotName();
+                curl.setRestMethod(true);
+                imports.add(Annotation.PUT_MAPPING.getPkg());
+                break;
+            case "DEL":
+                annotName = Annotation.DELETE_MAPPING.getAnnotName();
+                curl.setRestMethod(true);
+                imports.add(Annotation.DELETE_MAPPING.getPkg());
+                break;
+            default:
+                annotName = Annotation.REQUEST_MAPPING.getAnnotName();
+                curl.setHttpMethod("GET");
+                imports.add(Annotation.REQUEST_MAPPING.getPkg());
+                break;
+        }
+        return new Annot().setName(annotName);
+    }
+
     @SuppressWarnings("AlibabaMethodTooLong")
-    private static void resolveMethod(@NonNull Children children, @NonNull List<Module> moduleList, @NonNull Module module,
+    private static void resolveMethod(@NonNull Children children, @NonNull Set<Module> moduleSet, @NonNull Module module,
                                       @NonNull Interfac interfac, @NonNull Curl curl) {
         List<Attached> attachedList = children.getAttached();
         if (attachedList.size() == 0) {
@@ -84,93 +138,56 @@ public class XmindMethodParser {
             ParamType paramType = getParamType(splits[0].trim());
             if (splits.length != 3 || isNull(paramType)) {
                 LOG.debug("title [" + title + "] 格式错误, 标准格式: paramType/paramName/[description]");
-                generateOfAttachedWithModule(attached, moduleList, module);
+                generateOfAttachedWithModule(attached, moduleSet, module);
                 continue;
             }
             switch (paramType) {
                 case IN:
                     if (hasText(splits[1].trim())) {
                         // title 格式 in/type/descr
-                        generateInOrOut(attached, moduleList, module, interfac, curl, splits, TRUE, index);
+                        generateInOrOut(attached, moduleSet, module, interfac, curl, splits, TRUE, index);
                     } else {
                         // title 格式 in//
-                        generateInOrOut(attached, moduleList, module, interfac, curl, null, TRUE, 1);
+                        generateInOrOut(attached, moduleSet, module, interfac, curl, null, TRUE, 1);
                     }
                     break;
                 case OUT:
                     if (hasText(splits[1].trim())) {
                         // title 格式 out/type/descr
-                        generateInOrOut(attached, moduleList, module, interfac, curl, splits, FALSE, 1);
+                        generateInOrOut(attached, moduleSet, module, interfac, curl, splits, FALSE, 1);
                     } else {
                         // title 格式 out//
-                        generateInOrOut(attached, moduleList, module, interfac, curl, null, FALSE, 1);
+                        generateInOrOut(attached, moduleSet, module, interfac, curl, null, FALSE, 1);
                     }
                     break;
-                case ANNOTES:
+                case ANNOTATES:
                     Children annotesChildren = attached.getChildren();
                     if (nonNull(annotesChildren)) {
-                        generateAnnotes(annotesChildren, moduleList, module, interfac, curl.getAnnotations());
+                        generateAnnotes(annotesChildren, moduleSet, module, interfac, curl.getAnnotations());
                     }
                     break;
-                case ANNOT:
+                case ANNOTATE:
                 case ANNOTATION:
-                    Annot annotation = generateAnnot(attached, moduleList, module, splits, interfac);
+                    Annot annotation = generateAnnot(attached, moduleSet, module, splits, interfac);
                     annotations.add(annotation);
                     break;
                 case GENERIC_VAL:
                     curl.setGenericVal(firstLetterToUpper(splits[1].trim()));
                     Children genericValChildren = attached.getChildren();
                     if (nonNull(genericValChildren)) {
-                        generateImport(genericValChildren, moduleList, module, interfac);
+                        generateImport(genericValChildren, moduleSet, module, interfac);
                     }
                     break;
                 case URI:
-                    String method = curl.getHttpMethod();
-                    Set<String> imports = interfac.getImports();
-                    if (!hasText(method)) {
-                        method = splits[2].trim().toUpperCase();
-                    }
-                    String annotName;
-                    switch (method) {
-                        case "GET":
-                            annotName = Annotation.GET_MAPPING.getAnnotName();
-                            curl.setHttpMethod("GET");
-                            curl.setRestMethod(true);
-                            imports.add(Annotation.GET_MAPPING.getPkg());
-                            break;
-                        case "POST":
-                            annotName = Annotation.POST_MAPPING.getAnnotName();
-                            curl.setHttpMethod("POST");
-                            curl.setRestMethod(true);
-                            imports.add(Annotation.POST_MAPPING.getPkg());
-                            break;
-                        case "PUT":
-                            annotName = Annotation.PUT_MAPPING.getAnnotName();
-                            curl.setHttpMethod("PUT");
-                            curl.setRestMethod(true);
-                            imports.add(Annotation.PUT_MAPPING.getPkg());
-                            break;
-                        case "DEL":
-                            annotName = Annotation.DELETE_MAPPING.getAnnotName();
-                            curl.setHttpMethod("DEL");
-                            curl.setRestMethod(true);
-                            imports.add(Annotation.DELETE_MAPPING.getPkg());
-                            break;
-                        default:
-                            annotName = Annotation.REQUEST_MAPPING.getAnnotName();
-                            curl.setHttpMethod("GET");
-                            imports.add(Annotation.REQUEST_MAPPING.getPkg());
-                            break;
-                    }
-                    Annot annot = new Annot().setName(annotName);
-                    List<AnnotVal> annotValList = annot.getAnnotVals();
-                    annotValList.add(new AnnotVal().setKey("value").setValue("/" + splits[1].trim()));
+                    Annot annot = getAnnot(interfac, curl, splits[2].trim().toUpperCase());
+                    Set<AnnotVal> annotValSet = annot.getAnnotateVals();
+                    annotValSet.add(new AnnotVal().setKey("value").setValue("/" + splits[1].trim()));
                     annotations.add(annot);
                     Children uriChildren = attached.getChildren();
-                    generateUriAnnot(moduleList, module, interfac, annotValList, uriChildren);
+                    generateUriAnnot(moduleSet, module, interfac, annotValSet, uriChildren);
                     break;
                 default:
-                    generateOfAttachedWithModule(attached, moduleList, module);
+                    generateOfAttachedWithModule(attached, moduleSet, module);
                     break;
             }
             index++;
@@ -191,7 +208,7 @@ public class XmindMethodParser {
      * @param inOrOut    true 表示 {@link ParamType#IN}, false 表示 {@link ParamType#OUT}.
      * @param paramIndex 出入参数索引.
      */
-    private static void generateInOrOut(@NonNull Attached attached, @NonNull List<Module> moduleList,
+    private static void generateInOrOut(@NonNull Attached attached, @NonNull Set<Module> moduleList,
                                         @NonNull Module module, @NonNull Interfac interfac,
                                         @NonNull Curl curl, @Nullable String[] tokens,
                                         @NonNull Boolean inOrOut, @NonNull Integer paramIndex) {

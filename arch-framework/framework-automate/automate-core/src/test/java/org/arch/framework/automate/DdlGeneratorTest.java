@@ -3,8 +3,8 @@ package org.arch.framework.automate;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.arch.framework.automate.common.database.Database;
-import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;
 import org.arch.framework.automate.common.module.Module;
+import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;
 import org.arch.framework.automate.generater.reader.xmind.parser.XmindParser;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
@@ -14,8 +14,8 @@ import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author lait.zhang@gmail.com
@@ -38,10 +38,11 @@ public class DdlGeneratorTest {
 
         JsonRootBean root = XmindParser.parseObject(absolutePath, JsonRootBean.class);
 
-        List<Module> moduleList = new ArrayList<>();
-        //generate(root, moduleList);
+        Set<Module> moduleSet = new HashSet<>();
+        //generate(root, moduleSet);
 
-        Database database = moduleList.get(0).getDatabases().get(0);
+        Database database = moduleSet.stream().findFirst().orElse(new Module())
+                                     .getDatabases().stream().findFirst().get();
 //        FreeMarkerUtil.geneFile("ddl.ftl","templates",)
 
      }

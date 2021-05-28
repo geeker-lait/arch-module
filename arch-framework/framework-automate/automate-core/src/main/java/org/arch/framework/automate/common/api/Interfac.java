@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.arch.framework.automate.generater.core.Metadata;
 import org.arch.framework.automate.generater.reader.xmind.Import;
+import org.arch.framework.automate.generater.reader.xmind.Pkg;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,7 +19,7 @@ import java.util.Set;
  */
 @Data
 @Accessors(chain = true)
-public class Interfac implements Metadata, Import {
+public class Interfac implements Metadata, Import, Pkg {
     /**
      * 接口类目
      */

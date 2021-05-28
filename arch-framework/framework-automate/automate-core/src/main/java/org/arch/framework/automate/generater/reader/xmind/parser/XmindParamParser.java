@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.util.List;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -42,36 +42,36 @@ public class XmindParamParser {
 
     public static final Logger LOG = LoggerFactory.getLogger(XmindParamParser.class);
 
-    static void resolveParam(@NonNull List<Module> moduleList, @NonNull Module module,
-                                    @NonNull Interfac interfac, @NonNull Curl curl,
-                                    @NonNull Boolean inOrOut, @NonNull Attached paramAttached,
-                                    @NonNull String[] splits, @Nullable ParamType paramType) {
+    static void resolveParam(@NonNull Set<Module> moduleSet, @NonNull Module module,
+                             @NonNull Interfac interfac, @NonNull Curl curl,
+                             @NonNull Boolean inOrOut, @NonNull Attached paramAttached,
+                             @NonNull String[] splits, @Nullable ParamType paramType) {
         if (splits.length != 3 || isNull(paramType)) {
             LOG.debug("title [" + paramAttached.getTitle() + "] 格式错误, 标准格式: paramType/paramName/[description]");
-            generateOfAttachedWithModule(paramAttached, moduleList, module);
+            generateOfAttachedWithModule(paramAttached, moduleSet, module);
             return;
         }
-        List<Param> inputParams = curl.getInputs();
+        Set<Param> inputParams = curl.getInputs();
         if (!ENTITY.equals(paramType) && !GENERIC.equals(paramType)) {
             String type = paramType.getType();
             // 不是 entity/generic 类型时, 没有类型值则
             if (!hasText(type)) {
                 Children attachedChildren = paramAttached.getChildren();
                 if (nonNull(attachedChildren)) {
-                    generateOfChildren(attachedChildren, moduleList, module);
+                    generateOfChildren(attachedChildren, moduleSet, module);
                     return;
                 }
             }
         }
         if (inOrOut) {
-            inputParams.add(generateParam(paramAttached, moduleList, module, splits, paramType, interfac, inOrOut));
+            inputParams.add(generateParam(paramAttached, moduleSet, module, splits, paramType, interfac, inOrOut));
         } else {
-            curl.setOutput(generateParam(paramAttached, moduleList, module, splits, paramType, interfac, inOrOut));
+            curl.setOutput(generateParam(paramAttached, moduleSet, module, splits, paramType, interfac, inOrOut));
         }
     }
 
     @Nullable
-    static Param generateParam(@NonNull Attached attached, @NonNull List<Module> moduleList,
+    static Param generateParam(@NonNull Attached attached, @NonNull Set<Module> moduleSet,
                                @NonNull Module module, @NonNull String[] tokens,
                                @NonNull ParamType pParamType, @NonNull Import pImport,
                                @Nullable Boolean inOrOut) {
@@ -88,9 +88,9 @@ public class XmindParamParser {
                 Children children = attached.getChildren();
                 if (nonNull(children)) {
                     if (pImport instanceof Model) {
-                        generateModel(children, moduleList, module, attached.getTitle(), pImport, inOrOut);
+                        generateModel(children, moduleSet, module, attached.getTitle(), pImport, inOrOut);
                     } else if (pImport instanceof Interfac) {
-                        generateModel(children, moduleList, module, attached.getTitle(), pImport, inOrOut);
+                        generateModel(children, moduleSet, module, attached.getTitle(), pImport, inOrOut);
                     }
                 }
                 if (orgType.contains("[")) {
@@ -129,7 +129,7 @@ public class XmindParamParser {
             return param;
         }
         // 生成 annots/generic/genericTyp
-        generateAnnotAndGeneric(children, moduleList, module, pParamType, pImport, param);
+        generateAnnotAndGeneric(children, moduleSet, module, pParamType, pImport, param);
 
         return param;
     }

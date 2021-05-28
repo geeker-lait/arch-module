@@ -3,8 +3,8 @@ package org.arch.framework.automate.common.api;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 注解: 实体或字段注解
@@ -17,5 +17,5 @@ import java.util.List;
 @Accessors(chain = true)
 public class Annot {
     private String name;
-    private final List<AnnotVal> annotVals = new ArrayList<>();
+    private final Set<AnnotVal> annotateVals = new HashSet<>();
 }
