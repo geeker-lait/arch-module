@@ -9,7 +9,7 @@ import org.arch.automate.common.database.Database;
 import org.arch.automate.common.database.Table;
 import org.arch.automate.common.enums.SchemaPattern;
 import org.arch.automate.common.enums.SchemaType;
-import org.arch.automate.form.service.DatabaseService;
+import org.arch.form.crud.service.DatabaseService;
 import org.arch.framework.automate.generater.core.*;
 import org.arch.framework.automate.generater.properties.SchemaProperties;
 import org.springframework.stereotype.Service;

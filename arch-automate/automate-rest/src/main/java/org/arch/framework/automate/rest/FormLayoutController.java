@@ -2,10 +2,10 @@ package org.arch.framework.automate.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.api.dto.FormLayoutSearchDto;
-import org.arch.framework.automate.api.request.FormLayoutRequest;
-import org.arch.automate.form.entity.FormLayout;
-import org.arch.automate.form.service.FormLayoutService;
+import org.arch.form.api.dto.FormLayoutSearchDto;
+import org.arch.form.api.request.FormLayoutRequest;
+import org.arch.form.crud.entity.FormLayout;
+import org.arch.form.crud.service.FormLayoutService;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;

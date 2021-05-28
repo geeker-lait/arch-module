@@ -2,10 +2,10 @@ package org.arch.framework.automate.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.automate.api.dto.FormDefinitionSearchDto;
-import org.arch.framework.automate.api.request.FormDefinitionRequest;
-import org.arch.automate.form.entity.FormDefinition;
-import org.arch.automate.form.service.FormDefinitionService;
+import org.arch.form.api.dto.FormDefinitionSearchDto;
+import org.arch.form.api.request.FormDefinitionRequest;
+import org.arch.form.crud.entity.FormDefinition;
+import org.arch.form.crud.service.FormDefinitionService;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;

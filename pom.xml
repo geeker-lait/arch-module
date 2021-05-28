@@ -18,7 +18,7 @@
         <jsonwebtoken.version>0.5.1</jsonwebtoken.version>
         <guava.version>[24.1.1,)</guava.version>
         <flowable.version>6.6.0</flowable.version>
-        <dcenter-ums.version>2.2.36</dcenter-ums.version>
+        <dcenter-ums.version>2.2.41</dcenter-ums.version>
     </properties>
 
 
@@ -27,6 +27,7 @@
         <module>arch-application</module>
         <module>arch-auth</module>
         <module>arch-automate</module>
+        <module>arch-form</module>
         <module>arch-framework</module>
         <module>arch-gateway</module>
         <module>arch-mms</module>
@@ -134,6 +135,20 @@
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>automate-rest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
+
+
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>form-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>form-crud</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

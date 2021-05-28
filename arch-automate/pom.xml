@@ -14,7 +14,6 @@
         <module>automate-api</module>
         <module>automate-common</module>
         <module>automate-core</module>
-        <module>automate-form</module>
         <module>automate-rest</module>
         <module>automate-mvc</module>
 
