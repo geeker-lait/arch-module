@@ -1,9 +1,8 @@
 package org.arch.ums.account.client;
 
-
 import org.arch.framework.beans.Response;
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.account.dto.ResourceRequest;
 import org.arch.ums.account.dto.ResourceSearchDto;
 import org.arch.ums.account.entity.Resource;
@@ -31,8 +30,8 @@ public interface AccountResourceFeignService extends BaseFeignService<ResourceSe
     /**
      * 多租户根据 {@code resourceIds} 获取 {@link Resource} 列表.
      *
-     * @param tenantId      多租户 ID
-     * @param resourceIds   资源 ID 列表
+     * @param tenantId    多租户 ID
+     * @param resourceIds 资源 ID 列表
      * @return 资源列表, 只包含 {@code id, resourceCode, resourcePath, resourceVal} 字段
      */
     @GetMapping("/findByResourceIds/{tenantId}")

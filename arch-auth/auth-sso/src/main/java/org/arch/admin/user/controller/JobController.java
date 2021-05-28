@@ -3,10 +3,10 @@ package org.arch.admin.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.feign.FeignCrudController;
+import org.arch.framework.web.feign.FeignCrudController;
+import org.arch.ums.user.client.UserJobFeignService;
 import org.arch.ums.user.dto.JobRequest;
 import org.arch.ums.user.dto.JobSearchDto;
-import org.arch.ums.user.client.UserJobFeignService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

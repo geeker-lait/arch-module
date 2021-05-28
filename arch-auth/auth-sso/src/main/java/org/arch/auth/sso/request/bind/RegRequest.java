@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 /**
  * 用户注册请求信息
+ *
  * @author YongWu zheng
  * @since 2020.12.28 11:39
  */

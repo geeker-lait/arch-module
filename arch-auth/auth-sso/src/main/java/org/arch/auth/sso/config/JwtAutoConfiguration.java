@@ -21,6 +21,6 @@ public class JwtAutoConfiguration {
     public AuthenticationEntryPoint authenticationEntryPoint(JwtProperties jwtProperties) {
         BearerTokenProperties bearer = jwtProperties.getBearer();
         return new ArchBearerTokenAuthenticationEntryPoint(bearer.getBearerTokenHeaderName(),
-                                                           bearer.getBearerTokenParameterName());
+                bearer.getBearerTokenParameterName());
     }
 }

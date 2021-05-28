@@ -1,9 +1,8 @@
 package org.arch.ums.conf.client;
 
-
 import org.arch.framework.beans.Response;
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.conf.dto.MobileSegmentRequest;
 import org.arch.ums.conf.dto.MobileSegmentSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -31,8 +30,9 @@ public interface ConfMobileSegmentFeignService extends BaseFeignService<MobileSe
      * <br>
      * 格式: 1. 格式: 1345   CMCC	0 <br>
      * 分隔符可以自定义.
+     *
      * @param mobileSegmentList 实体类列表
-     * @return  {@link Response (Boolean)}
+     * @return {@link Response (Boolean)}
      */
     @PostMapping("/savesOnDuplicateKeyUpdate")
     Response<Boolean> insertOnDuplicateKeyUpdate(@Valid @RequestBody List<MobileSegmentRequest> mobileSegmentList);

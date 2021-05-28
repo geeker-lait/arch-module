@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>登录</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js" type="text/javascript"></script>
     <style>
         .rightValidate {
             width: 350px;
@@ -24,42 +24,50 @@
             background: #ddd;
             cursor: pointer;
         }
-        .imgBtn{
-            width:50px;
+
+        .imgBtn {
+            width: 50px;
             height: 50px;
             position: absolute;
             left: 0;
             display: none;
         }
-        .imgBtn img{
+
+        .imgBtn img {
             opacity: 0;
             filter: none;
         }
-        .imgBg{
+
+        .imgBg {
             position: relative;
             width: 350px;
             height: 0;
             box-shadow: 0px 4px 8px #3C5476;
         }
 
-        .hkinnerWrap{
+        .hkinnerWrap {
             border: 1px solid #eee;
         }
-        .green{
-            border-color:#34C6C2 !important;
+
+        .green {
+            border-color: #34C6C2 !important;
         }
-        .green .v_rightBtn{
+
+        .green .v_rightBtn {
             background: #34C6C2;
             color: #fff;
         }
-        .red{
-            border-color:red !important;
+
+        .red {
+            border-color: red !important;
         }
-        .red .v_rightBtn{
+
+        .red .v_rightBtn {
             background: red;
             color: #fff;
         }
-        .refresh{
+
+        .refresh {
             position: absolute;
             width: 30px;
             height: 30px;
@@ -71,14 +79,16 @@
             cursor: pointer;
             display: none;
         }
-        .notSel{
+
+        .notSel {
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             -webkit-touch-callout: none;
         }
-        #sent_sms_btn{
+
+        #sent_sms_btn {
             background-color: #efefef
         }
     </style>
@@ -97,31 +107,33 @@
 <h5>滑块验证码因与图片验证码对同一个链接进行验证, 滑块验证码优先级高于图片验证码, 图片验证码会失效: 在配置中注释滑块验证码 auth-urls: 可以使图片验证码生效; 注意验证码优先级.
 </h5>
 <!-- 通过 th:action 的方式支持 csrf 或者 添加隐藏域<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
-<form id="sli-form" th:action="@{/auth/form}" method="post">
+<form id="sli-form" method="post" th:action="@{/auth/form}">
     <table>
         <tr>
             <td>用户名：</td>
-            <td><input type="text" name="username" value="admin" ><p style="color: #ff0000"
-                                                                     id="error-name-sli"></p></td>
+            <td><input name="username" type="text" value="admin">
+                <p id="error-name-sli"
+                   style="color: #ff0000"></p></td>
         </tr>
         <tr>
             <td>密码：</td>
-            <td><input type="password" name="password" value="12345678"></td>
+            <td><input name="password" type="password" value="12345678"></td>
         </tr>
         <tr>
             <td>滑块验证码：</td>
             <td>
-                <input type="hidden" name="sliderCode">
+                <input name="sliderCode" type="hidden">
                 <div class="comImageValidate rightValidate">
                     <div class="hkinnerWrap" style="height: 33px;position: relative">
-                        <span  class="v_rightBtn " th:data-uri="@{/slider/check}"><em class="notSel">→</em></span>
-                        <span class="huakuai"  style="font-size: 12px;line-height: 33px;color: #A9A9A9;">向右滑动滑块填充拼图</span>
-                        <input type = "hidden" name="sliderToken"/>
+                        <span class="v_rightBtn " th:data-uri="@{/slider/check}"><em class="notSel">→</em></span>
+                        <span class="huakuai"
+                              style="font-size: 12px;line-height: 33px;color: #A9A9A9;">向右滑动滑块填充拼图</span>
+                        <input name="sliderToken" type="hidden"/>
                     </div>
-                    <span style="color: #ff0000" id="error-code-sli"></span>
+                    <span id="error-code-sli" style="color: #ff0000"></span>
                     <div class="imgBg">
                         <div class="imgBtn">
-                            <img />
+                            <img/>
                         </div>
                         <span class="refresh" id="slider-refresh" th:data-uri="@{/code/slider}">刷新</span>
                     </div>
@@ -129,34 +141,39 @@
             </td>
         </tr>
         <tr>
-            <td ><button id="btn-reg-sli" type="button">登录ajax</button></td>
+            <td>
+                <button id="btn-reg-sli" type="button">登录ajax</button>
+            </td>
         </tr>
     </table>
 </form>
 <br>
 <h2>手机登录</h2>
-<form id="mobile-form" th:action="@{/auth/mobile}" method="post">
+<form id="mobile-form" method="post" th:action="@{/auth/mobile}">
     <table>
         <tr>
             <td>手机号码：</td>
             <td>
-                <input type="tel" name="mobile" value="13345678980"><button type="button" id="sent_sms_btn">发送验证码</button>
-                <p style="color: #ff0000" id="error-name-mobile"></p>
-                <a th:href="@{/code/sms}" id="sms_uri" hidden="hidden" />
+                <input name="mobile" type="tel" value="13345678980">
+                <button id="sent_sms_btn" type="button">发送验证码</button>
+                <p id="error-name-mobile" style="color: #ff0000"></p>
+                <a hidden="hidden" id="sms_uri" th:href="@{/code/sms}"/>
             </td>
         </tr>
         <tr>
             <td>手机验证码：</td>
             <td>
-                <input type="text" name="smsCode">
+                <input name="smsCode" type="text">
             </td>
         </tr>
         <tr>
-            <td ><input type="checkbox" name="rememberMe" checked="true">记住我</input></td>
-            <td><p style="color: #ff0000" id="error-code-mobile"></p></td>
+            <td><input checked="true" name="rememberMe" type="checkbox">记住我</input></td>
+            <td><p id="error-code-mobile" style="color: #ff0000"></p></td>
         </tr>
         <tr>
-            <td ><button id="btn-mobile" type="button">登录ajax</button></td>
+            <td>
+                <button id="btn-mobile" type="button">登录ajax</button>
+            </td>
         </tr>
     </table>
 </form>
@@ -165,15 +182,17 @@
 <h5>通过设置 application.yml -> ums.jwt.blacklist 下的参数控制 jwt 传递方式</h5>
 <h5>通过 refreshToken 刷新 jwt 时, 默认 oldJwt 有效期没在 ums.jwt.remainingRefreshInterval 的时间内, 原样返回 oldJwt</h5>
 <h5>如果想重新刷新 jwt 则通过设置 ums.jwt.alwaysRefresh=true, 这样每次通过 refreshToken 刷新 jwt 则总是返回 newJwt</h5>
-<form id="refresh-token" th:action="@{/jwt/refreshToken}" method="post">
+<form id="refresh-token" method="post" th:action="@{/jwt/refreshToken}">
     <tr>
-        <td ><button id="btn-ref" type="button">通过 refresh 获取 Jwt</button></td>
+        <td>
+            <button id="btn-ref" type="button">通过 refresh 获取 Jwt</button>
+        </td>
     </tr>
 
 </form>
 <br><br>
 
-<dev id="basePath" th:basePath="@{/}" style="display: none"/>
+<dev id="basePath" style="display: none" th:basePath="@{/}"/>
 </body>
 <script>
     var basePath = $("#basePath").attr("basePath");
@@ -182,11 +201,10 @@
     console.log("")
     window.localStorage.setItem('jwt', "");
 
-    $.fn.serializeObject = function()
-    {
+    $.fn.serializeObject = function () {
         let o = {};
         let a = this.serializeArray();
-        $.each(a, function() {
+        $.each(a, function () {
             if (o[this.name]) {
                 if (!o[this.name].push) {
                     o[this.name] = [o[this.name]];
@@ -281,21 +299,21 @@
     });
 
 
-    $(".img").click(function(){
+    $(".img").click(function () {
         let uri = this.getAttribute("src");
         console.log(uri)
         let end = uri.indexOf('?', 0);
         console.log(end)
         if (end === -1) {
-            uri = uri + '?'+ Math.random();
+            uri = uri + '?' + Math.random();
         } else {
-            uri = uri.substring(0, end) + '?'+ Math.random();
+            uri = uri.substring(0, end) + '?' + Math.random();
         }
         console.log(uri)
         this.setAttribute('src', uri);
     });
 
-    $("#btn-ref").click(function(){
+    $("#btn-ref").click(function () {
         let url = $("#refresh-token").attr("action");
         let refreshToken = window.localStorage.getItem('refresh_token');
         if (undefined === refreshToken || null === refreshToken) {
@@ -311,7 +329,7 @@
             headers: {
                 'refresh_token': refreshToken
             },
-            beforeSend: function(request) {
+            beforeSend: function (request) {
                 // 与 headers 重复
                 // 如果 jwt 传输的方式是 ums.jwt.bearer.bearerTokenParameterName 方式, 则设置到 请求头 中
                 let jwt = window.localStorage.getItem('jwt')
@@ -486,7 +504,7 @@
                         headers: {
                             // 'Authorization': window.localStorage.getItem('jwt')
                         },
-                        beforeSend: function(request) {
+                        beforeSend: function (request) {
                             // 与 headers 重复
                             // 如果 jwt 传输的方式是 ums.jwt.bearer.bearerTokenParameterName 方式, 则设置到 请求头 中
                             let jwt = window.localStorage.getItem('jwt')
@@ -514,7 +532,7 @@
                             */
                             let Authorization = xhr.getResponseHeader('Authorization');
                             console.log(Authorization);
-                            let oldJwt =  window.localStorage.getItem('jwt');
+                            let oldJwt = window.localStorage.getItem('jwt');
                             // 刷新 jwt, 重新设置
                             if (undefined !== Authorization && null !== Authorization && oldJwt !== Authorization) {
                                 console.log("========> 如果 JWT 刷新策略是 JwtRefreshHandlerPolicy.AUTO_RENEW, 则后自动刷新 JWT,\n" +
@@ -559,30 +577,30 @@
             $(".imgBtn img").css('opacity', 0);
             validateImageInit(uri);
         })
-        $(".hkinnerWrap").mouseover(function(){
-            $(".imgBg").stop(false).animate({"height":"213px"},100,function () {
-                $(".imgBtn").css("display","block");
-                $(".refresh").css("display","block");
+        $(".hkinnerWrap").mouseover(function () {
+            $(".imgBg").stop(false).animate({"height": "213px"}, 100, function () {
+                $(".imgBtn").css("display", "block");
+                $(".refresh").css("display", "block");
             });
         }).mouseleave(function () {
-            $(".imgBg").stop(false).animate({"height":"0"},100,function () {
-                $(".imgBtn").css("display","none");
-                $(".refresh").css("display","none");
+            $(".imgBg").stop(false).animate({"height": "0"}, 100, function () {
+                $(".imgBtn").css("display", "none");
+                $(".refresh").css("display", "none");
             });
         });
         $(".imgBg").mouseover(function () {
-            $(".imgBg").stop(false).animate({"height":"213px"},100,function () {
-                $(".imgBtn").css("display","block");
-                $(".refresh").css("display","block");
+            $(".imgBg").stop(false).animate({"height": "213px"}, 100, function () {
+                $(".imgBtn").css("display", "block");
+                $(".refresh").css("display", "block");
             });
         }).mouseleave(function () {
-            $(".imgBg").stop(false).animate({"height":"0"},100,function () {
-                $(".imgBtn").css("display","none");
-                $(".refresh").css("display","none");
+            $(".imgBg").stop(false).animate({"height": "0"}, 100, function () {
+                $(".imgBtn").css("display", "none");
+                $(".refresh").css("display", "none");
             });
         })
         $('.v_rightBtn').on({
-            mousedown: function(e) {
+            mousedown: function (e) {
                 $(".huakuai").html("");
                 $(".hkinnerWrap").removeClass("red green")
                 $(".imgBtn img").css("opacity", 1)
@@ -591,52 +609,52 @@
                 dx = e.pageX - os.left;
                 //$(document)
                 $(this).parents(".hkinnerWrap").off('mousemove');
-                $(this).parents(".hkinnerWrap").on('mousemove', function(e) {
-                    var newLeft=e.pageX - dx;
+                $(this).parents(".hkinnerWrap").on('mousemove', function (e) {
+                    var newLeft = e.pageX - dx;
                     el.offset({
                         left: newLeft
                     });
-                    var newL=parseInt($(".v_rightBtn").css("left"));
-                    if(newL<=0){
-                        newL=0;
-                    }else if (newL>=298){
-                        newL=306;
+                    var newL = parseInt($(".v_rightBtn").css("left"));
+                    if (newL <= 0) {
+                        newL = 0;
+                    } else if (newL >= 298) {
+                        newL = 306;
                     }
-                    $(".v_rightBtn").css("left",newL+"px");
+                    $(".v_rightBtn").css("left", newL + "px");
                     $(".imgBtn").offset({
                         left: newLeft
                     });
-                    $(".imgBtn").css("left",newL+"px")
-                }).on('mouseup', function(e) {
+                    $(".imgBtn").css("left", newL + "px")
+                }).on('mouseup', function (e) {
                     //$(document)
                     $(this).off('mousemove');
                 })
             }
-        }).on("mouseup",function () {
+        }).on("mouseup", function () {
             $(this).parents(".hkinnerWrap").off('mousemove');
-            var l=$(this).css("left");
-            if(l.indexOf("px")!=-1){
-                l=l.substring(0,l.length-2);
+            var l = $(this).css("left");
+            if (l.indexOf("px") != -1) {
+                l = l.substring(0, l.length - 2);
             }
             x = l;
             let uri = $(this).attr("data-uri");
-            submitDate(l,y,tokenId, uri)
+            submitDate(l, y, tokenId, uri)
         })
 
     });
+
     /*图形验证*/
     function submitDate(x, y, tokenId, uri) {
         $.ajax({
-            url:uri + "?x="+x+"&y="+y+"&sliderToken="+tokenId,
-            dataType:'json',
+            url: uri + "?x=" + x + "&y=" + y + "&sliderToken=" + tokenId,
+            dataType: 'json',
             type: "POST",
-            success:function (data) {
-                if(data.code === 200){
+            success: function (data) {
+                if (data.code === 200) {
                     console.log(data);
                     $(".hkinnerWrap").addClass("green").removeClass("red");
                     $("#sli-form input[name='sliderCode']").val(data.data);
-                }
-                else if (data.code >= 606 || data.code < 700) {
+                } else if (data.code >= 606 || data.code < 700) {
                     console.log("不刷新, 用户重新操作: " + data);
                     $(".hkinnerWrap").addClass("red").removeClass("green");
                     $(".v_rightBtn").css("left", 0);
@@ -662,46 +680,47 @@
     /*初始化图形验证码*/
     function validateImageInit(uri) {
         $.ajax({
-            url:uri,
-            dataType:'json',
-            cache:false,
+            url: uri,
+            dataType: 'json',
+            cache: false,
             type: "get",
-            success:function (data) {
+            success: function (data) {
                 console.log(data);
                 $(".huakuai").html("向右滑动滑块填充拼图");
-                $(".imgBg").css("background",'#fff url("data:image/png;base64,'+data.sourceImage+'")');
-                $(".imgBtn").css('top',data.locationY+'px');
-                $(".imgBtn").find("img").attr("src","data:image/png;base64,"+data.markImage);
-                tokenId=data.token;
-                y=data.locationY;
+                $(".imgBg").css("background", '#fff url("data:image/png;base64,' + data.sourceImage + '")');
+                $(".imgBtn").css('top', data.locationY + 'px');
+                $(".imgBtn").find("img").attr("src", "data:image/png;base64," + data.markImage);
+                tokenId = data.token;
+                y = data.locationY;
                 $(".hkinnerWrap").removeClass("red green");
-                $(".v_rightBtn").css("left",0);
-                $(".imgBtn").css("left",0);
+                $(".v_rightBtn").css("left", 0);
+                $(".imgBtn").css("left", 0);
                 $(".hkinnerWrap input[name='sliderToken']").val(tokenId);
 
                 // 注意: 这里可以直接提交表单的动作, 为了演示这里需要用户点击提交表单的按钮
 
-            },error:function(err){
+            }, error: function (err) {
                 console.log(err)
             }
         })
     }
+
     /**
      * 再次进行用户拖动行为验证
      * @returns {boolean}
      */
-    function reValidateDeal(uri){
+    function reValidateDeal(uri) {
         var result = false;
         $.ajax({
-            url: uri + "?x="+x+"&y="+y+"&sliderToken="+tokenId,
-            dataType:'json',
-            cache : false,
-            async : false,
+            url: uri + "?x=" + x + "&y=" + y + "&sliderToken=" + tokenId,
+            dataType: 'json',
+            cache: false,
+            async: false,
             type: "POST",
-            success:function (data) {
-                if(data==true){
+            success: function (data) {
+                if (data == true) {
                     result = true;
-                }else {
+                } else {
                     result = false;
                 }
             }

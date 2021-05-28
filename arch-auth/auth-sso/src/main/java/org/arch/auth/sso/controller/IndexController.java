@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 首页控制器
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.5 18:52
@@ -33,8 +34,7 @@ public class IndexController {
             model.addAttribute("avatar", currentUser.getAvatar());
             model.addAttribute("loginType", currentUser.getLoginType());
             model.addAttribute("roles", StringUtils.join(currentUser.getAuthorities(), ","));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "index";
         }
         return "index";

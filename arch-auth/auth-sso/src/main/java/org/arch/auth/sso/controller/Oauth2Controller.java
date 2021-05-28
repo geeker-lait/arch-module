@@ -6,11 +6,7 @@ import org.arch.auth.sso.utils.RegisterUtils;
 import org.arch.framework.beans.Response;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.dcenter.ums.security.core.api.oauth.dto.ConnectionDto;
 import top.dcenter.ums.security.core.api.oauth.signup.ConnectionService;
 
@@ -18,6 +14,7 @@ import static java.util.Objects.isNull;
 
 /**
  * 第三方账号控制器
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.3 14:26
@@ -32,8 +29,9 @@ public class Oauth2Controller {
 
     /**
      * 解绑第三方账号 identifier
-     * @param identifier    账号标识(OAUTH2)
-     * @return  是否成功解绑信息
+     *
+     * @param identifier 账号标识(OAUTH2)
+     * @return 是否成功解绑信息
      */
     @DeleteMapping("/unbinding/{identifier}")
     public Response<Boolean> unbinding(@PathVariable("identifier") String identifier) {
@@ -44,15 +42,15 @@ public class Oauth2Controller {
             }
             this.connectionService.unbinding(identifier, providers[0], providers[1]);
             return Response.success(Boolean.TRUE);
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
             return Response.failed("解绑失败");
         }
     }
 
     /**
      * 查询当前账号下的所有绑定的第三方账号
+     *
      * @param accountId 账号ID/用户ID/会员ID/商户ID
      * @return 绑定账号集合
      */
@@ -67,9 +65,8 @@ public class Oauth2Controller {
         }
         try {
             return Response.success(this.connectionService.listAllConnections(accountId.toString()));
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
             return Response.failed("查询第三方绑定谢谢失败");
         }
     }

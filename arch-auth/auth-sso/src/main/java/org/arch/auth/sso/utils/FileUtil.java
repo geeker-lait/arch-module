@@ -5,13 +5,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 
 /**
@@ -25,7 +19,8 @@ public class FileUtil extends org.arch.framework.beans.utils.FileUtil {
 
     /**
      * 获取文件名称
-     * @param fileName  文件名称/文件全路径/url
+     *
+     * @param fileName 文件名称/文件全路径/url
      * @return 返回文件名称
      */
     @NonNull
@@ -39,8 +34,9 @@ public class FileUtil extends org.arch.framework.beans.utils.FileUtil {
 
     /**
      * 根据 fileName 获取文件后缀
-     * @param fileName  文件名
-     * @return  文件后缀
+     *
+     * @param fileName 文件名
+     * @return 文件后缀
      */
     @NonNull
     public static String getSuffix(@NonNull String fileName) {
@@ -51,8 +47,9 @@ public class FileUtil extends org.arch.framework.beans.utils.FileUtil {
 
     /**
      * 根据 url 获取图片文件后缀
-     * @param imgUrl    图片 url
-     * @return  图片后缀
+     *
+     * @param imgUrl 图片 url
+     * @return 图片后缀
      */
     @NonNull
     public static String getSuffixByUrl(@NonNull String imgUrl) {
@@ -62,7 +59,7 @@ public class FileUtil extends org.arch.framework.beans.utils.FileUtil {
         }
         String fileName = imgUrl;
         //noinspection AlibabaUndefineMagicConstant
-        if(imgUrl.contains("/")) {
+        if (imgUrl.contains("/")) {
             fileName = imgUrl.substring(imgUrl.lastIndexOf("/"));
         }
         String fileSuffix = getSuffix(fileName);
@@ -71,8 +68,9 @@ public class FileUtil extends org.arch.framework.beans.utils.FileUtil {
 
     /**
      * 是否为照片
-     * @param suffix    文件后缀
-     * @return  true 表示为照片
+     *
+     * @param suffix 文件后缀
+     * @return true 表示为照片
      */
     public static boolean isPicture(@NonNull String suffix) {
         return StringUtils.hasText(suffix) && Arrays.asList(PICTURE_SUFFIXES).contains(suffix.toLowerCase());
@@ -80,7 +78,8 @@ public class FileUtil extends org.arch.framework.beans.utils.FileUtil {
 
     /**
      * 创建目录
-     * @param filePath  目录路径
+     *
+     * @param filePath 目录路径
      */
     public static void mkdirs(@NonNull String filePath) {
         File file = new File(filePath);
@@ -99,7 +98,8 @@ public class FileUtil extends org.arch.framework.beans.utils.FileUtil {
 
     /**
      * 检查文件路径是否有效, 无效则创建目录
-     * @param realFilePath  目录路径
+     *
+     * @param realFilePath 目录路径
      */
     public static void checkFilePath(@NonNull String realFilePath) {
         if (!StringUtils.hasText(realFilePath)) {
@@ -118,7 +118,7 @@ public class FileUtil extends org.arch.framework.beans.utils.FileUtil {
      * 将 InputStream 转换为字符串
      *
      * @param is InputStream
-     * @return  InputStream 字符串
+     * @return InputStream 字符串
      */
     @NonNull
     public static String toString(@NonNull InputStream is) {
@@ -129,15 +129,15 @@ public class FileUtil extends org.arch.framework.beans.utils.FileUtil {
      * 将 InputStream 转换为字符串
      *
      * @param is InputStream
-     * @return  InputStream 字符串
+     * @return InputStream 字符串
      */
     @NonNull
     public static String toString(@NonNull InputStream is, @Nullable String encoding) {
         encoding = encoding == null ? "UTF-8" : encoding;
         StringBuilder fileContent = new StringBuilder();
         try (
-            InputStream inputStream = is;
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, encoding))
+                InputStream inputStream = is;
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, encoding))
         ) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -154,7 +154,7 @@ public class FileUtil extends org.arch.framework.beans.utils.FileUtil {
      * 克隆 InputStream
      *
      * @param is InputStream
-     * @return  ByteArrayInputStream, 支持 reset() 方法, 可重复读.
+     * @return ByteArrayInputStream, 支持 reset() 方法, 可重复读.
      */
     @NonNull
     public static InputStream clone(@NonNull InputStream is) {

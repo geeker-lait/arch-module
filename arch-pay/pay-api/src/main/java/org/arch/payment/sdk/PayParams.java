@@ -1,7 +1,7 @@
 package org.arch.payment.sdk;
 
 import com.alibaba.fastjson.JSONObject;
-import org.arch.framework.utils.ReflectUtils;
+import org.arch.framework.beans.utils.ReflectUtils;
 
 /**
  * @author lait.zhang@gmail.com

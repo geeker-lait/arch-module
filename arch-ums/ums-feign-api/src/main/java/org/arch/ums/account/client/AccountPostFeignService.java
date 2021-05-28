@@ -1,11 +1,10 @@
 package org.arch.ums.account.client;
 
 
-import org.arch.framework.feign.BaseFeignService;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.account.dto.PostRequest;
 import org.arch.ums.account.dto.PostSearchDto;
-import org.arch.ums.account.entity.Post;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 

@@ -11,6 +11,7 @@ import top.dcenter.ums.security.common.api.userdetails.converter.AuthenticationT
 
 /**
  * {@link AbstractOAuth2TokenAuthenticationToken} to {@link ArchUser}
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.3 13:57
@@ -23,14 +24,14 @@ public class ArchOauth2TokenAuthenticationTokenToUserConverter implements Authen
         // AbstractOAuth2TokenAuthenticationToken 必是登录用户, 直接获取当前用户信息.
         TokenInfo currentUser = SecurityUtils.getCurrentUser();
         ArchUser archUser = new ArchUser(source.getName(),
-                                         "",
-                                         currentUser.getIdentifierId(),
-                                         currentUser.getAccountId(),
-                                         currentUser.getTenantId(),
-                                         currentUser.getLoginType(),
-                                         currentUser.getNickName(),
-                                         currentUser.getAvatar(),
-                                         currentUser.getAuthorities());
+                "",
+                currentUser.getIdentifierId(),
+                currentUser.getAccountId(),
+                currentUser.getTenantId(),
+                currentUser.getLoginType(),
+                currentUser.getNickName(),
+                currentUser.getAvatar(),
+                currentUser.getAuthorities());
         archUser.eraseCredentials();
         return archUser;
 

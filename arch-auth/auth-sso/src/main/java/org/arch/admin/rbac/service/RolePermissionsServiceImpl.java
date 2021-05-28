@@ -2,8 +2,8 @@ package org.arch.admin.rbac.service;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
-import org.arch.ums.account.entity.Permission;
 import org.arch.ums.account.client.AccountRolePermissionFeignService;
+import org.arch.ums.account.entity.Permission;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
@@ -53,10 +53,9 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
             Response<Boolean> response =
                     this.rolePermissionFeignService.updateResourcesByRoleIdOfTenant(tenantId, roleId, asList(resourceIds));
             return Optional.ofNullable(response.getSuccessData()).orElse(false);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.UPDATE_ROLE_PERMISSIONS_FAILURE,
-                                               tenantId + ":" + roleId + ":" + Arrays.toString(resourceIds), e);
+                    tenantId + ":" + roleId + ":" + Arrays.toString(resourceIds), e);
 
         }
     }
@@ -70,10 +69,9 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
             Response<Boolean> response =
                     this.rolePermissionFeignService.updateResourcesByRoleIdOfScopeId(scopeId, roleId, asList(resourceIds));
             return Optional.ofNullable(response.getSuccessData()).orElse(false);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.UPDATE_ROLE_PERMISSIONS_FAILURE,
-                                               scopeId + ":" + roleId + ":" + Arrays.toString(resourceIds), e);
+                    scopeId + ":" + roleId + ":" + Arrays.toString(resourceIds), e);
 
         }
     }
@@ -93,8 +91,7 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
             Response<List<Permission>> response =
                     this.rolePermissionFeignService.findAllResourcesByRoleIdOfTenant(tenantId, roleId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new ArrayList<>(0));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.QUERY_ROLE_PERMISSIONS_FAILURE, tenantId + ":" + roleId, e);
         }
     }
@@ -107,8 +104,7 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
             Response<List<Permission>> response =
                     this.rolePermissionFeignService.findAllResourcesByRoleIdOfScopeId(scopeId, roleId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new ArrayList<>(0));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.QUERY_ROLE_PERMISSIONS_FAILURE, scopeId + ":" + roleId, e);
         }
     }

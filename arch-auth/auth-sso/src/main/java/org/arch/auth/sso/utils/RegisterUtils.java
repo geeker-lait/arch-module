@@ -30,6 +30,7 @@ import static top.dcenter.ums.security.common.consts.MdcConstants.MDC_KEY;
 
 /**
  * 注册工具
+ *
  * @author YongWu zheng
  * @since 2021.1.3 15:12
  */
@@ -37,9 +38,10 @@ public class RegisterUtils {
 
     /**
      * 生成第三方用户 identifier(账号-标识)
-     * @param provider          第三方服务商
-     * @param providerUserId    用户在第三方服务商的用户 ID
-     * @return  identifier(账号-标识)
+     *
+     * @param provider       第三方服务商
+     * @param providerUserId 用户在第三方服务商的用户 ID
+     * @return identifier(账号 - 标识)
      */
     @NonNull
     public static String getIdentifierForOauth2(@NonNull String provider, @NonNull String providerUserId) {
@@ -48,8 +50,9 @@ public class RegisterUtils {
 
     /**
      * 根据 identifier(账号-标识) 返回 new String[] {providerId, providerUserId}
-     * @param identifier         账号-标识
-     * @return  返回 new String[] {providerId, providerUserId}, 当 identifier(账号-标识) 不是 OAUTH2 格式时返回 null.
+     *
+     * @param identifier 账号-标识
+     * @return 返回 new String[] {providerId, providerUserId}, 当 identifier(账号-标识) 不是 OAUTH2 格式时返回 null.
      */
     @Nullable
     public static String[] getProvideIdAndProviderUserIdByIdentifierForOauth2(@NonNull String identifier) {
@@ -62,8 +65,9 @@ public class RegisterUtils {
 
     /**
      * 从 request 中 获取账号类型.
+     *
      * @param accountTypeName 账号类型参数名
-     * @return  返回 {@link AccountType} , 不存在则返回 null.
+     * @return 返回 {@link AccountType} , 不存在则返回 null.
      */
     @Nullable
     public static AccountType getAccountType(@NonNull String accountTypeName) {
@@ -77,8 +81,9 @@ public class RegisterUtils {
 
     /**
      * 从 request 中 获取来源类型.
+     *
      * @param sourceName 账号类型参数名
-     * @return  返回来源 , 不存在则返回 null.
+     * @return 返回来源 , 不存在则返回 null.
      */
     @Nullable
     public static String getSource(@NonNull String sourceName) {
@@ -87,9 +92,10 @@ public class RegisterUtils {
 
     /**
      * 获取默认的用户权限
+     *
      * @param ssoProperties {@link SsoProperties}
      * @param tenantId      租户 ID
-     * @return  默认的用户权限
+     * @return 默认的用户权限
      */
     @NonNull
     public static String getDefaultAuthorities(@NonNull SsoProperties ssoProperties, @NonNull String tenantId) {
@@ -99,9 +105,10 @@ public class RegisterUtils {
 
     /**
      * 获取默认的用户权限
-     * @param defaultAuthority  用户默认权限
-     * @param tenantId          租户 ID
-     * @return  默认的用户权限
+     *
+     * @param defaultAuthority 用户默认权限
+     * @param tenantId         租户 ID
+     * @return 默认的用户权限
      */
     @NonNull
     public static String getDefaultAuthorities(@NonNull String defaultAuthority, @NonNull String tenantId) {
@@ -111,8 +118,9 @@ public class RegisterUtils {
 
     /**
      * 从 request 中获取指定参数值, 会从 header 或 请求参数中获取
+     *
      * @param paramName 参数名称
-     * @return  返回指定参数名称的值, 如果不存在对应的值返回 null
+     * @return 返回指定参数名称的值, 如果不存在对应的值返回 null
      */
     @Nullable
     private static String getValueFromRequest(@NotNull String paramName) {
@@ -123,7 +131,7 @@ public class RegisterUtils {
         HttpServletRequest request = requestAttributes.getRequest();
         String parameter = request.getParameter(paramName);
         if (hasText(parameter)) {
-        	return parameter;
+            return parameter;
         }
         return request.getHeader(paramName);
 
@@ -147,10 +155,10 @@ public class RegisterUtils {
         OauthTokenRequest oauthToken = new OauthTokenRequest();
         BeanUtils.copyProperties(token, oauthToken);
         oauthToken.setProviderId(authUser.getSource())
-                  .setAccountIdentifierId(identifierId)
-                  .setTenantId(Integer.valueOf(tenantId))
-                  .setEnableRefresh(true)
-                  .setDt(LocalDateTime.now());
+                .setAccountIdentifierId(identifierId)
+                .setTenantId(Integer.valueOf(tenantId))
+                .setEnableRefresh(true)
+                .setDt(LocalDateTime.now());
 
         // 有效期转时间戳
         oauthToken.setExpireTime(Auth2DefaultRequest.expireIn2Timestamp(timeout, token.getExpireIn()));
@@ -160,7 +168,8 @@ public class RegisterUtils {
 
     /**
      * 获取 MDC 调用链路追踪 ID
-     * @return  MDC 调用链路追踪 ID
+     *
+     * @return MDC 调用链路追踪 ID
      */
     @NonNull
     public static String getTraceId() {

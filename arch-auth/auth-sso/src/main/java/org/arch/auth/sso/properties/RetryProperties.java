@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 针对 {@link RetryListener} 的重试属性设置.
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.3 18:05

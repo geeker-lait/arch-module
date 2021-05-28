@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * rbac and spring cloud stream  auto configuration
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.19 9:46

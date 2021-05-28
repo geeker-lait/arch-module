@@ -1,9 +1,8 @@
 package org.arch.auth.rbac.feign;
 
-
 import org.arch.framework.beans.Response;
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.account.dto.PermissionRequest;
 import org.arch.ums.account.dto.PermissionSearchDto;
 import org.arch.ums.account.entity.Permission;
@@ -18,6 +17,7 @@ import java.util.List;
 /**
  * arch-ums-api {@code PermissionService}服务远程调用的 feign 客户端.
  * 注意: 与 ums-feign-api 模块的 {@code UmsAccountPermissionFeignService} 逻辑相同, 添加接口时需一同修改.
+ *
  * @author YongWu zheng
  * @date 2021-03-06 15:04:30
  * @since 1.0.0

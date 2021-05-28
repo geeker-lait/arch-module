@@ -1,9 +1,8 @@
 package org.arch.auth.rbac.feign;
 
-
 import org.arch.framework.beans.Response;
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.account.dto.MenuRequest;
 import org.arch.ums.account.dto.MenuSearchDto;
 import org.arch.ums.account.entity.Menu;

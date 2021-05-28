@@ -1,9 +1,8 @@
 package org.arch.ums.conf.client;
 
-
 import org.arch.framework.beans.Response;
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.conf.dto.MobileInfoRequest;
 import org.arch.ums.conf.dto.MobileInfoSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -29,10 +28,11 @@ public interface ConfMobileInfoFeignService extends BaseFeignService<MobileInfoS
     /**
      * 批量上传手机归属地信息, 批量保存, 如果主键或唯一索引重复则更新.<br>
      * 主要用户批量更新与添加, 如果初始化时请直接调用 ums-api 的 /ums/conf/mobile/info/uploadInfos.<br>
-     *     格式: 1999562  甘肃-兰州 <br>
-     *     分隔符可以自定义.
+     * 格式: 1999562  甘肃-兰州 <br>
+     * 分隔符可以自定义.
+     *
      * @param mobileInfoList 实体类列表
-     * @return  {@link Response(Boolean)}
+     * @return {@link Response(Boolean)}
      */
     @PostMapping("/savesOnDuplicateKeyUpdate")
     Response<Boolean> insertOnDuplicateKeyUpdate(@Valid @RequestBody List<MobileInfoRequest> mobileInfoList);

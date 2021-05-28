@@ -15,11 +15,7 @@ import top.dcenter.ums.security.core.api.permission.service.RolePermissionsServi
 import top.dcenter.ums.security.core.permission.dto.UpdateRoleResourcesDto;
 import top.dcenter.ums.security.core.permission.enums.UpdateRolesResourcesType;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.arch.auth.rbac.utils.RbacUtils.publishEvent;
@@ -27,11 +23,12 @@ import static top.dcenter.ums.security.common.consts.TransactionalConstants.ONE_
 
 /**
  * 主要功能: <br>
- *     1. 当权限更新时, 发送更新消息到 MQ, 以便其他微服务更新本地权限缓存.<br>
- *     2. 发布本地更新事件, 以便其他微服务更新本地权限缓存.
- * @see top.dcenter.ums.security.core.api.permission.service.RolePermissionsServiceAspect
+ * 1. 当权限更新时, 发送更新消息到 MQ, 以便其他微服务更新本地权限缓存.<br>
+ * 2. 发布本地更新事件, 以便其他微服务更新本地权限缓存.
+ *
  * @author YongWu zheng
  * @version V2.0  Created by 2020/11/7 18:41
+ * @see top.dcenter.ums.security.core.api.permission.service.RolePermissionsServiceAspect
  */
 @SuppressWarnings("unchecked")
 @Component
@@ -50,17 +47,17 @@ public class DistributedRolePermissionsServiceAspect implements RolePermissionsS
         if (jp.getTarget() instanceof RolePermissionsService) {
             RolePermissionsService<Object> rolePermissionsService = (RolePermissionsService<Object>) jp.getTarget();
             if (result) {
-                Map<Long, List<Long>> roleIdResourcesIdMap =  new HashMap<>(1);
+                Map<Long, List<Long>> roleIdResourcesIdMap = new HashMap<>(1);
                 roleIdResourcesIdMap.put(roleId,
-                                         Arrays.stream(resourceIds)
-                                               .collect(Collectors.toList()));
+                        Arrays.stream(resourceIds)
+                                .collect(Collectors.toList()));
                 UpdateRoleResourcesDto<Object> updateRoleResourcesDto =
                         UpdateRoleResourcesDto.builder()
-                                              .updateType(UpdateRolesResourcesType.ROLE)
-                                              .roleResources(roleIdResourcesIdMap)
-                                              .resourceClass(rolePermissionsService.getUpdateResourcesClass())
-                                              .build();
-                publishEvent(updateRoleResourcesDto,this, applicationEventPublisher, Boolean.TRUE);
+                                .updateType(UpdateRolesResourcesType.ROLE)
+                                .roleResources(roleIdResourcesIdMap)
+                                .resourceClass(rolePermissionsService.getUpdateResourcesClass())
+                                .build();
+                publishEvent(updateRoleResourcesDto, this, applicationEventPublisher, Boolean.TRUE);
             }
         }
     }
@@ -76,16 +73,16 @@ public class DistributedRolePermissionsServiceAspect implements RolePermissionsS
             if (result) {
                 Map<Long, List<Long>> roleIdResourcesIdMap = new HashMap<>(1);
                 roleIdResourcesIdMap.put(roleId,
-                                         Arrays.stream(resourceIds)
-                                               .collect(Collectors.toList()));
+                        Arrays.stream(resourceIds)
+                                .collect(Collectors.toList()));
                 UpdateRoleResourcesDto<Object> updateRoleResourcesDto =
                         UpdateRoleResourcesDto.builder()
-                                              .tenantId(tenantId)
-                                              .roleResources(roleIdResourcesIdMap)
-                                              .updateType(UpdateRolesResourcesType.TENANT)
-                                              .resourceClass(rolePermissionsService.getUpdateResourcesClass())
-                                              .build();
-                publishEvent(updateRoleResourcesDto,this, applicationEventPublisher, Boolean.TRUE);
+                                .tenantId(tenantId)
+                                .roleResources(roleIdResourcesIdMap)
+                                .updateType(UpdateRolesResourcesType.TENANT)
+                                .resourceClass(rolePermissionsService.getUpdateResourcesClass())
+                                .build();
+                publishEvent(updateRoleResourcesDto, this, applicationEventPublisher, Boolean.TRUE);
             }
         }
     }
@@ -100,16 +97,16 @@ public class DistributedRolePermissionsServiceAspect implements RolePermissionsS
             if (result) {
                 Map<Long, List<Long>> roleIdResourcesIdMap = new HashMap<>(1);
                 roleIdResourcesIdMap.put(roleId,
-                                         Arrays.stream(resourceIds)
-                                               .collect(Collectors.toList()));
+                        Arrays.stream(resourceIds)
+                                .collect(Collectors.toList()));
                 UpdateRoleResourcesDto<Object> updateRoleResourcesDto =
                         UpdateRoleResourcesDto.builder()
-                                              .scopeId(scopeId)
-                                              .updateType(UpdateRolesResourcesType.SCOPE)
-                                              .roleResources(roleIdResourcesIdMap)
-                                              .resourceClass(rolePermissionsService.getUpdateResourcesClass())
-                                              .build();
-                publishEvent(updateRoleResourcesDto,this, applicationEventPublisher, Boolean.TRUE);
+                                .scopeId(scopeId)
+                                .updateType(UpdateRolesResourcesType.SCOPE)
+                                .roleResources(roleIdResourcesIdMap)
+                                .resourceClass(rolePermissionsService.getUpdateResourcesClass())
+                                .build();
+                publishEvent(updateRoleResourcesDto, this, applicationEventPublisher, Boolean.TRUE);
             }
         }
     }
@@ -124,15 +121,15 @@ public class DistributedRolePermissionsServiceAspect implements RolePermissionsS
             if (result) {
                 Map<Long, Set<Long>> groupIdRoleIdsMap = new HashMap<>(1);
                 groupIdRoleIdsMap.put(groupId,
-                                      Arrays.stream(roleIds)
-                                            .collect(Collectors.toSet()));
+                        Arrays.stream(roleIds)
+                                .collect(Collectors.toSet()));
                 UpdateRoleResourcesDto<Object> updateRoleResourcesDto =
                         UpdateRoleResourcesDto.builder()
-                                              .updateType(UpdateRolesResourcesType.GROUP)
-                                              .groupRoles(groupIdRoleIdsMap)
-                                              .resourceClass(rolePermissionsService.getUpdateResourcesClass())
-                                              .build();
-                publishEvent(updateRoleResourcesDto,this, applicationEventPublisher, Boolean.TRUE);
+                                .updateType(UpdateRolesResourcesType.GROUP)
+                                .groupRoles(groupIdRoleIdsMap)
+                                .resourceClass(rolePermissionsService.getUpdateResourcesClass())
+                                .build();
+                publishEvent(updateRoleResourcesDto, this, applicationEventPublisher, Boolean.TRUE);
             }
         }
     }
@@ -147,16 +144,16 @@ public class DistributedRolePermissionsServiceAspect implements RolePermissionsS
             if (result) {
                 Map<Long, Set<Long>> groupIdRoleIdsMap = new HashMap<>(1);
                 groupIdRoleIdsMap.put(groupId,
-                                      Arrays.stream(roleIds)
-                                            .collect(Collectors.toSet()));
+                        Arrays.stream(roleIds)
+                                .collect(Collectors.toSet()));
                 UpdateRoleResourcesDto<Object> updateRoleResourcesDto =
                         UpdateRoleResourcesDto.builder()
-                                              .tenantId(tenantId)
-                                              .updateType(UpdateRolesResourcesType.GROUP)
-                                              .groupRoles(groupIdRoleIdsMap)
-                                              .resourceClass(rolePermissionsService.getUpdateResourcesClass())
-                                              .build();
-                publishEvent(updateRoleResourcesDto,this, applicationEventPublisher, Boolean.TRUE);
+                                .tenantId(tenantId)
+                                .updateType(UpdateRolesResourcesType.GROUP)
+                                .groupRoles(groupIdRoleIdsMap)
+                                .resourceClass(rolePermissionsService.getUpdateResourcesClass())
+                                .build();
+                publishEvent(updateRoleResourcesDto, this, applicationEventPublisher, Boolean.TRUE);
             }
         }
     }

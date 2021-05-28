@@ -25,6 +25,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 /**
  * 数据字典初始化
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.5.27 14:11
@@ -64,10 +65,10 @@ public class AdminDictionaryInitServiceImpl implements DictionaryInitService {
             String mark = type.getMark();
             String title = type.getTitle();
             dictionaryRequestList.add(new DictionaryRequest()
-                                              .setCode(type.name().toLowerCase())
-                                              .setTitle(title)
-                                              .setMark(hasText(mark) ? mark : title)
-                                              .setDeleted(Boolean.FALSE));
+                    .setCode(type.name().toLowerCase())
+                    .setTitle(title)
+                    .setMark(hasText(mark) ? mark : title)
+                    .setDeleted(Boolean.FALSE));
         }
     }
 
@@ -79,17 +80,17 @@ public class AdminDictionaryInitServiceImpl implements DictionaryInitService {
             DictionaryItemInfo[] dictionaryItemInfos = dictionaryType.getDictionaryItemInfo();
             if (nonNull(dictionaryItemInfos)) {
                 Arrays.stream(dictionaryItemInfos)
-                      .forEach(info -> {
-                          String title = info.getTitle();
-                          String mark = info.getMark();
-                          dictionaryItemRequestList.add(new DictionaryItemRequest()
-                                                                         .setDictionaryId(dictionarySearchDto.getId())
-                                                                         .setTitle(title)
-                                                                         .setVal(info.getVal())
-                                                                         .setSeq(info.getSeq())
-                                                                         .setMark(hasText(mark) ? mark : title)
-                                                                         .setDeleted(Boolean.FALSE));
-                               });
+                        .forEach(info -> {
+                            String title = info.getTitle();
+                            String mark = info.getMark();
+                            dictionaryItemRequestList.add(new DictionaryItemRequest()
+                                    .setDictionaryId(dictionarySearchDto.getId())
+                                    .setTitle(title)
+                                    .setVal(info.getVal())
+                                    .setSeq(info.getSeq())
+                                    .setMark(hasText(mark) ? mark : title)
+                                    .setDeleted(Boolean.FALSE));
+                        });
             }
         });
     }

@@ -1,8 +1,8 @@
 package org.arch.ums.user.client;
 
 
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.user.dto.JobRequest;
 import org.arch.ums.user.dto.JobSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;

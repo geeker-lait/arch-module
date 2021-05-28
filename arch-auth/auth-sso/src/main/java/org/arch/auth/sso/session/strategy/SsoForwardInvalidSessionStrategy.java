@@ -15,6 +15,7 @@ import static java.util.Optional.ofNullable;
 
 /**
  * 无效 session 时创建新的 session 且重新转发
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.1 14:16
@@ -33,8 +34,7 @@ public class SsoForwardInvalidSessionStrategy implements InvalidSessionStrategy 
 
         String forwardUrl = UrlUtil.getUrlPathHelper().getPathWithinApplication(request) + ofNullable(queryString).orElse("");
 
-        if (log.isDebugEnabled())
-        {
+        if (log.isDebugEnabled()) {
             log.debug("Starting new session and forward");
         }
         request.getSession(true);

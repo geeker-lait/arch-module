@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    @Autowired
+   /* @Autowired
     private RedisTemplate redisTemplate;
 
     @Override
@@ -40,5 +40,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //                .excludePathPatterns("/regist/**")
 //                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
 
-    }
+    }*/
 }

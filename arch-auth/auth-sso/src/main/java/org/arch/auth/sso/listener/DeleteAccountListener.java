@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 删除账号监听器
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.6 13:17

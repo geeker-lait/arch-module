@@ -10,7 +10,7 @@ import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.beans.exception.BaseException;
 import org.arch.framework.beans.exception.BusinessException;
 import org.arch.framework.beans.exception.ValidationException;
-import org.arch.framework.feign.exception.FeignCallException;
+import org.arch.framework.web.feign.exception.FeignCallException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;

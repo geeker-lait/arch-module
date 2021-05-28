@@ -1,8 +1,8 @@
 package org.arch.ums.account.client;
 
 import org.arch.framework.beans.Response;
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.account.dto.AuthClientRequest;
 import org.arch.ums.account.dto.AuthClientSearchDto;
 import org.arch.ums.account.vo.AuthClientVo;
@@ -19,6 +19,7 @@ import java.util.Set;
 
 /**
  * arch-ums-api {@code AuthClientService}服务远程调用的 feign 客户端.
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.12 13:44
@@ -30,9 +31,10 @@ public interface AccountAuthClientFeignService extends BaseFeignService<AuthClie
 
     /**
      * 根据 clientId 与 clientSecret 查询 scopes
-     * @param clientId      client id
-     * @param clientSecret  client secret
-     * @return  返回 scopes 集合, 如果不存在, 返回空集合.
+     *
+     * @param clientId     client id
+     * @param clientSecret client secret
+     * @return 返回 scopes 集合, 如果不存在, 返回空集合.
      */
     @NonNull
     @PostMapping(value = "/scopes", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})

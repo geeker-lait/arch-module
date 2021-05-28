@@ -19,6 +19,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 /**
  * 用户推荐控制器
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.14 17:53
@@ -50,8 +51,9 @@ public class RecommendController {
 
     /**
      * 获取带有用户推荐码的注册链接
+     *
      * @param token {@link TokenInfo}
-     * @return  返回带有用户推荐码的注册链接
+     * @return 返回带有用户推荐码的注册链接
      */
     @GetMapping("/registerUrl")
     public Response<String> getRegisterUrlWithRecommendCode(TokenInfo token) {
@@ -60,8 +62,7 @@ public class RecommendController {
         }
         try {
             return Response.success(this.registerUrl + this.recommendAndPromotionService.generateUserRecommendCode());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("生成用户推荐码失败", e);
             return Response.failed(CommonStatusCode.GENERATE_USER_RECOMMEND_CODE_FAILED);
         }
@@ -69,8 +70,9 @@ public class RecommendController {
 
     /**
      * 获取用户推荐码
+     *
      * @param token {@link TokenInfo}
-     * @return  返回用户推荐码
+     * @return 返回用户推荐码
      */
     @GetMapping("/code")
     public Response<String> getRecommendCode(TokenInfo token) {
@@ -79,8 +81,7 @@ public class RecommendController {
         }
         try {
             return Response.success(this.recommendAndPromotionService.generateUserRecommendCode());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("生成用户推荐码失败", e);
             return Response.failed(CommonStatusCode.GENERATE_USER_RECOMMEND_CODE_FAILED);
         }

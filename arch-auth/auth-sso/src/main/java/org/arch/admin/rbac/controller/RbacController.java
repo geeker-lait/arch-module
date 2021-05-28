@@ -10,11 +10,7 @@ import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.dcenter.ums.security.core.permission.dto.UpdateRoleResourcesDto;
 import top.dcenter.ums.security.core.permission.enums.UpdateRolesResourcesType;
 import top.dcenter.ums.security.core.permission.event.UpdateRolesResourcesEvent;
@@ -29,6 +25,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 /**
  * 用于权限同步更新缓存异常时用于人工干预
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.24 13:33
@@ -46,22 +43,23 @@ public class RbacController implements ApplicationEventPublisherAware {
      * 根据死信队列消息 {@code payload: {"type":"UpdateRoleResourcesDto","updateType":"TENANT","tenantId":0,"scopeId":null,
      * "groupRoles":null,"roleResources":{"1":[1,2,3]},"resourceClass":"org.arch.ums.account.entity.Permission"}}
      * 设置参数.<br>
-     *  注意: 必须拥有 ROLE_ADMIN 角色才能上传.
-     * @param updateType        {@link UpdateRolesResourcesType}, ALL/GROUP/ROLE/SCOPE/TENANT
-     * @param id                角色 id, 当 {@code updateType} 为 {@code GROUP} 时为 groupId,
-     *                          当 {@code updateType} 为 {@code ALL} 时为 null
-     * @param ids               权限 ids, 当 {@code updateType} 为 {@code GROUP} 时为 roleIds,
-     *                          当 {@code updateType} 为 {@code ALL} 时为 null
-     * @param permissionType    权限类型, 如: org.arch.ums.account.entity.Permission
-     * @param tenantId          id 与 ids 所属的租户 id, 当 {@code updateType} 为 {@code ALL/SCOPE/ROLE} 时为 null
-     * @return  是否成功发送权限更新事件
+     * 注意: 必须拥有 ROLE_ADMIN 角色才能上传.
+     *
+     * @param updateType     {@link UpdateRolesResourcesType}, ALL/GROUP/ROLE/SCOPE/TENANT
+     * @param id             角色 id, 当 {@code updateType} 为 {@code GROUP} 时为 groupId,
+     *                       当 {@code updateType} 为 {@code ALL} 时为 null
+     * @param ids            权限 ids, 当 {@code updateType} 为 {@code GROUP} 时为 roleIds,
+     *                       当 {@code updateType} 为 {@code ALL} 时为 null
+     * @param permissionType 权限类型, 如: org.arch.ums.account.entity.Permission
+     * @param tenantId       id 与 ids 所属的租户 id, 当 {@code updateType} 为 {@code ALL/SCOPE/ROLE} 时为 null
+     * @return 是否成功发送权限更新事件
      */
     @PostMapping("/publishingUpdateEvent/{updateType}")
     public Response<Boolean> publisherPermissionUpdateEvent(@PathVariable("updateType") String updateType,
-                                @RequestParam(value = "id", required = false) Long id,
-                                @RequestParam(value = "ids", required = false) List<Long> ids,
-                                @RequestParam(value = "permissionType", required = false) String permissionType,
-                                @RequestParam(value = "tenantId", required = false) Long tenantId,
+                                                            @RequestParam(value = "id", required = false) Long id,
+                                                            @RequestParam(value = "ids", required = false) List<Long> ids,
+                                                            @RequestParam(value = "permissionType", required = false) String permissionType,
+                                                            @RequestParam(value = "tenantId", required = false) Long tenantId,
                                                             TokenInfo token) {
 
         if (!isAdminForRole(token)) {
@@ -71,13 +69,12 @@ public class RbacController implements ApplicationEventPublisherAware {
         UpdateRolesResourcesType updateRolesResourcesType;
         try {
             updateRolesResourcesType = UpdateRolesResourcesType.valueOf(updateType.toUpperCase());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Response.failed(ArgumentStatuesCode.VALIDATE_FAILED,
-                                   "updateType 必须是 TENANT/SCOPE/ROLE/GROUP/ALL 之一");
+                    "updateType 必须是 TENANT/SCOPE/ROLE/GROUP/ALL 之一");
         }
 
-        switch(updateRolesResourcesType) {
+        switch (updateRolesResourcesType) {
             case TENANT:
                 return publishingEventOfTenant(id, ids, permissionType, tenantId);
             case SCOPE:
@@ -90,7 +87,7 @@ public class RbacController implements ApplicationEventPublisherAware {
                 return publishingAllEvent();
             default:
                 return Response.failed(ArgumentStatuesCode.VALIDATE_FAILED,
-                                       "updateType 必须是 TENANT/SCOPE/ROLE/GROUP/ALL 之一");
+                        "updateType 必须是 TENANT/SCOPE/ROLE/GROUP/ALL 之一");
         }
 
     }
@@ -98,19 +95,19 @@ public class RbacController implements ApplicationEventPublisherAware {
     private Response<Boolean> publishingEventOfGroup(Long id, List<Long> ids, Long tenantId) {
         if (isNull(tenantId) || isNull(id) || isNull(ids)) {
             return Response.failed(ArgumentStatuesCode.VALIDATE_FAILED,
-                                   "tenantId, id, ids cannot be null");
+                    "tenantId, id, ids cannot be null");
         }
 
         UpdateRoleResourcesDto<Object> dto =
                 UpdateRoleResourcesDto.builder()
-                                      .updateType(UpdateRolesResourcesType.GROUP)
-                                      .tenantId(tenantId)
-                                      .groupRoles(Collections.singletonMap(id, new HashSet<>(ids)))
-                                      .build();
+                        .updateType(UpdateRolesResourcesType.GROUP)
+                        .tenantId(tenantId)
+                        .groupRoles(Collections.singletonMap(id, new HashSet<>(ids)))
+                        .build();
         this.publisher.publishEvent(new UpdateRolesResourcesEvent(this,
-                                                                  dto,
-                                                                  new RbacRemotePermissionUpdatedEvent(this,
-                                                                                                       dto)));
+                dto,
+                new RbacRemotePermissionUpdatedEvent(this,
+                        dto)));
 
         return Response.success(Boolean.TRUE);
     }
@@ -122,23 +119,23 @@ public class RbacController implements ApplicationEventPublisherAware {
 
         if (isNull(id) || isNull(ids)) {
             return Response.failed(ArgumentStatuesCode.VALIDATE_FAILED,
-                                   "id, ids cannot be null");
+                    "id, ids cannot be null");
         }
 
         if (isNull(resourceClass)) {
             return Response.failed(ArgumentStatuesCode.VALIDATE_FAILED,
-                                   "permissionType 错误");
+                    "permissionType 错误");
         }
         UpdateRoleResourcesDto<Object> dto =
                 UpdateRoleResourcesDto.builder()
-                                      .updateType(UpdateRolesResourcesType.SCOPE)
-                                      .resourceClass(resourceClass)
-                                      .roleResources(Collections.singletonMap(id, ids))
-                                      .build();
+                        .updateType(UpdateRolesResourcesType.SCOPE)
+                        .resourceClass(resourceClass)
+                        .roleResources(Collections.singletonMap(id, ids))
+                        .build();
         this.publisher.publishEvent(new UpdateRolesResourcesEvent(this,
-                                                                  dto,
-                                                                  new RbacRemotePermissionUpdatedEvent(this,
-                                                                                                       dto)));
+                dto,
+                new RbacRemotePermissionUpdatedEvent(this,
+                        dto)));
 
         return Response.success(Boolean.TRUE);
     }
@@ -146,7 +143,7 @@ public class RbacController implements ApplicationEventPublisherAware {
     private Response<Boolean> publishingEventOfRole(Long id, List<Long> ids, String permissionType) {
         if (isNull(id) || isNull(ids)) {
             return Response.failed(ArgumentStatuesCode.VALIDATE_FAILED,
-                                   "id, ids cannot be null");
+                    "id, ids cannot be null");
         }
 
         // 获取要更新的资源类型
@@ -154,18 +151,18 @@ public class RbacController implements ApplicationEventPublisherAware {
         Class<Object> resourceClass = (Class<Object>) getResourceClass(permissionType);
         if (isNull(resourceClass)) {
             return Response.failed(ArgumentStatuesCode.VALIDATE_FAILED,
-                                   "permissionType 错误");
+                    "permissionType 错误");
         }
         UpdateRoleResourcesDto<Object> dto =
                 UpdateRoleResourcesDto.builder()
-                                      .updateType(UpdateRolesResourcesType.ROLE)
-                                      .resourceClass(resourceClass)
-                                      .roleResources(Collections.singletonMap(id, ids))
-                                      .build();
+                        .updateType(UpdateRolesResourcesType.ROLE)
+                        .resourceClass(resourceClass)
+                        .roleResources(Collections.singletonMap(id, ids))
+                        .build();
         this.publisher.publishEvent(new UpdateRolesResourcesEvent(this,
-                                                                  dto,
-                                                                  new RbacRemotePermissionUpdatedEvent(this,
-                                                                                                       dto)));
+                dto,
+                new RbacRemotePermissionUpdatedEvent(this,
+                        dto)));
 
         return Response.success(Boolean.TRUE);
     }
@@ -174,7 +171,7 @@ public class RbacController implements ApplicationEventPublisherAware {
 
         if (isNull(tenantId) || isNull(id) || isNull(ids)) {
             return Response.failed(ArgumentStatuesCode.VALIDATE_FAILED,
-                                   "tenantId, id, ids cannot be null");
+                    "tenantId, id, ids cannot be null");
         }
 
         // 获取要更新的资源类型
@@ -182,19 +179,19 @@ public class RbacController implements ApplicationEventPublisherAware {
         Class<Object> resourceClass = (Class<Object>) getResourceClass(permissionType);
         if (isNull(resourceClass)) {
             return Response.failed(ArgumentStatuesCode.VALIDATE_FAILED,
-                                   "permissionType 错误");
+                    "permissionType 错误");
         }
         UpdateRoleResourcesDto<Object> dto =
                 UpdateRoleResourcesDto.builder()
-                                      .updateType(UpdateRolesResourcesType.TENANT)
-                                      .tenantId(tenantId)
-                                      .resourceClass(resourceClass)
-                                      .roleResources(Collections.singletonMap(id, ids))
-                                      .build();
+                        .updateType(UpdateRolesResourcesType.TENANT)
+                        .tenantId(tenantId)
+                        .resourceClass(resourceClass)
+                        .roleResources(Collections.singletonMap(id, ids))
+                        .build();
         this.publisher.publishEvent(new UpdateRolesResourcesEvent(this,
-                                                                  dto,
-                                                                  new RbacRemotePermissionUpdatedEvent(this,
-                                                                                                       dto)));
+                dto,
+                new RbacRemotePermissionUpdatedEvent(this,
+                        dto)));
 
         return Response.success(Boolean.TRUE);
     }
@@ -202,12 +199,12 @@ public class RbacController implements ApplicationEventPublisherAware {
     private Response<Boolean> publishingAllEvent() {
         UpdateRoleResourcesDto<Object> dto =
                 UpdateRoleResourcesDto.builder()
-                                      .updateType(UpdateRolesResourcesType.ALL)
-                                      .build();
+                        .updateType(UpdateRolesResourcesType.ALL)
+                        .build();
         this.publisher.publishEvent(new UpdateRolesResourcesEvent(this,
-                                                                  dto,
-                                                                  new RbacRemotePermissionUpdatedEvent(this,
-                                                                                                       dto)));
+                dto,
+                new RbacRemotePermissionUpdatedEvent(this,
+                        dto)));
 
         return Response.success(Boolean.TRUE);
     }
@@ -216,8 +213,7 @@ public class RbacController implements ApplicationEventPublisherAware {
         if (hasText(permissionType)) {
             try {
                 return Class.forName(permissionType);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 return null;
             }
         }

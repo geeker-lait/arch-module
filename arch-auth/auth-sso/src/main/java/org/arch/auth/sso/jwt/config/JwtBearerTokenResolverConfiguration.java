@@ -29,6 +29,7 @@ import java.util.Set;
 
 /**
  * 针对 {@link UmsBearerTokenResolver} 的 ignoreUrls 的自动配置
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.8 12:56
@@ -54,8 +55,7 @@ public class JwtBearerTokenResolverConfiguration {
             ignoreUrls.add(auth2Properties.getAuthLoginUrlPrefix() + "/*");
             ignoreUrls.add(auth2Properties.getRedirectUrlPrefix() + "/*");
         }
-        if (bearerTokenResolver instanceof UmsBearerTokenResolver)
-        {
+        if (bearerTokenResolver instanceof UmsBearerTokenResolver) {
             UmsBearerTokenResolver tokenResolver = ((UmsBearerTokenResolver) bearerTokenResolver);
             tokenResolver.addIgnoreUrls(ignoreUrls);
         }

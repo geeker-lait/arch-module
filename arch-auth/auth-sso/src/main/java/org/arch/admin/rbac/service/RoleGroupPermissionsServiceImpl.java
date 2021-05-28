@@ -2,8 +2,8 @@ package org.arch.admin.rbac.service;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
-import org.arch.ums.account.entity.Group;
 import org.arch.ums.account.client.AccountRoleGroupFeignService;
+import org.arch.ums.account.entity.Group;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
@@ -52,13 +52,12 @@ public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<G
                                                 Long... roleIds) throws RolePermissionsException {
         try {
             Response<Boolean> response = this.roleGroupFeignService.updateRolesByGroupIdOfTenant(tenantId,
-                                                                                                 groupId,
-                                                                                                 asList(roleIds));
+                    groupId,
+                    asList(roleIds));
             return Optional.ofNullable(response.getSuccessData()).orElse(false);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.UPDATE_ROLE_PERMISSIONS_FAILURE,
-                                               tenantId + ":" + groupId + ":" + Arrays.toString(roleIds), e);
+                    tenantId + ":" + groupId + ":" + Arrays.toString(roleIds), e);
 
         }
     }
@@ -77,8 +76,7 @@ public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<G
         try {
             Response<Set<String>> response = this.roleGroupFeignService.findRolesByGroupIdOfTenant(tenantId, groupId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new HashSet<>(0));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.QUERY_ROLE_PERMISSIONS_FAILURE, tenantId + ":" + groupId, e);
         }
     }

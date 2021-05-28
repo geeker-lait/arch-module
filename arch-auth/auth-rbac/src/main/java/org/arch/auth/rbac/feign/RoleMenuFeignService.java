@@ -1,7 +1,7 @@
 package org.arch.auth.rbac.feign;
 
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.account.dto.RoleMenuRequest;
 import org.arch.ums.account.dto.RoleMenuSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;

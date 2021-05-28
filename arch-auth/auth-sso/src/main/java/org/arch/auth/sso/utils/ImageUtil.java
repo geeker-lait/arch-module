@@ -24,8 +24,8 @@ public class ImageUtil {
     /**
      * 获取图片信息
      *
-     * @param file  图片文件
-     * @throws GlobalFileException  获取图片信息失败
+     * @param file 图片文件
+     * @throws GlobalFileException 获取图片信息失败
      */
     @NonNull
     public static FileInfoDto getInfo(@Nullable File file) {
@@ -47,7 +47,7 @@ public class ImageUtil {
      * 获取图片信息
      *
      * @param multipartFile multipart file
-     * @throws GlobalFileException  获取图片信息失败
+     * @throws GlobalFileException 获取图片信息失败
      */
     @NonNull
     public static FileInfoDto getInfo(@Nullable MultipartFile multipartFile) {
@@ -73,8 +73,8 @@ public class ImageUtil {
     /**
      * 获取图片信息
      *
-     * @param inputStream   图片流
-     * @throws GlobalFileException  获取图片信息失败
+     * @param inputStream 图片流
+     * @throws GlobalFileException 获取图片信息失败
      */
     @NonNull
     public static FileInfoDto getInfo(@NonNull InputStream inputStream) {

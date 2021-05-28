@@ -1,8 +1,8 @@
 package org.arch.ums.conf.client;
 
 import org.arch.framework.beans.Response;
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.conf.dto.FileInfoRequest;
 import org.arch.ums.conf.dto.FileInfoSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * arch-conf-api {@code FileInfoService}服务远程调用的 feign 客户端.
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.2.27 16:51

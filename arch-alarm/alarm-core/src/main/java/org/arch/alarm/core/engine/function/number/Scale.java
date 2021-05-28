@@ -3,7 +3,7 @@ package org.arch.alarm.core.engine.function.number;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.type.AviatorDecimal;
 import com.googlecode.aviator.runtime.type.AviatorObject;
-import com.yonghui.ofs.alarm.center.computer.engine.util.ArithUtil;
+import org.arch.alarm.core.engine.util.ArithUtil;
 
 import java.math.BigDecimal;
 import java.util.Map;

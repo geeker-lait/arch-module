@@ -26,6 +26,7 @@
         <module>arch-alarm</module>
         <module>arch-application</module>
         <module>arch-auth</module>
+        <module>arch-automate</module>
         <module>arch-framework</module>
         <module>arch-gateway</module>
         <module>arch-mms</module>
@@ -33,9 +34,9 @@
         <module>arch-pay</module>
         <module>arch-pms</module>
         <module>arch-rule</module>
+        <module>arch-sms</module>
         <module>arch-ums</module>
         <module>arch-workflow</module>
-        <module>arch-sms</module>
     </modules>
 
 
@@ -137,6 +138,11 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>framework-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <artifactId>mq-messaging</artifactId>
@@ -528,44 +534,43 @@
         </pluginManagement>
     </build>
 
-    <repositories>
+    <!--<repositories>
+        <repository>
+            <id>central</id>
+            <name>aliyun maven</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            &lt;!&ndash; 是否开启发布版构件下载 &ndash;&gt;
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            &lt;!&ndash; 是否开启快照版构件下载 &ndash;&gt;
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
 
-        <!-- <repository>
-             <id>central</id>
-             <name>aliyun maven</name>
-             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-             <layout>default</layout>
-             &lt;!&ndash; 是否开启发布版构件下载 &ndash;&gt;
-             <releases>
-                 <enabled>true</enabled>
-             </releases>
-             &lt;!&ndash; 是否开启快照版构件下载 &ndash;&gt;
-             <snapshots>
-                 <enabled>false</enabled>
-             </snapshots>
-         </repository>
-         <repository>
-             <id>spring-milestones</id>
-             <name>Spring Milestones</name>
-             <url>https://repo.spring.io/milestone</url>
-         </repository>
+        <repository>
+            <id>snoatype-snapshots</id>
+            <name>sonatype snapshots</name>
+            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
 
-         <repository>
-             <id>snoatype-snapshots</id>
-             <name>sonatype snapshots</name>
-             <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-         </repository>
-
-         <repository>
-             <id>central</id>
-             <name>central maven</name>
-             <url>https://repo1.maven.org/maven2/</url>
-         </repository>
-         <repository>
-             <id>central</id>
-             <name>central maven</name>
-             <url>http://central.maven.org/maven2/</url>
-         </repository>-->
-    </repositories>
+        <repository>
+            <id>central</id>
+            <name>central maven</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <name>central maven</name>
+            <url>http://central.maven.org/maven2/</url>
+        </repository>
+    </repositories>-->
 
 </project>

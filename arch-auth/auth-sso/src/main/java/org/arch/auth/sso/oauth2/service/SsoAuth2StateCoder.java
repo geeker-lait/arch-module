@@ -17,6 +17,7 @@ import static java.util.Objects.isNull;
 
 /**
  * 对 OAuth2 login 流程中的 state 进行自定义编解码. 传递 accountType 信息.
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.2 0:09

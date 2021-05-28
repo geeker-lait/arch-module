@@ -25,7 +25,6 @@ import top.dcenter.ums.security.jwt.claims.service.GenerateClaimsSetService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.regex.Pattern;
 
 import static java.util.Objects.nonNull;
@@ -34,6 +33,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 /**
  * 注册相关接口
+ *
  * @author YongWu zheng
  * @since 2021.1.3 16:25
  */
@@ -52,7 +52,7 @@ public class RegisterController {
     public RegisterController(UmsUserDetailsService umsUserDetailsService,
                               UsernameKeywordFilteringService usernameKeywordFilteringService,
                               @Autowired(required = false)
-                              RememberMeServices rememberMeServices,
+                                      RememberMeServices rememberMeServices,
                               GenerateClaimsSetService generateClaimsSetService) {
         this.umsUserDetailsService = umsUserDetailsService;
         this.usernameKeywordFilteringService = usernameKeywordFilteringService;
@@ -62,8 +62,9 @@ public class RegisterController {
 
     /**
      * 用户名密码注册请求
-     * @param regRequest   注册请求
-     * @return  返回是否注册成功信息
+     *
+     * @param regRequest 注册请求
+     * @return 返回是否注册成功信息
      */
     @RequestMapping(value = "/form", method = {RequestMethod.POST})
     public Response<String> register(@Validated RegRequest regRequest, HttpServletRequest request,
@@ -72,7 +73,7 @@ public class RegisterController {
             // 获取昵称且校验用户名与昵称是否有效
             String nickName = getNickNameAndCheck(regRequest);
             if (!hasText(nickName)) {
-            	return Response.failed("用户名或昵称不规范");
+                return Response.failed("用户名或昵称不规范");
             }
             regRequest.setNickName(nickName);
             ServletWebRequest servletWebRequest = new ServletWebRequest(request, response);
@@ -88,12 +89,10 @@ public class RegisterController {
 
             return Response.success(null, "注册成功");
 
-        }
-        catch (RegisterUserFailureException e) {
+        } catch (RegisterUserFailureException e) {
             log.error(e.getMessage(), e);
             return Response.failed(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.failed("用户注册失败");
         }
@@ -101,7 +100,8 @@ public class RegisterController {
 
     /**
      * 获取昵称且对用户名与昵称进行有效性校验
-     * @param regRequest    {@link RegRequest}
+     *
+     * @param regRequest {@link RegRequest}
      * @return 返回昵称, 如果用户名或昵称校验无效返回 null.
      */
     @Nullable
@@ -116,13 +116,11 @@ public class RegisterController {
             if (hasText(nickName) && !usernameKeywordFilteringService.isValid(nickName)) {
                 return null;
             }
-        }
-        else {
+        } else {
             boolean matches = Pattern.matches(EMAIL_REGEX, username);
             if (matches) {
                 nickName = username.substring(0, username.indexOf("@")).replaceAll("_", "");
-            }
-            else {
+            } else {
                 nickName = username;
             }
         }

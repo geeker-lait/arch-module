@@ -1,8 +1,8 @@
 package org.arch.ums.user.client;
 
 
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.user.dto.IdCardRequest;
 import org.arch.ums.user.dto.IdCardSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;

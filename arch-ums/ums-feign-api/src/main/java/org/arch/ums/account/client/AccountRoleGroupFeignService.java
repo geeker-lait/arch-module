@@ -2,8 +2,8 @@ package org.arch.ums.account.client;
 
 
 import org.arch.framework.beans.Response;
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.account.dto.RoleGroupRequest;
 import org.arch.ums.account.dto.RoleGroupSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,6 +20,7 @@ import java.util.Set;
 
 /**
  * arch-ums-api {@code RoleGroupService}服务远程调用的 feign 客户端.
+ *
  * @author YongWu zheng
  * @date 2021-03-06 15:04:32
  * @since 1.0.0
@@ -31,7 +32,8 @@ public interface AccountRoleGroupFeignService extends BaseFeignService<RoleGroup
 
     /**
      * 获取所有租户的所有角色组的角色
-     * @return  Map(tenantAuthority, Map(groupAuthority, Set(roleAuthority))), 如果不存在这返回空集合.
+     *
+     * @return Map(tenantAuthority, Map ( groupAuthority, Set ( roleAuthority))), 如果不存在这返回空集合.
      */
     @GetMapping("/listGroups")
     @NonNull
@@ -43,21 +45,21 @@ public interface AccountRoleGroupFeignService extends BaseFeignService<RoleGroup
      * @param tenantId 多租户 ID
      * @param groupId  用户的 groupId
      * @param roleIds  用户的角色 ids
-     * @return  Map(tenantAuthority, Map(groupAuthority, Set(roleAuthority))), 如果不存在这返回空集合.
+     * @return Map(tenantAuthority, Map ( groupAuthority, Set ( roleAuthority))), 如果不存在这返回空集合.
      */
     @GetMapping("/findGroupRoles/{tenantId}/{groupId}")
     @NonNull
     Response<Map<String, Map<String, Set<String>>>> findGroupRolesByGroupIdOfTenant(
-                                                                    @PathVariable(value = "tenantId") Integer tenantId,
-                                                                    @PathVariable(value = "groupId") Long groupId,
-                                                                    @RequestBody List<Long> roleIds);
+            @PathVariable(value = "tenantId") Integer tenantId,
+            @PathVariable(value = "groupId") Long groupId,
+            @RequestBody List<Long> roleIds);
 
     /**
      * 基于多租户, 更新角色组 {@code groupId} 的角色集合
      *
-     * @param tenantId    多租户 ID
-     * @param groupId     角色组 ID
-     * @param roleIds     角色 ids
+     * @param tenantId 多租户 ID
+     * @param groupId  角色组 ID
+     * @param roleIds  角色 ids
      * @return 是否更新成功
      */
     @PutMapping("/updateRoles/{tenantId}/{groupId}")
@@ -68,9 +70,10 @@ public interface AccountRoleGroupFeignService extends BaseFeignService<RoleGroup
 
     /**
      * 基于多租户, 查询指定角色组 {@code groupId} 所拥有的所有角色集合, Set(roleAuthority).
-     * @param tenantId  多租户 ID
-     * @param groupId   角色组 ID
-     * @return  groupId 所拥有的所有角色集合, Set(roleAuthority).
+     *
+     * @param tenantId 多租户 ID
+     * @param groupId  角色组 ID
+     * @return groupId 所拥有的所有角色集合, Set(roleAuthority).
      */
     @GetMapping("/findRoles/{tenantId}/{groupId}")
     @NonNull

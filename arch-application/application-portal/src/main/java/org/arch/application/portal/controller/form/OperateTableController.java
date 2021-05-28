@@ -1,28 +1,23 @@
-//package org.arch.application.portal.controller.form;
-//
-//import com.alibaba.fastjson.JSONObject;
-//import com.alibaba.fastjson.TypeReference;
-//import com.github.pagehelper.PageInfo;
-//import io.swagger.annotations.ApiImplicitParam;
-//import io.swagger.annotations.ApiImplicitParams;
-//import io.swagger.annotations.ApiOperation;
-//import org.arch.framework.automate.from.entity.bak.FieldAndOptionDetail;
-//import org.arch.framework.automate.from.entity.bak.Form;
-//import org.arch.framework.automate.from.service.bak.FieldService;
-//import org.arch.framework.automate.from.service.bak.FormService;
-//import org.arch.framework.automate.from.service.bak.OperateTableService;
-//import org.arch.framework.beans.Response;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.ArrayList;
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//
-//@RestController
-//public class OperateTableController {
-//
+package org.arch.application.portal.controller.form;
+
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import org.arch.framework.beans.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+public class OperateTableController {
+
 //    @Autowired
 //    private FieldService fieldService;
 //
@@ -246,5 +241,5 @@
 //        System.out.println("tableName=" + tableName);
 //        return Response.success(list);
 //    }
-//
-//}
+
+}

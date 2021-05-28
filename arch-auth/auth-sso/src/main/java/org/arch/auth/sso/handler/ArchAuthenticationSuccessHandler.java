@@ -41,16 +41,15 @@ import java.nio.charset.StandardCharsets;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 import static org.springframework.util.StringUtils.hasText;
-import static top.dcenter.ums.security.common.utils.JsonUtil.isAjaxOrJson;
-import static top.dcenter.ums.security.common.utils.JsonUtil.responseWithJson;
-import static top.dcenter.ums.security.common.utils.JsonUtil.toJsonString;
+import static top.dcenter.ums.security.common.utils.JsonUtil.*;
 import static top.dcenter.ums.security.core.util.MvcUtil.isSelfTopDomain;
 import static top.dcenter.ums.security.core.util.RequestUtil.getRequestUri;
 import static top.dcenter.ums.security.jwt.JwtContext.TEMPORARY_JWT_REFRESH_TOKEN;
 
 /**
- *  arch 客户端认证成功处理器.<br><br>
- * @author  YongWu zheng
+ * arch 客户端认证成功处理器.<br><br>
+ *
+ * @author YongWu zheng
  * @since 2021.1.6 11:54
  */
 @Component
@@ -98,12 +97,11 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
         if (log.isInfoEnabled()) {
             // 客户端成功处理器,
             log.info("登录成功: uid={}, ip={}, ua={}, sid={}",
-                     authentication.getName(), IpUtil.getRealIp(request),
-                     request.getHeader(SecurityConstants.HEADER_USER_AGENT), session.getId());
+                    authentication.getName(), IpUtil.getRealIp(request),
+                    request.getHeader(SecurityConstants.HEADER_USER_AGENT), session.getId());
         }
 
-        try
-        {
+        try {
             // 设置跳转的 url
             String targetUrl = determineTargetUrl(request, response);
 
@@ -115,23 +113,22 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
                 AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token> jwtAuthentication =
                         (AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token>) authentication;
                 oauth2CallbackUrl(request, response, targetUrl, jwtAuthentication);
-                return ;
+                return;
             }
 
 
             // 判断是否返回 json 类型 或 accept 是否要求返回 json
-            if (LoginProcessType.JSON.equals(this.loginProcessType) || isAjaxOrJson(request))
-            {
+            if (LoginProcessType.JSON.equals(this.loginProcessType) || isAjaxOrJson(request)) {
                 clearAuthenticationAttributes(request);
                 TokenInfo currentUser = SecurityUtils.getCurrentUser();
                 AuthTokenVo authTokenVo = new AuthTokenVo(currentUser.getAccountId().toString(),
-                                                          currentUser.getAccountName(),
-                                                          null,
-                                                          null,
-                                                          null,
-                                                          null,
-                                                          getJsonTargetUrl(targetUrl, request),
-                                                          null);
+                        currentUser.getAccountName(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        getJsonTargetUrl(targetUrl, request),
+                        null);
                 // 设置 jwt
                 String jwtStringIfAllowBodyParameter = JwtContext.getJwtStringIfAllowBodyParameter(authentication);
                 if (hasText(jwtStringIfAllowBodyParameter)) {
@@ -145,19 +142,17 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
 
                 clearAuthenticationAttributes(request);
                 responseWithJson(response, HttpStatus.OK.value(),
-                                 toJsonString(ResponseResult.success(null, authTokenVo)));
+                        toJsonString(ResponseResult.success(null, authTokenVo)));
                 return;
             }
 
             clearAuthenticationAttributes(request);
             session.removeAttribute(TEMPORARY_JWT_REFRESH_TOKEN);
             getRedirectStrategy().sendRedirect(request, response, targetUrl);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             log.error(String.format("设置登录成功后跳转的URL失败: error=%s, uid=%s, ip=%s, ua=%s, sid=%s",
-                                    e.getMessage(), authentication.getName(), IpUtil.getRealIp(request),
-                                    request.getHeader(SecurityConstants.HEADER_USER_AGENT), session.getId()), e);
+                    e.getMessage(), authentication.getName(), IpUtil.getRealIp(request),
+                    request.getHeader(SecurityConstants.HEADER_USER_AGENT), session.getId()), e);
             super.onAuthenticationSuccess(request, response, authentication);
         }
 
@@ -182,8 +177,7 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
             return defaultTargetUrl;
         }
 
-        if (savedRequest != null)
-        {
+        if (savedRequest != null) {
             final String redirectUrl = savedRequest.getRedirectUrl();
             if (this.logger.isTraceEnabled()) {
                 this.logger.trace(LogMessage.format("using url %s from default saved request %s", redirectUrl));
@@ -201,7 +195,7 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
             if (hasText(targetUrl) && isSelfTopDomain(targetUrl)) {
                 if (this.logger.isTraceEnabled()) {
                     this.logger.trace(LogMessage.format("Using url %s from request parameter %s", targetUrl,
-                                                        targetUrlParameter));
+                            targetUrlParameter));
                 }
                 return targetUrl;
             }
@@ -210,15 +204,13 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
 
         if (useReferer) {
             String referer = request.getHeader("Referer");
-            if (hasText(referer) && isSelfTopDomain(referer))
-            {
+            if (hasText(referer) && isSelfTopDomain(referer)) {
                 targetUrl = referer;
             }
         }
 
         // 当 targetUrl 为 登录 url 时, 设置为 defaultTargetUrl
-        if (!hasText(targetUrl) || isIgnoreUrl(targetUrl, request))
-        {
+        if (!hasText(targetUrl) || isIgnoreUrl(targetUrl, request)) {
             if (this.logger.isTraceEnabled()) {
                 this.logger.trace(LogMessage.format("Using default url %s", defaultTargetUrl));
             }
@@ -246,13 +238,12 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
         String jwtRefreshTokenFromSession = JwtContext.getJwtRefreshTokenFromSession();
         if (hasText(jwtRefreshTokenFromSession)) {
             tkValue = tkValue.concat(ssoProperties.getDelimiterOfTokenAndRefreshToken())
-                             .concat(jwtRefreshTokenFromSession);
-        }
-        else {
+                    .concat(jwtRefreshTokenFromSession);
+        } else {
             String refreshTokenFromHeader = response.getHeader(jwtProperties.bearer.getRefreshTokenHeaderName());
             if (hasText(refreshTokenFromHeader)) {
                 tkValue = tkValue.concat(ssoProperties.getDelimiterOfTokenAndRefreshToken())
-                                 .concat(refreshTokenFromHeader);
+                        .concat(refreshTokenFromHeader);
             }
         }
         //noinspection AlibabaUndefineMagicConstant
@@ -260,22 +251,22 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
             targetUrl = domain + request.getContextPath();
         }
         tkValue = tkValue.concat(ssoProperties.getDelimiterOfTokenAndRefreshToken())
-                         .concat(targetUrl);
+                .concat(targetUrl);
         getConnection().setEx((ssoProperties.getTempOauth2TokenPrefix() + uuid).getBytes(StandardCharsets.UTF_8),
-                              ssoProperties.getTempOauth2TokenTimeout().getSeconds(),
-                              tkValue.getBytes(StandardCharsets.UTF_8));
+                ssoProperties.getTempOauth2TokenTimeout().getSeconds(),
+                tkValue.getBytes(StandardCharsets.UTF_8));
 
         clearAuthenticationAttributes(request);
         //noinspection StringBufferReplaceableByString
         StringBuilder url = new StringBuilder(request.getContextPath() + ssoProperties.getAutoGetTokenUri());
         url.append("?")
-           .append(ssoProperties.getOauth2TokenParamName())
-           .append("=")
-           .append(uuid)
-           .append("&username=")
-           .append(jwtAuthentication.getName())
-           .append("&id=")
-           .append(jwtAuthentication.getTokenAttributes().get(JwtArchClaimNames.IDENTIFIER_ID.getClaimName()));
+                .append(ssoProperties.getOauth2TokenParamName())
+                .append("=")
+                .append(uuid)
+                .append("&username=")
+                .append(jwtAuthentication.getName())
+                .append("&id=")
+                .append(jwtAuthentication.getTokenAttributes().get(JwtArchClaimNames.IDENTIFIER_ID.getClaimName()));
         response.sendRedirect(url.toString());
     }
 
@@ -283,8 +274,7 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
      * 获取用于 json 的跳转地址
      */
     private String getJsonTargetUrl(String targetUrl, HttpServletRequest request) {
-        if (!UrlUtils.isAbsoluteUrl(targetUrl))
-        {
+        if (!UrlUtils.isAbsoluteUrl(targetUrl)) {
             String contextPath = request.getContextPath();
             if (!targetUrl.startsWith(contextPath)) {
                 targetUrl = contextPath + targetUrl;
@@ -295,6 +285,7 @@ public class ArchAuthenticationSuccessHandler extends BaseAuthenticationSuccessH
 
     /**
      * 判断 ignoreUrls 中是否包含 targetUrl
+     *
      * @param targetUrl 不能为 null
      * @return boolean
      */

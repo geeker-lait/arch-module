@@ -13,6 +13,7 @@ import static java.util.Objects.nonNull;
 
 /**
  * 应用初始化接口
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.5.27 14:56

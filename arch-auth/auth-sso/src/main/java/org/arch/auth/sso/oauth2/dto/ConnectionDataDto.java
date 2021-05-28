@@ -8,6 +8,7 @@ import top.dcenter.ums.security.core.api.oauth.entity.ConnectionData;
 
 /**
  * {@link ConnectionData} DTO
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.2.25 13:17

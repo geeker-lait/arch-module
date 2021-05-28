@@ -1,11 +1,10 @@
 package org.arch.ums.user.client;
 
 
-import org.arch.framework.feign.BaseFeignService;
+import org.arch.framework.web.feign.BaseFeignService;
 import org.arch.ums.user.dto.BankCardRequest;
 import org.arch.ums.user.dto.BankCardSearchDto;
-import org.arch.ums.user.entity.BankCard;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 

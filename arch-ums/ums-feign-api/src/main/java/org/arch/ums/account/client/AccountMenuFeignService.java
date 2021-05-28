@@ -1,9 +1,8 @@
 package org.arch.ums.account.client;
 
-
 import org.arch.framework.beans.Response;
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.account.dto.MenuRequest;
 import org.arch.ums.account.dto.MenuSearchDto;
 import org.arch.ums.account.entity.Menu;
@@ -30,9 +29,10 @@ public interface AccountMenuFeignService extends BaseFeignService<MenuSearchDto,
 
     /**
      * 多租户根据 {@code menuIds} 获取 {@link Menu} 列表.
-     * @param tenantId  多租户 ID
-     * @param menuIds   菜单 ID 列表
-     * @return  菜单列表
+     *
+     * @param tenantId 多租户 ID
+     * @param menuIds  菜单 ID 列表
+     * @return 菜单列表
      */
     @GetMapping("/findByMenuIds/{tenantId}")
     @NonNull

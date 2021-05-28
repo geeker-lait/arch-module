@@ -1,8 +1,7 @@
 package org.arch.ums.conf.client;
 
-
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.conf.dto.DictionaryRequest;
 import org.arch.ums.conf.dto.DictionarySearchDto;
 import org.springframework.cloud.openfeign.FeignClient;

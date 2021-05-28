@@ -1,8 +1,8 @@
 package org.arch.ums.account.client;
 
 
-import org.arch.framework.feign.BaseFeignService;
-import org.arch.framework.feign.config.DeFaultFeignConfig;
+import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.account.dto.RoleRequest;
 import org.arch.ums.account.dto.RoleSearchDto;
 import org.springframework.cloud.openfeign.FeignClient;

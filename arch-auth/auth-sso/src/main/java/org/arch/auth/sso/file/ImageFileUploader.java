@@ -16,6 +16,7 @@ import java.io.InputStream;
 
 /**
  * 图片的文件上传类
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.2.27 14:45

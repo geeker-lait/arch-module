@@ -1,12 +1,11 @@
 package org.arch.admin.account.controller;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.feign.FeignCrudController;
+import org.arch.framework.web.feign.FeignCrudController;
+import org.arch.ums.account.client.AccountPostFeignService;
 import org.arch.ums.account.dto.PostRequest;
 import org.arch.ums.account.dto.PostSearchDto;
-import org.arch.ums.account.client.AccountPostFeignService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

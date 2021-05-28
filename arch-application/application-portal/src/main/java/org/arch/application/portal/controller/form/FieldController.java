@@ -1,21 +1,17 @@
-//package org.arch.application.portal.controller.form;
-//
-//import io.swagger.annotations.ApiImplicitParam;
-//import io.swagger.annotations.ApiImplicitParams;
-//import io.swagger.annotations.ApiOperation;
-//import org.arch.framework.automate.from.entity.bak.Field;
-//import org.arch.framework.automate.from.entity.bak.FieldType;
-//import org.arch.framework.automate.from.entity.bak.Option;
-//import org.arch.framework.automate.from.service.bak.FieldService;
-//import org.arch.framework.beans.Response;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.List;
-//
-//@RestController
-//public class FieldController {
-//
+package org.arch.application.portal.controller.form;
+
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import org.arch.framework.beans.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+public class FieldController {
+
 //    @Autowired
 //    private FieldService fieldService;
 //
@@ -232,4 +228,4 @@
 //            }
 //        }
 //    }
-//}
+}

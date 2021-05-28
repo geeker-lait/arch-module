@@ -1,12 +1,11 @@
 package org.arch.admin.conf.contorller;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.feign.FeignCrudController;
+import org.arch.framework.web.feign.FeignCrudController;
+import org.arch.ums.conf.client.ConfDictionaryFeignService;
 import org.arch.ums.conf.dto.DictionaryRequest;
 import org.arch.ums.conf.dto.DictionarySearchDto;
-import org.arch.ums.conf.client.ConfDictionaryFeignService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController("adminDictionaryController")
 @RequestMapping("/conf/dictionary")
-public class DictionaryController implements FeignCrudController<DictionarySearchDto, java.lang.Long, DictionaryRequest, ConfDictionaryFeignService> {
+public class DictionaryController implements FeignCrudController<DictionarySearchDto, Long, DictionaryRequest, ConfDictionaryFeignService> {
 
     private final ConfDictionaryFeignService confDictionaryService;
 

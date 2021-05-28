@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * 单独登录 APP
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.5 14:09

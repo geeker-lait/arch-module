@@ -6,9 +6,9 @@ import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 import org.arch.framework.ums.enums.ScopesType;
 import org.arch.framework.ums.properties.AuthClientScopesCacheProperties;
-import org.arch.ums.account.vo.AuthClientVo;
+import org.arch.framework.web.feign.exception.FeignCallException;
 import org.arch.ums.account.client.AccountAuthClientFeignService;
-import org.arch.framework.feign.exception.FeignCallException;
+import org.arch.ums.account.vo.AuthClientVo;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -34,6 +34,7 @@ import static org.arch.framework.utils.AuthClientSyncUtils.setScopesLocalUpdateS
 
 /**
  * jws set uri 访问权限访问服务接口
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.5 17:33
@@ -76,8 +77,9 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
     /**
      * 检查是否有访问 jws set uri 的访问权限, 即 AccountOauthClient 的 clientId 所对应的
      * scopes 字段(JWK,USER,UMS,..)中是否有 {@link ScopesType#JWK}.
-     * @param request     {@link HttpServletRequest}
-     * @return  返回 true 表示有访问权限.
+     *
+     * @param request {@link HttpServletRequest}
+     * @return 返回 true 表示有访问权限.
      */
     @NonNull
     private Boolean hasPermissionOfApp(@NonNull HttpServletRequest request) {
@@ -92,16 +94,16 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
         String tenantId = tenantContextHolder.getTenantId();
         // 从本地缓存中获取 scopes .
         if (isNull(allScopeMap)) {
-        	syncToLocalCache();
+            syncToLocalCache();
         }
         Map<String, AuthClientVo> stringAuthClientVoMap = allScopeMap.get(Integer.valueOf(tenantId));
         if (isNull(stringAuthClientVoMap)) {
-        	return Collections.emptySet();
+            return Collections.emptySet();
         }
 
         AuthClientVo authClientVo = stringAuthClientVoMap.get(clientId);
         if (isNull(authClientVo)) {
-        	return Collections.emptySet();
+            return Collections.emptySet();
         }
 
         if (authClientVo.getClientSecret().equals(clientSecret)) {
@@ -117,8 +119,7 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
         // 对 scopes 进行本地缓存.
         try {
             syncToLocalCache();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.warn("服务器启动同步 AuthClient 的 scopes 缓存未成功");
         }
     }
@@ -127,14 +128,14 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
     public void run() {
         try (RedisConnection connection = getConnection()) {
             if (checkScopesUpdate(this.authClientScopesCacheProperties,
-                                  connection,
-                                  this.scopeUpdateUuid)) {
+                    connection,
+                    this.scopeUpdateUuid)) {
                 // 对 scopes 进行本地缓存.
                 syncToLocalCache();
                 // 标记本地缓存已经更新.
                 setScopesLocalUpdateSyncFlag(this.authClientScopesCacheProperties,
-                                             connection,
-                                             this.scopeUpdateUuid);
+                        connection,
+                        this.scopeUpdateUuid);
             }
         }
     }
@@ -156,8 +157,7 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
             if (nonNull(allScopeMap)) {
                 this.allScopeMap = allScopeMap;
             }
-        }
-        catch (FeignException e) {
+        } catch (FeignException e) {
             String msg = "scopes 本地缓存失败";
             throw new FeignCallException(ResponseStatusCode.FAILED, null, msg, e);
         }
