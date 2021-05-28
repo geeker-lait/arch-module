@@ -2,10 +2,12 @@ package org.arch.framework.automate.generater.reader.xmind.parser;
 
 import org.arch.framework.automate.common.module.Module;
 import org.arch.framework.automate.common.module.Project;
+import org.arch.framework.automate.generater.reader.xmind.Pkg;
 import org.arch.framework.automate.generater.reader.xmind.meta.Attached;
 import org.arch.framework.automate.generater.reader.xmind.meta.Children;
 import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;
 import org.arch.framework.automate.generater.reader.xmind.meta.RootTopic;
+import org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType;
 import org.arch.framework.automate.generater.reader.xmind.nodespace.TiTleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -46,14 +49,14 @@ public class XmindProjectParser {
             String title = root.getTitle().trim();
             TiTleType tiTleType = getTiTleType(title);
             if (isNull(tiTleType)) {
-                generateOfRootTopic(root.getRootTopic(), project, tiTleType);
+                generateOfRootTopic(root.getRootTopic(), project, tiTleType, null);
                 return;
             }
             if (PROJECT.equals(tiTleType)) {
                 String[] splits = splitInto3Parts(title);
                 project.setName(splits[1].trim());
                 project.setDescr(removeNewlines(splits[2].trim()));
-                generateOfRootTopic(root.getRootTopic(), project, tiTleType);
+                generateOfRootTopic(root.getRootTopic(), project, tiTleType, null);
             }
             else if (MODULE.equals(tiTleType)) {
                 String[] splits = splitInto3Parts(title);
@@ -62,15 +65,15 @@ public class XmindProjectParser {
                 module.setName(splits[1].trim());
                 module.setComment(removeNewlines(splits[2].trim()));
                 project.getModules().add(module);
-                generateOfRootTopic(root.getRootTopic(), project, tiTleType);
+                generateOfRootTopic(root.getRootTopic(), project, tiTleType, module);
             }
         } catch (Exception e) {
-            generateOfRootTopic(root.getRootTopic(), project, null);
+            generateOfRootTopic(root.getRootTopic(), project, null, null);
         }
     }
 
     private static void generateOfRootTopic(@NonNull RootTopic rootTopic, @NonNull Project project,
-                                            @Nullable TiTleType pTiTleType) {
+                                            @Nullable TiTleType pTiTleType, @Nullable Module pModule) {
         String title = rootTopic.getTitle().trim();
         TiTleType tiTleType = getTiTleType(title);
         if (isNull(pTiTleType)) {
@@ -99,8 +102,8 @@ public class XmindProjectParser {
         else if (MODULE.equals(pTiTleType)) {
             Children children = rootTopic.getChildren();
             if (nonNull(children)) {
-                List<Module> modules = project.getModules();
-                generateOfChildren(children, modules, modules.get(0));
+                Set<Module> modules = project.getModules();
+                generateOfChildren(children, modules, pModule);
             }
         }
     }
@@ -109,27 +112,27 @@ public class XmindProjectParser {
      * 根据 {@link Attached} 的内容生成相应的规格内容, 添加到 {@link Module}.
      *
      * @param attached   {@link Attached}
-     * @param moduleList {@link Module} list
+     * @param moduleSet {@link Module} list
      */
-    private static void generateOfAttached(@NonNull Attached attached, @NonNull List<Module> moduleList) {
+    private static void generateOfAttached(@NonNull Attached attached, @NonNull Set<Module> moduleSet) {
         String title = attached.getTitle().trim();
         TiTleType tiTleType = getTiTleType(title);
         Children children = attached.getChildren();
         if (isNull(children)) {
             return;
         }
-        generate(children, moduleList, title, tiTleType);
+        generate(children, moduleSet, title, tiTleType);
     }
 
-    private static void generate(@Nullable Children children, @NonNull List<Module> moduleList,
+    private static void generate(@Nullable Children children, @NonNull Set<Module> moduleSet,
                                  @NonNull String title, @Nullable TiTleType pTiTleType) {
         if (isNull(children)) {
             return;
         }
         if (nonNull(pTiTleType) && MODULE.equals(pTiTleType)) {
             Module module = new Module();
-            moduleList.add(module);
-            generateOfChildren(children, moduleList, module, MODULE, title);
+            moduleSet.add(module);
+            generateOfChildren(children, moduleSet, module, MODULE, title);
             return;
         }
         List<Attached> attachedList = children.getAttached();
@@ -137,7 +140,7 @@ public class XmindProjectParser {
             return;
         }
         for (Attached attached : attachedList) {
-            generateOfAttached(attached, moduleList);
+            generateOfAttached(attached, moduleSet);
         }
     }
 
@@ -145,53 +148,53 @@ public class XmindProjectParser {
      * 根据 {@link Attached} 的内容生成相应的规格内容, 添加到 {@link Module}.
      *
      * @param attached   {@link Attached}
-     * @param moduleList {@link Module} list
+     * @param moduleSet {@link Module} list
      * @param module     {@link Module}
      */
-    static void generateOfAttachedWithModule(@NonNull Attached attached, @NonNull List<Module> moduleList,
+    static void generateOfAttachedWithModule(@NonNull Attached attached, @NonNull Set<Module> moduleSet,
                                                     @NonNull Module module) {
         String title = attached.getTitle().trim();
         TiTleType tiTleType = getTiTleType(title);
         Children children = attached.getChildren();
         if (isNull(children)) {
             if (nonNull(tiTleType) && PKG.equals(tiTleType)) {
-                generatePkg(null, moduleList, module, title, tiTleType);
+                generatePkg(null, moduleSet, module, title, tiTleType);
             }
             return;
         }
-        generateWithModule(children, moduleList, module, title, tiTleType);
+        generateWithModule(children, moduleSet, module, title, tiTleType);
     }
 
-    static void generateWithModule(@NonNull Children children, @NonNull List<Module> moduleList,
-                                           @NonNull Module module,
-                                           @NonNull String title, @Nullable TiTleType tiTleType) {
+    static void generateWithModule(@NonNull Children children, @NonNull Set<Module> moduleSet,
+                                   @NonNull Module module,
+                                   @NonNull String title, @Nullable TiTleType tiTleType) {
         if (isNull(tiTleType)) {
             List<Attached> attachedList = children.getAttached();
             if (isNull(attachedList) || attachedList.size() == 0) {
                 return;
             }
             for (Attached attached : attachedList) {
-                generateOfAttachedWithModule(attached, moduleList, module);
+                generateOfAttachedWithModule(attached, moduleSet, module);
             }
             return;
         }
         if (MODULE.equals(tiTleType)) {
             Module newModule = new Module();
-            moduleList.add(newModule);
-            generateOfChildren(children, moduleList, newModule, MODULE, title);
+            moduleSet.add(newModule);
+            generateOfChildren(children, moduleSet, newModule, MODULE, title);
             return;
         }
-        generateOfChildren(children, moduleList, module, tiTleType, title);
+        generateOfChildren(children, moduleSet, module, tiTleType, title);
     }
 
-    static void generateOfChildren(@NonNull Children children, @NonNull List<Module> moduleList,
+    static void generateOfChildren(@NonNull Children children, @NonNull Set<Module> moduleSet,
                                           @NonNull Module module) {
         List<Attached> attachedList = children.getAttached();
         if (isNull(attachedList) || attachedList.size() == 0) {
             return;
         }
         for (Attached attached : attachedList) {
-            generateOfAttachedWithModule(attached, moduleList, module);
+            generateOfAttachedWithModule(attached, moduleSet, module);
         }
     }
 
@@ -199,15 +202,15 @@ public class XmindProjectParser {
      * 根据 {@link Children} 的内容生成相应的规格内容, 添加到 {@link Module}.
      *
      * @param children   {@link Children}
-     * @param moduleList {@link Module} list
+     * @param moduleSet {@link Module} list
      * @param module     {@link Module}
      * @param pTiTleType {@link TiTleType}
      * @param pTitle     pTitle
      */
-    static void generateOfChildren(@NonNull Children children, @NonNull List<Module> moduleList,
-                                          @NonNull Module module, @Nullable TiTleType pTiTleType, @NonNull String pTitle) {
+    static void generateOfChildren(@NonNull Children children, @NonNull Set<Module> moduleSet,
+                                   @NonNull Module module, @Nullable TiTleType pTiTleType, @NonNull String pTitle) {
         if (isNull(pTiTleType)) {
-            generateOfChildren(children, moduleList, module);
+            generateOfChildren(children, moduleSet, module);
             return;
         }
 
@@ -220,29 +223,29 @@ public class XmindProjectParser {
                           .setName(splits[1].trim())
                           .setComment(removeNewlines(splits[2].trim()));
                 }
-                generateOfChildren(children, moduleList, module);
+                generateOfChildren(children, moduleSet, module);
                 return;
             case DATABASE:
-                XmindDatabaseParser.generateDatabase(children, moduleList, module, pTitle);
+                XmindDatabaseParser.generateDatabase(children, moduleSet, module, pTitle);
                 return;
             case API:
-                generateApi(children, moduleList, module, pTiTleType, pTitle);
+                generateApi(children, moduleSet, module, pTiTleType, pTitle);
                 return;
             case ENTITY:
-                generateModel(children, moduleList, module, pTitle, null, null);
+                generateModel(children, moduleSet, module, pTitle, null, null);
                 return;
             case PKG:
-                generatePkg(children, moduleList, module, pTitle, pTiTleType);
+                generatePkg(children, moduleSet, module, pTitle, pTiTleType);
                 return;
             default:
-                generateOfChildren(children, moduleList, module);
+                generateOfChildren(children, moduleSet, module);
         }
 
     }
 
-    static void generatePkg(@Nullable Children children, @NonNull List<Module> moduleList,
-                                    @NonNull Module module, @NonNull String pTitle,
-                                    @NonNull TiTleType pTiTleType) {
+    static void generatePkg(@Nullable Children children, @NonNull Set<Module> moduleList,
+                            @NonNull Module module, @NonNull String pTitle,
+                            @NonNull TiTleType pTiTleType) {
         if (!PKG.equals(pTiTleType)) {
             return;
         }
@@ -250,6 +253,23 @@ public class XmindProjectParser {
         if (tokens.length > 1) {
             String pkg = tokens[1].trim();
             module.setPkg(pkg);
+        }
+        if (nonNull(children)) {
+            generateOfChildren(children, moduleList, module);
+        }
+    }
+
+    static void generatePkg(@Nullable Children children, @NonNull Set<Module> moduleList,
+                            @NonNull Module module, @NonNull Pkg pkg, @NonNull String pTitle,
+                            @NonNull ParamType paramType) {
+        //noinspection DuplicatedCode
+        if (!ParamType.PKG.equals(paramType)) {
+            return;
+        }
+        String[] tokens = splitInto3Parts(pTitle);
+        if (tokens.length > 1) {
+            String pkgStr = tokens[1].trim();
+            pkg.setPkg(pkgStr);
         }
         if (nonNull(children)) {
             generateOfChildren(children, moduleList, module);

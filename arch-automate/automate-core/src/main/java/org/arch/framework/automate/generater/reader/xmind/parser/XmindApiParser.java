@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -34,12 +35,12 @@ public class XmindApiParser {
 
     public static final Logger LOG = LoggerFactory.getLogger(XmindApiParser.class);
 
-    static void generateApi(@NonNull Children children, @NonNull List<Module> moduleList,
+    static void generateApi(@NonNull Children children, @NonNull Set<Module> moduleSet,
                             @NonNull Module module, @NonNull TiTleType pTiTleType,
                             @NonNull String pTitle) {
 
         if (!API.equals(pTiTleType)) {
-            generateOfChildren(children, moduleList, module);
+            generateOfChildren(children, moduleSet, module);
             return;
         }
         String[] apiTokens = splitInto3Parts(pTitle);
@@ -53,17 +54,17 @@ public class XmindApiParser {
             TiTleType tiTleType = getTiTleType(title);
             if (splits.length != 3 || isNull(tiTleType)) {
                 LOG.debug("title [" + title + "] 格式错误, 标准格式: paramType/paramName/[description]");
-                generateOfAttachedWithModule(interfaceAttached, moduleList, module);
+                generateOfAttachedWithModule(interfaceAttached, moduleSet, module);
                 continue;
             }
             if (INTERFACE.equals(tiTleType)) {
                 // add inteface
                 Children interfaceChildren = interfaceAttached.getChildren();
                 if (nonNull(interfaceChildren)) {
-                    generateInterface(interfaceChildren, moduleList, module, api, splits);
+                    generateInterface(interfaceChildren, moduleSet, module, api, splits);
                 }
             } else {
-                generateOfAttachedWithModule(interfaceAttached, moduleList, module);
+                generateOfAttachedWithModule(interfaceAttached, moduleSet, module);
             }
         }
     }

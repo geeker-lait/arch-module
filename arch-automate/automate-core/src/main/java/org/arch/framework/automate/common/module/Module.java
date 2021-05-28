@@ -8,9 +8,7 @@ import org.arch.framework.automate.common.api.Api;
 import org.arch.framework.automate.common.api.Model;
 import org.arch.framework.automate.common.database.Database;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -36,8 +34,8 @@ public class Module {
     private String comment;
     @Setter
     private String pkg;
-    private final List<Database> databases = new ArrayList<>();
-    private final List<Api> apis = new ArrayList<>();
+    private final Set<Database> databases = new HashSet<>();
+    private final Set<Api> apis = new HashSet<>();
     private final Set<Model> models = new HashSet<>();
 
     public void addDatabase(Database database) {

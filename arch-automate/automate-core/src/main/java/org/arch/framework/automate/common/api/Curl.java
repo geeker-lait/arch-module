@@ -39,7 +39,7 @@ public class Curl {
     /**
      * 方法请求入参
      */
-    private final List<Param> inputs = new ArrayList<>();
+    private final Set<Param> inputs = new HashSet<>();
     /**
      * 方法返回值或出参
      */

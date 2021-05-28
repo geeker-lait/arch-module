@@ -3,10 +3,9 @@ package org.arch.framework.automate.common.api;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.arch.framework.automate.generater.reader.xmind.Import;
+import org.arch.framework.automate.generater.reader.xmind.Pkg;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,7 +15,7 @@ import java.util.Set;
  */
 @Data
 @Accessors(chain = true)
-public class Model implements Import {
+public class Model implements Import, Pkg {
 
     private String name;
     private String descr;
@@ -30,7 +29,7 @@ public class Model implements Import {
      */
     private String genericTyp;
     private final Set<Annot> annotations = new HashSet<>();
-    private final List<Param> fields = new ArrayList<>();
+    private final Set<Param> fields = new HashSet<>();
     private final Set<String> imports = new HashSet<>();
     /**
      * 从 {@link Param} 中解析出的字段 {@link Model} 类型

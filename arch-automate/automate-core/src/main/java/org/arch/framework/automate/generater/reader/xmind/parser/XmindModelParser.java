@@ -21,13 +21,15 @@ import java.util.Set;
 import static java.lang.Boolean.FALSE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.ANNOT;
+import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.ANNOTATE;
+import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.ANNOTATES;
 import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.ANNOTATION;
-import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.ANNOTES;
-import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.ANNOT_E;
 import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.GENERIC_TYP;
 import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.GENERIC_TYP_E;
 import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.IMPORT;
+import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.IMPORTS;
+import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.OBJ_ANNOTATE;
+import static org.arch.framework.automate.generater.reader.xmind.nodespace.ParamType.PKG;
 import static org.arch.framework.automate.generater.reader.xmind.parser.XmindAnnotAndGenericParser.generateAnnot;
 import static org.arch.framework.automate.generater.reader.xmind.parser.XmindAnnotAndGenericParser.generateAnnotAndGeneric;
 import static org.arch.framework.automate.generater.reader.xmind.parser.XmindAnnotAndGenericParser.generateAnnotes;
@@ -36,6 +38,7 @@ import static org.arch.framework.automate.generater.reader.xmind.parser.XmindImp
 import static org.arch.framework.automate.generater.reader.xmind.parser.XmindParamParser.generateParam;
 import static org.arch.framework.automate.generater.reader.xmind.parser.XmindProjectParser.generateOfAttachedWithModule;
 import static org.arch.framework.automate.generater.reader.xmind.parser.XmindProjectParser.generateOfChildren;
+import static org.arch.framework.automate.generater.reader.xmind.parser.XmindProjectParser.generatePkg;
 import static org.arch.framework.automate.generater.reader.xmind.utils.XmindUtils.firstLetterToLower;
 import static org.arch.framework.automate.generater.reader.xmind.utils.XmindUtils.firstLetterToUpper;
 import static org.arch.framework.automate.generater.reader.xmind.utils.XmindUtils.getColumnType;
@@ -59,7 +62,7 @@ public class XmindModelParser {
      * 生成 {@link Model}
      *
      * @param children   {@link Children}
-     * @param moduleList {@link Module} 列表
+     * @param moduleSet {@link Module} 列表
      * @param module     {@link Module}
      * @param pTitle     上级节点 title
      * @param pImport    {@link Import}
@@ -67,14 +70,14 @@ public class XmindModelParser {
      */
     @SuppressWarnings("AlibabaMethodTooLong")
     @Nullable
-    static void generateModel(@NonNull Children children, @NonNull List<Module> moduleList,
+    static void generateModel(@NonNull Children children, @NonNull Set<Module> moduleSet,
                               @NonNull Module module, @NonNull String pTitle,
                               @Nullable Import pImport, @Nullable Boolean inOrOut) {
         String[] splits = splitInto3Parts(pTitle);
         //noinspection AlibabaUndefineMagicConstant
         if (splits.length != 3) {
             LOG.debug("title [" + pTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
-            generateOfChildren(children, moduleList, module, null, pTitle);
+            generateOfChildren(children, moduleSet, module, null, pTitle);
             return;
         }
 
@@ -95,7 +98,7 @@ public class XmindModelParser {
         // 遍历 model 字段
         Set<String> imports = model.getImports();
         Set<Annot> annotSet = model.getAnnotations();
-        List<Param> entityFields = model.getFields();
+        Set<Param> entityFields = model.getFields();
         List<Attached> attachedList = children.getAttached();
         if (isNull(attachedList) || attachedList.size() == 0) {
             return;
@@ -111,7 +114,7 @@ public class XmindModelParser {
             }
             if (splits.length != 3 || (isNull(paramType) && isNull(columnType))) {
                 LOG.debug("title [" + fieldTitle + "] 格式错误, 标准格式: paramType/paramName/[description]");
-                generateOfAttachedWithModule(attached, moduleList, module);
+                generateOfAttachedWithModule(attached, moduleSet, module);
                 continue;
             }
             String orgName = splits[1].trim();
@@ -126,56 +129,59 @@ public class XmindModelParser {
                 Children fieldChildren = attached.getChildren();
                 if (nonNull(fieldChildren)) {
                     // 生成 annots/generic/genericTyp
-                    generateAnnotAndGeneric(fieldChildren, moduleList, module, null, model, field);
+                    generateAnnotAndGeneric(fieldChildren, moduleSet, module, null, model, field);
                 }
             } else if (ParamType.ENTITY.equals(paramType)) {
-                Param entityParam = generateParam(attached, moduleList, module, splits, paramType, model, inOrOut);
+                Param entityParam = generateParam(attached, moduleSet, module, splits, paramType, model, inOrOut);
                 if (nonNull(entityParam)) {
                     entityFields.add(entityParam);
                     isNewCreatedEntity = true;
                 }
-            } else if (IMPORT.equals(paramType) && nonNull(pImport)) {
-                generateImportOfAttached(attached, moduleList, module, paramType, splits, pImport);
-            } else if (ANNOTES.equals(paramType)) {
+            } else //noinspection AlibabaAvoidComplexCondition
+                if ((IMPORT.equals(paramType) || IMPORTS.equals(paramType)) && nonNull(pImport)) {
+                generateImportOfAttached(attached, moduleSet, module, paramType, splits, pImport);
+            } else if (PKG.equals(paramType) && nonNull(pImport)) {
+                generatePkg(null, moduleSet, module, model, fieldTitle, paramType);
+            } else if (ANNOTATES.equals(paramType)) {
                 Children annotesChildren = attached.getChildren();
                 if (nonNull(annotesChildren)) {
                     if (nonNull(pImport)) {
-                        generateAnnotes(annotesChildren, moduleList, module, pImport, annotSet);
+                        generateAnnotes(annotesChildren, moduleSet, module, pImport, annotSet);
                     } else {
-                        generateAnnotes(annotesChildren, moduleList, module, model, annotSet);
+                        generateAnnotes(annotesChildren, moduleSet, module, model, annotSet);
                     }
                 }
-            } else if (ANNOT.equals(paramType) || ANNOTATION.equals(paramType)) {
+            } else if (ANNOTATE.equals(paramType) || ANNOTATION.equals(paramType)) {
                 Annot annotation;
                 if (nonNull(pImport)) {
-                    annotation = generateAnnot(attached, moduleList, module, splits, pImport);
+                    annotation = generateAnnot(attached, moduleSet, module, splits, pImport);
                 } else {
-                    annotation = generateAnnot(attached, moduleList, module, splits, model);
+                    annotation = generateAnnot(attached, moduleSet, module, splits, model);
                 }
                 annotSet.add(annotation);
-            } else if (ANNOT_E.equals(paramType)) {
-                Annot annotation = generateAnnot(attached, moduleList, module, splits, model);
+            } else if (OBJ_ANNOTATE.equals(paramType)) {
+                Annot annotation = generateAnnot(attached, moduleSet, module, splits, model);
                 annotSet.add(annotation);
             } else if (GENERIC_TYP_E.equals(paramType)) {
                 String genericTyp = firstLetterToUpper(orgName);
                 model.setGenericTyp(genericTyp);
                 Children attachedChildren = attached.getChildren();
                 if (nonNull(attachedChildren)) {
-                    generateImport(attachedChildren, moduleList, module, model);
+                    generateImport(attachedChildren, moduleSet, module, model);
                 }
             } else if (GENERIC_TYP.equals(paramType) && isNull(pImport)) {
                 String genericTyp = firstLetterToUpper(orgName);
                 model.setGenericTyp(genericTyp);
                 Children attachedChildren = attached.getChildren();
                 if (nonNull(attachedChildren)) {
-                    generateImport(attachedChildren, moduleList, module, model);
+                    generateImport(attachedChildren, moduleSet, module, model);
                 }
             } else {
                 String paramTypePkg = paramType.getPkg();
                 if (hasText(paramTypePkg)) {
                     imports.add(paramTypePkg);
                 }
-                Param fieldParam = generateParam(attached, moduleList, module, splits, paramType, model, inOrOut);
+                Param fieldParam = generateParam(attached, moduleSet, module, splits, paramType, model, inOrOut);
                 if (nonNull(fieldParam)) {
                     entityFields.add(fieldParam);
                     isNewCreatedEntity = true;
@@ -202,4 +208,5 @@ public class XmindModelParser {
         }
 
     }
+
 }

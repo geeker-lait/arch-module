@@ -17,6 +17,7 @@ import org.springframework.lang.NonNull;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 
 import static java.util.Objects.isNull;
@@ -44,7 +45,7 @@ public class XmindTableParser {
 
     public static final Logger LOG = LoggerFactory.getLogger(XmindTableParser.class);
 
-    public static void generateTable(@NonNull Children children, @NonNull List<Module> moduleList,
+    public static void generateTable(@NonNull Children children, @NonNull Set<Module> moduleSet,
                                       @NonNull Module module, @NonNull Database database,
                                       @NonNull String[] tokens) {
         // 判断是否 table 命名空间
@@ -52,12 +53,12 @@ public class XmindTableParser {
         try {
             TiTleType tiTleType = TiTleType.valueOf(type.toUpperCase());
             if (!TABLE.equals(tiTleType)) {
-                generateOfChildren(children, moduleList, module, null, "");
+                generateOfChildren(children, moduleSet, module, null, "");
                 return;
             }
         } catch (Exception e) {
             LOG.error("title [" + type + "] 不能转换为 TitleType", e);
-            generateOfChildren(children, moduleList, module, null, "");
+            generateOfChildren(children, moduleSet, module, null, "");
             return;
         }
 
@@ -79,7 +80,7 @@ public class XmindTableParser {
             return;
         }
         for (Attached attached : attachedList) {
-            generateColumn(attached, moduleList, module, table, pkMap, uniqueMap, indexMap);
+            generateColumn(attached, moduleSet, module, table, pkMap, uniqueMap, indexMap);
         }
 
         // 拼装 pk 索引
@@ -136,7 +137,7 @@ public class XmindTableParser {
      * @param indexMap      Map(idxGroupProp, column)
      * @param idxKeyword    索引关键字, 如: UNIQUE KEY/INDEX/KEY
      */
-    private static void resolveIndexStat(@NonNull List<String> indexStatList, @NonNull Map<String, String> indexMap,
+    private static void resolveIndexStat(@NonNull Set<String> indexStatList, @NonNull Map<String, String> indexMap,
                                          @NonNull String idxKeyword) {
         if (indexMap.isEmpty()) {
             return;
@@ -177,7 +178,7 @@ public class XmindTableParser {
         });
     }
 
-    private static void generateColumn(@NonNull Attached attached, @NonNull List<Module> moduleList,
+    private static void generateColumn(@NonNull Attached attached, @NonNull Set<Module> moduleSet,
                                        @NonNull Module module, @NonNull Table table,
                                        @NonNull Map<String, String> pkMap, @NonNull Map<String, String> uniqueMap,
                                        @NonNull Map<String, String> indexMap) {
@@ -187,7 +188,7 @@ public class XmindTableParser {
         //noinspection AlibabaUndefineMagicConstant
         if (splits.length != 3) {
             LOG.debug("title [" + title + "] 格式错误, 标准格式: columnType/columnName/[comment]");
-            generateOfAttachedWithModule(attached, moduleList, module);
+            generateOfAttachedWithModule(attached, moduleSet, module);
             return;
         }
         String columnTypeStr = splits[0].trim();
@@ -195,7 +196,7 @@ public class XmindTableParser {
         String comment = removeNewlines(splits[2].trim());
         ColumnType columnType = XmindUtils.getColumnType(columnTypeStr);
         if (isNull(columnType)) {
-            generateOfAttachedWithModule(attached, moduleList, module);
+            generateOfAttachedWithModule(attached, moduleSet, module);
             return;
         }
         String defValue = columnType.getDefValue();
@@ -215,11 +216,11 @@ public class XmindTableParser {
         if (isNull(children)) {
             return;
         }
-        generateProperty(children, moduleList, module, column, pkMap, uniqueMap, indexMap);
+        generateProperty(children, moduleSet, module, column, pkMap, uniqueMap, indexMap);
 
     }
 
-    private static void generateProperty(@NonNull Children children, @NonNull List<Module> moduleList,
+    private static void generateProperty(@NonNull Children children, @NonNull Set<Module> moduleSet,
                                          @NonNull Module module, @NonNull Column column,
                                          @NonNull Map<String, String> pkMap,
                                          @NonNull Map<String, String> uniqueMap, @NonNull Map<String, String> indexMap) {
@@ -237,7 +238,7 @@ public class XmindTableParser {
             ColumnProperty columnProperty = getColumnProperty(propName);
             if (propSplits.length < 2 || isNull(columnProperty)) {
                 LOG.debug("title [" + propTitle + "] 格式错误, 标准格式: propType/propValue/[description]");
-                generateOfAttachedWithModule(attached, moduleList, module);
+                generateOfAttachedWithModule(attached, moduleSet, module);
                 continue;
             }
             String propValue = propSplits[1].trim();
@@ -284,7 +285,7 @@ public class XmindTableParser {
                     column.setIndex(propValue).setNotnull(true);
                     break;
                 default:
-                    generateOfAttachedWithModule(attached, moduleList, module);
+                    generateOfAttachedWithModule(attached, moduleSet, module);
                     break;
             }
         }

@@ -49,7 +49,7 @@ public class XmindTest {
 
         generate(root, project);
 
-        Database database = project.getModules().get(0).getDatabases().get(0);
+        Database database = project.getModules().stream().findFirst().get().getDatabases().stream().findFirst().get();
         FreeMarkerUtil.geneFile("ddl","templates","ddl.sql", database);
         System.out.println(JSON.toJSONString(project));
     }

@@ -17,6 +17,10 @@ public enum ParamType {
      */
     IMPORT("", ""),
     /**
+     * 多个包路径
+     */
+    IMPORTS("", ""),
+    /**
      * 泛型
      */
     GENERIC("", ""),
@@ -36,29 +40,33 @@ public enum ParamType {
      */
     GENERIC_VAL("", ""),
     /**
-     * 注解: ANNOT/ANNOTATION/ANNOT_E 都是此命名空间的子节点
+     * 注解: ANNOTATE/ANNOTATION/OBJ_ANNOTATE 都是此命名空间的子节点
      */
-    ANNOTES("", ""),
+    ANNOTATES("", ""),
     /**
      * 注解字段(as ANNOTATION)
      */
-    ANNOT("", ""),
+    ANNOTATE("", ""),
     /**
-     * 注解字段(as ANNOT)
+     * 注解字段(as ANNOTATE)
      */
     ANNOTATION("", ""),
     /**
      * 注解对象: 针对对象, 当父节点即是对象节点也是参数节点时使用.<br>
      */
-    ANNOT_E("", ""),
+    OBJ_ANNOTATE("", ""),
     /**
      * 注解键值对
      */
-    ANNOT_VAL("", ""),
+    ANNOTATE_VAL("", ""),
     /**
      * 普通方法
      */
     METHOD("", ""),
+    /**
+     * 包
+     */
+    PKG("", ""),
     /**
      * 接口入参
      */
