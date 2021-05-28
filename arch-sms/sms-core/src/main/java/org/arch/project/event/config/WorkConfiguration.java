@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * @author lait.zhang@gmail.com
  * @Tel 15801818092
  * @date 11/16/2020 4:49 PM
- * @description: 履约流程配置类,这里的粒度可以更细，直接到作业级别
+ * @description: 履约流程配置类, 这里的粒度可以更细，直接到作业级别
  */
 @Component
 @ConfigurationProperties(prefix = "work")

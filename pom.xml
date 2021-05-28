@@ -18,7 +18,7 @@
         <jsonwebtoken.version>0.5.1</jsonwebtoken.version>
         <guava.version>[24.1.1,)</guava.version>
         <flowable.version>6.6.0</flowable.version>
-        <dcenter-ums.version>2.2.41</dcenter-ums.version>
+        <dcenter-ums.version>2.2.36</dcenter-ums.version>
     </properties>
 
 
@@ -106,7 +106,6 @@
             </dependency>
 
 
-
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>automate-api</artifactId>
@@ -139,9 +138,6 @@
             </dependency>
 
 
-
-
-
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>framework-core</artifactId>
@@ -167,9 +163,16 @@
                 <artifactId>framework-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-
-
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>framework-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>framework-spi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
 
             <dependency>
@@ -177,11 +180,7 @@
                 <groupId>org.arch.projects</groupId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>framework-mq</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>mq-consumer</artifactId>
@@ -200,11 +199,6 @@
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>mq-consumer-spring-boot-starter</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>framework-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -234,6 +228,7 @@
                 <artifactId>auth-oauth</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
 
             <dependency>
                 <groupId>org.arch.projects</groupId>
@@ -422,11 +417,23 @@
                 <version>2.10.10</version>
             </dependency>
 
+
+            <!--google -->
             <!-- 解决: 未知的枚举常量 javax.annotation.meta.When.MAYBE -->
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>3.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.7</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>3.4.1</version>
             </dependency>
 
             <!-- other -->
