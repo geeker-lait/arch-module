@@ -2,10 +2,10 @@ package org.arch.framework.automate;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveException;
-import org.arch.automate.common.database.Database;
-import org.arch.automate.common.Module;
-import org.arch.framework.automate.generater.reader.xmind.meta.JsonRootBean;
-import org.arch.framework.automate.generater.reader.xmind.parser.XmindParser;
+import org.arch.framework.beans.schema.database.Database;
+import org.arch.automate.Module;
+import org.arch.automate.reader.xmind.meta.JsonRootBean;
+import org.arch.automate.reader.xmind.parser.XmindParser;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

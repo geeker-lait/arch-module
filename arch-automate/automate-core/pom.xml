@@ -13,13 +13,12 @@
 
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>automate-form</artifactId>
+            <artifactId>automate-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>automate-api</artifactId>
+            <artifactId>framework-beans</artifactId>
         </dependency>
-
 
 
         <dependency>
@@ -29,10 +28,6 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
         </dependency>
 
 
@@ -53,14 +48,11 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.20</version>
         </dependency>
         <!--xml to java object-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-digester3</artifactId>
-            <version>3.2</version>
-            <classifier>with-deps</classifier>
         </dependency>
         <!--xpath不加这个依赖会报错-->
         <dependency>
@@ -72,6 +64,12 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20210307</version>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>form-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
 
 

@@ -80,10 +80,10 @@ public class RocketmqConsumerBeanPostProcessor implements BeanPostProcessor, Dis
             }
         }).collect(Collectors.toList());
         if (vos.isEmpty()) {
-            throw new BeanCreationException("cannot found  rocketmq consumer config");
+            throw new BeanCreationException("cannot found  rocketmq consumer properties");
         }
         if (vos.size() > 1) {
-            throw new BeanCreationException("found  rocketmq consumer config > 1, found size " + vos.size());
+            throw new BeanCreationException("found  rocketmq consumer properties > 1, found size " + vos.size());
         }
         final RocketmqConsumerConfigModel rocketMQSpringConsumerVo = vos.get(0);
         String address = rocketMQSpringConsumerVo.getAddress();

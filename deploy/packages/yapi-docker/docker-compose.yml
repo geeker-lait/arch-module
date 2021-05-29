@@ -15,8 +15,8 @@ services:
       - 3001:3000
     volumes:
       - type: bind
-        source: /deploy/conf/yapi/config.json
-        target: /home/yapi/config.json
+        source: /deploy/conf/yapi/properties.json
+        target: /home/yapi/properties.json
       - type: bind
         source: /deploy/logs/yapi
         target: /home/yapi/log

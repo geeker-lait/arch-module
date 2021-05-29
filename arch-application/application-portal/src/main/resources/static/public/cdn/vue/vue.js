@@ -1881,7 +1881,7 @@
         // if the user intentionally throws the original error in the handler,
         // do not log it twice
         if (e !== err) {
-          logError(e, null, 'config.errorHandler');
+          logError(e, null, 'properties.errorHandler');
         }
       }
     }
@@ -2072,7 +2072,7 @@
       config.keyCodes = new Proxy(config.keyCodes, {
         set: function set (target, key, value) {
           if (isBuiltInModifier(key)) {
-            warn(("Avoid overwriting built-in modifier in config.keyCodes: ." + key));
+            warn(("Avoid overwriting built-in modifier in properties.keyCodes: ." + key));
             return false
           } else {
             target[key] = value;
@@ -2723,7 +2723,7 @@
   }
 
   /**
-   * Runtime helper for checking keyCodes from config.
+   * Runtime helper for checking keyCodes from properties.
    * exposed as Vue.prototype._k
    * passing in eventKeyName as last argument separately for backwards compat
    */
@@ -5376,13 +5376,13 @@
   /*  */
 
   function initGlobalAPI (Vue) {
-    // config
+    // properties
     var configDef = {};
     configDef.get = function () { return config; };
     {
       configDef.set = function () {
         warn(
-          'Do not replace the Vue.config object, set individual fields instead.'
+          'Do not replace the Vue.properties object, set individual fields instead.'
         );
       };
     }

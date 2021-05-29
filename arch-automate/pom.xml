@@ -12,13 +12,11 @@
 
     <modules>
         <module>automate-api</module>
-        <module>automate-common</module>
         <module>automate-core</module>
         <module>automate-rest</module>
         <module>automate-mvc</module>
 
     </modules>
-
 
 
     <build>

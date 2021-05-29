@@ -1,4 +1,4 @@
-//package org.arch.application.user.config.security;
+//package org.arch.application.user.properties.security;
 //
 //import org.springframework.security.access.AccessDeniedException;
 //import org.springframework.security.web.access.AccessDeniedHandler;

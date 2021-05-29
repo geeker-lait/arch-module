@@ -1,4 +1,4 @@
-//package org.arch.auth.oauth2.config;
+//package org.arch.auth.oauth2.properties;
 //
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;

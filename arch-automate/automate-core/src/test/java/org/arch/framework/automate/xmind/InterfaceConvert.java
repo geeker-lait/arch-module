@@ -1,6 +1,6 @@
 package org.arch.framework.automate.xmind;
 
-import org.arch.automate.common.database.Database;
+import org.arch.framework.beans.schema.database.Database;
 
 /**
  * @author lait.zhang@gmail.com

@@ -1,7 +1,7 @@
-//package org.arch.application.user.config.security;
+//package org.arch.application.user.properties.security;
 //
-//import com.uni.common.config.SpringContextHolder;
-//import com.uni.skit.user.config.properties.SupportProperties;
+//import com.uni.common.properties.SpringContextHolder;
+//import com.uni.skit.user.properties.properties.SupportProperties;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.core.context.SecurityContextHolder;

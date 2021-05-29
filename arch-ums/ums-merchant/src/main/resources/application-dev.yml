@@ -81,6 +81,6 @@ chuanglan:
 sharelink:
   priKeyPass: 123
   #windows环境商户证书路径
-  priKeyPath: D:/config/test/ect_test.pfx
+  priKeyPath: D:/properties/test/ect_test.pfx
   #windows环境平台证书路径
-  pubKeyPath: D:/config/test/ect_test.cer
+  pubKeyPath: D:/properties/test/ect_test.cer

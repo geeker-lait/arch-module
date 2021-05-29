@@ -30,7 +30,7 @@ public class DirectiveRequestDto implements DirectiveRequest, Serializable {
 
     /**
      * 数据源
-     *  类属性 复制于 {@link org.arch.framework.automate.generater.properties.DatabaseProperties}
+     *  类属性 复制于 {@link org.arch.automate.properties.DatabaseProperties}
      */
     DatabasePropertiesDto dataSource;
 

@@ -13,6 +13,7 @@
 
     <modules>
         <module>form-api</module>
+        <module>form-core</module>
         <module>form-crud</module>
     </modules>
 

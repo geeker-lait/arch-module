@@ -1,5 +1,5 @@
 #!/bin/bash
-#move old config files and symlink them
+#move old properties files and symlink them
 #shipped with vsftpd-2.0.1-6
 PREFIX="vsftpd"
 for file in $( ls /etc/${PREFIX}.* ); do

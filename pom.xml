@@ -94,7 +94,7 @@
     <dependencyManagement>
         <dependencies>
 
-            <!-- arch projects -->
+            <!-- arch-pay#arch-pay#arch-pay#arch-pay#arch-pay#arch-pay#arch-pay -->
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>pay-api</artifactId>
@@ -105,8 +105,9 @@
                 <artifactId>pay-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <!-- arch-pay#arch-pay#arch-pay#arch-pay#arch-pay#arch-pay#arch-pay -->
 
-
+            <!-- arch-automate#arch-pay#arch-automate#arch-automate#arch-automate -->
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>automate-api</artifactId>
@@ -137,8 +138,7 @@
                 <artifactId>automate-rest</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-
+            <!-- arch-automate#arch-pay#arch-automate#arch-automate#arch-automate -->
 
 
             <dependency>
@@ -295,15 +295,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jsonwebtoken.version}</version>
             </dependency>
 
-            <!-- spring -->
+            <!-- spring#spring#spring#spring#spring#spring#spring#spring -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -332,21 +330,20 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-
-            <!-- apache -->
-            <dependency>
-                <groupId>org.apache.rocketmq</groupId>
-                <artifactId>rocketmq-spring-boot-starter</artifactId>
-                <version>2.0.4</version>
-            </dependency>
-
             <dependency>
                 <groupId>com.alibaba.rocketmq</groupId>
                 <artifactId>rocketmq-client</artifactId>
                 <version>3.2.6</version>
             </dependency>
+            <!-- spring#spring#spring#spring#spring#spring#spring#spring -->
 
+
+            <!-- apache#apache#apache#apachea#pache#apache#apache#apache-->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>2.0.4</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
@@ -387,7 +384,28 @@
                 <artifactId>commons-beanutils</artifactId>
                 <version>1.9.4</version>
             </dependency>
-
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>1.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-digester3</artifactId>
+                <version>3.2</version>
+                <!--<classifier>with-deps</classifier>-->
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>1.20</version>
+            </dependency>
+            <!-- apache#apache#apache#apachea#pache#apache#apache#apache-->
 
             <!-- commons -->
             <dependency>
@@ -417,11 +435,6 @@
                 <version>5.4.1</version>
             </dependency>
             <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>30.0-jre</version>
-            </dependency>
-            <dependency>
                 <groupId>io.beanmapper</groupId>
                 <artifactId>beanmapper</artifactId>
                 <version>3.1.0</version>
@@ -441,6 +454,11 @@
                 <version>3.0.2</version>
             </dependency>
             <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>30.0-jre</version>
+            </dependency>
+            <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>2.8.7</version>
@@ -458,12 +476,13 @@
                 <version>1.27</version>
             </dependency>
 
+
+            <!--Feign-->
             <dependency>
                 <groupId>io.github.openfeign</groupId>
                 <artifactId>feign-core</artifactId>
                 <version>10.10.1</version>
             </dependency>
-            <!--Feign-->
             <dependency>
                 <groupId>io.github.openfeign.form</groupId>
                 <artifactId>feign-form</artifactId>
@@ -475,21 +494,10 @@
                 <version>3.8.0</version>
             </dependency>
             <dependency>
-                <groupId>commons-fileupload</groupId>
-                <artifactId>commons-fileupload</artifactId>
-                <version>1.4</version>
-            </dependency>
-            <dependency>
                 <groupId>io.github.openfeign</groupId>
                 <artifactId>feign-httpclient</artifactId>
                 <version>11.0</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>4.5.13</version>
-            </dependency>
-
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-boot-starter</artifactId>
@@ -528,7 +536,6 @@
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>1.2.10</version>
             </dependency>
-            <!--https://blog.battcn.com/2018/06/20/springboot/v2-other-liquibase/-->
             <dependency>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-core</artifactId>

@@ -1,6 +1,6 @@
 package org.arch.framework.automate.biz;
 
-import org.arch.framework.automate.api.FormDefinitionClient;
+import org.arch.form.api.FormDefinitionClient;
 import org.arch.form.api.request.FormDefinitionRequest;
 import org.arch.form.api.response.FormDefinitionResponse;
 import org.springframework.stereotype.Service;

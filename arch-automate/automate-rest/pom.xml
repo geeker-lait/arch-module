@@ -12,10 +12,6 @@
     <dependencies>
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>automate-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.arch.projects</groupId>
             <artifactId>automate-core</artifactId>
         </dependency>
     </dependencies>

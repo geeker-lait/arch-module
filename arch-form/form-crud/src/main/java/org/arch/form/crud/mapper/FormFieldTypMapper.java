@@ -2,7 +2,7 @@ package org.arch.form.crud.mapper;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.ibatis.annotations.Mapper;
-import org.arch.framework.automate.api.Constants;
+import org.arch.form.api.DatasourceConstants;
 import org.arch.form.crud.entity.FormFieldTyp;
 import org.arch.framework.crud.CrudMapper;
 
@@ -14,7 +14,7 @@ import org.arch.framework.crud.CrudMapper;
  * @since 1.0.0
  */
 @Mapper
-@DS(Constants.DATASOURCE_MASTER_FORM)
+@DS(DatasourceConstants.DATASOURCE_MASTER_FORM)
 public interface FormFieldTypMapper extends CrudMapper<FormFieldTyp> {
 
 }

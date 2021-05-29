@@ -3,7 +3,8 @@ package org.arch.form.crud.mapper;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.arch.framework.automate.api.Constants;
+
+import org.arch.form.api.DatasourceConstants;
 import org.arch.form.api.dto.DefinitionTableDto;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Map;
  * 2021-02-18
  */
 @Mapper
-@DS(Constants.DATASOURCE_MASTER_DDL)
+@DS(DatasourceConstants.DATASOURCE_MASTER_DDL)
 public interface DDLMapper {
 
     /**

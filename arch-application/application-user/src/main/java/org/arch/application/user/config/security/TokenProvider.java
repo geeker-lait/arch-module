@@ -1,6 +1,6 @@
-//package org.arch.application.user.config.security;
+//package org.arch.application.user.properties.security;
 //
-//import com.uni.skit.user.config.properties.SupportProperties;
+//import com.uni.skit.user.properties.properties.SupportProperties;
 //import io.jsonwebtoken.*;
 //import io.jsonwebtoken.io.Decoders;
 //import io.jsonwebtoken.security.Keys;

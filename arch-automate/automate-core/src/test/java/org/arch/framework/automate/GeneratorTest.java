@@ -1,8 +1,8 @@
 package org.arch.framework.automate;
 
 import com.alibaba.fastjson.JSONObject;
-import org.arch.framework.automate.generater.config.GeneratorConfig;
-import org.arch.framework.automate.generater.core.Generable;
+import org.arch.automate.config.GeneratorConfig;
+import org.arch.automate.core.Generable;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

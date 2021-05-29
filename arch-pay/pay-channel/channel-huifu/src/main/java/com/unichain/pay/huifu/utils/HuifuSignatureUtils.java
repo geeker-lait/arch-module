@@ -6,7 +6,7 @@
 //import com.huifu.saturn.cfca.CFCASignature;
 //import com.huifu.saturn.cfca.SignResult;
 //import com.huifu.saturn.cfca.VerifyResult;
-//import com.unichain.pay.huifu.config.HuifuProperties;
+//import com.unichain.pay.huifu.properties.HuifuProperties;
 //import com.unichain.pay.huifu.dto.HuifuPayConfigDto;
 //import org.apache.commons.codec.binary.Base64;
 //import org.slf4j.Logger;
