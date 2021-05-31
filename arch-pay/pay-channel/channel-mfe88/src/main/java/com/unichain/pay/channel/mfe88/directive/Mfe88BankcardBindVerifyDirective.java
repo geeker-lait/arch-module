@@ -4,7 +4,7 @@
 //import com.unichain.pay.channel.mfe88.Mfe88ChannelDirecvite;
 //import com.unichain.pay.channel.mfe88.Mfe88PayRequestHandler;
 //import com.unichain.pay.channel.mfe88.dto.response.BankcardBindResponse;
-//import com.unichain.pay.channel.mfe88.dto.request.BindCardRequest;
+//import com.unichain.pay.channel.mfe88.dto.request.BindCardParams;
 //import org.arch.payment.sdk.PayRequest;
 //import org.arch.payment.sdk.PayResponse;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +12,14 @@
 //
 //
 //@Service("Mfe88BankcardBindVerifyDirective")
-//public class Mfe88BankcardBindVerifyDirective implements PayDirective<Mfe88ChannelDirecvite, BindCardRequest> /*implements PayDirective<BankcardBindParam>*/ {
+//public class Mfe88BankcardBindVerifyDirective implements PayDirective<Mfe88ChannelDirecvite, BindCardParams> /*implements PayDirective<BankcardBindParam>*/ {
 //
 //
 //    @Autowired
 //    private ChannelDirectiveRecordService channelDirectiveRecordService;
 //
 //    @Override
-//    public PayResponse exec(Mfe88ChannelDirecvite channelDirective, BindCardRequest bindCardRequest, PayRequest payRequest) {
+//    public PayResponse exec(Mfe88ChannelDirecvite channelDirective, BindCardParams bindCardRequest, PayRequest payRequest) {
 //
 //        String uri = channelDirective.getDirectiveUri();
 ////        String merchantNo = channelDirective.getMerchantNo();
@@ -31,8 +31,8 @@
 //    }
 //
 //    @Override
-//    public BindCardRequest buildPayParam(PayRequest payRequest) {
-//        BindCardRequest bindCardRequest = new BindCardRequest();
+//    public BindCardParams buildPayParam(PayRequest payRequest) {
+//        BindCardParams bindCardRequest = new BindCardParams();
 //        Mfe88PayRequestHandler.buildPayParam(bindCardRequest, payRequest);
 //        return bindCardRequest;
 //    }
@@ -43,7 +43,7 @@
 //    }
 //
 //    @Override
-//    public PayResponse record(BindCardRequest payParam, PayRequest payRequest, String data) {
+//    public PayResponse record(BindCardParams payParam, PayRequest payRequest, String data) {
 //        BankcardBindResponse response = JSONUtil.toBean(data, BankcardBindResponse.class);
 //
 //        ChannelDirectiveRecord save = new ChannelDirectiveRecord();

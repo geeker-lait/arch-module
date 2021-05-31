@@ -16,8 +16,8 @@ public class PayHeader {
     // 支付类型 1支付宝 2微信 3三方支付公司 4四方支付
     private PayType payType;
     @NonNull
-    // 商户ID
-    private String merchantId;
+    // 商户号
+    private String merchantNo;
     @NonNull
     // 应用ID
     private String appId;

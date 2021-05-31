@@ -35,7 +35,7 @@ public class PreBindCardRouter extends AbstractDirectiveRouter implements Direct
 //    @Autowired
 //    private RedisUtils redisUtils;
 //    @Autowired
-//    private ChuangLanSmsService chuangLanSmsService;
+//    private SmsService smsService;
 
 //    @Override
 //    public PayResponse routing(PayRequest payRequest) {

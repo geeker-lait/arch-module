@@ -3,7 +3,7 @@
 //import com.alibaba.fastjson.JSONObject;
 //import com.unichain.pay.channel.mfe88.Mfe88ChannelDirecvite;
 //import com.unichain.pay.channel.mfe88.Mfe88PayRequestHandler;
-//import com.unichain.pay.channel.mfe88.dto.request.PayingRequest;
+//import com.unichain.pay.channel.mfe88.dto.request.PayingParams;
 //import com.unichain.pay.channel.mfe88.dto.response.BankcardPrePayResponse;
 //import org.arch.payment.sdk.PayRequest;
 //import org.arch.payment.sdk.PayResponse;
@@ -11,12 +11,12 @@
 //import org.springframework.stereotype.Service;
 //
 //@Service("Mfe88BankcardPayDirective")
-//public class Mfe88BankcardDirective implements PayDirective<Mfe88ChannelDirecvite, PayingRequest> {
+//public class Mfe88BankcardDirective implements PayDirective<Mfe88ChannelDirecvite, PayingParams> {
 //    @Autowired
 //    private ChannelDirectiveRecordService channelDirectiveRecordService;
 //
 //    @Override
-//    public PayResponse exec(Mfe88ChannelDirecvite channelDirective, PayingRequest payingRequest, PayRequest payRequest) {
+//    public PayResponse exec(Mfe88ChannelDirecvite channelDirective, PayingParams payingRequest, PayRequest payRequest) {
 //        payingRequest.setMerchantNo(channelDirective.getMerchantNo());
 //
 //        String data = Mfe88PayRequestHandler.build(payingRequest, channelDirective)
@@ -28,8 +28,8 @@
 //    }
 //
 //    @Override
-//    public PayingRequest buildPayParam(PayRequest payRequest) {
-//        PayingRequest payingRequest = new PayingRequest();
+//    public PayingParams buildPayParam(PayRequest payRequest) {
+//        PayingParams payingRequest = new PayingParams();
 //        Mfe88PayRequestHandler.buildPayParam(payingRequest, payRequest);
 //        return payingRequest;
 //    }
@@ -45,7 +45,7 @@
 //    }
 //
 //    @Override
-//    public PayResponse record(PayingRequest payingRequest, PayRequest payRequest, String data) {
+//    public PayResponse record(PayingParams payingRequest, PayRequest payRequest, String data) {
 //        // 保存记录
 //        ChannelDirectiveRecord channelDirectiveRecord = new ChannelDirectiveRecord();
 //

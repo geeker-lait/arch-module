@@ -10,35 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>pay-core</artifactId>
     <dependencies>
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>pay-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>framework-core</artifactId>
-        </dependency>
 
-        <!--        &lt;!&ndash;https://blog.battcn.com/2018/06/20/springboot/v2-other-liquibase/&ndash;&gt;
-                <dependency>
-                    <groupId>org.liquibase</groupId>
-                    <artifactId>liquibase-core</artifactId>
-                </dependency>-->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>pay-crud</artifactId>
         </dependency>
 
     </dependencies>

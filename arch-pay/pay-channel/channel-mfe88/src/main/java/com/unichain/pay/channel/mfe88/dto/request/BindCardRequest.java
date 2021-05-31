@@ -13,7 +13,7 @@
 // * @date
 // */
 //@Data
-//public class BindCardRequest implements DirectiveRequest {
+//public class BindCardParams implements DirectiveRequest {
 //    private String service = "quickPayBindConfirm";
 //
 //    private String merchantNo;
@@ -36,7 +36,7 @@
 //
 //    @Override
 //    public DirectiveRequest convert(Map<String, Object> map, PayRequest payRequest) {
-//        BindCardRequest bean = BeanUtil.mapToBean(map, BindCardRequest.class, true);
+//        BindCardParams bean = BeanUtil.mapToBean(map, BindCardParams.class, true);
 //        BeanUtil.copyProperties(bean, this);
 //        //this.orderNo = payRequest.getDirectiveRequestMap().get("paymentId").toString();
 //        return this;

@@ -4,7 +4,7 @@
 //import com.unichain.pay.channel.mfe88.Mfe88ChannelDirecvite;
 //import com.unichain.pay.channel.mfe88.Mfe88PayRequestHandler;
 //import com.unichain.pay.channel.mfe88.demo.Demo;
-//import com.unichain.pay.channel.mfe88.dto.request.PrePayingRequest;
+//import com.unichain.pay.channel.mfe88.dto.request.PrePayingParams;
 //import com.unichain.pay.channel.mfe88.dto.response.BankcardPrePayResponse;
 //import org.arch.payment.sdk.PayRequest;
 //import org.arch.payment.sdk.PayResponse;
@@ -14,12 +14,12 @@
 //import java.math.BigDecimal;
 //
 //@Service("Mfe88BankcardPrePayDirective")
-//public class Mfe88BankcardPreDirective implements PayDirective<Mfe88ChannelDirecvite, PrePayingRequest> {
+//public class Mfe88BankcardPreDirective implements PayDirective<Mfe88ChannelDirecvite, PrePayingParams> {
 //    @Autowired
 //    private ChannelDirectiveRecordService channelDirectiveRecordService;
 //
 //    @Override
-//    public PayResponse exec(Mfe88ChannelDirecvite channelDirective, PrePayingRequest prePayingRequest, PayRequest payRequest) {
+//    public PayResponse exec(Mfe88ChannelDirecvite channelDirective, PrePayingParams prePayingRequest, PayRequest payRequest) {
 //        prePayingRequest.setMerchantNo(channelDirective.getMerchantNo());
 //
 //        String data = Mfe88PayRequestHandler.build(prePayingRequest, channelDirective)
@@ -32,8 +32,8 @@
 //    }
 //
 //    @Override
-//    public PrePayingRequest buildPayParam(PayRequest payRequest) {
-//        PrePayingRequest prePayingRequest = new PrePayingRequest();
+//    public PrePayingParams buildPayParam(PayRequest payRequest) {
+//        PrePayingParams prePayingRequest = new PrePayingParams();
 //        Mfe88PayRequestHandler.buildPayParam(prePayingRequest, payRequest);
 //        return prePayingRequest;
 //    }
@@ -49,7 +49,7 @@
 //    }
 //
 //    @Override
-//    public PayResponse record(PrePayingRequest prePayingRequest, PayRequest payRequest, String data) {
+//    public PayResponse record(PrePayingParams prePayingRequest, PayRequest payRequest, String data) {
 //        // 保存记录
 //        ChannelDirectiveRecord channelDirectiveRecord = new ChannelDirectiveRecord();
 //

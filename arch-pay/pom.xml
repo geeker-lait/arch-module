@@ -14,6 +14,7 @@
     <modules>
         <module>pay-api</module>
         <module>pay-core</module>
+        <module>pay-crud</module>
         <module>pay-channel</module>
 
     </modules>

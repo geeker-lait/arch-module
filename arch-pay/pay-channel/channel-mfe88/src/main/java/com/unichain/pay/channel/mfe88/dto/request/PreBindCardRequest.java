@@ -15,7 +15,7 @@
 // * @date 2018-8-31 03:30:56
 // */
 //@Data
-//public class PreBindCardRequest implements DirectiveRequest {
+//public class PreBindCardParams implements DirectiveRequest {
 //
 //
 //    private String service = "quickPayBind";

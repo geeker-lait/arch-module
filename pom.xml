@@ -105,6 +105,11 @@
                 <artifactId>pay-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>pay-crud</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!-- arch-pay#arch-pay#arch-pay#arch-pay#arch-pay#arch-pay#arch-pay -->
 
             <!-- arch-automate#arch-pay#arch-automate#arch-automate#arch-automate -->

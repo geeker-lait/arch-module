@@ -12,7 +12,7 @@
 // * @date
 // */
 //@Data
-//public class PayingRequest implements DirectiveRequest {
+//public class PayingParams implements DirectiveRequest {
 //
 //    /**
 //     * 接口名称

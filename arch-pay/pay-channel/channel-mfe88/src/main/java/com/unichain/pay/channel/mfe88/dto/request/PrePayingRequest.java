@@ -12,7 +12,7 @@
 //import java.util.Map;
 //
 //@Data
-//public class PrePayingRequest implements DirectiveRequest {
+//public class PrePayingParams implements DirectiveRequest {
 //    /**
 //     * 接口名称
 //     */

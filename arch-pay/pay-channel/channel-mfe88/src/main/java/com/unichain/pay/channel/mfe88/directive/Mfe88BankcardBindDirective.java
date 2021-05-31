@@ -3,7 +3,7 @@
 //import cn.hutool.json.JSONUtil;
 //import com.unichain.pay.channel.mfe88.Mfe88ChannelDirecvite;
 //import com.unichain.pay.channel.mfe88.Mfe88PayRequestHandler;
-//import com.unichain.pay.channel.mfe88.dto.request.PreBindCardRequest;
+//import com.unichain.pay.channel.mfe88.dto.request.PreBindCardParams;
 //import com.unichain.pay.channel.mfe88.dto.response.BankcardBindResponse;
 //import org.arch.payment.sdk.Directive;
 //import org.arch.payment.sdk.PayRequest;
@@ -14,13 +14,13 @@
 //
 //
 //@Service("Mfe88BankcardBindDirective")
-//public class Mfe88BankcardBindDirective implements BindCardDirective,Directive<Mfe88ChannelDirecvite, PreBindCardRequest> {
+//public class Mfe88BankcardBindDirective implements BindCardDirective,Directive<Mfe88ChannelDirecvite, PreBindCardParams> {
 //
 //    @Autowired
 //    private ChannelDirectiveRecordService channelDirectiveRecordService;
 //
 //    @Override
-//    public PayResponse exec(Mfe88ChannelDirecvite channelDirective, PreBindCardRequest preBindCardRequest, PayRequest payRequest) {
+//    public PayResponse exec(Mfe88ChannelDirecvite channelDirective, PreBindCardParams preBindCardRequest, PayRequest payRequest) {
 //// 测试
 ////        PayResponse result = new PayResponse();
 ////        Map resultMap = new HashMap();
@@ -46,7 +46,7 @@
 //     * @param data
 //     */
 //    @Override
-//    public PayResponse record(PreBindCardRequest payParam, PayRequest payRequest, String data) {
+//    public PayResponse record(PreBindCardParams payParam, PayRequest payRequest, String data) {
 //        BankcardBindResponse response = JSONUtil.toBean(data, BankcardBindResponse.class);
 //
 //        ChannelDirectiveRecord save = new ChannelDirectiveRecord();
@@ -93,8 +93,8 @@
 //    }
 //
 //    @Override
-//    public PreBindCardRequest buildPayParam(PayRequest payRequest) {
-//        PreBindCardRequest preBindCardRequest = new PreBindCardRequest();
+//    public PreBindCardParams buildPayParam(PayRequest payRequest) {
+//        PreBindCardParams preBindCardRequest = new PreBindCardParams();
 //        Mfe88PayRequestHandler.buildPayParam(preBindCardRequest, payRequest);
 //        return preBindCardRequest;
 //    }
