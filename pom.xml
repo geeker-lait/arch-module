@@ -102,6 +102,11 @@
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
+                <artifactId>pay-biz</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
                 <artifactId>pay-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -110,7 +115,76 @@
                 <artifactId>pay-crud</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>pay-rest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>pay-sdk</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>channel-alipay</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>channel-huifu</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>channel-lianlian</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>channel-mfe88</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>channel-weixin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>channel-yeepay</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!-- arch-pay#arch-pay#arch-pay#arch-pay#arch-pay#arch-pay#arch-pay -->
+
+            <!--arhc-sms#arhc-sms#arhc-sms#arhc-sms#arhc-sms#arhc-sms#arhc-sms#-->
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>sms-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>sms-channel</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>sms-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>sms-crud</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>sms-rest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!--arhc-sms#arhc-sms#arhc-sms#arhc-sms#arhc-sms#arhc-sms#arhc-sms#-->
 
             <!-- arch-automate#arch-pay#arch-automate#arch-automate#arch-automate -->
             <dependency>
@@ -145,7 +219,7 @@
             </dependency>
             <!-- arch-automate#arch-pay#arch-automate#arch-automate#arch-automate -->
 
-
+            <!-- arch-form#arch-form#arch-form#arch-form#arch-form#arch-form#arch-form -->
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>form-api</artifactId>
@@ -156,8 +230,12 @@
                 <artifactId>form-crud</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <!-- arch-form#arch-form#arch-form#arch-form#arch-form#arch-form#arch-form -->
 
 
+
+
+            <!-- arch-framework#arch-framework#arch-framework#arch-framework#arch-framework# -->
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>framework-core</artifactId>
@@ -193,14 +271,13 @@
                 <artifactId>framework-spi</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+            <!-- arch-framework#arch-framework#arch-framework#arch-framework#arch-framework# -->
 
             <dependency>
                 <artifactId>mq-messaging</artifactId>
                 <groupId>org.arch.projects</groupId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>mq-consumer</artifactId>

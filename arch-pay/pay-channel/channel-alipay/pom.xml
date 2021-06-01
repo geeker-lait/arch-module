@@ -13,10 +13,25 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.alipay.sdk</groupId>
-            <artifactId>alipay-sdk-java</artifactId>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>pay-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>framework-beans</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fastjson</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
 
     </dependencies>

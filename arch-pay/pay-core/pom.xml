@@ -13,7 +13,40 @@
 
         <dependency>
             <groupId>org.arch.projects</groupId>
+            <artifactId>sms-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
             <artifactId>pay-crud</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>pay-sdk</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>channel-alipay</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>channel-huifu</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>channel-lianlian</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>channel-mfe88</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>channel-weixin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>channel-yeepay</artifactId>
         </dependency>
 
     </dependencies>

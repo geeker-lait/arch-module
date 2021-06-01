@@ -1,0 +1,46 @@
+rocketmq:
+  name-server: 127.0.0.1:9876
+#  producer:
+#    group: newProducer
+#    topic: newTopic
+work:
+  store-core-work:
+    group-order: 1
+    group-name: store-core-work
+    topics:
+
+  store-inner-work:
+    group-order: 2
+    group-name: store-inner-work
+    topics:
+      - pick
+      - pack
+      - issuing
+  store-outter-work: 1
+    group-order: 3
+    group-name: store-outter-work
+    topics:
+      - accept
+      - collection
+      - distribute
+  store-tail-work: 1
+    group-order: 3
+    group-name: store-tail-work
+    topics:
+      - delivery
+      - receive
+      - refund
+
+  order-key-mapping:
+    oms:
+      consigneeInfo:
+        userName:
+        phoneNo:
+        province:
+
+      paymentInfo:
+
+      productInfo:
+
+      protection: true
+      cost: 20

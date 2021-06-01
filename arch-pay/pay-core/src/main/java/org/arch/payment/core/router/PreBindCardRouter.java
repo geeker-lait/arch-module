@@ -1,9 +1,11 @@
 package org.arch.payment.core.router;
 
+import lombok.RequiredArgsConstructor;
 import org.arch.payment.sdk.Directive;
-import org.arch.payment.sdk.DirectiveCode;
 import org.arch.payment.sdk.DirectiveRouter;
-import org.arch.payment.sdk.PayRequest;
+import org.arch.payment.sdk.bean.PayRequest;
+import org.arch.payment.sdk.bean.PayResponse;
+import org.arch.payment.sdk.enums.DirectiveCode;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
  */
 //@DirectiveTyp(DirectiveCode.PRE_BINDCARD_DIRECTIVE)
 @Service
+@RequiredArgsConstructor
 public class PreBindCardRouter extends AbstractDirectiveRouter implements DirectiveRouter {
 
     @Override
@@ -23,25 +26,8 @@ public class PreBindCardRouter extends AbstractDirectiveRouter implements Direct
         // 流水号
         String paySn = idService.generateId(payRequest.getDirectiveCode().getIdKey());
 
-
-    }
-
-    @Override
-    public DirectiveCode getDirectiveCode() {
-        return DirectiveCode.PRE_BINDCARD_DIRECTIVE;
-    }
-
-
-//    @Autowired
-//    private RedisUtils redisUtils;
-//    @Autowired
-//    private SmsService smsService;
-
-//    @Override
-//    public PayResponse routing(PayRequest payRequest) {
-//        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
-//        PayResponse payResponse = new PayResponse();
-//        // 0、判断有无绑卡，如果已经绑定模拟发送验证码，让用户继续往下走支付流程
+        PayResponse payResponse = new PayResponse();
+        // 0、判断有无绑卡，如果已经绑定模拟发送验证码，让用户继续往下走支付流程
 //        if (bindedRecordervice.hasBindedCard(payRequest)) {
 //            //生成验证码
 //            String accountCode = RandomStringUtils.random(4, "0123456789");
@@ -78,15 +64,21 @@ public class PreBindCardRouter extends AbstractDirectiveRouter implements Direct
 //        // 3.1、递归调用
 //        payResponse = recursion(null, merchantChannelList, payRequest);
 //        return payResponse;
-//    }
 
-//
-//    /**
-//     * 递归商户通道
-//     *
-//     * @param merchantChannelList
-//     * @return
-//     */
+    }
+
+    @Override
+    public DirectiveCode getDirectiveCode() {
+        return DirectiveCode.PRE_BINDCARD_DIRECTIVE;
+    }
+
+
+    /**
+     * 递归商户通道
+     *
+     * @param merchantChannelList
+     * @return
+     */
 //    public PayResponse recursion(PayMerchantChannel merchantChannel, List<PayMerchantChannel> merchantChannelList, PayRequest payRequest) {
 //
 //        if (merchantChannel == null && merchantChannelList.size() > 0) {
@@ -141,5 +133,5 @@ public class PreBindCardRouter extends AbstractDirectiveRouter implements Direct
 //        }
 //        return merchantChannelList;
 //    }
-//
+
 }

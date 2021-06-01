@@ -2,9 +2,9 @@ package org.arch.payment.core.router;
 
 
 import org.arch.payment.sdk.Directive;
-import org.arch.payment.sdk.DirectiveCode;
 import org.arch.payment.sdk.DirectiveRouter;
-import org.arch.payment.sdk.PayRequest;
+import org.arch.payment.sdk.bean.PayRequest;
+import org.arch.payment.sdk.enums.DirectiveCode;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

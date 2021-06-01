@@ -1,6 +1,7 @@
 package org.arch.payment.core.router;
 
 import org.arch.framework.id.IdService;
+import org.arch.sms.api.SmsApi;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -31,6 +32,10 @@ public abstract class AbstractDirectiveRouter {
 //    PayStrategyService payStrategyService;
     @Autowired
     protected IdService idService;
+    //@Autowired
+    //protected RedisService redisService;
+    @Autowired
+    protected SmsApi smsApi;
 
 
 }
