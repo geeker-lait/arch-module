@@ -86,6 +86,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>test</scope>
         </dependency>
 
@@ -194,22 +200,12 @@
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>automate-common</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.arch.projects</groupId>
                 <artifactId>automate-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>automate-form</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>automate-mvc</artifactId>
+                <artifactId>automate-crud</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -227,13 +223,20 @@
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
+                <artifactId>form-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
                 <artifactId>form-crud</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>form-rest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!-- arch-form#arch-form#arch-form#arch-form#arch-form#arch-form#arch-form -->
-
-
-
 
             <!-- arch-framework#arch-framework#arch-framework#arch-framework#arch-framework# -->
             <dependency>
@@ -629,7 +632,11 @@
                 <artifactId>dom4j</artifactId>
                 <version>2.1.3</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20210307</version>
+            </dependency>
 
             <!-- redis -->
             <dependency>

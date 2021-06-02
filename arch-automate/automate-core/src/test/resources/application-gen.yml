@@ -53,7 +53,7 @@ spring:
       - type: entity
         pkg: entity
         template: entity.ftl
-        suffix:
+        suffix: Entity
       - type: mapper
         pkg: mapper
         template: mapper.ftl
@@ -116,8 +116,8 @@ spring:
         resources: classpath:xls/uni-life-pms.xlsx
         configuration: {
           table: "表名/Table",
-          column: "列名/Column",
           type: "数据类型/Type",
+          column: "列名/Column",
           length: "长度/Length",
           isnull: "是否为空/Null",
           defaultValue: "默认值/Default",
@@ -146,6 +146,3 @@ spring:
           username: "root",
           password: "late856147"
         }
-
-
-

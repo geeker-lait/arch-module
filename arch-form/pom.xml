@@ -15,6 +15,7 @@
         <module>form-api</module>
         <module>form-core</module>
         <module>form-crud</module>
+        <module>form-rest</module>
     </modules>
 
 </project>

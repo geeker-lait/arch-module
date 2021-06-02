@@ -115,7 +115,7 @@ public class ExcelSchemaReader extends AbstractSchemaReader<ExcelFiledConfigurat
                                 }
                                 table = new Table();
                                 table.setName(tc[1]);
-                                table.setComment(tc[0]);
+                                table.setComment(tc[2]);
                                 database.getTables().add(table);
                                 tabMap.put(tc[1], table);
                             }
