@@ -1,6 +1,5 @@
 package org.arch.framework.web.feign.encoder;
 
-import feign.Request;
 import feign.RequestTemplate;
 import feign.codec.EncodeException;
 import feign.codec.Encoder;
@@ -28,7 +27,12 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Add springFormEncoder to encode APPLICATION_FORM_URLENCODED
@@ -130,7 +134,7 @@ public class ArchSpringEncoder implements Encoder {
                     } else {
                         charset = StandardCharsets.UTF_8;
                     }
-                    request.body(Request.Body.encoded(outputMessage.getOutputStream().toByteArray(), charset));
+                    request.body(outputMessage.getOutputStream().toByteArray(), charset);
                     return;
                 }
             }
