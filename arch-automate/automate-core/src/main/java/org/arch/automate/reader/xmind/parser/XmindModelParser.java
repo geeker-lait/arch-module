@@ -67,18 +67,20 @@ public class XmindModelParser {
      * @param pTitle     上级节点 title
      * @param pImport    {@link Import}
      * @param inOrOut    inOrOut: true 表示 {@link ParamType#IN}, false 表示 {@link ParamType#OUT}.
+     * @param isAddModel 表示是否添加到 pImport 中.
      */
     @SuppressWarnings("AlibabaMethodTooLong")
     @Nullable
-    static void generateModel(@NonNull Children children, @NonNull Set<Module> moduleSet,
-                              @NonNull Module module, @NonNull String pTitle,
-                              @Nullable Import pImport, @Nullable Boolean inOrOut) {
+    static Model generateModel(@NonNull Children children, @NonNull Set<Module> moduleSet,
+                               @NonNull Module module, @NonNull String pTitle,
+                               @Nullable Import pImport, @Nullable Boolean inOrOut,
+                               @NonNull Boolean isAddModel) {
         String[] splits = splitInto3Parts(pTitle);
         //noinspection AlibabaUndefineMagicConstant
         if (splits.length != 3) {
             LOG.debug("title [" + pTitle + "] 格式错误, 标准格式: TitleType/TypeName/[description]");
             generateOfChildren(children, moduleSet, module, null, pTitle);
-            return;
+            return null;
         }
 
         String name = splits[1].trim();
@@ -101,7 +103,7 @@ public class XmindModelParser {
         Set<Param> entityFields = model.getFields();
         List<Attached> attachedList = children.getAttached();
         if (isNull(attachedList) || attachedList.size() == 0) {
-            return;
+            return null;
         }
         String fieldTitle;
         for (Attached attached : attachedList) {
@@ -139,64 +141,69 @@ public class XmindModelParser {
                 }
             } else //noinspection AlibabaAvoidComplexCondition
                 if ((IMPORT.equals(paramType) || IMPORTS.equals(paramType)) && nonNull(pImport)) {
-                generateImportOfAttached(attached, moduleSet, module, paramType, splits, pImport);
-            } else if (PKG.equals(paramType) && nonNull(pImport)) {
-                generatePkg(null, moduleSet, module, model, fieldTitle, paramType);
-            } else if (ANNOTATES.equals(paramType)) {
-                Children annotesChildren = attached.getChildren();
-                if (nonNull(annotesChildren)) {
+                    generateImportOfAttached(attached, moduleSet, module, paramType, splits, pImport);
+                } else if (PKG.equals(paramType) && nonNull(pImport)) {
+                    generatePkg(null, moduleSet, module, model, fieldTitle, paramType);
+                } else if (ANNOTATES.equals(paramType)) {
+                    Children annotesChildren = attached.getChildren();
+                    if (nonNull(annotesChildren)) {
+                        if (nonNull(pImport)) {
+                            generateAnnotes(annotesChildren, moduleSet, module, pImport, annotSet);
+                        } else {
+                            generateAnnotes(annotesChildren, moduleSet, module, model, annotSet);
+                        }
+                    }
+                } else if (ANNOTATE.equals(paramType) || ANNOTATION.equals(paramType)) {
+                    Annot annotation;
                     if (nonNull(pImport)) {
-                        generateAnnotes(annotesChildren, moduleSet, module, pImport, annotSet);
+                        annotation = generateAnnot(attached, moduleSet, module, splits, pImport);
                     } else {
-                        generateAnnotes(annotesChildren, moduleSet, module, model, annotSet);
+                        annotation = generateAnnot(attached, moduleSet, module, splits, model);
+                    }
+                    annotSet.add(annotation);
+                } else if (OBJ_ANNOTATE.equals(paramType)) {
+                    Annot annotation = generateAnnot(attached, moduleSet, module, splits, model);
+                    annotSet.add(annotation);
+                } else if (GENERIC_TYP_E.equals(paramType)) {
+                    String genericTyp = firstLetterToUpper(orgName);
+                    model.setGenericTyp(genericTyp);
+                    Children attachedChildren = attached.getChildren();
+                    if (nonNull(attachedChildren)) {
+                        generateImport(attachedChildren, moduleSet, module, model);
+                    }
+                } else if (GENERIC_TYP.equals(paramType) && isNull(pImport)) {
+                    String genericTyp = firstLetterToUpper(orgName);
+                    model.setGenericTyp(genericTyp);
+                    Children attachedChildren = attached.getChildren();
+                    if (nonNull(attachedChildren)) {
+                        generateImport(attachedChildren, moduleSet, module, model);
+                    }
+                } else {
+                    String paramTypePkg = paramType.getPkg();
+                    if (hasText(paramTypePkg)) {
+                        imports.add(paramTypePkg);
+                    }
+                    Param fieldParam = generateParam(attached, moduleSet, module, splits, paramType, model, inOrOut);
+                    if (nonNull(fieldParam)) {
+                        entityFields.add(fieldParam);
+                        isNewCreatedEntity = true;
                     }
                 }
-            } else if (ANNOTATE.equals(paramType) || ANNOTATION.equals(paramType)) {
-                Annot annotation;
-                if (nonNull(pImport)) {
-                    annotation = generateAnnot(attached, moduleSet, module, splits, pImport);
-                } else {
-                    annotation = generateAnnot(attached, moduleSet, module, splits, model);
-                }
-                annotSet.add(annotation);
-            } else if (OBJ_ANNOTATE.equals(paramType)) {
-                Annot annotation = generateAnnot(attached, moduleSet, module, splits, model);
-                annotSet.add(annotation);
-            } else if (GENERIC_TYP_E.equals(paramType)) {
-                String genericTyp = firstLetterToUpper(orgName);
-                model.setGenericTyp(genericTyp);
-                Children attachedChildren = attached.getChildren();
-                if (nonNull(attachedChildren)) {
-                    generateImport(attachedChildren, moduleSet, module, model);
-                }
-            } else if (GENERIC_TYP.equals(paramType) && isNull(pImport)) {
-                String genericTyp = firstLetterToUpper(orgName);
-                model.setGenericTyp(genericTyp);
-                Children attachedChildren = attached.getChildren();
-                if (nonNull(attachedChildren)) {
-                    generateImport(attachedChildren, moduleSet, module, model);
-                }
-            } else {
-                String paramTypePkg = paramType.getPkg();
-                if (hasText(paramTypePkg)) {
-                    imports.add(paramTypePkg);
-                }
-                Param fieldParam = generateParam(attached, moduleSet, module, splits, paramType, model, inOrOut);
-                if (nonNull(fieldParam)) {
-                    entityFields.add(fieldParam);
-                    isNewCreatedEntity = true;
-                }
-            }
         }
-        if (isNewCreatedEntity) {
-            module.addModel(model);
-            // 存储从 Param 中解析出的字段 Model 类型
-            if (pImport instanceof Model) {
-                ((Model) pImport).getParamModels().add(model);
-            }
+        if (isNewCreatedEntity && isAddModel) {
+            addModel(module, pImport, inOrOut, model);
         }
 
-        if (pImport instanceof Interfac) {
+        return model;
+    }
+
+    static void addModel(@NonNull Module module, @Nullable Import pImport,
+                         @Nullable Boolean inOrOut, @NonNull Model model) {
+        // 存储从 Param 中解析出的字段 Model 类型
+        if (pImport instanceof Model) {
+            ((Model) pImport).getParamModels().add(model);
+        }
+        else if (pImport instanceof Interfac) {
             model.setApi(((Interfac) pImport).getApi());
             // 存储从出入参数中解析出的字段 Model 类型
             if (nonNull(inOrOut) && inOrOut) {
@@ -206,7 +213,9 @@ public class XmindModelParser {
                 ((Interfac) pImport).getOutModels().add(model);
             }
         }
-
+        else {
+            module.addModel(model);
+        }
     }
 
 }

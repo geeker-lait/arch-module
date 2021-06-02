@@ -26,8 +26,8 @@
         <module>arch-alarm</module>
         <module>arch-application</module>
         <module>arch-auth</module>
-        <module>arch-automate</module>
         <module>arch-form</module>
+        <module>arch-automate</module>
         <module>arch-framework</module>
         <module>arch-gateway</module>
         <module>arch-mms</module>

@@ -13,7 +13,7 @@ public class ReaderConfiguration<T extends SchemaConfiguration> {
     private T configuration;
     private SchemaPattern pattern;
     /**
-     * 用于缓存解析 resource 后的 Project
+     * 用于缓存解析 resource 后的 Project, Map(resource, Project)
      */
     private ConcurrentHashMap<String, Project> resourceProjectMap;
 }

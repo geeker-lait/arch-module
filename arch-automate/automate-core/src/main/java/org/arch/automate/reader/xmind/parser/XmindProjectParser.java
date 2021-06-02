@@ -17,6 +17,7 @@ import org.springframework.lang.Nullable;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.automate.reader.xmind.nodespace.TiTleType.MODULE;
@@ -232,7 +233,7 @@ public class XmindProjectParser {
                 generateApi(children, moduleSet, module, pTiTleType, pTitle);
                 return;
             case ENTITY:
-                generateModel(children, moduleSet, module, pTitle, null, null);
+                generateModel(children, moduleSet, module, pTitle, null, null, TRUE);
                 return;
             case PKG:
                 generatePkg(children, moduleSet, module, pTitle, pTiTleType);
@@ -243,7 +244,7 @@ public class XmindProjectParser {
 
     }
 
-    static void generatePkg(@Nullable Children children, @NonNull Set<Module> moduleList,
+    static void generatePkg(@Nullable Children children, @NonNull Set<Module> moduleSet,
                             @NonNull Module module, @NonNull String pTitle,
                             @NonNull TiTleType pTiTleType) {
         if (!PKG.equals(pTiTleType)) {
@@ -255,11 +256,11 @@ public class XmindProjectParser {
             module.setPkg(pkg);
         }
         if (nonNull(children)) {
-            generateOfChildren(children, moduleList, module);
+            generateOfChildren(children, moduleSet, module);
         }
     }
 
-    static void generatePkg(@Nullable Children children, @NonNull Set<Module> moduleList,
+    static void generatePkg(@Nullable Children children, @NonNull Set<Module> moduleSet,
                             @NonNull Module module, @NonNull Pkg pkg, @NonNull String pTitle,
                             @NonNull ParamType paramType) {
         //noinspection DuplicatedCode
@@ -272,7 +273,7 @@ public class XmindProjectParser {
             pkg.setPkg(pkgStr);
         }
         if (nonNull(children)) {
-            generateOfChildren(children, moduleList, module);
+            generateOfChildren(children, moduleSet, module);
         }
     }
 

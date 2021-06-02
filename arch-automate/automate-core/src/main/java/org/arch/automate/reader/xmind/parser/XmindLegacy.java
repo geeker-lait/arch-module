@@ -1,6 +1,7 @@
 package org.arch.automate.reader.xmind.parser;
 
 import org.dom4j.*;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 
@@ -71,9 +72,14 @@ public class XmindLegacy {
         Element sheet = root.elements("sheet").get(0);
         String res = sheet.asXML();
         //将xml转为json
-        JSONObject xmlJSONObj = XML.toJSONObject(res);
-        JSONObject jsonObject = xmlJSONObj.getJSONObject("sheet");
-        //设置缩进
-        return jsonObject.toString(4);
+        try {
+            JSONObject xmlJSONObj = XML.toJSONObject(res);
+            JSONObject jsonObject = xmlJSONObj.getJSONObject("sheet");
+            //设置缩进
+            return jsonObject.toString(4);
+        }
+        catch (JSONException e) {
+            throw new IOException(e);
+        }
     }
 }

@@ -1,14 +1,14 @@
 package org.arch.automate.reader.xmind.parser;
 
-import org.arch.framework.beans.schema.api.Annot;
-import org.arch.framework.beans.schema.api.AnnotVal;
-import org.arch.framework.beans.schema.api.Curl;
-import org.arch.framework.beans.schema.api.Interfac;
 import org.arch.automate.Module;
 import org.arch.automate.reader.xmind.meta.Attached;
 import org.arch.automate.reader.xmind.meta.Children;
 import org.arch.automate.reader.xmind.nodespace.Annotation;
 import org.arch.automate.reader.xmind.nodespace.ParamType;
+import org.arch.framework.beans.schema.api.Annot;
+import org.arch.framework.beans.schema.api.AnnotVal;
+import org.arch.framework.beans.schema.api.Curl;
+import org.arch.framework.beans.schema.api.Interfac;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -21,14 +21,13 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static org.arch.automate.reader.xmind.nodespace.ParamType.ENTITY;
 import static org.arch.automate.reader.xmind.nodespace.ParamType.METHOD;
 import static org.arch.automate.reader.xmind.parser.XmindAnnotAndGenericParser.generateAnnot;
 import static org.arch.automate.reader.xmind.parser.XmindAnnotAndGenericParser.generateAnnotes;
 import static org.arch.automate.reader.xmind.parser.XmindAnnotAndGenericParser.generateUriAnnot;
 import static org.arch.automate.reader.xmind.parser.XmindImportParser.generateImport;
-import static org.arch.automate.reader.xmind.parser.XmindParamParser.generateParamName;
 import static org.arch.automate.reader.xmind.parser.XmindParamParser.resolveParam;
+import static org.arch.automate.reader.xmind.parser.XmindParamParser.smartResolveParam;
 import static org.arch.automate.reader.xmind.parser.XmindProjectParser.generateOfAttachedWithModule;
 import static org.arch.automate.reader.xmind.utils.XmindUtils.firstLetterToLower;
 import static org.arch.automate.reader.xmind.utils.XmindUtils.firstLetterToUpper;
@@ -199,7 +198,7 @@ public class XmindMethodParser {
      * 生成输入输出参数
      *
      * @param attached   {@link Attached}
-     * @param moduleList {@link Module} 列表
+     * @param moduleSet {@link Module} 列表
      * @param module     {@link Module}
      * @param interfac   {@link Interfac}
      * @param curl       {@link Curl}
@@ -208,34 +207,13 @@ public class XmindMethodParser {
      * @param inOrOut    true 表示 {@link ParamType#IN}, false 表示 {@link ParamType#OUT}.
      * @param paramIndex 出入参数索引.
      */
-    private static void generateInOrOut(@NonNull Attached attached, @NonNull Set<Module> moduleList,
+    private static void generateInOrOut(@NonNull Attached attached, @NonNull Set<Module> moduleSet,
                                         @NonNull Module module, @NonNull Interfac interfac,
                                         @NonNull Curl curl, @Nullable String[] tokens,
                                         @NonNull Boolean inOrOut, @NonNull Integer paramIndex) {
         // 当 inOrOut 的 attached title 的格式为 [in/out]/type/descr 的情况
         if (nonNull(tokens)) {
-            String inOrOutParamType = tokens[1].trim();
-            ParamType paramType = getParamType(inOrOutParamType);
-            if (paramType == null) {
-                paramType = ENTITY;
-            }
-            // index = 0 为 newType, index = 1 为 newParamName
-            String[] typeAndParamNameArray = new String[2];
-            generateParamName(paramType, typeAndParamNameArray, inOrOutParamType, inOrOut, paramIndex);
-            String newType = typeAndParamNameArray[0];
-            String newParamName = typeAndParamNameArray[1];
-            String newDescr = tokens[2].trim();
-            String title = newType.concat("/").concat(newParamName).concat("/").concat(newDescr);
-            String[] paramSplits = new String[]{newType, newParamName, newDescr};
-            // 新建出入参数的 attached
-            Attached paramAttached = new Attached();
-            paramAttached.setId(attached.getId());
-            paramAttached.setTitle(title);
-            paramAttached.setChildren(attached.getChildren());
-            paramAttached.setComments(attached.getComments());
-            paramAttached.setNotes(attached.getNotes());
-            // 解析出入参数的 attached
-            resolveParam(moduleList, module, interfac, curl, inOrOut, paramAttached, paramSplits, paramType);
+            smartResolveParam(attached, moduleSet, module, interfac, curl, inOrOut, tokens, paramIndex);
             return;
         }
 
@@ -253,7 +231,7 @@ public class XmindMethodParser {
             String title = paramAttached.getTitle().trim();
             String[] splits = splitInto3Parts(title);
             ParamType paramType = getParamType(splits[0].trim());
-            resolveParam(moduleList, module, interfac, curl, inOrOut, paramAttached, splits, paramType);
+            resolveParam(moduleSet, module, interfac, curl, inOrOut, paramAttached, splits, paramType);
         }
     }
 

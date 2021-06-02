@@ -77,7 +77,7 @@ public class XmindAnnotAndGenericParser {
                 String title = annotAttached.getTitle().trim();
                 String[] splits = splitInto3Parts(title);
                 ParamType paramType = getParamType(splits[0].trim());
-                if (splits.length != 3 || isNull(paramType)) {
+                if (splits.length != 3) {
                     LOG.debug("title [" + title + "] 格式错误, 标准格式: annot_val/annot_valKey/annot_valValue");
                     generateOfChildren(children, moduleSet, module, null, title);
                     continue;
@@ -92,7 +92,15 @@ public class XmindAnnotAndGenericParser {
                     generateImportOfAttached(attached, moduleSet, module, paramType, splits, importObj);
                 }
                 else {
-                    generateOfAttachedWithModule(attached, moduleSet, module);
+                    // 新增 annot 的 键值对
+                    AnnotVal annotVal = new AnnotVal().setKey(firstLetterToLower(splits[0].trim()))
+                                                      .setValue(removeNewlines(splits[1].trim()));
+                    annotVals.add(annotVal);
+                    // 添加 import
+                    Children annotChildren = annotAttached.getChildren();
+                    if (nonNull(annotChildren)) {
+                        generateImport(annotChildren, moduleSet, module, importObj);
+                    }
                 }
             }
         }
@@ -101,25 +109,25 @@ public class XmindAnnotAndGenericParser {
     }
 
     @Nullable
-    private static AnnotVal generateAnnotVal(@NonNull Attached attached, @NonNull Set<Module> moduleList,
+    private static AnnotVal generateAnnotVal(@NonNull Attached attached, @NonNull Set<Module> moduleSet,
                                              @NonNull Module module, @NonNull String[] tokens,
                                              @NonNull Import importObj) {
 
         // 新增 annot 的 键值对
-        String annotValKey = firstLetterToUpper(tokens[1].trim());
+        String annotValKey = firstLetterToLower(tokens[1].trim());
         String annotValValue = removeNewlines(tokens[2].trim());
 
         // 添加 import
         Children children = attached.getChildren();
         if (nonNull(children)) {
-            generateImport(children, moduleList, module, importObj);
+            generateImport(children, moduleSet, module, importObj);
         }
 
         return new AnnotVal().setKey(annotValKey)
                              .setValue(annotValValue);
     }
 
-    static void generateUriAnnot(@NonNull Set<Module> moduleList, @NonNull Module module,
+    static void generateUriAnnot(@NonNull Set<Module> moduleSet, @NonNull Module module,
                                  @NonNull Interfac interfac, @NonNull Set<AnnotVal> annotValSet,
                                  @Nullable Children uriChildren) {
         if (nonNull(uriChildren)) {
@@ -129,7 +137,7 @@ public class XmindAnnotAndGenericParser {
                 String[] annotValSplits = splitInto3Parts(annotValTitle);
                 ParamType annotValParamType = getParamType(annotValSplits[0].trim());
                 if (nonNull(annotValParamType) && ANNOTATE_VAL.equals(annotValParamType)) {
-                    AnnotVal annotVal = generateAnnotVal(annotValAttached, moduleList,
+                    AnnotVal annotVal = generateAnnotVal(annotValAttached, moduleSet,
                                                          module, annotValSplits, interfac);
                     annotValSet.add(annotVal);
                 }
@@ -138,7 +146,7 @@ public class XmindAnnotAndGenericParser {
     }
 
 
-    static void generateAnnotes(@NonNull Children children, @NonNull Set<Module> moduleList,
+    static void generateAnnotes(@NonNull Children children, @NonNull Set<Module> moduleSet,
                                 @NonNull Module module, @NonNull Import importObj,
                                 @NonNull Set<Annot> annotations) {
 
@@ -153,11 +161,11 @@ public class XmindAnnotAndGenericParser {
             ParamType paramType = getParamType(splits[0].trim());
             if (splits.length != 3 || isNull(paramType)) {
                 LOG.debug("title [" + title + "] 格式错误, 标准格式: paramType/paramName/[description]");
-                generateOfAttachedWithModule(attached, moduleList, module);
+                generateOfAttachedWithModule(attached, moduleSet, module);
                 continue;
             }
             if (ANNOTATE.equals(paramType) || ANNOTATION.equals(paramType)) {
-                Annot annot = generateAnnot(attached, moduleList, module, splits, importObj);
+                Annot annot = generateAnnot(attached, moduleSet, module, splits, importObj);
                 annotations.add(annot);
             }
         }
@@ -219,7 +227,7 @@ public class XmindAnnotAndGenericParser {
         return firstLetterToLower(paramNameSb.append(firstLetterToUpper(paramType.name().toLowerCase())).toString());
     }
 
-    static void generateAnnotAndGeneric(@NonNull Children children, @NonNull Set<Module> moduleList,
+    static void generateAnnotAndGeneric(@NonNull Children children, @NonNull Set<Module> moduleSet,
                                         @NonNull Module module, @Nullable ParamType pParamType,
                                         @NonNull Import pImport, @NonNull Param param) {
         // 遍历 annots/generic/genericTyp
@@ -238,7 +246,7 @@ public class XmindAnnotAndGenericParser {
             }
             if (splits.length != 3 || (isNull(paramTyp) && isNull(paramProperty))) {
                 LOG.debug("title [" + paramTitle + "] 格式错误, 标准格式: type/key/value");
-                generateOfAttachedWithModule(paramAttached, moduleList, module);
+                generateOfAttachedWithModule(paramAttached, moduleSet, module);
                 continue;
             }
             if (isNull(paramTyp)) {
@@ -246,15 +254,15 @@ public class XmindAnnotAndGenericParser {
                     // 基本数据类型处理
                     param.setTyp(param.getTyp().concat("[]"));
                 } else {
-                    generateOfAttachedWithModule(paramAttached, moduleList, module);
+                    generateOfAttachedWithModule(paramAttached, moduleSet, module);
                 }
             } else if (ANNOTATES.equals(paramTyp)) {
                 Children annotesChildren = paramAttached.getChildren();
                 if (nonNull(annotesChildren)) {
-                    generateAnnotes(annotesChildren, moduleList, module, pImport, param.getAnnotations());
+                    generateAnnotes(annotesChildren, moduleSet, module, pImport, param.getAnnotations());
                 }
             } else if (ANNOTATE.equals(paramTyp) || ANNOTATION.equals(paramTyp)) {
-                Annot annotation = generateAnnot(paramAttached, moduleList, module, splits, pImport);
+                Annot annotation = generateAnnot(paramAttached, moduleSet, module, splits, pImport);
                 annots.add(annotation);
             } else if (GENERIC_TYP.equals(paramTyp)) {
                 String genericTyp = firstLetterToUpper(splits[1].trim());
@@ -263,15 +271,15 @@ public class XmindAnnotAndGenericParser {
                 }
                 Children attachedChildren = paramAttached.getChildren();
                 if (nonNull(attachedChildren)) {
-                    generateImport(attachedChildren, moduleList, module, pImport);
+                    generateImport(attachedChildren, moduleSet, module, pImport);
                 }
             } else if (nonNull(pParamType) && GENERIC.equals(pParamType) && GENERIC_VAL.equals(paramTyp)) {
                 String genericVal = firstLetterToUpper(splits[1].trim());
                 param.setTyp(genericVal);
                 Children paramAttachedChildren = paramAttached.getChildren();
                 if (nonNull(paramAttachedChildren)) {
-                    generateImport(paramAttachedChildren, moduleList, module, pImport);
-                    generateOfChildren(children, moduleList, module);
+                    generateImport(paramAttachedChildren, moduleSet, module, pImport);
+                    generateOfChildren(children, moduleSet, module);
                 }
                 // 给对象添加泛型值
                 if (pImport instanceof Model) {
@@ -280,11 +288,11 @@ public class XmindAnnotAndGenericParser {
                     ((Interfac) pImport).setGenericTyp(genericVal);
                 }
             } else if (IMPORT.equals(paramTyp) || IMPORTS.equals(paramType)) {
-                generateImportOfAttached(paramAttached, moduleList, module, paramTyp, splits, pImport);
+                generateImportOfAttached(paramAttached, moduleSet, module, paramTyp, splits, pImport);
             } else {
                 Children paramAttachedChildren = paramAttached.getChildren();
                 if (nonNull(paramAttachedChildren)) {
-                    generateOfChildren(children, moduleList, module);
+                    generateOfChildren(children, moduleSet, module);
                 }
             }
         }
