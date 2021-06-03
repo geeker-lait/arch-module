@@ -20,7 +20,6 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContexts;
 import org.arch.framework.beans.utils.StringUtils;
 import org.arch.payment.sdk.enums.MethodType;
-import org.arch.payment.sdk.bean.PayException;
 import org.arch.payment.sdk.ex.PayErrorException;
 
 import javax.net.ssl.KeyManagerFactory;
@@ -35,8 +34,6 @@ import java.util.Map;
 
 @Slf4j
 public class HttpRequestTemplate {
-
-    //protected static final logger log = loggerFactory.getlogger(HttpRequestTemplate.class);
 
     protected CloseableHttpClient httpClient;
 

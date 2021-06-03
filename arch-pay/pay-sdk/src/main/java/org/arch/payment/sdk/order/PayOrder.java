@@ -1,4 +1,4 @@
-package org.arch.payment.sdk.bean;
+package org.arch.payment.sdk.order;
 
 import org.arch.framework.beans.utils.StringUtils;
 import org.arch.payment.sdk.CurType;

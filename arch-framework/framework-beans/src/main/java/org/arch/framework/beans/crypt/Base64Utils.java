@@ -1,4 +1,4 @@
-package org.arch.framework.beans.utils;
+package org.arch.framework.beans.crypt;
 
 import cn.hutool.core.codec.Base64;
 
@@ -41,6 +41,13 @@ public class Base64Utils {
     public static String encode(byte[] bytes) throws Exception {
         return new String(Base64.encode(bytes));
     }
+//    public static byte[] decode(String str) {
+//        return Base64.decodeBase64(str);
+//    }
+
+//    public static String encode(byte[] bytes) {
+//        return Base64.encodeBase64String(bytes);
+//    }
 
     /**
      * <p>
@@ -65,7 +72,7 @@ public class Base64Utils {
      * </p>
      *
      * @param filePath 文件绝对路径
-     * @param base64 编码字符串
+     * @param base64   编码字符串
      * @throws Exception
      */
     public static void decodeToFile(String filePath, String base64) throws Exception {
@@ -106,7 +113,7 @@ public class Base64Utils {
      * 二进制数据写文件
      * </p>
      *
-     * @param bytes 二进制数据
+     * @param bytes    二进制数据
      * @param filePath 文件生成目录
      */
     public static void byteArrayToFile(byte[] bytes, String filePath) throws Exception {

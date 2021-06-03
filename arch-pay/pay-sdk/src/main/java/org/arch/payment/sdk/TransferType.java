@@ -1,7 +1,6 @@
 package org.arch.payment.sdk;
 
-import org.arch.payment.sdk.TransactionType;
-import org.arch.payment.sdk.bean.TransferOrder;
+import org.arch.payment.sdk.order.TransferOrder;
 
 import java.util.Map;
 

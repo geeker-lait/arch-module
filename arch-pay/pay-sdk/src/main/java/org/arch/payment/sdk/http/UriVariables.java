@@ -1,10 +1,8 @@
 package org.arch.payment.sdk.http;
 
 import com.alibaba.fastjson.JSONObject;
-import org.arch.payment.sdk.bean.PayException;
+import lombok.extern.slf4j.Slf4j;
 import org.arch.payment.sdk.ex.PayErrorException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -14,9 +12,8 @@ import java.util.Map;
 /**
  * URL表达式处理器
  */
+@Slf4j
 public final class UriVariables {
-    private static final Logger LOG = LoggerFactory.getLogger(UriVariables.class);
-
     private UriVariables() {
     }
 
@@ -200,7 +197,7 @@ public final class UriVariables {
         try {
             return URLEncoder.encode(str, enc);
         } catch (UnsupportedEncodingException e) {
-            LOG.error("", e);
+            log.error("", e);
         }
         return str;
     }

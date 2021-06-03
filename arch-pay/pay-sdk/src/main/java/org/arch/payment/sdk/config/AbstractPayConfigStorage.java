@@ -1,4 +1,4 @@
-package org.arch.payment.sdk.bean;
+package org.arch.payment.sdk.config;
 
 import org.arch.payment.sdk.PayConfigStorage;
 

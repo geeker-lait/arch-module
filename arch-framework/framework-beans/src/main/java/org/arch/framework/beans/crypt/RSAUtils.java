@@ -1,4 +1,4 @@
-package org.arch.framework.beans.utils;
+package org.arch.framework.beans.crypt;
 
 import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;

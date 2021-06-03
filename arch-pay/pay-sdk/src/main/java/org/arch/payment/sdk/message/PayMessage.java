@@ -1,4 +1,4 @@
-package org.arch.payment.sdk.bean;
+package org.arch.payment.sdk.message;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

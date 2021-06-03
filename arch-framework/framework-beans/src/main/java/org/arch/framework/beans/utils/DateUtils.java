@@ -406,5 +406,36 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
             seconds -= TimeUnit.MINUTES.toSeconds(minutes);
         return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds) : String.format("%02d:%02d", minutes, seconds);
     }
+
+
+    /**
+     * 剩余分钟数
+     *
+     * @param date 结束点日期
+     * @return 分钟数
+     */
+    public static final long minutesRemaining(Date date) {
+        return (date.getTime() / 1000 / 60 - System.currentTimeMillis() / 1000 / 60);
+    }
+
+    /**
+     * 剩余小时
+     *
+     * @param date 结束点日期
+     * @return 小时数
+     */
+    public static final long remainingHours(Date date) {
+        return minutesRemaining(date) / 60;
+    }
+
+    /**
+     * 剩余天数
+     *
+     * @param date 结束点日期
+     * @return 天数
+     */
+    public static final long remainingDays(Date date) {
+        return remainingHours(date) / 24;
+    }
 }
 

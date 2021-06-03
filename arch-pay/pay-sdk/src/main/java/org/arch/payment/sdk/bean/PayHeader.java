@@ -2,7 +2,7 @@ package org.arch.payment.sdk.bean;
 
 import lombok.Data;
 import lombok.NonNull;
-import org.arch.payment.sdk.PayType;
+import org.arch.payment.sdk.enums.PayType;
 
 /**
  * @author lait.zhang@gmail.com

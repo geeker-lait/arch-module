@@ -1,6 +1,10 @@
 package org.arch.payment.sdk;
 
-import org.arch.payment.sdk.bean.*;
+import org.arch.payment.sdk.message.PayMessage;
+import org.arch.payment.sdk.message.PayOutMessage;
+import org.arch.payment.sdk.order.PayOrder;
+import org.arch.payment.sdk.order.RefundOrder;
+import org.arch.payment.sdk.order.TransferOrder;
 import org.arch.payment.sdk.enums.MethodType;
 import org.arch.payment.sdk.http.HttpConfigStorage;
 import org.arch.payment.sdk.http.HttpRequestTemplate;

@@ -15,8 +15,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import org.arch.framework.beans.utils.StringUtils;
 import org.arch.payment.sdk.enums.MethodType;
-import org.arch.payment.sdk.bean.PayException;
 import org.arch.payment.sdk.ex.PayErrorException;
+import org.arch.payment.sdk.ex.PayException;
 
 import java.io.*;
 import java.net.URI;

@@ -70,7 +70,7 @@ public class HttpRequestUtils {
         }
         // json格式 json格式需要从request的输入流中解析获取
         if ("application/json".equalsIgnoreCase(contentType)) {
-            // 使用 commons-io中 IOUtils 类快速获取输入流内容
+            // 使用 commons-io中 IoUtils 类快速获取输入流内容
             String paramJson = null;
             try {
                 paramJson = IOUtils.toString(request.getInputStream(), "UTF-8");
