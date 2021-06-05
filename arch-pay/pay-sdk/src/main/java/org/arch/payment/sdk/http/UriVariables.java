@@ -2,7 +2,7 @@ package org.arch.payment.sdk.http;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.payment.sdk.ex.PayErrorException;
+import org.arch.payment.sdk.exception.PayErrorException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

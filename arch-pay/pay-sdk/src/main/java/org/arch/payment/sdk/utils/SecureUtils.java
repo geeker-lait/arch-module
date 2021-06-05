@@ -1,8 +1,8 @@
-package org.arch.payment.sdk.utils.sign;
+package org.arch.payment.sdk.utils;
 
-import com.egzosn.pay.common.bean.result.PayException;
-import com.egzosn.pay.common.exception.PayErrorException;
-import com.egzosn.pay.common.util.sign.encrypt.sm3.SM3Digest;
+import org.arch.framework.beans.crypt.sm3.SM3Digest;
+import org.arch.payment.sdk.exception.PayErrorException;
+import org.arch.payment.sdk.exception.PayException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +12,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.Signature;
 
-public class SecureUtil {
+public class SecureUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SecureUtil.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SecureUtils.class);
     /**
      * 算法常量： SHA1
      */
@@ -46,8 +46,7 @@ public class SecureUtil {
             md.reset();
             md.update(data);
             return md.digest();
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             LOG.error("", e);
             return null;
         }
@@ -68,14 +67,12 @@ public class SecureUtil {
                 if (Integer.toHexString(0xFF & bytes[i]).length() == 1) {
                     sha1StrBuff.append("0").append(
                             Integer.toHexString(0xFF & bytes[i]));
-                }
-                else {
+                } else {
                     sha1StrBuff.append(Integer.toHexString(0xFF & bytes[i]));
                 }
             }
             return sha1StrBuff.toString().getBytes(encoding);
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             LOG.error("", e);
             return null;
         }
@@ -93,8 +90,7 @@ public class SecureUtil {
         byte[] bytes = null;
         try {
             bytes = digestByData(data.getBytes(encoding), ALGORITHM_SHA1);
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             throw new PayErrorException(new PayException("error", e.getLocalizedMessage()));
         }
         StringBuilder sha256StrBuff = new StringBuilder();
@@ -102,8 +98,7 @@ public class SecureUtil {
             if (Integer.toHexString(0xFF & bytes[i]).length() == 1) {
                 sha256StrBuff.append("0").append(
                         Integer.toHexString(0xFF & bytes[i]));
-            }
-            else {
+            } else {
                 sha256StrBuff.append(Integer.toHexString(0xFF & bytes[i]));
             }
         }
@@ -135,9 +130,8 @@ public class SecureUtil {
     public static String sm3X16Str(String data, String encoding) {
         byte[] bytes = new byte[new SM3Digest().getDigestSize()];
         try {
-            bytes = SecureUtil.sm3(data.getBytes(encoding));
-        }
-        catch (UnsupportedEncodingException e) {
+            bytes = SecureUtils.sm3(data.getBytes(encoding));
+        } catch (UnsupportedEncodingException e) {
             LOG.error("", e);
         }
         StringBuilder sm3StrBuff = new StringBuilder();
@@ -145,8 +139,7 @@ public class SecureUtil {
             if (Integer.toHexString(0xFF & bytes[i]).length() == 1) {
                 sm3StrBuff.append("0").append(
                         Integer.toHexString(0xFF & bytes[i]));
-            }
-            else {
+            } else {
                 sm3StrBuff.append(Integer.toHexString(0xFF & bytes[i]));
             }
         }

@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.arch.framework.beans.utils.StringUtils;
-import org.arch.payment.sdk.ex.PayErrorException;
-import org.arch.payment.sdk.ex.PayException;
+import org.arch.payment.sdk.exception.PayErrorException;
+import org.arch.payment.sdk.exception.PayException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class XML {
+public class XmlUtils {
 
 
     /**
@@ -229,10 +229,10 @@ public class XML {
             }
         }
         catch (ParserConfigurationException e) {
-            throw new PayErrorException(new PayException("XML failure", "XML解析失败\n" + e.getMessage()));
+            throw new PayErrorException(new PayException("XmlUtils failure", "XML解析失败\n" + e.getMessage()));
         }
         catch (SAXException e) {
-            throw new PayErrorException(new PayException("XML failure", "XML解析失败\n" + e.getMessage()));
+            throw new PayErrorException(new PayException("XmlUtils failure", "XML解析失败\n" + e.getMessage()));
         }
         finally {
             in.close();
@@ -296,7 +296,7 @@ public class XML {
             return output;
         }
         catch (TransformerException e) {
-            throw new PayErrorException(new PayException("XML failure", "XML生成失败\n" + e.getMessage()));
+            throw new PayErrorException(new PayException("XmlUtils failure", "XML生成失败\n" + e.getMessage()));
         }
 
 

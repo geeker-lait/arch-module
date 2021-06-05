@@ -1,4 +1,4 @@
-package org.arch.payment.sdk.ex;
+package org.arch.payment.sdk.exception;
 //
 //import org.arch.framework.beans.exception.BaseException;
 //import org.arch.payment.sdk.enums.PayCodeDescr;

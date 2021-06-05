@@ -1,4 +1,6 @@
-package org.arch.payment.sdk;
+package org.arch.payment.sdk.order;
+
+import org.arch.payment.sdk.Attrs;
 
 /**
  * 支付订单信息

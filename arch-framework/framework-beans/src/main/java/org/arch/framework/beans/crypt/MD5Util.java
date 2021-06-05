@@ -7,18 +7,10 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * date: 2020/3/30 18:33
- * desc:
- */
 public class MD5Util {
 
     private static final int MD5INDEX = 16 ;
 
-    public static void main(String[] args) throws Exception {
-        String pwd = MD5("123456", "yueshang1005");
-        System.out.println(pwd);
-    }
 
     public static String MD5(String password, String salt) throws NoSuchAlgorithmException {
         MessageDigest instance = MessageDigest.getInstance("MD5");

@@ -1,9 +1,9 @@
-package org.arch.payment.sdk.order;
+package org.arch.payment.sdk.order.impl;
 
 import org.arch.framework.beans.utils.StringUtils;
 import org.arch.payment.sdk.CurType;
-import org.arch.payment.sdk.Order;
 import org.arch.payment.sdk.TransactionType;
+import org.arch.payment.sdk.order.Order;
 
 import java.math.BigDecimal;
 import java.util.Date;

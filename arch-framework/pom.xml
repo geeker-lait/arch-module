@@ -20,6 +20,7 @@
         <module>framework-mq</module>
         <module>framework-config</module>
         <module>framework-spi</module>
+        <module>framework-cache</module>
     </modules>
 
 </project>

@@ -1,4 +1,4 @@
-package org.arch.payment.sdk.enums;
+package org.arch.payment.api.enums;
 
 /**
  * @Author lait.zhang@gmail.com
@@ -7,5 +7,5 @@ package org.arch.payment.sdk.enums;
  * @Description ${Description}
  */
 public enum PayType {
-    ALIPAY, WEIXIN, THIRD
+    ALI_PAY, WX_PAY, THIRD_PAY
 }

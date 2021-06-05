@@ -1,20 +1,21 @@
 package org.arch.payment.sdk;
 
-import org.arch.payment.sdk.message.PayMessage;
-import org.arch.payment.sdk.message.PayOutMessage;
-import org.arch.payment.sdk.order.PayOrder;
-import org.arch.payment.sdk.order.RefundOrder;
-import org.arch.payment.sdk.order.TransferOrder;
 import org.arch.payment.sdk.enums.MethodType;
 import org.arch.payment.sdk.http.HttpConfigStorage;
 import org.arch.payment.sdk.http.HttpRequestTemplate;
+import org.arch.payment.sdk.message.PayMessageHandler;
+import org.arch.payment.sdk.message.PayMessageInterceptor;
+import org.arch.payment.sdk.message.PayOutMessage;
+import org.arch.payment.sdk.order.impl.PayOrder;
+import org.arch.payment.sdk.order.impl.RefundOrder;
+import org.arch.payment.sdk.order.impl.TransferOrder;
 
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Map;
 
-public interface PayService<PC extends PayConfigStorage> {
+public interface PayService<PC extends PayConfigurable> {
 
 
     /**

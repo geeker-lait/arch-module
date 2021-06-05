@@ -1,6 +1,5 @@
-package org.arch.payment.sdk.utils;
+package org.arch.payment.sdk.exception;
 
-import org.arch.payment.sdk.ex.PayErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

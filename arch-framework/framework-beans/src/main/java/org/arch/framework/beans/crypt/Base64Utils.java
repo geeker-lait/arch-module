@@ -4,11 +4,6 @@ import cn.hutool.core.codec.Base64;
 
 import java.io.*;
 
-/**
- * Description:
- *
- * @date 2020/3/28 20:28
- */
 public class Base64Utils {
 
     /**

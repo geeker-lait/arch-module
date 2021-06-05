@@ -1,7 +1,9 @@
 package org.arch.payment.sdk.message;
 
 import com.alibaba.fastjson.JSONObject;
-import javafx.scene.text.TextBuilder;
+import org.arch.payment.sdk.message.builder.JsonBuilder;
+import org.arch.payment.sdk.message.builder.TextBuilder;
+import org.arch.payment.sdk.message.builder.XmlBuilder;
 
 import java.io.Serializable;
 

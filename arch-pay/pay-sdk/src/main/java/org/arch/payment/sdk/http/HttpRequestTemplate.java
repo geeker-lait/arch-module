@@ -20,7 +20,7 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContexts;
 import org.arch.framework.beans.utils.StringUtils;
 import org.arch.payment.sdk.enums.MethodType;
-import org.arch.payment.sdk.ex.PayErrorException;
+import org.arch.payment.sdk.exception.PayErrorException;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;

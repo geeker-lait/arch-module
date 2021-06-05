@@ -1,9 +1,10 @@
-package org.arch.payment.sdk.utils.sign;
+package org.arch.payment.sdk.utils;
 
 import org.apache.http.message.BasicNameValuePair;
+import org.arch.framework.beans.utils.StringUtils;
 import org.arch.payment.sdk.SignType;
-import org.arch.payment.sdk.ex.PayErrorException;
-import org.arch.payment.sdk.ex.PayException;
+import org.arch.payment.sdk.exception.PayErrorException;
+import org.arch.payment.sdk.exception.PayException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +36,7 @@ public enum SignUtils implements SignType {
          */
         @Override
         public String createSign(String content, String key, String characterEncoding) {
-
-            return com.egzosn.pay.common.util.sign.encrypt.MD5.sign(content, key, characterEncoding);
+            return MD5.sign(content, key, characterEncoding);
         }
 
         /**
@@ -49,9 +49,10 @@ public enum SignUtils implements SignType {
          */
         @Override
         public boolean verify(String text, String sign, String key, String characterEncoding) {
-            return com.egzosn.pay.common.util.sign.encrypt.MD5.verify(text, sign, key, characterEncoding);
+            return MD5.verify(text, sign, key, characterEncoding);
         }
-    }, HMACSHA256 {
+    },
+    HMACSHA256 {
         @Override
         public String getName() {
             return "HMAC-SHA256";
@@ -109,57 +110,57 @@ public enum SignUtils implements SignType {
     RSA {
         @Override
         public String createSign(String content, String key, String characterEncoding) {
-            return com.egzosn.pay.common.util.sign.encrypt.RSA.sign(content, key, characterEncoding);
+            return RSA.sign(content, key, characterEncoding);
         }
 
         @Override
         public boolean verify(String text, String sign, String publicKey, String characterEncoding) {
-            return com.egzosn.pay.common.util.sign.encrypt.RSA.verify(text, sign, publicKey, characterEncoding);
+            return RSA.verify(text, sign, publicKey, characterEncoding);
         }
     },
 
     RSA2 {
         @Override
         public String createSign(String content, String key, String characterEncoding) {
-            return com.egzosn.pay.common.util.sign.encrypt.RSA2.sign(content, key, characterEncoding);
+            return RSA2.sign(content, key, characterEncoding);
         }
 
         @Override
         public boolean verify(String text, String sign, String publicKey, String characterEncoding) {
-            return com.egzosn.pay.common.util.sign.encrypt.RSA2.verify(text, sign, publicKey, characterEncoding);
+            return RSA2.verify(text, sign, publicKey, characterEncoding);
         }
     },
     SHA1 {
         @Override
         public String createSign(String content, String key, String characterEncoding) {
-            return com.egzosn.pay.common.util.sign.encrypt.SHA1.sign(content, key, characterEncoding);
+            return SHA1.sign(content, key, characterEncoding);
         }
 
         @Override
         public boolean verify(String text, String sign, String publicKey, String characterEncoding) {
-            return com.egzosn.pay.common.util.sign.encrypt.SHA1.verify(text, sign, publicKey, characterEncoding);
+            return SHA1.verify(text, sign, publicKey, characterEncoding);
         }
     },
     SHA256 {
         @Override
         public String createSign(String content, String key, String characterEncoding) {
-            return com.egzosn.pay.common.util.sign.encrypt.SHA256.sign(content, key, characterEncoding);
+            return SHA256.sign(content, key, characterEncoding);
         }
 
         @Override
         public boolean verify(String text, String sign, String publicKey, String characterEncoding) {
-            return com.egzosn.pay.common.util.sign.encrypt.SHA256.verify(text, sign, publicKey, characterEncoding);
+            return SHA256.verify(text, sign, publicKey, characterEncoding);
         }
     },
     SM3 {
         @Override
         public String createSign(String content, String key, String characterEncoding) {
-            return com.egzosn.pay.common.util.sign.encrypt.RSA2.sign(content, key, characterEncoding);
+            return RSA2.sign(content, key, characterEncoding);
         }
 
         @Override
         public boolean verify(String text, String sign, String publicKey, String characterEncoding) {
-            return com.egzosn.pay.common.util.sign.encrypt.RSA2.verify(text, sign, publicKey, characterEncoding);
+            return RSA2.verify(text, sign, publicKey, characterEncoding);
         }
     };
     private static final Logger LOG = LoggerFactory.getLogger(SignUtils.class);

@@ -1,45 +1,132 @@
 package org.arch.payment.sdk;
 
-public interface PayConfigurable {
+/**
+ * 支付客户端配置存储
+ */
+public interface PayConfigurable extends Attrs {
 
-    String getPrivateKey();
+    /**
+     * 附加支付配置
+     *
+     * @return 附加信息
+     */
+    Object getAttach();
 
-    void setPrivateKey(String privateKey);
+    /**
+     * 应用id
+     *
+     * @return 应用id
+     */
+    String getAppId();
 
+    /**
+     * 获取商户号
+     *
+     * @return
+     */
     String getMerchantNo();
 
-    String getMerchantCode();
-    void setMerchantCode(String merchantCode);
+    /**
+     * 合作商唯一标识
+     *
+     * @return 合作商唯一标识
+     */
+    String getPid();
 
-    void setMerchantNo(String merchantId);
+    /**
+     * 获取收款账号
+     *
+     * @return 收款账号
+     */
+    String getSeller();
 
-    String getPublicKey();
+    /**
+     * 授权令牌
+     *
+     * @return 授权令牌
+     */
+    String getToken();
 
-    void setPublicKey(String Key);
-
-    String getSecretKey();
-
-    void setSecretKey(String secretKey);
-
+    /**
+     * 获取指令
+     *
+     * @return
+     */
     String getDirectiveUri();
 
-    void setDirectiveUri(String uri);
-//
-//    // 私钥
-//    private String privateKey;
-//    // 商户号
-//    private String merchantNo;
-//    // 商户码/用户名/商户名
-//    private String merchantCode;
-//    // 公钥
-//    private String publicKey;
-//    //密钥/密码
-//    private String secretKey;
-//    // uri 不一样
-//    private String directiveUri;
-//    // 回掉URL
-//    private String callbackUrl;
-//    // 跳转URL
-//    private String redirectUrl;
+    /**
+     * 服务端异步回调Url
+     *
+     * @return 异步回调Url
+     */
+    String getNotifyUrl();
+
+    /**
+     * 服务端同步回调Url
+     *
+     * @return 同步回调Url
+     */
+    String getReturnUrl();
+
+    /**
+     * 签名方式
+     *
+     * @return 签名方式
+     */
+    String getSignType();
+
+    /**
+     * 字符编码格式
+     *
+     * @return 字符编码
+     */
+    String getInputCharset();
+
+    /**
+     * 支付平台公钥(签名校验使用)
+     *
+     * @return 公钥
+     */
+    String getKeyPublic();
+
+    /**
+     * 应用私钥(生成签名时使用)
+     *
+     * @return 私钥
+     */
+    String getKeyPrivate();
+
+    /**
+     * 支付类型 自定义
+     * 这里暂定 aliPay 支付宝， wxPay微信支付
+     *
+     * @return 支付类型
+     */
+    String getPayType();
+
+
+    /**
+     * 应该是线程安全的
+     *
+     * @param accessToken      新的accessToken值
+     * @param expiresInSeconds 过期时间，以秒为单位 多少秒
+     */
+    void updateAccessToken(String accessToken, int expiresInSeconds);
+
+    /**
+     * 应该是线程安全的
+     *
+     * @param accessToken 新的accessToken值
+     * @param expiresTime 过期时间，时间戳
+     */
+    void updateAccessToken(String accessToken, long expiresTime);
+
+    /**
+     * 是否为测试环境， true测试环境
+     *
+     * @return true测试环境
+     */
+    boolean isTest();
+
 
 }

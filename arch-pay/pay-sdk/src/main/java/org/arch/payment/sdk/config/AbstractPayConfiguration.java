@@ -1,6 +1,6 @@
 package org.arch.payment.sdk.config;
 
-import org.arch.payment.sdk.PayConfigStorage;
+import org.arch.payment.sdk.PayConfigurable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,10 +9,9 @@ import java.util.concurrent.locks.Lock;
 /**
  * 支付基础配置存储
  */
-public abstract class AbstractPayConfigStorage implements PayConfigStorage {
+public abstract class AbstractPayConfiguration implements PayConfigurable {
 
     private Object attach;
-
     /**
      * 应用私钥，rsa_private pkcs8格式 生成签名时使用
      */
@@ -38,8 +37,6 @@ public abstract class AbstractPayConfigStorage implements PayConfigStorage {
      * 字符类型
      */
     private String inputCharset;
-
-
     /**
      * 支付类型 aliPay 支付宝， wxPay微信..等等，扩展支付模块定义唯一。
      */
@@ -183,29 +180,11 @@ public abstract class AbstractPayConfigStorage implements PayConfigStorage {
         return System.currentTimeMillis() > this.expiresTime;
     }
 
-
-    @Override
-    public synchronized void updateAccessToken(String accessToken, int expiresInSeconds) {
-        updateAccessToken(accessToken, System.currentTimeMillis() + (expiresInSeconds - 600) * 1000L);
-    }
-
-    @Override
-    public synchronized void updateAccessToken(String accessToken, long expiresTime) {
-        this.accessToken = accessToken;
-        this.expiresTime = expiresTime;
-    }
-
-
     /**
      * 强制将access token过期掉
      */
     public void expireAccessToken() {
         this.expiresTime = 0;
-    }
-
-    @Override
-    public String getToken() {
-        return null;
     }
 
     public void setAccessToken(String accessToken) {
@@ -220,11 +199,6 @@ public abstract class AbstractPayConfigStorage implements PayConfigStorage {
         this.accessTokenLock = accessTokenLock;
     }
 
-    @Override
-    public boolean isTest() {
-        return isTest;
-    }
-
     public void setTest(boolean test) {
         isTest = test;
     }
@@ -235,6 +209,37 @@ public abstract class AbstractPayConfigStorage implements PayConfigStorage {
 
     public void setCertSign(boolean certSign) {
         this.certSign = certSign;
+    }
+    /**
+     * 添加配置信息
+     *
+     * @param key   key
+     * @param value 值
+     */
+    public void addAttr(String key, Object value) {
+        getAttrs().put(key, value);
+    }
+
+
+    @Override
+    public synchronized void updateAccessToken(String accessToken, int expiresInSeconds) {
+        updateAccessToken(accessToken, System.currentTimeMillis() + (expiresInSeconds - 600) * 1000L);
+    }
+
+    @Override
+    public synchronized void updateAccessToken(String accessToken, long expiresTime) {
+        this.accessToken = accessToken;
+        this.expiresTime = expiresTime;
+    }
+
+    @Override
+    public String getToken() {
+        return null;
+    }
+
+    @Override
+    public boolean isTest() {
+        return isTest;
     }
 
     @Override
@@ -251,13 +256,5 @@ public abstract class AbstractPayConfigStorage implements PayConfigStorage {
     }
 
 
-    /**
-     * 添加配置信息
-     *
-     * @param key   key
-     * @param value 值
-     */
-    public void addAttr(String key, Object value) {
-        getAttrs().put(key, value);
-    }
+
 }

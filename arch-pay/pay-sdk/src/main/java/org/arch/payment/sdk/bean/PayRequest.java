@@ -3,9 +3,9 @@ package org.arch.payment.sdk.bean;
 import lombok.Getter;
 import lombok.ToString;
 import org.arch.framework.beans.utils.HttpRequestUtils;
+import org.arch.payment.api.enums.PayType;
 import org.arch.payment.sdk.PayParams;
 import org.arch.payment.sdk.enums.DirectiveCode;
-import org.arch.payment.sdk.enums.PayType;
 
 import javax.servlet.http.HttpServletRequest;
 

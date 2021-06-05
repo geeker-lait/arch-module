@@ -1,5 +1,6 @@
-package org.arch.payment.sdk.utils.sign;
+package org.arch.payment.sdk.utils;
 
+import org.arch.framework.beans.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -304,6 +305,7 @@ public class CertDescriptor {
             LOG.info("RootCert is empty");
         }
     }
+
     /**
      * 加载根证书
      *
