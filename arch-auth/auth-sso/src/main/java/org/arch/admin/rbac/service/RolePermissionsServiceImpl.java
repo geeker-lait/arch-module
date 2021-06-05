@@ -2,7 +2,7 @@ package org.arch.admin.rbac.service;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
-import org.arch.ums.account.client.AccountRolePermissionFeignService;
+import org.arch.ums.account.client.AccountRolePermissionApi;
 import org.arch.ums.account.entity.Permission;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ import static java.util.Arrays.asList;
 @RequiredArgsConstructor
 public class RolePermissionsServiceImpl implements RolePermissionsService<Permission> {
 
-    private final AccountRolePermissionFeignService rolePermissionFeignService;
+    private final AccountRolePermissionApi rolePermissionFeignService;
     private final TenantContextHolder tenantContextHolder;
 
     @Override

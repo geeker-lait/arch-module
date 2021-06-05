@@ -323,16 +323,16 @@
                 <artifactId>auth-sso</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
+            <!--<dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>auth-oauth</artifactId>
                 <version>${project.version}</version>
-            </dependency>
+            </dependency>-->
 
 
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>ums-account</artifactId>
+                <artifactId>ums-commons</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -342,35 +342,19 @@
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>ums-commons</artifactId>
+                <artifactId>ums-biz</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>ums-feign-api</artifactId>
+                <artifactId>ums-crud</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>ums-member</artifactId>
+                <artifactId>ums-rest</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>ums-merchant</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>ums-user</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>ums-conf</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
 
             <!-- auth -->
             <dependency>

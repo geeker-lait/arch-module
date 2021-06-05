@@ -7,7 +7,7 @@ import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 import org.arch.framework.ums.enums.ScopesType;
 import org.arch.framework.ums.properties.AuthClientScopesCacheProperties;
 import org.arch.framework.web.feign.exception.FeignCallException;
-import org.arch.ums.account.client.AccountAuthClientFeignService;
+import org.arch.ums.account.client.AccountAuthClientApi;
 import org.arch.ums.account.vo.AuthClientVo;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -43,7 +43,7 @@ import static org.arch.framework.utils.AuthClientSyncUtils.setScopesLocalUpdateS
 @Slf4j
 public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissionService, InitializingBean, JobHandler {
 
-    private final AccountAuthClientFeignService accountAuthClientFeignService;
+    private final AccountAuthClientApi accountAuthClientApi;
     private final TenantContextHolder tenantContextHolder;
     private final RedisConnectionFactory redisConnectionFactory;
     private final AuthClientScopesCacheProperties authClientScopesCacheProperties;
@@ -56,11 +56,11 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
      */
     private volatile Map<Integer, Map<String, AuthClientVo>> allScopeMap;
 
-    public ArchJwkEndpointPermissionServiceImpl(AccountAuthClientFeignService accountAuthClientFeignService,
+    public ArchJwkEndpointPermissionServiceImpl(AccountAuthClientApi accountAuthClientApi,
                                                 TenantContextHolder tenantContextHolder,
                                                 RedisConnectionFactory redisConnectionFactory,
                                                 AuthClientScopesCacheProperties authClientScopesCacheProperties) {
-        this.accountAuthClientFeignService = accountAuthClientFeignService;
+        this.accountAuthClientApi = accountAuthClientApi;
         this.tenantContextHolder = tenantContextHolder;
         this.redisConnectionFactory = redisConnectionFactory;
         this.authClientScopesCacheProperties = authClientScopesCacheProperties;
@@ -152,7 +152,7 @@ public class ArchJwkEndpointPermissionServiceImpl implements JwkEndpointPermissi
     private void syncToLocalCache() {
         try {
             // 对 scopes 进行本地缓存. Map(tenantId, Map(clientId, AuthClientVo))
-            final Response<Map<Integer, Map<String, AuthClientVo>>> response = accountAuthClientFeignService.getAllScopes();
+            final Response<Map<Integer, Map<String, AuthClientVo>>> response = accountAuthClientApi.getAllScopes();
             Map<Integer, Map<String, AuthClientVo>> allScopeMap = response.getSuccessData();
             if (nonNull(allScopeMap)) {
                 this.allScopeMap = allScopeMap;

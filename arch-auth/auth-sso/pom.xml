@@ -60,6 +60,10 @@
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>framework-web</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
@@ -68,7 +72,7 @@
 
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>ums-feign-api</artifactId>
+            <artifactId>ums-api</artifactId>
         </dependency>
 
         <dependency>

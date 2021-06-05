@@ -10,7 +10,7 @@ import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.utils.ConverUtils;
 import org.arch.framework.utils.SecurityUtils;
-import org.arch.ums.conf.client.ConfFileInfoFeignService;
+import org.arch.ums.conf.client.ConfFileInfoApi;
 import org.arch.ums.conf.dto.FileInfoRequest;
 import org.arch.ums.conf.dto.FileInfoSearchDto;
 import org.arch.ums.conf.entity.FileInfo;
@@ -42,16 +42,16 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
 
     public static final Logger log = LoggerFactory.getLogger(BaseImageFileUploader.class);
 
-    protected final ConfFileInfoFeignService confFileInfoFeignService;
+    protected final ConfFileInfoApi confFileInfoApi;
     protected final TenantContextHolder tenantContextHolder;
     protected final ImageClient imageClient;
     protected ApplicationContext applicationContext;
 
-    protected BaseImageFileUploader(ConfFileInfoFeignService confFileInfoFeignService,
+    protected BaseImageFileUploader(ConfFileInfoApi confFileInfoApi,
                                     TenantContextHolder tenantContextHolder,
                                     ImageClient imageClient,
                                     FileProperties fileProperties) {
-        this.confFileInfoFeignService = confFileInfoFeignService;
+        this.confFileInfoApi = confFileInfoApi;
         this.tenantContextHolder = tenantContextHolder;
         this.imageClient = new ImageClientAdapter(fileProperties, imageClient);
     }
@@ -124,7 +124,7 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
             fileInfo.setDeleted(Boolean.FALSE);
             FileInfoSearchDto successData;
             try {
-                Response<FileInfoSearchDto> response = this.confFileInfoFeignService.save(fileInfo);
+                Response<FileInfoSearchDto> response = this.confFileInfoApi.save(fileInfo);
                 successData = response.getSuccessData();
                 if (isNull(successData)) {
                     if (DUPLICATE_KEY.getCode() == response.getCode()) {
@@ -133,11 +133,11 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
                         String traceId = getTraceId();
                         log.warn("保持对象存储信息到数据库失败, 发布重试事件, traceId={}", traceId);
                         publishRetryEvent(this.applicationContext, traceId,
-                                this.confFileInfoFeignService,
-                                ConfFileInfoFeignService.class,
-                                "save",
-                                new Class[]{FileInfo.class},
-                                fileInfo);
+                                          this.confFileInfoApi,
+                                          ConfFileInfoApi.class,
+                                          "save",
+                                          new Class[]{FileInfo.class},
+                                          fileInfo);
                     }
                     successData = ConverUtils.copyProperties(fileInfo, FileInfoSearchDto.class);
                 }
@@ -147,11 +147,11 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
                 String traceId = getTraceId();
                 log.warn("保持对象存储信息到数据库失败, 发布重试事件, traceId={}", traceId);
                 publishRetryEvent(this.applicationContext, getTraceId(),
-                        this.confFileInfoFeignService,
-                        ConfFileInfoFeignService.class,
-                        "save",
-                        new Class[]{FileInfo.class},
-                        fileInfo);
+                                  this.confFileInfoApi,
+                                  ConfFileInfoApi.class,
+                                  "save",
+                                  new Class[]{FileInfo.class},
+                                  fileInfo);
                 successData = ConverUtils.copyProperties(fileInfo, FileInfoSearchDto.class);
             }
             BeanUtil.copyProperties(successData, fileInfoDto);
@@ -173,28 +173,28 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
             try {
                 // 这里不关心对象存储信息是否删除成功, 因为不影响业务逻辑, 对象存储信息的一致性可通过定时任务进行补偿
                 Response<FileInfoSearchDto> response =
-                        this.confFileInfoFeignService.deleteByFilePathAndUploadType(filePath, uploadType);
+                        this.confFileInfoApi.deleteByFilePathAndUploadType(filePath, uploadType);
                 successData = response.getSuccessData();
                 if (isNull(successData)) {
                     String traceId = getTraceId();
                     log.warn("删除对象存储文件的数据库记录失败, 发布重试事件, traceId={}", traceId);
                     publishRetryEvent(this.applicationContext, traceId,
-                            this.confFileInfoFeignService,
-                            ConfFileInfoFeignService.class,
-                            "deleteByFilePathAndUploadType",
-                            new Class[]{String.class, String.class},
-                            filePath, uploadType);
+                                      this.confFileInfoApi,
+                                      ConfFileInfoApi.class,
+                                      "deleteByFilePathAndUploadType",
+                                      new Class[]{String.class, String.class},
+                                      filePath, uploadType);
                 }
             } catch (FeignException e) {
                 String traceId = getTraceId();
                 log.error(e.getMessage(), e);
                 log.warn("删除对象存储文件的数据库记录失败, 发布重试事件, traceId={}", traceId);
                 publishRetryEvent(this.applicationContext, traceId,
-                        this.confFileInfoFeignService,
-                        ConfFileInfoFeignService.class,
-                        "deleteByFilePathAndUploadType",
-                        new Class[]{String.class, String.class},
-                        filePath, uploadType);
+                                  this.confFileInfoApi,
+                                  ConfFileInfoApi.class,
+                                  "deleteByFilePathAndUploadType",
+                                  new Class[]{String.class, String.class},
+                                  filePath, uploadType);
             }
         }
         return removeFile;

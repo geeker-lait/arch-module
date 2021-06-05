@@ -6,7 +6,7 @@ import org.arch.form.api.dto.FormFieldOptionSearchDto;
 import org.arch.form.api.request.FormFieldOptionRequest;
 import org.arch.form.crud.entity.FormFieldOption;
 import org.arch.form.crud.service.FormFieldOptionService;
-import org.arch.framework.crud.CrudController;
+import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/field/option")
-public class FormFieldOptionController implements CrudController<FormFieldOptionRequest, FormFieldOption, java.lang.Long,
+public class FormFieldOptionController implements CrudBiz<FormFieldOptionRequest, FormFieldOption, Long,
         FormFieldOptionSearchDto, FormFieldOptionService> {
 
     private final TenantContextHolder tenantContextHolder;

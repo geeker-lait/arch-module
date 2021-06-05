@@ -6,7 +6,7 @@ import org.arch.form.api.dto.FormFieldSearchDto;
 import org.arch.form.api.request.FormFieldRequest;
 import org.arch.form.crud.entity.FormField;
 import org.arch.form.crud.service.FormFieldService;
-import org.arch.framework.crud.CrudController;
+import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/field")
-public class FormFieldController implements CrudController<FormFieldRequest, FormField, java.lang.Long, FormFieldSearchDto,
+public class FormFieldController implements CrudBiz<FormFieldRequest, FormField, Long, FormFieldSearchDto,
         FormFieldService> {
 
     private final TenantContextHolder tenantContextHolder;

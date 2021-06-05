@@ -6,7 +6,7 @@ import org.arch.form.api.dto.FormBizSearchDto;
 import org.arch.form.api.request.FormBizRequest;
 import org.arch.form.crud.entity.FormBiz;
 import org.arch.form.crud.service.FormBizService;
-import org.arch.framework.crud.CrudController;
+import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/biz")
-public class FormBizController implements CrudController<FormBizRequest, FormBiz, java.lang.Long, FormBizSearchDto,
+public class FormBizController implements CrudBiz<FormBizRequest, FormBiz, Long, FormBizSearchDto,
         FormBizService> {
 
     private final TenantContextHolder tenantContextHolder;

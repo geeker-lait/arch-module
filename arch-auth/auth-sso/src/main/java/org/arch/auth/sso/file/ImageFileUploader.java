@@ -3,7 +3,7 @@ package org.arch.auth.sso.file;
 import org.arch.auth.sso.exception.GlobalFileException;
 import org.arch.auth.sso.file.image.ImageClient;
 import org.arch.auth.sso.properties.FileProperties;
-import org.arch.ums.conf.client.ConfFileInfoFeignService;
+import org.arch.ums.conf.client.ConfFileInfoApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -25,11 +25,11 @@ import java.io.InputStream;
 public class ImageFileUploader extends BaseImageFileUploader implements FileUploader {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    public ImageFileUploader(ConfFileInfoFeignService confFileInfoFeignService,
+    public ImageFileUploader(ConfFileInfoApi confFileInfoApi,
                              TenantContextHolder tenantContextHolder,
                              @Autowired(required = false) ImageClient imageClient,
                              FileProperties fileProperties) {
-        super(confFileInfoFeignService, tenantContextHolder, imageClient, fileProperties);
+        super(confFileInfoApi, tenantContextHolder, imageClient, fileProperties);
     }
 
     @Override

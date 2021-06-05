@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
 import org.arch.framework.event.DeleteAccountEvent;
-import org.arch.ums.account.client.AccountIdentifierFeignService;
+import org.arch.ums.account.client.AccountIdentifierApi;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -29,7 +29,7 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class AccountController implements ApplicationContextAware {
 
-    private final AccountIdentifierFeignService accountIdentifierFeignService;
+    private final AccountIdentifierApi accountIdentifierApi;
     private ApplicationContext applicationContext;
 
     /**
@@ -41,7 +41,7 @@ public class AccountController implements ApplicationContextAware {
     @DeleteMapping("/{accountId}")
     public Response<Boolean> deleteAccount(@PathVariable("accountId") Long accountId) {
         try {
-            Response<Boolean> response = accountIdentifierFeignService.deleteByAccountId(accountId);
+            Response<Boolean> response = accountIdentifierApi.deleteByAccountId(accountId);
             Boolean successData = response.getSuccessData();
             if (nonNull(successData) && successData) {
                 this.applicationContext.publishEvent(new DeleteAccountEvent(accountId));

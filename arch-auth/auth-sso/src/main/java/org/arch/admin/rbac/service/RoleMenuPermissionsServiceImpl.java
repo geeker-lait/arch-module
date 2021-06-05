@@ -2,7 +2,7 @@ package org.arch.admin.rbac.service;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
-import org.arch.ums.account.client.AccountRoleMenuFeignService;
+import org.arch.ums.account.client.AccountRoleMenuApi;
 import org.arch.ums.account.entity.Menu;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ import static java.util.Arrays.asList;
 @RequiredArgsConstructor
 public class RoleMenuPermissionsServiceImpl implements RolePermissionsService<Menu> {
 
-    private final AccountRoleMenuFeignService roleMenuFeignService;
+    private final AccountRoleMenuApi roleMenuFeignService;
     private final TenantContextHolder tenantContextHolder;
 
     @Override

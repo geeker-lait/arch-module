@@ -20,7 +20,7 @@ import ${basePkg!""}.dto.${(name?cap_first)!""}Request;
 import ${basePkg!""}.dto.${(name?cap_first)!""}SearchDto;
 import ${basePkg!""}.entity.${(name?cap_first)!""};
 import ${basePkg!""}.service.${(name?cap_first)!""}Service;
-import org.arch.framework.crud.CrudController;
+import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.beans.Response;
 import org.springframework.beans.BeanUtils;
@@ -86,7 +86,7 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
     /**
     * 根据 entity 条件查询对象.
     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-    * @param entity    实体的 request 类型
+    * @param entity    实体的 request 封装类型
     * @param token     token info
     * @return  {@link Response}
     */
@@ -98,7 +98,7 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
             ${(name?cap_first)!""} ${(name?uncap_first)!""} = resolver(token, request);
             ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(${(name?uncap_first)!""});
             ${(name?cap_first)!""} result = getCrudService().findOneByMapParams(searchDto.searchParams());
-            return Response.success(convertSearchDto(result));
+            return Response.success(convertReturnDto(result));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             if (e instanceof IncorrectResultSizeDataAccessException) {
@@ -112,7 +112,7 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
     /**
     * 根据 entity 条件查询对象列表.
     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-    * @param t         实体的 request 类型
+    * @param t         实体的 request 封装类型
     * @param token     token info
     * @return  {@link Response}
     */
@@ -124,7 +124,7 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
         ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(${(name?uncap_first)!""});
         try {
         List<${(name?cap_first)!""}> ${(name?uncap_first)!""}List = getCrudService().findAllByMapParams(searchDto.searchParams());
-        return Response.success(${(name?uncap_first)!""}List.stream().map(this::convertSearchDto).collect(Collectors.toList()));
+        return Response.success(${(name?uncap_first)!""}List.stream().map(this::convertReturnDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -135,7 +135,7 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
     /**
     * 分页查询.
     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-    * @param entity        实体的 request 类型
+    * @param entity        实体的 request 封装类型
     * @param pageNumber    第几页
     * @param pageSize      页大小
     * @param token         token info
@@ -152,7 +152,7 @@ public class ${(name?cap_first)!""}${suffix!""} implements CrudController<${(nam
         ${(name?cap_first)!""}SearchDto searchDto = convertSearchDto(${(name?uncap_first)!""});
         try {
             IPage<${(name?cap_first)!""}> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
-            return Response.success(page.convert(this::convertSearchDto));
+            return Response.success(page.convert(this::convertReturnDto));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);

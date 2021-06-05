@@ -6,7 +6,7 @@ import org.arch.form.api.dto.FormInterfaceSearchDto;
 import org.arch.form.api.request.FormInterfaceRequest;
 import org.arch.form.crud.entity.FormInterface;
 import org.arch.form.crud.service.FormInterfaceService;
-import org.arch.framework.crud.CrudController;
+import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/interface")
-public class FormInterfaceController implements CrudController<FormInterfaceRequest, FormInterface, java.lang.Long,
+public class FormInterfaceController implements CrudBiz<FormInterfaceRequest, FormInterface, Long,
         FormInterfaceSearchDto, FormInterfaceService> {
 
     private final TenantContextHolder tenantContextHolder;

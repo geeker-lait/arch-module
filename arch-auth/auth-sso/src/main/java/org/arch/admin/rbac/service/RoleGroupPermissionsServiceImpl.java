@@ -2,7 +2,7 @@ package org.arch.admin.rbac.service;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
-import org.arch.ums.account.client.AccountRoleGroupFeignService;
+import org.arch.ums.account.client.AccountRoleGroupApi;
 import org.arch.ums.account.entity.Group;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ import static java.util.Arrays.asList;
 @RequiredArgsConstructor
 public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<Group> {
 
-    private final AccountRoleGroupFeignService roleGroupFeignService;
+    private final AccountRoleGroupApi roleGroupFeignService;
     private final TenantContextHolder tenantContextHolder;
 
     @NonNull
