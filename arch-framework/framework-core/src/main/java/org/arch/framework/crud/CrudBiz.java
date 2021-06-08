@@ -9,9 +9,13 @@ import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.BusinessException;
 import org.arch.framework.crud.utils.SearchFilter;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -91,12 +95,12 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
     /**
      * 保存
      * @param r     实体的 request 封装类型
-     * @param token token info
      * @return  {@link Response}
      */
     @Override
-    default DTO save(R r, TokenInfo token) {
-        T t = resolver(token, r);
+    default DTO save(R r) {
+        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        T t = resolver(tokenInfo, r);
         boolean isSave = getCrudService().save(t);
         if (isSave) {
             return convertReturnDto(t);
@@ -136,12 +140,12 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
     /**
      * 根据 entity 条件查询对象.
      * @param request   实体的 request 封装类型
-     * @param token     token info
      * @return  {@link Response}
      */
     @Override
-    default DTO findOne(R request, TokenInfo token) {
-        T entity = resolver(token, request);
+    default DTO findOne(R request) {
+        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        T entity = resolver(tokenInfo, request);
         SearchDTO searchDto = convertSearchDto(entity);
         T t = getCrudService().findOneByMapParams(searchDto.searchParams());
         return convertReturnDto(t);
@@ -150,12 +154,12 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
     /**
      * 根据 entity 条件查询对象列表.
      * @param request   实体的 request 封装类型
-     * @param token     token info
      * @return  {@link Response}
      */
     @Override
-    default List<DTO> find(R request, TokenInfo token) {
-        T entity = resolver(token, request);
+    default List<DTO> find(R request) {
+        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        T entity = resolver(tokenInfo, request);
         SearchDTO searchDto = convertSearchDto(entity);
         List<T> tList = getCrudService().findAllByMapParams(searchDto.searchParams());
         return tList.stream().map(this::convertReturnDto).collect(Collectors.toList());
@@ -163,12 +167,11 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
 
     /**
      * 查询所有列表
-     * @param token     token info
      * @return  {@link Response}
      */
     @Override
-    default List<DTO> list(TokenInfo token) {
-        return find(null, token);
+    default List<DTO> list() {
+        return find(null);
     }
 
     /**
@@ -177,12 +180,12 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
      * @param request    实体的 request 封装类型
      * @param pageNumber 第几页
      * @param pageSize   页大小
-     * @param token      token info
      * @return {@link Response}
      */
     @Override
-    default IPage<DTO> page(R request, Integer pageNumber, Integer pageSize, TokenInfo token) {
-        T entity = resolver(token, request);
+    default IPage<DTO> page(R request, Integer pageNumber, Integer pageSize) {
+        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        T entity = resolver(tokenInfo, request);
         SearchDTO searchDto = convertSearchDto(entity);
         IPage<T> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
         return page.convert(this::convertReturnDto);
@@ -199,13 +202,24 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
     }
 
     /**
+     * 批量逻辑删除
+     *
+     * @param ids 主键集合
+     * @return 是否删除成功
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    default Boolean deleteAllById(@RequestBody List<ID> ids) {
+        return getCrudService().deleteAllById(ids);
+    };
+
+    /**
      * 根据 id 更新实体, 对实体未进行校验, 直接更新 不为 null 的值.
      * @param request   实体的 request 封装类型
-     * @param token     token info
      * @return  true 表示更新成功
      */
     @Override
-    default Boolean updateById(R request, TokenInfo token) {
+    default Boolean updateById(R request) {
         // 检查 id 是否为 null
         Object idValue = ReflectionKit.getFieldValue(request,
                                                      TableInfoHelper.getTableInfo(request.getClass())
@@ -213,7 +227,8 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
         if (isNull(idValue)) {
             throw new BusinessException("id 不能为 null");
         }
-        T entity = resolver(token, request);
+        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        T entity = resolver(tokenInfo, request);
         // id 具有唯一性, 不需要租户 id 来区分, 对于用户来说租户 id 不会变, 不必要更新;
         // 如果更新租户 id, 对于行级租户同时会更新有租户字段的索引, 影响 sql 执行性能
         removeTenantIdValue(entity);
@@ -224,12 +239,12 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
      * 根据 entity 条件模糊查询对象; 模糊查询的条件拼接 {@code CONCAT("%", condition ,"%")},
      * 此方法会对不为 null 的 {@link String} 类型的字段都进行模糊查询.
      * @param request   实体的 request 类型
-     * @param token     token info
      * @return  {@link Response}
      */
     @Override
-    default List<DTO> like(R request, TokenInfo token) {
-        final T entity = resolver(token, request);
+    default List<DTO> like(R request) {
+        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        final T entity = resolver(tokenInfo, request);
         Field[] fields = entity.getClass().getDeclaredFields();
         final Class<String> stringClass = String.class;
         final String likePrefix = SearchFilter.Operator.LIKE + "_";
@@ -266,7 +281,7 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
                                      })
                       );
         SearchDTO searchDto = getSearchDto();
-        searchDto.putNoNull(TENANT_ID_CONDITION_EXP, token.getTenantId(), likeParamsMap);
+        searchDto.putNoNull(TENANT_ID_CONDITION_EXP, tokenInfo.getTenantId(), likeParamsMap);
         List<T> likeList = getCrudService().findAllByMapParams(likeParamsMap);
         return likeList.stream().map(this::convertReturnDto).collect(Collectors.toList());
     }

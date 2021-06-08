@@ -3,7 +3,7 @@ package org.arch.admin.account.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.account.client.AccountCategoryApi;
+import org.arch.ums.account.api.AccountCategoryApi;
 import org.arch.ums.account.dto.CategoryRequest;
 import org.arch.ums.account.dto.CategorySearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/account/category")
 public class CategoryApi implements FeignCrudApi<CategorySearchDto, Long, CategoryRequest, AccountCategoryApi> {
 
-    private final AccountCategoryApi accountCategoryService;
+    private final AccountCategoryApi accountCategoryApi;
 
     @Override
-    public AccountCategoryApi getFeignService() {
-        return this.accountCategoryService;
+    public AccountCategoryApi getFeignApi() {
+        return this.accountCategoryApi;
     }
 
 }

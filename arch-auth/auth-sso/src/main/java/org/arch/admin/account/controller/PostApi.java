@@ -3,7 +3,7 @@ package org.arch.admin.account.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.account.client.AccountPostApi;
+import org.arch.ums.account.api.AccountPostApi;
 import org.arch.ums.account.dto.PostRequest;
 import org.arch.ums.account.dto.PostSearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/account/post")
 public class PostApi implements FeignCrudApi<PostSearchDto, Long, PostRequest, AccountPostApi> {
 
-    private final AccountPostApi accountPostService;
+    private final AccountPostApi accountPostApi;
 
     @Override
-    public AccountPostApi getFeignService() {
-        return this.accountPostService;
+    public AccountPostApi getFeignApi() {
+        return this.accountPostApi;
     }
 
 }

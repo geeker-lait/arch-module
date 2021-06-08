@@ -3,7 +3,7 @@ package org.arch.admin.conf.contorller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.conf.client.ConfDictionaryItemApi;
+import org.arch.ums.conf.api.ConfDictionaryItemApi;
 import org.arch.ums.conf.dto.DictionaryItemRequest;
 import org.arch.ums.conf.dto.DictionaryItemSearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/conf/dictionary/item")
 public class DictionaryItemApi implements FeignCrudApi<DictionaryItemSearchDto, Long, DictionaryItemRequest, ConfDictionaryItemApi> {
 
-    private final ConfDictionaryItemApi confDictionaryItemService;
+    private final ConfDictionaryItemApi confDictionaryItemApi;
 
     @Override
-    public ConfDictionaryItemApi getFeignService() {
-        return this.confDictionaryItemService;
+    public ConfDictionaryItemApi getFeignApi() {
+        return this.confDictionaryItemApi;
     }
 
 }

@@ -2,7 +2,7 @@ package org.arch.admin.rbac.service;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
-import org.arch.ums.account.client.AccountRoleGroupApi;
+import org.arch.ums.account.api.AccountRoleGroupApi;
 import org.arch.ums.account.entity.Group;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ import static java.util.Arrays.asList;
 @RequiredArgsConstructor
 public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<Group> {
 
-    private final AccountRoleGroupApi roleGroupFeignService;
+    private final AccountRoleGroupApi accountRoleGroupApi;
     private final TenantContextHolder tenantContextHolder;
 
     @NonNull
@@ -51,9 +51,9 @@ public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<G
                                                 @NonNull Long groupId,
                                                 Long... roleIds) throws RolePermissionsException {
         try {
-            Response<Boolean> response = this.roleGroupFeignService.updateRolesByGroupIdOfTenant(tenantId,
-                    groupId,
-                    asList(roleIds));
+            Response<Boolean> response = this.accountRoleGroupApi.updateRolesByGroupIdOfTenant(tenantId,
+                                                                                               groupId,
+                                                                                               asList(roleIds));
             return Optional.ofNullable(response.getSuccessData()).orElse(false);
         } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.UPDATE_ROLE_PERMISSIONS_FAILURE,
@@ -74,7 +74,7 @@ public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<G
     public Set<String> findRolesByGroupIdOfTenant(@NonNull Long tenantId,
                                                   @NonNull Long groupId) throws RolePermissionsException {
         try {
-            Response<Set<String>> response = this.roleGroupFeignService.findRolesByGroupIdOfTenant(tenantId, groupId);
+            Response<Set<String>> response = this.accountRoleGroupApi.findRolesByGroupIdOfTenant(tenantId, groupId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new HashSet<>(0));
         } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.QUERY_ROLE_PERMISSIONS_FAILURE, tenantId + ":" + groupId, e);

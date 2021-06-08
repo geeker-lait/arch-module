@@ -2,7 +2,7 @@ package org.arch.admin.rbac.service;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
-import org.arch.ums.account.client.AccountRolePermissionApi;
+import org.arch.ums.account.api.AccountRolePermissionApi;
 import org.arch.ums.account.entity.Permission;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ import static java.util.Arrays.asList;
 @RequiredArgsConstructor
 public class RolePermissionsServiceImpl implements RolePermissionsService<Permission> {
 
-    private final AccountRolePermissionApi rolePermissionFeignService;
+    private final AccountRolePermissionApi accountRolePermissionApi;
     private final TenantContextHolder tenantContextHolder;
 
     @Override
@@ -51,7 +51,7 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
                                                    Long... resourceIds) throws RolePermissionsException {
         try {
             Response<Boolean> response =
-                    this.rolePermissionFeignService.updateResourcesByRoleIdOfTenant(tenantId, roleId, asList(resourceIds));
+                    this.accountRolePermissionApi.updateResourcesByRoleIdOfTenant(tenantId, roleId, asList(resourceIds));
             return Optional.ofNullable(response.getSuccessData()).orElse(false);
         } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.UPDATE_ROLE_PERMISSIONS_FAILURE,
@@ -67,7 +67,7 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
                                                     Long... resourceIds) throws RolePermissionsException {
         try {
             Response<Boolean> response =
-                    this.rolePermissionFeignService.updateResourcesByRoleIdOfScopeId(scopeId, roleId, asList(resourceIds));
+                    this.accountRolePermissionApi.updateResourcesByRoleIdOfScopeId(scopeId, roleId, asList(resourceIds));
             return Optional.ofNullable(response.getSuccessData()).orElse(false);
         } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.UPDATE_ROLE_PERMISSIONS_FAILURE,
@@ -89,7 +89,7 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
                                                              @NonNull Long roleId) throws RolePermissionsException {
         try {
             Response<List<Permission>> response =
-                    this.rolePermissionFeignService.findAllResourcesByRoleIdOfTenant(tenantId, roleId);
+                    this.accountRolePermissionApi.findAllResourcesByRoleIdOfTenant(tenantId, roleId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new ArrayList<>(0));
         } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.QUERY_ROLE_PERMISSIONS_FAILURE, tenantId + ":" + roleId, e);
@@ -102,7 +102,7 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
                                                               @NonNull Long roleId) throws RolePermissionsException {
         try {
             Response<List<Permission>> response =
-                    this.rolePermissionFeignService.findAllResourcesByRoleIdOfScopeId(scopeId, roleId);
+                    this.accountRolePermissionApi.findAllResourcesByRoleIdOfScopeId(scopeId, roleId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new ArrayList<>(0));
         } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.QUERY_ROLE_PERMISSIONS_FAILURE, scopeId + ":" + roleId, e);

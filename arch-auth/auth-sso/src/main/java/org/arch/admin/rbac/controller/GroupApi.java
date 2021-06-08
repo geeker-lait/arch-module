@@ -3,7 +3,7 @@ package org.arch.admin.rbac.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.account.client.AccountGroupApi;
+import org.arch.ums.account.api.AccountGroupApi;
 import org.arch.ums.account.dto.GroupRequest;
 import org.arch.ums.account.dto.GroupSearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class GroupApi implements FeignCrudApi<GroupSearchDto, Long, GroupRequest, AccountGroupApi> {
 
-    private final AccountGroupApi groupFeignService;
+    private final AccountGroupApi accountGroupApi;
 
     @Override
-    public AccountGroupApi getFeignService() {
-        return this.groupFeignService;
+    public AccountGroupApi getFeignApi() {
+        return this.accountGroupApi;
     }
 }

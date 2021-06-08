@@ -3,7 +3,7 @@ package org.arch.admin.rbac.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.account.client.AccountAuthClientApi;
+import org.arch.ums.account.api.AccountAuthClientApi;
 import org.arch.ums.account.dto.AuthClientRequest;
 import org.arch.ums.account.dto.AuthClientSearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthClientApi implements FeignCrudApi<AuthClientSearchDto, Long, AuthClientRequest,
         AccountAuthClientApi> {
 
-    private final AccountAuthClientApi authClientFeignService;
+    private final AccountAuthClientApi accountAuthClientApi;
 
     @Override
-    public AccountAuthClientApi getFeignService() {
-        return this.authClientFeignService;
+    public AccountAuthClientApi getFeignApi() {
+        return this.accountAuthClientApi;
     }
 
 }

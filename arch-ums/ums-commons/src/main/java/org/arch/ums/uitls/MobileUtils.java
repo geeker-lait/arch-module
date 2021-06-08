@@ -1,8 +1,6 @@
 package org.arch.ums.uitls;
 
 import org.arch.framework.beans.Response;
-import org.arch.framework.beans.exception.constant.ArgumentStatuesCode;
-import org.arch.framework.beans.exception.constant.AuthStatusCode;
 import org.arch.framework.beans.exception.constant.CommonStatusCode;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.ums.conf.dto.MobileInfoRequest;
@@ -61,15 +59,12 @@ public class MobileUtils {
      * @param token     {@link TokenInfo}
      * @return  当返回 null 时表示校验通过, 校验不通过时返回 {@link Response}.
      */
-    @Nullable
-    public static Response<Boolean> check(@NonNull String delimiter, @Nullable TokenInfo token) {
+    @NonNull
+    public static Boolean check(@NonNull String delimiter, @Nullable TokenInfo token) {
         if (isNull(token)) {
-            return Response.failed(AuthStatusCode.UNAUTHORIZED);
+            return false;
         }
-        if (!hasText(delimiter)) {
-            return Response.failed(ArgumentStatuesCode.VALID_ERROR, "必须设定 delimiter 分隔符参数");
-        }
-        return null;
+        return hasText(delimiter);
     }
 
     /**

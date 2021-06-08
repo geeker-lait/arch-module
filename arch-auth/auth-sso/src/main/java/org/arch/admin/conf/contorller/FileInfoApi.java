@@ -4,7 +4,7 @@ package org.arch.admin.conf.contorller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.conf.client.ConfFileInfoApi;
+import org.arch.ums.conf.api.ConfFileInfoApi;
 import org.arch.ums.conf.dto.FileInfoRequest;
 import org.arch.ums.conf.dto.FileInfoSearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/conf/file/info")
 public class FileInfoApi implements FeignCrudApi<FileInfoSearchDto, Long, FileInfoRequest, ConfFileInfoApi> {
 
-    private final ConfFileInfoApi confFileInfoService;
+    private final ConfFileInfoApi confFileInfoApi;
 
     @Override
-    public ConfFileInfoApi getFeignService() {
-        return this.confFileInfoService;
+    public ConfFileInfoApi getFeignApi() {
+        return this.confFileInfoApi;
     }
 
 }

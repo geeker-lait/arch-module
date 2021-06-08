@@ -10,7 +10,7 @@ import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.utils.ConverUtils;
 import org.arch.framework.utils.SecurityUtils;
-import org.arch.ums.conf.client.ConfFileInfoApi;
+import org.arch.ums.conf.api.ConfFileInfoApi;
 import org.arch.ums.conf.dto.FileInfoRequest;
 import org.arch.ums.conf.dto.FileInfoSearchDto;
 import org.arch.ums.conf.entity.FileInfo;

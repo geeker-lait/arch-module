@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
 import org.arch.framework.event.DeleteAccountEvent;
-import org.arch.ums.account.client.AccountIdentifierApi;
+import org.arch.ums.account.api.AccountIdentifierApi;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

@@ -2,7 +2,7 @@ package org.arch.admin.rbac.service;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
-import org.arch.ums.account.client.AccountRoleResourceApi;
+import org.arch.ums.account.api.AccountRoleResourceApi;
 import org.arch.ums.account.entity.Resource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ import static java.util.Arrays.asList;
 @RequiredArgsConstructor
 public class RoleResourcePermissionsServiceImpl implements RolePermissionsService<Resource> {
 
-    private final AccountRoleResourceApi roleResourceFeignService;
+    private final AccountRoleResourceApi accountRoleResourceApi;
     private final TenantContextHolder tenantContextHolder;
 
     @Override
@@ -51,7 +51,7 @@ public class RoleResourcePermissionsServiceImpl implements RolePermissionsServic
                                                    Long... resourceIds) throws RolePermissionsException {
         try {
             Response<Boolean> response =
-                    this.roleResourceFeignService.updateResourcesByRoleIdOfTenant(tenantId, roleId, asList(resourceIds));
+                    this.accountRoleResourceApi.updateResourcesByRoleIdOfTenant(tenantId, roleId, asList(resourceIds));
             return Optional.ofNullable(response.getSuccessData()).orElse(false);
         } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.UPDATE_ROLE_PERMISSIONS_FAILURE,
@@ -67,7 +67,7 @@ public class RoleResourcePermissionsServiceImpl implements RolePermissionsServic
                                                     Long... resourceIds) throws RolePermissionsException {
         try {
             Response<Boolean> response =
-                    this.roleResourceFeignService.updateResourcesByRoleIdOfScopeId(scopeId, roleId, asList(resourceIds));
+                    this.accountRoleResourceApi.updateResourcesByRoleIdOfScopeId(scopeId, roleId, asList(resourceIds));
             return Optional.ofNullable(response.getSuccessData()).orElse(false);
         } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.UPDATE_ROLE_PERMISSIONS_FAILURE,
@@ -88,8 +88,8 @@ public class RoleResourcePermissionsServiceImpl implements RolePermissionsServic
     public List<Resource> findAllResourcesByRoleIdOfTenant(@NonNull Long tenantId,
                                                            @NonNull Long roleId) throws RolePermissionsException {
         try {
-            Response<List<Resource>> response = this.roleResourceFeignService.findAllResourcesByRoleIdOfTenant(tenantId,
-                    roleId);
+            Response<List<Resource>> response = this.accountRoleResourceApi.findAllResourcesByRoleIdOfTenant(tenantId,
+                                                                                                             roleId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new ArrayList<>(0));
         } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.QUERY_ROLE_PERMISSIONS_FAILURE, tenantId + ":" + roleId, e);
@@ -101,8 +101,8 @@ public class RoleResourcePermissionsServiceImpl implements RolePermissionsServic
     public List<Resource> findAllResourcesByRoleIdOfScopeId(@NonNull Long scopeId,
                                                             @NonNull Long roleId) throws RolePermissionsException {
         try {
-            Response<List<Resource>> response = this.roleResourceFeignService.findAllResourcesByRoleIdOfScopeId(scopeId,
-                    roleId);
+            Response<List<Resource>> response = this.accountRoleResourceApi.findAllResourcesByRoleIdOfScopeId(scopeId,
+                                                                                                              roleId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new ArrayList<>(0));
         } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.QUERY_ROLE_PERMISSIONS_FAILURE, scopeId + ":" + roleId, e);

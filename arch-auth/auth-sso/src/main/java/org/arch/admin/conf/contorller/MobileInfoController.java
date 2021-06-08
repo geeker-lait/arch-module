@@ -6,8 +6,8 @@ import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.constant.AuthStatusCode;
 import org.arch.framework.beans.exception.constant.CommonStatusCode;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.ums.conf.client.ConfMobileInfoApi;
-import org.arch.ums.conf.client.ConfMobileSegmentApi;
+import org.arch.ums.conf.api.ConfMobileInfoApi;
+import org.arch.ums.conf.api.ConfMobileSegmentApi;
 import org.arch.ums.conf.dto.MobileInfoRequest;
 import org.arch.ums.conf.dto.MobileSegmentRequest;
 import org.arch.ums.conf.dto.MobileSegmentSearchDto;
@@ -28,10 +28,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.nonNull;
-import static org.arch.framework.beans.exception.constant.CommonStatusCode.*;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_INFO_FAILED;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_INFO_PARTIAL_FAILED;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_SEGMENT_FAILED;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_SEGMENT_PARTIAL_FAILED;
 import static org.arch.framework.utils.SecurityUtils.isAdminForRole;
-import static org.arch.ums.uitls.MobileUtils.*;
+import static org.arch.ums.uitls.MobileUtils.check;
+import static org.arch.ums.uitls.MobileUtils.getBooleanResponse;
+import static org.arch.ums.uitls.MobileUtils.getMobileInfo;
+import static org.arch.ums.uitls.MobileUtils.getMobileSegment;
 
 /**
  * 更新与增量添加手机号段信息, 手机归属地信息.<br>
@@ -67,9 +72,9 @@ public class MobileInfoController {
                                            @RequestParam("delimiter") String delimiter,
                                            TokenInfo token) {
         try {
-            Response<Boolean> checkFailure = check(delimiter, token);
-            if (nonNull(checkFailure)) {
-                return checkFailure;
+            Boolean checkFailure = check(delimiter, token);
+            if (!checkFailure) {
+                return Response.success(checkFailure);
             }
             // 权限校验
             if (isAdminForRole(token)) {
@@ -127,9 +132,9 @@ public class MobileInfoController {
                                               @RequestParam("delimiter") String delimiter,
                                               TokenInfo token) {
         try {
-            Response<Boolean> checkFailure = check(delimiter, token);
-            if (nonNull(checkFailure)) {
-                return checkFailure;
+            Boolean checkFailure = check(delimiter, token);
+            if (!checkFailure) {
+                return Response.success(checkFailure);
             }
             // 权限校验
             if (isAdminForRole(token)) {

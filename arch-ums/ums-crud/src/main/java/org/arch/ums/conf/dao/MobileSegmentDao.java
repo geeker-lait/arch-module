@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.arch.framework.beans.exception.BusinessException;
 import org.arch.framework.crud.CrudDao;
 import org.arch.framework.crud.CrudServiceImpl;
 import org.arch.framework.crud.utils.MybatisBatchUtils;
@@ -53,7 +54,7 @@ public class MobileSegmentDao extends CrudServiceImpl<MobileSegmentMapper, Mobil
      * @throws SQLException 批量保持失败
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public boolean insertOnDuplicateKeyUpdateBatch(List<MobileSegment> mobileSegmentList) throws SQLException {
+    public boolean insertOnDuplicateKeyUpdateBatch(List<MobileSegment> mobileSegmentList) {
 
         SqlSessionFactory sqlSessionFactory = SqlHelper.sqlSessionFactory(entityClass);
         boolean transaction = TransactionSynchronizationManager.isSynchronizationActive();
@@ -82,7 +83,12 @@ public class MobileSegmentDao extends CrudServiceImpl<MobileSegmentMapper, Mobil
             }
             return true;
         } catch (Throwable t) {
-            connection.rollback();
+            try {
+                connection.rollback();
+            }
+            catch (SQLException throwables) {
+                throw new BusinessException("批量保持失败, 回滚失败.");
+            }
             Throwable unwrapped = ExceptionUtil.unwrapThrowable(t);
             if (unwrapped instanceof RuntimeException) {
                 MyBatisExceptionTranslator myBatisExceptionTranslator

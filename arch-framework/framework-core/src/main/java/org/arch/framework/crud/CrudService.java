@@ -2,6 +2,7 @@ package org.arch.framework.crud;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -109,11 +110,22 @@ public abstract class CrudService<T, ID extends Serializable> implements Convert
      * 根据 id 更新实体
      *
      * @param entity 实体
-     * @return 返回更新后的实体
+     * @return 是否更新成功
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean updateById(T entity) {
         return crudDao.updateById(entity);
+    }
+
+    /**
+     * 根据 {@link UpdateWrapper} 更新实体
+     *
+     * @param updateWrapper {@link UpdateWrapper}
+     * @return 是否更新成功
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean updateBySpec(Wrapper<T> updateWrapper) {
+        return crudDao.update(updateWrapper);
     }
 
     /**

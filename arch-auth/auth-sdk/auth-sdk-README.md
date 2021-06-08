@@ -75,7 +75,7 @@ spring:
       rocketmq:
         # RocketMQ Binder 配置项，对应 RocketMQBinderConfigurationProperties 类
         binder:
-          name-server: 192.168.50.2:9876 # RocketMQ Namesrv 地址
+          name-server: 192.168.31.31:9876 # RocketMQ Namesrv 地址
           enable-msg-trace: true
           customized-trace-topic: rbac_permission_update_trace
         # RocketMQ 自定义 Binding 配置项，对应 RocketMQBindingProperties Map
@@ -91,7 +91,7 @@ spring:
               #              suspendCurrentQueueTimeMillis: 1000
 
 rocketmq:
-  name-server: 192.168.50.2:9876
+  name-server: 192.168.31.31:9876
 ---
 spring:
   config:

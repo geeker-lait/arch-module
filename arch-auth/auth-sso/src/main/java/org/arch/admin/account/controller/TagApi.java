@@ -3,7 +3,7 @@ package org.arch.admin.account.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.account.client.AccountTagApi;
+import org.arch.ums.account.api.AccountTagApi;
 import org.arch.ums.account.dto.TagRequest;
 import org.arch.ums.account.dto.TagSearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/account/tag")
 public class TagApi implements FeignCrudApi<TagSearchDto, Long, TagRequest, AccountTagApi> {
 
-    private final AccountTagApi accountTagService;
+    private final AccountTagApi accountTagApi;
 
     @Override
-    public AccountTagApi getFeignService() {
-        return this.accountTagService;
+    public AccountTagApi getFeignApi() {
+        return this.accountTagApi;
     }
 
 }

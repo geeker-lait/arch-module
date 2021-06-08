@@ -35,10 +35,6 @@
         </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>ums-biz</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.arch.projects</groupId>
             <artifactId>ums-commons</artifactId>
         </dependency>
 

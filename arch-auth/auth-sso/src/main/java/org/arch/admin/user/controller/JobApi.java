@@ -4,7 +4,7 @@ package org.arch.admin.user.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.user.client.UserJobApi;
+import org.arch.ums.user.api.UserJobApi;
 import org.arch.ums.user.dto.JobRequest;
 import org.arch.ums.user.dto.JobSearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user/job")
 public class JobApi implements FeignCrudApi<JobSearchDto, Long, JobRequest, UserJobApi> {
 
-    private final UserJobApi userJobService;
+    private final UserJobApi userJobApi;
 
     @Override
-    public UserJobApi getFeignService() {
-        return this.userJobService;
+    public UserJobApi getFeignApi() {
+        return this.userJobApi;
     }
 
 }

@@ -7,7 +7,7 @@ import org.arch.framework.beans.exception.constant.ResponseStatusCode;
 import org.arch.framework.ums.enums.ScopesType;
 import org.arch.framework.ums.properties.AuthClientScopesCacheProperties;
 import org.arch.framework.web.feign.exception.FeignCallException;
-import org.arch.ums.account.client.AccountAuthClientApi;
+import org.arch.ums.account.api.AccountAuthClientApi;
 import org.arch.ums.account.vo.AuthClientVo;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.redis.connection.RedisConnection;

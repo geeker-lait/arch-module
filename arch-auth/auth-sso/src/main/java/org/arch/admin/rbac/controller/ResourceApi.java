@@ -3,7 +3,7 @@ package org.arch.admin.rbac.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.account.client.AccountResourceApi;
+import org.arch.ums.account.api.AccountResourceApi;
 import org.arch.ums.account.dto.ResourceRequest;
 import org.arch.ums.account.dto.ResourceSearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ResourceApi implements FeignCrudApi<ResourceSearchDto, Long, ResourceRequest, AccountResourceApi> {
 
-    private final AccountResourceApi roleFeignService;
+    private final AccountResourceApi accountResourceApi;
 
     @Override
-    public AccountResourceApi getFeignService() {
-        return this.roleFeignService;
+    public AccountResourceApi getFeignApi() {
+        return this.accountResourceApi;
     }
 
 }

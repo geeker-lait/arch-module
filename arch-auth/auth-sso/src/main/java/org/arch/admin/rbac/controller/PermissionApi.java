@@ -3,7 +3,7 @@ package org.arch.admin.rbac.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.account.client.AccountPermissionApi;
+import org.arch.ums.account.api.AccountPermissionApi;
 import org.arch.ums.account.dto.PermissionRequest;
 import org.arch.ums.account.dto.PermissionSearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PermissionApi implements FeignCrudApi<PermissionSearchDto, Long, PermissionRequest, AccountPermissionApi> {
 
-    private final AccountPermissionApi permissionFeignService;
+    private final AccountPermissionApi accountPermissionApi;
 
     @Override
-    public AccountPermissionApi getFeignService() {
-        return this.permissionFeignService;
+    public AccountPermissionApi getFeignApi() {
+        return this.accountPermissionApi;
     }
 
 }

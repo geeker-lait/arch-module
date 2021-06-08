@@ -34,7 +34,7 @@ public interface FeignCrudApi<DTO, ID extends Serializable, R,
      *
      * @return 返回 {@link FeignApi} 子类对象
      */
-    FA getFeignService();
+    FA getFeignApi();
 
     /**
      * 保存
@@ -45,7 +45,7 @@ public interface FeignCrudApi<DTO, ID extends Serializable, R,
     @PostMapping
     default Response<DTO> save(@Valid @RequestBody R request) {
         try {
-            return getFeignService().save(request);
+            return getFeignApi().save(request);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.error(ResponseStatusCode.FAILED.getCode(), e.getMessage());
@@ -61,7 +61,7 @@ public interface FeignCrudApi<DTO, ID extends Serializable, R,
     @PostMapping("/saves")
     default Response<List<DTO>> saveAll(@Valid @RequestBody List<R> requestList) {
         try {
-            return getFeignService().saveAll(requestList);
+            return getFeignApi().saveAll(requestList);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.error(ResponseStatusCode.FAILED.getCode(), e.getMessage());
@@ -77,7 +77,7 @@ public interface FeignCrudApi<DTO, ID extends Serializable, R,
     @GetMapping(path = "/{id:\\d+}")
     default Response<DTO> findById(@PathVariable("id") ID id) {
         try {
-            return getFeignService().findById(id);
+            return getFeignApi().findById(id);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             if (e instanceof IncorrectResultSizeDataAccessException) {
@@ -97,7 +97,7 @@ public interface FeignCrudApi<DTO, ID extends Serializable, R,
     @GetMapping("/single")
     default Response<DTO> findOne(@Valid R request) {
         try {
-            return getFeignService().findOne(request);
+            return getFeignApi().findOne(request);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             if (e instanceof IncorrectResultSizeDataAccessException) {
@@ -117,7 +117,7 @@ public interface FeignCrudApi<DTO, ID extends Serializable, R,
     @GetMapping("/find")
     default Response<List<DTO>> find(@Valid R request) {
         try {
-            return getFeignService().find(request);
+            return getFeignApi().find(request);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.error(ResponseStatusCode.FAILED.getCode(), e.getMessage());
@@ -132,7 +132,7 @@ public interface FeignCrudApi<DTO, ID extends Serializable, R,
     @GetMapping("/list")
     default Response<List<DTO>> list() {
         try {
-            return getFeignService().list();
+            return getFeignApi().list();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.error(ResponseStatusCode.FAILED.getCode(), e.getMessage());
@@ -152,7 +152,7 @@ public interface FeignCrudApi<DTO, ID extends Serializable, R,
                                      @PathVariable(value = "pageNumber") Integer pageNumber,
                                      @PathVariable(value = "pageSize") Integer pageSize) {
         try {
-            return getFeignService().page(request, pageNumber, pageSize);
+            return getFeignApi().page(request, pageNumber, pageSize);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.error(ResponseStatusCode.FAILED.getCode(), e.getMessage());
@@ -168,7 +168,7 @@ public interface FeignCrudApi<DTO, ID extends Serializable, R,
     @DeleteMapping(path = "/{id}")
     default Response<Boolean> deleteById(@PathVariable("id") ID id) {
         try {
-            return getFeignService().deleteById(id);
+            return getFeignApi().deleteById(id);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             if (e instanceof IncorrectResultSizeDataAccessException) {
@@ -188,7 +188,7 @@ public interface FeignCrudApi<DTO, ID extends Serializable, R,
     @PutMapping
     default Response<Boolean> updateById(@Valid @RequestBody R request) {
         try {
-            return getFeignService().updateById(request);
+            return getFeignApi().updateById(request);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             if (e instanceof IncorrectResultSizeDataAccessException) {
@@ -209,7 +209,7 @@ public interface FeignCrudApi<DTO, ID extends Serializable, R,
     @GetMapping("/like")
     default Response<List<DTO>> like(@Valid R request) {
         try {
-            return getFeignService().like(request);
+            return getFeignApi().like(request);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.error(ResponseStatusCode.FAILED.getCode(), e.getMessage());

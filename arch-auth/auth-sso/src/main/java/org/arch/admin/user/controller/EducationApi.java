@@ -4,7 +4,7 @@ package org.arch.admin.user.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.user.client.UserEducationApi;
+import org.arch.ums.user.api.UserEducationApi;
 import org.arch.ums.user.dto.EducationRequest;
 import org.arch.ums.user.dto.EducationSearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user/education")
 public class EducationApi implements FeignCrudApi<EducationSearchDto, Long, EducationRequest, UserEducationApi> {
 
-    private final UserEducationApi userEducationService;
+    private final UserEducationApi userEducationApi;
 
     @Override
-    public UserEducationApi getFeignService() {
-        return this.userEducationService;
+    public UserEducationApi getFeignApi() {
+        return this.userEducationApi;
     }
 
 }

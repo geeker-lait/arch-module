@@ -3,7 +3,7 @@ package org.arch.admin.account.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.account.client.AccountTicketApi;
+import org.arch.ums.account.api.AccountTicketApi;
 import org.arch.ums.account.dto.TicketRequest;
 import org.arch.ums.account.dto.TicketSearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/account/ticket")
 public class TicketApi implements FeignCrudApi<TicketSearchDto, Long, TicketRequest, AccountTicketApi> {
 
-    private final AccountTicketApi accountTicketService;
+    private final AccountTicketApi accountTicketApi;
 
     @Override
-    public AccountTicketApi getFeignService() {
-        return this.accountTicketService;
+    public AccountTicketApi getFeignApi() {
+        return this.accountTicketApi;
     }
 
 }

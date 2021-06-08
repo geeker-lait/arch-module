@@ -5,8 +5,8 @@ import org.arch.framework.beans.Response;
 import org.arch.framework.init.service.DictionaryInitService;
 import org.arch.framework.ums.enums.DictionaryItemInfo;
 import org.arch.framework.ums.enums.DictionaryType;
-import org.arch.ums.conf.client.ConfDictionaryApi;
-import org.arch.ums.conf.client.ConfDictionaryItemApi;
+import org.arch.ums.conf.api.ConfDictionaryApi;
+import org.arch.ums.conf.api.ConfDictionaryItemApi;
 import org.arch.ums.conf.dto.DictionaryItemRequest;
 import org.arch.ums.conf.dto.DictionaryRequest;
 import org.arch.ums.conf.dto.DictionarySearchDto;
@@ -33,12 +33,12 @@ import static org.springframework.util.StringUtils.hasText;
 @Service
 @Slf4j
 public class AdminDictionaryInitServiceImpl implements DictionaryInitService {
-    private final ConfDictionaryApi dictionaryFeignService;
-    private final ConfDictionaryItemApi dictionaryItemFeignService;
+    private final ConfDictionaryApi confDictionaryApi;
+    private final ConfDictionaryItemApi confDictionaryItemApi;
 
-    public AdminDictionaryInitServiceImpl(ConfDictionaryApi dictionaryFeignService, ConfDictionaryItemApi dictionaryItemFeignService) {
-        this.dictionaryFeignService = dictionaryFeignService;
-        this.dictionaryItemFeignService = dictionaryItemFeignService;
+    public AdminDictionaryInitServiceImpl(ConfDictionaryApi confDictionaryApi, ConfDictionaryItemApi confDictionaryItemApi) {
+        this.confDictionaryApi = confDictionaryApi;
+        this.confDictionaryItemApi = confDictionaryItemApi;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class AdminDictionaryInitServiceImpl implements DictionaryInitService {
         List<DictionaryItemRequest> dictionaryItemRequestList = new ArrayList<>();
 
         fillingDictionary(dictionaryRequestList);
-        Response<List<DictionarySearchDto>> response = dictionaryFeignService.saveAll(dictionaryRequestList);
+        Response<List<DictionarySearchDto>> response = confDictionaryApi.saveAll(dictionaryRequestList);
         List<DictionarySearchDto> dictionarySearchDtoList = response.getSuccessData();
 
         if (isNull(dictionarySearchDtoList)) {
@@ -56,7 +56,7 @@ public class AdminDictionaryInitServiceImpl implements DictionaryInitService {
         }
 
         fillingItem(dictionaryItemRequestList, dictionarySearchDtoList);
-        dictionaryItemFeignService.saveAll(dictionaryItemRequestList);
+        confDictionaryItemApi.saveAll(dictionaryItemRequestList);
         return true;
     }
 

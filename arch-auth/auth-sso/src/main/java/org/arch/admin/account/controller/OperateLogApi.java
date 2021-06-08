@@ -3,7 +3,7 @@ package org.arch.admin.account.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.web.feign.FeignCrudApi;
-import org.arch.ums.account.client.AccountOperateLogApi;
+import org.arch.ums.account.api.AccountOperateLogApi;
 import org.arch.ums.account.dto.OperateLogRequest;
 import org.arch.ums.account.dto.OperateLogSearchDto;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/account/operate/log")
 public class OperateLogApi implements FeignCrudApi<OperateLogSearchDto, Long, OperateLogRequest, AccountOperateLogApi> {
 
-    private final AccountOperateLogApi accountOperateLogService;
+    private final AccountOperateLogApi accountOperateLogApi;
 
     @Override
-    public AccountOperateLogApi getFeignService() {
-        return this.accountOperateLogService;
+    public AccountOperateLogApi getFeignApi() {
+        return this.accountOperateLogApi;
     }
 
 }
