@@ -6,7 +6,7 @@ import org.arch.application.demo.ums.dto.IdentifierRequest;
 import org.arch.application.demo.ums.dto.IdentifierSearchDto;
 import org.arch.application.demo.ums.entity.Identifier;
 import org.arch.application.demo.ums.service.IdentifierService;
-import org.arch.framework.crud.CrudController;
+import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +25,7 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/identifier")
-public class IdentifierController implements CrudController<IdentifierRequest, Identifier, java.lang.Long,
+public class IdentifierController implements CrudBiz<IdentifierRequest, Identifier, Long,
         IdentifierSearchDto, IdentifierService> {
 
     private final IdentifierService identifierService;

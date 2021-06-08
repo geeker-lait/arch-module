@@ -6,7 +6,7 @@ import org.arch.form.api.dto.FormFieldTypSearchDto;
 import org.arch.form.api.request.FormFieldTypRequest;
 import org.arch.form.crud.entity.FormFieldTyp;
 import org.arch.form.crud.service.FormFieldTypService;
-import org.arch.framework.crud.CrudController;
+import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/field/typ")
-public class FormFieldTypController implements CrudController<FormFieldTypRequest, FormFieldTyp, java.lang.Long,
+public class FormFieldTypController implements CrudBiz<FormFieldTypRequest, FormFieldTyp, Long,
         FormFieldTypSearchDto, FormFieldTypService> {
 
     private final TenantContextHolder tenantContextHolder;

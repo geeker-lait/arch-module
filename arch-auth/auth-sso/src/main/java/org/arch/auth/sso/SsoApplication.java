@@ -5,6 +5,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
@@ -15,10 +16,13 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @since 2021.1.5 14:09
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.arch.admin", "org.arch.auth.sso"})
+@ComponentScan(basePackages = {"org.arch.admin", "org.arch.auth.sso"},
+excludeFilters = {
+       @ComponentScan.Filter(type = FilterType.REGEX, pattern = "org.arch.ums.*.rest.*Rest")
+})
 @EnableAsync
 @EnableAspectJAutoProxy
-@EnableFeignClients(basePackages = {"org.arch.ums.*.client"})
+@EnableFeignClients(basePackages = {"org.arch.ums.*.api"})
 public class SsoApplication {
     public static void main(String[] args) {
         new SpringApplicationBuilder(SsoApplication.class)

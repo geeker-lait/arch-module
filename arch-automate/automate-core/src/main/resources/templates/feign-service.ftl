@@ -14,7 +14,7 @@ package ${package!""};
     <#assign _pkType = "java.lang.Long">
 </#if>
 
-import org.arch.framework.web.feign.BaseFeignService;
+import org.arch.framework.web.feign.FeignApi;
 import ${basePkg!""}.dto.${(name?cap_first)!""}SearchDto;
 import ${basePkg!""}.dto.${(name?cap_first)!""}Request;
 import org.arch.framework.web.feign.config.DeFaultFeignConfig;

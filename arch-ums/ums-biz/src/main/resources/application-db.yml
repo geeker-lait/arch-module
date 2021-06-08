@@ -1,0 +1,107 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  #配置数据源
+  datasource:
+    druid:
+      db-type: com.alibaba.druid.pool.DruidDataSource
+      driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      url: jdbc:log4jdbc:mysql://localhost:3306/dokit?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+      username: root
+      password: 123456
+
+      # 初始化配置
+      initial-size: 3
+      # 最小连接数
+      min-idle: 3
+      # 最大连接数
+      max-active: 15
+      # 获取连接超时时间
+      max-wait: 5000
+      # 连接有效性检测时间
+      time-between-eviction-runs-millis: 90000
+      # 最大空闲时间
+      min-evictable-idle-time-millis: 1800000
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      validation-query: select 1
+      # 配置监控统计拦截的filters
+      filters: stat
+
+      stat-view-servlet:
+        url-pattern: /druid/*
+        reset-enable: false
+        login-username: admin
+        login-password: 123456
+
+      web-stat-filter:
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  typeAliasesPackage: org.arch.ums.account.entity,org.arch.ums.user.entity,org.arch.ums.member.entity,org.arch.ums.conf.entity
+  global-config:
+    db-config:
+      id-type: auto
+      insert-strategy: not_empty
+      update-strategy: not_empty
+      select-strategy: not_empty
+#      logic-delete-field: deleted  # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+#      logic-delete-value: true # 逻辑已删除值(默认为 1)
+#      logic-not-delete-value: false # 逻辑未删除值(默认为 0)
+    #    datacenter-id: ${nodeId:${spring.nodeId:1}}
+    #    worker-id: ${nodeId:${spring.nodeId:1}}
+    banner: false
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    jdbc-type-for-null: null
+  type-enums-package: org.arch.framework.ums.enums
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    hikari:
+      connection-test-query: SELECT 1
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://192.168.31.31:58886/ums?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000&allowPublicKeyRetrieval=true
+      username: "root"
+      password: "whroot"
+      maximum-pool-size: 10
+      minimum-idle: 5
+    url: jdbc:mysql://192.168.31.31:58886/ums?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf8&connectTimeout=3000&allowPublicKeyRetrieval=true
+    username: "root"
+    password: "123456"
+
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  typeAliasesPackage: org.arch.ums.account.entity,org.arch.ums.user.entity
+  global-config:
+    db-config:
+      id-type: AUTO
+      insert-strategy: not_empty
+      update-strategy: not_empty
+      select-strategy: not_empty
+    #    datacenter-id: ${nodeId:${spring.nodeId:1}}
+    #    worker-id: ${nodeId:${spring.nodeId:1}}
+    banner: false
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    jdbc-type-for-null: null
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-enums-package: org.arch.framework.ums.enums
+
+
