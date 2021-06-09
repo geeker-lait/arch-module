@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
 import static org.arch.framework.crud.utils.TenantUtils.removeTenantIdValue;
 
@@ -99,7 +100,7 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
      */
     @Override
     default DTO save(R r) {
-        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        TokenInfo tokenInfo = SecurityUtils.getTokenInfo();
         T t = resolver(tokenInfo, r);
         boolean isSave = getCrudService().save(t);
         if (isSave) {
@@ -117,7 +118,8 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
      */
     @Override
     default List<DTO> saveAll(List<R> requestList){
-        List<T> tList = requestList.stream().map(request -> resolver(null, request)).collect(Collectors.toList());
+        TokenInfo tokenInfo = SecurityUtils.getTokenInfo();
+        List<T> tList = requestList.stream().map(request -> resolver(tokenInfo, request)).collect(Collectors.toList());
         boolean isSave = getCrudService().saveList(tList);
         if (isSave) {
             return tList.stream().map(this::convertReturnDto).collect(Collectors.toList());
@@ -144,7 +146,7 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
      */
     @Override
     default DTO findOne(R request) {
-        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        TokenInfo tokenInfo = SecurityUtils.getTokenInfo();
         T entity = resolver(tokenInfo, request);
         SearchDTO searchDto = convertSearchDto(entity);
         T t = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -158,7 +160,7 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
      */
     @Override
     default List<DTO> find(R request) {
-        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        TokenInfo tokenInfo = SecurityUtils.getTokenInfo();
         T entity = resolver(tokenInfo, request);
         SearchDTO searchDto = convertSearchDto(entity);
         List<T> tList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -184,7 +186,7 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
      */
     @Override
     default IPage<DTO> page(R request, Integer pageNumber, Integer pageSize) {
-        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        TokenInfo tokenInfo = SecurityUtils.getTokenInfo();
         T entity = resolver(tokenInfo, request);
         SearchDTO searchDto = convertSearchDto(entity);
         IPage<T> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
@@ -243,7 +245,7 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
      */
     @Override
     default List<DTO> like(R request) {
-        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        TokenInfo tokenInfo = SecurityUtils.getTokenInfo();
         final T entity = resolver(tokenInfo, request);
         Field[] fields = entity.getClass().getDeclaredFields();
         final Class<String> stringClass = String.class;
@@ -281,7 +283,9 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
                                      })
                       );
         SearchDTO searchDto = getSearchDto();
-        searchDto.putNoNull(TENANT_ID_CONDITION_EXP, tokenInfo.getTenantId(), likeParamsMap);
+        if (nonNull(tokenInfo)) {
+            searchDto.putNoNull(TENANT_ID_CONDITION_EXP, tokenInfo.getTenantId(), likeParamsMap);
+        }
         List<T> likeList = getCrudService().findAllByMapParams(likeParamsMap);
         return likeList.stream().map(this::convertReturnDto).collect(Collectors.toList());
     }
