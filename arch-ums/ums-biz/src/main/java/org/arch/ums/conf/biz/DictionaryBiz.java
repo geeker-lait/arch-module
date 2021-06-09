@@ -73,7 +73,7 @@ public class DictionaryBiz implements CrudBiz<DictionaryRequest, Dictionary, jav
     @NonNull
     @Transactional(readOnly = true)
     public DictionarySearchDto findOne(DictionaryRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Dictionary dictionary = resolver(token, request);
         DictionarySearchDto searchDto = convertSearchDto(dictionary);
         Dictionary result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -91,7 +91,7 @@ public class DictionaryBiz implements CrudBiz<DictionaryRequest, Dictionary, jav
     @NonNull
     @Transactional(readOnly = true)
     public List<DictionarySearchDto> find(DictionaryRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Dictionary dictionary = resolver(token, request);
         DictionarySearchDto searchDto = convertSearchDto(dictionary);
         List<Dictionary> dictionaryList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -111,7 +111,7 @@ public class DictionaryBiz implements CrudBiz<DictionaryRequest, Dictionary, jav
     @NonNull
     @Transactional(readOnly = true)
     public IPage<DictionarySearchDto> page(DictionaryRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Dictionary dictionary = resolver(token, request);
         DictionarySearchDto searchDto = convertSearchDto(dictionary);
         IPage<Dictionary> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

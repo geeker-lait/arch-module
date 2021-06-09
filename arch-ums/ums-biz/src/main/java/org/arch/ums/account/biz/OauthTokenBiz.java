@@ -78,7 +78,7 @@ public class OauthTokenBiz implements CrudBiz<OauthTokenRequest, OauthToken, jav
     @NonNull
     @Transactional(readOnly = true)
     public OauthTokenSearchDto findOne(OauthTokenRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         OauthToken oauthToken = resolver(token, request);
         OauthTokenSearchDto searchDto = convertSearchDto(oauthToken);
         OauthToken result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -96,7 +96,7 @@ public class OauthTokenBiz implements CrudBiz<OauthTokenRequest, OauthToken, jav
     @NonNull
     @Transactional(readOnly = true)
     public List<OauthTokenSearchDto> find(OauthTokenRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         OauthToken oauthToken = resolver(token, request);
         OauthTokenSearchDto searchDto = convertSearchDto(oauthToken);
         List<OauthToken> oauthTokenList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -116,7 +116,7 @@ public class OauthTokenBiz implements CrudBiz<OauthTokenRequest, OauthToken, jav
     @NonNull
     @Transactional(readOnly = true)
     public IPage<OauthTokenSearchDto> page(OauthTokenRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         OauthToken oauthToken = resolver(token, request);
         OauthTokenSearchDto searchDto = convertSearchDto(oauthToken);
         IPage<OauthToken> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

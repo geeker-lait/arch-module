@@ -1,9 +1,9 @@
 package org.arch.ums.account.api;
 
 import org.arch.framework.web.feign.config.DeFaultFeignConfig;
+import org.arch.ums.account.dto.MenuSearchDto;
 import org.arch.ums.account.dto.RoleMenuRequest;
 import org.arch.ums.account.dto.RoleMenuSearchDto;
-import org.arch.ums.account.entity.Menu;
 import org.arch.ums.common.service.RolePermissionApi;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-roleMenu", path = "/ums/account/role/menu",
         configuration = DeFaultFeignConfig.class)
-public interface AccountRoleMenuApi extends RolePermissionApi<Menu, Long,
+public interface AccountRoleMenuApi extends RolePermissionApi<MenuSearchDto, Long,
         RoleMenuSearchDto, RoleMenuRequest, Long> {
 
 }

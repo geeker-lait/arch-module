@@ -73,7 +73,7 @@ public class GroupBiz implements CrudBiz<GroupRequest, Group, java.lang.Long, Gr
     @NonNull
     @Transactional(readOnly = true)
     public GroupSearchDto findOne(GroupRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Group group = resolver(token, request);
         GroupSearchDto searchDto = convertSearchDto(group);
         Group result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -91,7 +91,7 @@ public class GroupBiz implements CrudBiz<GroupRequest, Group, java.lang.Long, Gr
     @NonNull
     @Transactional(readOnly = true)
     public List<GroupSearchDto> find(GroupRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Group group = resolver(token, request);
         GroupSearchDto searchDto = convertSearchDto(group);
         List<Group> groupList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -111,7 +111,7 @@ public class GroupBiz implements CrudBiz<GroupRequest, Group, java.lang.Long, Gr
     @NonNull
     @Transactional(readOnly = true)
     public IPage<GroupSearchDto> page(GroupRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Group group = resolver(token, request);
         GroupSearchDto searchDto = convertSearchDto(group);
         IPage<Group> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

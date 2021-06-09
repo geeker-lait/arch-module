@@ -72,7 +72,7 @@ public class EducationBiz implements CrudBiz<EducationRequest, Education, java.l
     @NonNull
     @Transactional(readOnly = true)
     public EducationSearchDto findOne(EducationRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Education education = resolver(token, request);
         EducationSearchDto searchDto = convertSearchDto(education);
         Education result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -90,7 +90,7 @@ public class EducationBiz implements CrudBiz<EducationRequest, Education, java.l
     @NonNull
     @Transactional(readOnly = true)
     public List<EducationSearchDto> find(EducationRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Education education = resolver(token, request);
         EducationSearchDto searchDto = convertSearchDto(education);
         List<Education> educationList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -110,7 +110,7 @@ public class EducationBiz implements CrudBiz<EducationRequest, Education, java.l
     @NonNull
     @Transactional(readOnly = true)
     public IPage<EducationSearchDto> page(EducationRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Education education = resolver(token, request);
         EducationSearchDto searchDto = convertSearchDto(education);
         IPage<Education> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

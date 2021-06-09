@@ -26,7 +26,7 @@ public class TagApi implements FeignCrudApi<TagSearchDto, Long, TagRequest, Acco
     private final AccountTagApi accountTagApi;
 
     @Override
-    public AccountTagApi getFeignApi() {
+    public AccountTagApi getApi() {
         return this.accountTagApi;
     }
 

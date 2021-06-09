@@ -26,7 +26,7 @@ public class PostApi implements FeignCrudApi<PostSearchDto, Long, PostRequest, A
     private final AccountPostApi accountPostApi;
 
     @Override
-    public AccountPostApi getFeignApi() {
+    public AccountPostApi getApi() {
         return this.accountPostApi;
     }
 

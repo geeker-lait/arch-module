@@ -26,7 +26,7 @@ public class CategoryApi implements FeignCrudApi<CategorySearchDto, Long, Catego
     private final AccountCategoryApi accountCategoryApi;
 
     @Override
-    public AccountCategoryApi getFeignApi() {
+    public AccountCategoryApi getApi() {
         return this.accountCategoryApi;
     }
 

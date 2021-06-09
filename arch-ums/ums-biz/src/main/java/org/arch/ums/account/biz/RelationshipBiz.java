@@ -78,7 +78,7 @@ public class RelationshipBiz implements CrudBiz<RelationshipRequest, Relationshi
     @NonNull
     @Transactional(readOnly = true)
     public RelationshipSearchDto findOne(RelationshipRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Relationship relationship = resolver(token, request);
         RelationshipSearchDto searchDto = convertSearchDto(relationship);
         Relationship result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -96,7 +96,7 @@ public class RelationshipBiz implements CrudBiz<RelationshipRequest, Relationshi
     @NonNull
     @Transactional(readOnly = true)
     public List<RelationshipSearchDto> find(RelationshipRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Relationship relationship = resolver(token, request);
         RelationshipSearchDto searchDto = convertSearchDto(relationship);
         List<Relationship> relationshipList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -116,7 +116,7 @@ public class RelationshipBiz implements CrudBiz<RelationshipRequest, Relationshi
     @NonNull
     @Transactional(readOnly = true)
     public IPage<RelationshipSearchDto> page(RelationshipRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Relationship relationship = resolver(token, request);
         RelationshipSearchDto searchDto = convertSearchDto(relationship);
         IPage<Relationship> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
@@ -131,7 +131,7 @@ public class RelationshipBiz implements CrudBiz<RelationshipRequest, Relationshi
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public RelationshipSearchDto save(RelationshipRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Relationship relationship = resolver(token, request);
         boolean isSuccess = false;
         if (isNull(request.getSeq()) || isNull(request.getOrg())) {

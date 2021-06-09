@@ -86,7 +86,7 @@ public class MobileInfoBiz implements CrudBiz<MobileInfoRequest, MobileInfo, jav
     @NonNull
     @Transactional(readOnly = true)
     public MobileInfoSearchDto findOne(MobileInfoRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         MobileInfo mobileInfo = resolver(token, request);
         MobileInfoSearchDto searchDto = convertSearchDto(mobileInfo);
         MobileInfo result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -104,7 +104,7 @@ public class MobileInfoBiz implements CrudBiz<MobileInfoRequest, MobileInfo, jav
     @NonNull
     @Transactional(readOnly = true)
     public List<MobileInfoSearchDto> find(MobileInfoRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         MobileInfo mobileInfo = resolver(token, request);
         MobileInfoSearchDto searchDto = convertSearchDto(mobileInfo);
         List<MobileInfo> mobileInfoList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -124,7 +124,7 @@ public class MobileInfoBiz implements CrudBiz<MobileInfoRequest, MobileInfo, jav
     @NonNull
     @Transactional(readOnly = true)
     public IPage<MobileInfoSearchDto> page(MobileInfoRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         MobileInfo mobileInfo = resolver(token, request);
         MobileInfoSearchDto searchDto = convertSearchDto(mobileInfo);
         IPage<MobileInfo> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
@@ -157,7 +157,7 @@ public class MobileInfoBiz implements CrudBiz<MobileInfoRequest, MobileInfo, jav
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Object addMobileInfo(MultipartFile file, String delimiter) throws SQLException, IOException {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Boolean checkFailure = check(delimiter, token);
         if (!checkFailure) {
             return checkFailure;

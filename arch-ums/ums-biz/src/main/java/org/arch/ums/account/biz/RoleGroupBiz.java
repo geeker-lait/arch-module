@@ -102,7 +102,7 @@ public class RoleGroupBiz implements CrudBiz<RoleGroupRequest, RoleGroup, java.l
     @NonNull
     @Transactional(readOnly = true)
     public RoleGroupSearchDto findOne(RoleGroupRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         RoleGroup roleGroup = resolver(token, request);
         RoleGroupSearchDto searchDto = convertSearchDto(roleGroup);
         RoleGroup result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -120,7 +120,7 @@ public class RoleGroupBiz implements CrudBiz<RoleGroupRequest, RoleGroup, java.l
     @NonNull
     @Transactional(readOnly = true)
     public List<RoleGroupSearchDto> find(RoleGroupRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         RoleGroup roleGroup = resolver(token, request);
         RoleGroupSearchDto searchDto = convertSearchDto(roleGroup);
         List<RoleGroup> roleGroupList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -140,7 +140,7 @@ public class RoleGroupBiz implements CrudBiz<RoleGroupRequest, RoleGroup, java.l
     @NonNull
     @Transactional(readOnly = true)
     public IPage<RoleGroupSearchDto> page(RoleGroupRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         RoleGroup roleGroup = resolver(token, request);
         RoleGroupSearchDto searchDto = convertSearchDto(roleGroup);
         IPage<RoleGroup> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

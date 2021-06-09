@@ -73,7 +73,7 @@ public class NameBiz implements CrudBiz<NameRequest, Name, java.lang.Long, NameS
     @NonNull
     @Transactional(readOnly = true)
     public NameSearchDto findOne(NameRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Name name = resolver(token, request);
         NameSearchDto searchDto = convertSearchDto(name);
         Name result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -91,7 +91,7 @@ public class NameBiz implements CrudBiz<NameRequest, Name, java.lang.Long, NameS
     @NonNull
     @Transactional(readOnly = true)
     public List<NameSearchDto> find(NameRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Name name = resolver(token, request);
         NameSearchDto searchDto = convertSearchDto(name);
         List<Name> nameList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -111,7 +111,7 @@ public class NameBiz implements CrudBiz<NameRequest, Name, java.lang.Long, NameS
     @NonNull
     @Transactional(readOnly = true)
     public IPage<NameSearchDto> page(NameRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Name name = resolver(token, request);
         NameSearchDto searchDto = convertSearchDto(name);
         IPage<Name> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

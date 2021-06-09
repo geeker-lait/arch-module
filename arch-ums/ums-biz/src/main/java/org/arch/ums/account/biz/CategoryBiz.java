@@ -73,7 +73,7 @@ public class CategoryBiz implements CrudBiz<CategoryRequest, Category, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public CategorySearchDto findOne(CategoryRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Category category = resolver(token, request);
         CategorySearchDto searchDto = convertSearchDto(category);
         Category result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -91,7 +91,7 @@ public class CategoryBiz implements CrudBiz<CategoryRequest, Category, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public List<CategorySearchDto> find(CategoryRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Category category = resolver(token, request);
         CategorySearchDto searchDto = convertSearchDto(category);
         List<Category> categoryList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -111,7 +111,7 @@ public class CategoryBiz implements CrudBiz<CategoryRequest, Category, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public IPage<CategorySearchDto> page(CategoryRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Category category = resolver(token, request);
         CategorySearchDto searchDto = convertSearchDto(category);
         IPage<Category> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

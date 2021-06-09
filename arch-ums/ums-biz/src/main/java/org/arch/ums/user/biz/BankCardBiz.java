@@ -72,7 +72,7 @@ public class BankCardBiz implements CrudBiz<BankCardRequest, BankCard, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public BankCardSearchDto findOne(BankCardRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         BankCard bankCard = resolver(token, request);
         BankCardSearchDto searchDto = convertSearchDto(bankCard);
         BankCard result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -90,7 +90,7 @@ public class BankCardBiz implements CrudBiz<BankCardRequest, BankCard, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public List<BankCardSearchDto> find(BankCardRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         BankCard bankCard = resolver(token, request);
         BankCardSearchDto searchDto = convertSearchDto(bankCard);
         List<BankCard> bankCardList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -110,7 +110,7 @@ public class BankCardBiz implements CrudBiz<BankCardRequest, BankCard, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public IPage<BankCardSearchDto> page(BankCardRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         BankCard bankCard = resolver(token, request);
         BankCardSearchDto searchDto = convertSearchDto(bankCard);
         IPage<BankCard> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

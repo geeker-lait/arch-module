@@ -41,7 +41,7 @@ public class RbacController implements ApplicationEventPublisherAware {
     /**
      * 发送权限更新事件, 用于权限同步更新缓存异常, 且对应的 RocketMq 死信队列有消息时, 通过人工调用此 API 接口处理, 重新发布更新事件.
      * 根据死信队列消息 {@code payload: {"type":"UpdateRoleResourcesDto","updateType":"TENANT","tenantId":0,"scopeId":null,
-     * "groupRoles":null,"roleResources":{"1":[1,2,3]},"resourceClass":"org.arch.ums.account.entity.Permission"}}
+     * "groupRoles":null,"roleResources":{"1":[1,2,3]},"resourceClass":"org.arch.ums.account.entity.PermissionSearchDto"}}
      * 设置参数.<br>
      * 注意: 必须拥有 ROLE_ADMIN 角色才能上传.
      *
@@ -50,7 +50,8 @@ public class RbacController implements ApplicationEventPublisherAware {
      *                       当 {@code updateType} 为 {@code ALL} 时为 null
      * @param ids            权限 ids, 当 {@code updateType} 为 {@code GROUP} 时为 roleIds,
      *                       当 {@code updateType} 为 {@code ALL} 时为 null
-     * @param permissionType 权限类型, 如: org.arch.ums.account.entity.Permission
+     * @param permissionType 权限类型, 如: org.arch.ums.account.entity.PermissionSearchDto,
+     *                       org.arch.ums.account.entity.ResourceSearchDto
      * @param tenantId       id 与 ids 所属的租户 id, 当 {@code updateType} 为 {@code ALL/SCOPE/ROLE} 时为 null
      * @return 是否成功发送权限更新事件
      */

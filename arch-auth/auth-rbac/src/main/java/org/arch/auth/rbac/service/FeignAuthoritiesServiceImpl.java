@@ -310,7 +310,7 @@ public class FeignAuthoritiesServiceImpl implements AuthoritiesService {
                                                                                              Long... resourceIds) {
         // Map(tenantAuthority, Map ( roleAuthority, map ( uri / path, Set ( permission)))
         switch (resourceClass.getName()) {
-            case "org.arch.ums.account.entity.Resource":
+            case "org.arch.ums.account.entity.ResourceSearchDto":
                 return findAuthoritiesByRoleIdOfTenant(tenantId,
                                                        roleId,
                                                        () -> ofNullable(resourceApi
@@ -329,7 +329,7 @@ public class FeignAuthoritiesServiceImpl implements AuthoritiesService {
                                                        String.format("获取角色资源权限信息失败: tenantId=%s, roleId=%s",
                                                                      tenantId, roleId),
                                                        log);
-            case "org.arch.ums.account.entity.Permission":
+            case "org.arch.ums.account.entity.PermissionSearchDto":
                 return findAuthoritiesByRoleIdOfTenant(tenantId,
                                                        roleId,
                                                        () -> ofNullable(permissionApi

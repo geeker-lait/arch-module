@@ -73,7 +73,7 @@ public class PostBiz implements CrudBiz<PostRequest, Post, java.lang.Long, PostS
     @NonNull
     @Transactional(readOnly = true)
     public PostSearchDto findOne(PostRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Post post = resolver(token, request);
         PostSearchDto searchDto = convertSearchDto(post);
         Post result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -91,7 +91,7 @@ public class PostBiz implements CrudBiz<PostRequest, Post, java.lang.Long, PostS
     @NonNull
     @Transactional(readOnly = true)
     public List<PostSearchDto> find(PostRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Post post = resolver(token, request);
         PostSearchDto searchDto = convertSearchDto(post);
         List<Post> postList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -111,7 +111,7 @@ public class PostBiz implements CrudBiz<PostRequest, Post, java.lang.Long, PostS
     @NonNull
     @Transactional(readOnly = true)
     public IPage<PostSearchDto> page(PostRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Post post = resolver(token, request);
         PostSearchDto searchDto = convertSearchDto(post);
         IPage<Post> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

@@ -27,7 +27,7 @@ public class JobApi implements FeignCrudApi<JobSearchDto, Long, JobRequest, User
     private final UserJobApi userJobApi;
 
     @Override
-    public UserJobApi getFeignApi() {
+    public UserJobApi getApi() {
         return this.userJobApi;
     }
 

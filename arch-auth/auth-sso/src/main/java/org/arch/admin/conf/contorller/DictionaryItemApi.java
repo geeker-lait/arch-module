@@ -26,7 +26,7 @@ public class DictionaryItemApi implements FeignCrudApi<DictionaryItemSearchDto, 
     private final ConfDictionaryItemApi confDictionaryItemApi;
 
     @Override
-    public ConfDictionaryItemApi getFeignApi() {
+    public ConfDictionaryItemApi getApi() {
         return this.confDictionaryItemApi;
     }
 

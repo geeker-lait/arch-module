@@ -367,7 +367,7 @@ public class IdentifierBiz implements CrudBiz<IdentifierRequest, Identifier, jav
     @NonNull
     @Transactional(readOnly = true)
     public IdentifierSearchDto findOne(IdentifierRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Identifier identifier = resolver(token, request);
         IdentifierSearchDto searchDto = convertSearchDto(identifier);
         Identifier result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -385,7 +385,7 @@ public class IdentifierBiz implements CrudBiz<IdentifierRequest, Identifier, jav
     @NonNull
     @Transactional(readOnly = true)
     public List<IdentifierSearchDto> find(IdentifierRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Identifier identifier = resolver(token, request);
         IdentifierSearchDto searchDto = convertSearchDto(identifier);
         List<Identifier> identifierList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -405,7 +405,7 @@ public class IdentifierBiz implements CrudBiz<IdentifierRequest, Identifier, jav
     @NonNull
     @Transactional(readOnly = true)
     public IPage<IdentifierSearchDto> page(IdentifierRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Identifier identifier = resolver(token, request);
         IdentifierSearchDto searchDto = convertSearchDto(identifier);
         IPage<Identifier> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

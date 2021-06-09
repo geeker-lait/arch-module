@@ -73,7 +73,7 @@ public class OperateLogBiz implements CrudBiz<OperateLogRequest, OperateLog, jav
     @NonNull
     @Transactional(readOnly = true)
     public OperateLogSearchDto findOne(OperateLogRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         OperateLog operateLog = resolver(token, request);
         OperateLogSearchDto searchDto = convertSearchDto(operateLog);
         OperateLog result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -91,7 +91,7 @@ public class OperateLogBiz implements CrudBiz<OperateLogRequest, OperateLog, jav
     @NonNull
     @Transactional(readOnly = true)
     public List<OperateLogSearchDto> find(OperateLogRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         OperateLog operateLog = resolver(token, request);
         OperateLogSearchDto searchDto = convertSearchDto(operateLog);
         List<OperateLog> operateLogList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -111,7 +111,7 @@ public class OperateLogBiz implements CrudBiz<OperateLogRequest, OperateLog, jav
     @NonNull
     @Transactional(readOnly = true)
     public IPage<OperateLogSearchDto> page(OperateLogRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         OperateLog operateLog = resolver(token, request);
         OperateLogSearchDto searchDto = convertSearchDto(operateLog);
         IPage<OperateLog> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

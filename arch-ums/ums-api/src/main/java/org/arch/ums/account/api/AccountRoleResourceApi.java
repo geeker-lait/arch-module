@@ -2,6 +2,7 @@ package org.arch.ums.account.api;
 
 
 import org.arch.framework.web.feign.config.DeFaultFeignConfig;
+import org.arch.ums.account.dto.ResourceSearchDto;
 import org.arch.ums.account.dto.RoleResourceRequest;
 import org.arch.ums.account.dto.RoleResourceSearchDto;
 import org.arch.ums.account.entity.Resource;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-roleResource", path = "/ums/account/role/resource",
         configuration = DeFaultFeignConfig.class)
-public interface AccountRoleResourceApi extends RolePermissionApi<Resource, Long,
+public interface AccountRoleResourceApi extends RolePermissionApi<ResourceSearchDto, Long,
         RoleResourceSearchDto, RoleResourceRequest, Long> {
 
 }

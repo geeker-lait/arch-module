@@ -112,10 +112,10 @@ public class RestExceptionHandler implements ResponseBodyAdvice<Object> {
      * @return 异常结果
      */
     //@ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({NoHandlerFoundException.class, HttpRequestMethodNotSupportedException.class,
+    @ExceptionHandler({NoHandlerFoundException.class,
             HttpMediaTypeNotSupportedException.class, HttpMediaTypeNotAcceptableException.class,
-            MissingPathVariableException.class, MissingServletRequestParameterException.class,
-            TypeMismatchException.class, HttpMessageNotReadableException.class, HttpMessageNotWritableException.class,
+            MissingPathVariableException.class,
+            HttpMessageNotReadableException.class, HttpMessageNotWritableException.class,
             ServletRequestBindingException.class, ConversionNotSupportedException.class,
             MissingServletRequestPartException.class, AsyncRequestTimeoutException.class})
     public Response<?> handleServletException(HttpServletRequest request, HttpServletResponse response,
@@ -182,18 +182,27 @@ public class RestExceptionHandler implements ResponseBodyAdvice<Object> {
      * @return 异常结果
      */
     @ExceptionHandler(value = Exception.class)
-    public Response<?> resolveException(HttpServletRequest request, HttpServletResponse response, Exception e) {
-        log.error("调用={}服务出现异常了，请求的url是={}，请求的方法是={}，原因={}", serviceName, request.getRequestURL(), request.getMethod(),
-                e);
-        if (ENV_PROD.equals(profile)) {
-            // 当为生产环境, 不适合把具体的异常信息展示给用户, 比如数据库异常信息.
-            int code = CommonStatusCode.SERVER_ERROR.getCode();
-            BaseException baseException = new BaseException(CommonStatusCode.SERVER_ERROR);
-            String message = getMessage(baseException);
-            return Response.error(code, message);
+    public Object resolveException(HttpServletRequest request, HttpServletResponse response, Exception e) {
+        log.error("调用={}服务出现异常了，请求的url是={}，请求的方法是={}，原因={}",
+                  serviceName, request.getRequestURL(), request.getMethod(), e.getMessage());
+
+        if (isAjax(request)) {
+            if (ENV_PROD.equals(profile)) {
+                // 当为生产环境, 不适合把具体的异常信息展示给用户, 比如数据库异常信息.
+                int code = CommonStatusCode.SERVER_ERROR.getCode();
+                BaseException baseException = new BaseException(CommonStatusCode.SERVER_ERROR);
+                String message = getMessage(baseException);
+                return Response.error(code, message);
+            }
+            return Response.failed(e.getMessage());
+        } else {
+            ModelAndView mav = new ModelAndView();
+            mav.addObject("exception", e);
+            mav.addObject("url", request.getRequestURL());
+            mav.setViewName("error");
+            return mav;
         }
 
-        return Response.error(CommonStatusCode.SERVER_ERROR.getCode(), e.getMessage());
     }
 
     /***
@@ -315,22 +324,22 @@ public class RestExceptionHandler implements ResponseBodyAdvice<Object> {
         return Response.failed("非法输入");
     }
 
-    @ExceptionHandler  //处理其他异常
-    @ResponseBody
-    public Object allExceptionHandler(Exception e, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println(e.getStackTrace());
-        log.error("具体错误信息:【" + e.getMessage() + "】"); //会记录出错的代码行等具体信息
-        e.printStackTrace();
-        if (isAjax(request)) {
-            return Response.failed(e.getMessage());
-        } else {
-            ModelAndView mav = new ModelAndView();
-            mav.addObject("exception", e);
-            mav.addObject("url", request.getRequestURL());
-            mav.setViewName("error");
-            return mav;
-        }
-    }
+//    @ExceptionHandler  //处理其他异常
+//    @ResponseBody
+//    public Object allExceptionHandler(Exception e, HttpServletRequest request, HttpServletResponse response) {
+//        System.out.println(e.getStackTrace());
+//        log.error("具体错误信息:【" + e.getMessage() + "】"); //会记录出错的代码行等具体信息
+//        e.printStackTrace();
+//        if (isAjax(request)) {
+//            return Response.failed(e.getMessage());
+//        } else {
+//            ModelAndView mav = new ModelAndView();
+//            mav.addObject("exception", e);
+//            mav.addObject("url", request.getRequestURL());
+//            mav.setViewName("error");
+//            return mav;
+//        }
+//    }
 
     /**
      * 判断是否ajax请求

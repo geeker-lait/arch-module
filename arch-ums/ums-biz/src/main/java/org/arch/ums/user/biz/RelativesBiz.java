@@ -72,7 +72,7 @@ public class RelativesBiz implements CrudBiz<RelativesRequest, Relatives, java.l
     @NonNull
     @Transactional(readOnly = true)
     public RelativesSearchDto findOne(RelativesRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Relatives relatives = resolver(token, request);
         RelativesSearchDto searchDto = convertSearchDto(relatives);
         Relatives result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -90,7 +90,7 @@ public class RelativesBiz implements CrudBiz<RelativesRequest, Relatives, java.l
     @NonNull
     @Transactional(readOnly = true)
     public List<RelativesSearchDto> find(RelativesRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Relatives relatives = resolver(token, request);
         RelativesSearchDto searchDto = convertSearchDto(relatives);
         List<Relatives> relativesList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -110,7 +110,7 @@ public class RelativesBiz implements CrudBiz<RelativesRequest, Relatives, java.l
     @NonNull
     @Transactional(readOnly = true)
     public IPage<RelativesSearchDto> page(RelativesRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Relatives relatives = resolver(token, request);
         RelativesSearchDto searchDto = convertSearchDto(relatives);
         IPage<Relatives> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

@@ -73,7 +73,7 @@ public class TicketBiz implements CrudBiz<TicketRequest, Ticket, java.lang.Long,
     @NonNull
     @Transactional(readOnly = true)
     public TicketSearchDto findOne(TicketRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Ticket ticket = resolver(token, request);
         TicketSearchDto searchDto = convertSearchDto(ticket);
         Ticket result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -91,7 +91,7 @@ public class TicketBiz implements CrudBiz<TicketRequest, Ticket, java.lang.Long,
     @NonNull
     @Transactional(readOnly = true)
     public List<TicketSearchDto> find(TicketRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Ticket ticket = resolver(token, request);
         TicketSearchDto searchDto = convertSearchDto(ticket);
         List<Ticket> ticketList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -111,7 +111,7 @@ public class TicketBiz implements CrudBiz<TicketRequest, Ticket, java.lang.Long,
     @NonNull
     @Transactional(readOnly = true)
     public IPage<TicketSearchDto> page(TicketRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Ticket ticket = resolver(token, request);
         TicketSearchDto searchDto = convertSearchDto(ticket);
         IPage<Ticket> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

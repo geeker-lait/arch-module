@@ -72,7 +72,7 @@ public class JobBiz implements CrudBiz<JobRequest, Job, java.lang.Long, JobSearc
     @NonNull
     @Transactional(readOnly = true)
     public JobSearchDto findOne(JobRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Job job = resolver(token, request);
         JobSearchDto searchDto = convertSearchDto(job);
         Job result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -90,7 +90,7 @@ public class JobBiz implements CrudBiz<JobRequest, Job, java.lang.Long, JobSearc
     @NonNull
     @Transactional(readOnly = true)
     public List<JobSearchDto> find(JobRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Job job = resolver(token, request);
         JobSearchDto searchDto = convertSearchDto(job);
         List<Job> jobList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -110,7 +110,7 @@ public class JobBiz implements CrudBiz<JobRequest, Job, java.lang.Long, JobSearc
     @NonNull
     @Transactional(readOnly = true)
     public IPage<JobSearchDto> page(JobRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Job job = resolver(token, request);
         JobSearchDto searchDto = convertSearchDto(job);
         IPage<Job> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

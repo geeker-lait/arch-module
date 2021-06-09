@@ -25,7 +25,7 @@ public class MenuApi implements FeignCrudApi<MenuSearchDto, Long, MenuRequest, A
     private final AccountMenuApi accountMenuApi;
 
     @Override
-    public AccountMenuApi getFeignApi() {
+    public AccountMenuApi getApi() {
         return this.accountMenuApi;
     }
 

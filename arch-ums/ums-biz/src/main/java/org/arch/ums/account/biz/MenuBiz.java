@@ -75,7 +75,7 @@ public class MenuBiz implements CrudBiz<MenuRequest, Menu, java.lang.Long, MenuS
     @NonNull
     @Transactional(readOnly = true)
     public MenuSearchDto findOne(MenuRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Menu menu = resolver(token, request);
         MenuSearchDto searchDto = convertSearchDto(menu);
         Menu result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -93,7 +93,7 @@ public class MenuBiz implements CrudBiz<MenuRequest, Menu, java.lang.Long, MenuS
     @NonNull
     @Transactional(readOnly = true)
     public List<MenuSearchDto> find(MenuRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Menu menu = resolver(token, request);
         MenuSearchDto searchDto = convertSearchDto(menu);
         List<Menu> menuList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -113,7 +113,7 @@ public class MenuBiz implements CrudBiz<MenuRequest, Menu, java.lang.Long, MenuS
     @NonNull
     @Transactional(readOnly = true)
     public IPage<MenuSearchDto> page(MenuRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Menu menu = resolver(token, request);
         MenuSearchDto searchDto = convertSearchDto(menu);
         IPage<Menu> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

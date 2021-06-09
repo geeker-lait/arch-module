@@ -76,7 +76,7 @@ public class ResourceBiz implements CrudBiz<ResourceRequest, Resource, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public ResourceSearchDto findOne(ResourceRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Resource resource = resolver(token, request);
         ResourceSearchDto searchDto = convertSearchDto(resource);
         Resource result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -94,7 +94,7 @@ public class ResourceBiz implements CrudBiz<ResourceRequest, Resource, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public List<ResourceSearchDto> find(ResourceRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Resource resource = resolver(token, request);
         ResourceSearchDto searchDto = convertSearchDto(resource);
         List<Resource> resourceList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -114,7 +114,7 @@ public class ResourceBiz implements CrudBiz<ResourceRequest, Resource, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public IPage<ResourceSearchDto> page(ResourceRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Resource resource = resolver(token, request);
         ResourceSearchDto searchDto = convertSearchDto(resource);
         IPage<Resource> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

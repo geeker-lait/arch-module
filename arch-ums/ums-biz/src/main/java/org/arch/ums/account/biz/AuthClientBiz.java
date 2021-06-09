@@ -165,7 +165,7 @@ public class AuthClientBiz implements CrudBiz<AuthClientRequest, AuthClient, jav
     @NonNull
     @Transactional(readOnly = true)
     public AuthClientSearchDto findOne(AuthClientRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         AuthClient authClient = resolver(token, request);
         AuthClientSearchDto searchDto = convertSearchDto(authClient);
         AuthClient result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -183,7 +183,7 @@ public class AuthClientBiz implements CrudBiz<AuthClientRequest, AuthClient, jav
     @NonNull
     @Transactional(readOnly = true)
     public List<AuthClientSearchDto> find(AuthClientRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         AuthClient authClient = resolver(token, request);
         AuthClientSearchDto searchDto = convertSearchDto(authClient);
         List<AuthClient> authClientList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -203,7 +203,7 @@ public class AuthClientBiz implements CrudBiz<AuthClientRequest, AuthClient, jav
     @NonNull
     @Transactional(readOnly = true)
     public IPage<AuthClientSearchDto> page(AuthClientRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         AuthClient authClient = resolver(token, request);
         AuthClientSearchDto searchDto = convertSearchDto(authClient);
         IPage<AuthClient> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

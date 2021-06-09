@@ -71,7 +71,7 @@ public class AddressBiz implements CrudBiz<AddressRequest, Address, java.lang.Lo
     @NonNull
     @Transactional(readOnly = true)
     public AddressSearchDto findOne(AddressRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Address address = resolver(token, request);
         AddressSearchDto searchDto = convertSearchDto(address);
         Address result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -89,7 +89,7 @@ public class AddressBiz implements CrudBiz<AddressRequest, Address, java.lang.Lo
     @NonNull
     @Transactional(readOnly = true)
     public List<AddressSearchDto> find(AddressRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Address address = resolver(token, request);
         AddressSearchDto searchDto = convertSearchDto(address);
         List<Address> addressList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -109,7 +109,7 @@ public class AddressBiz implements CrudBiz<AddressRequest, Address, java.lang.Lo
     @NonNull
     @Transactional(readOnly = true)
     public IPage<AddressSearchDto> page(AddressRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Address address = resolver(token, request);
         AddressSearchDto searchDto = convertSearchDto(address);
         IPage<Address> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

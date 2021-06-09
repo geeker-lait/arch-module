@@ -73,7 +73,7 @@ public class MemberBiz implements CrudBiz<MemberRequest, Member, java.lang.Long,
     @NonNull
     @Transactional(readOnly = true)
     public MemberSearchDto findOne(MemberRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Member member = resolver(token, request);
         MemberSearchDto searchDto = convertSearchDto(member);
         Member result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -91,7 +91,7 @@ public class MemberBiz implements CrudBiz<MemberRequest, Member, java.lang.Long,
     @NonNull
     @Transactional(readOnly = true)
     public List<MemberSearchDto> find(MemberRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Member member = resolver(token, request);
         MemberSearchDto searchDto = convertSearchDto(member);
         List<Member> memberList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -111,7 +111,7 @@ public class MemberBiz implements CrudBiz<MemberRequest, Member, java.lang.Long,
     @NonNull
     @Transactional(readOnly = true)
     public IPage<MemberSearchDto> page(MemberRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Member member = resolver(token, request);
         MemberSearchDto searchDto = convertSearchDto(member);
         IPage<Member> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

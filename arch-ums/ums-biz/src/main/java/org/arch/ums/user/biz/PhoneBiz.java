@@ -72,7 +72,7 @@ public class PhoneBiz implements CrudBiz<PhoneRequest, Phone, java.lang.Long, Ph
     @NonNull
     @Transactional(readOnly = true)
     public PhoneSearchDto findOne(PhoneRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Phone phone = resolver(token, request);
         PhoneSearchDto searchDto = convertSearchDto(phone);
         Phone result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -90,7 +90,7 @@ public class PhoneBiz implements CrudBiz<PhoneRequest, Phone, java.lang.Long, Ph
     @NonNull
     @Transactional(readOnly = true)
     public List<PhoneSearchDto> find(PhoneRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Phone phone = resolver(token, request);
         PhoneSearchDto searchDto = convertSearchDto(phone);
         List<Phone> phoneList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -110,7 +110,7 @@ public class PhoneBiz implements CrudBiz<PhoneRequest, Phone, java.lang.Long, Ph
     @NonNull
     @Transactional(readOnly = true)
     public IPage<PhoneSearchDto> page(PhoneRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Phone phone = resolver(token, request);
         PhoneSearchDto searchDto = convertSearchDto(phone);
         IPage<Phone> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

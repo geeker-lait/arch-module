@@ -26,7 +26,7 @@ public class TicketApi implements FeignCrudApi<TicketSearchDto, Long, TicketRequ
     private final AccountTicketApi accountTicketApi;
 
     @Override
-    public AccountTicketApi getFeignApi() {
+    public AccountTicketApi getApi() {
         return this.accountTicketApi;
     }
 

@@ -87,7 +87,7 @@ public class RoleMenuBiz implements CrudBiz<RoleMenuRequest, RoleMenu, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public RoleMenuSearchDto findOne(RoleMenuRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         RoleMenu roleMenu = resolver(token, request);
         RoleMenuSearchDto searchDto = convertSearchDto(roleMenu);
         RoleMenu result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -105,7 +105,7 @@ public class RoleMenuBiz implements CrudBiz<RoleMenuRequest, RoleMenu, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public List<RoleMenuSearchDto> find(RoleMenuRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         RoleMenu roleMenu = resolver(token, request);
         RoleMenuSearchDto searchDto = convertSearchDto(roleMenu);
         List<RoleMenu> roleMenuList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -125,7 +125,7 @@ public class RoleMenuBiz implements CrudBiz<RoleMenuRequest, RoleMenu, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public IPage<RoleMenuSearchDto> page(RoleMenuRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         RoleMenu roleMenu = resolver(token, request);
         RoleMenuSearchDto searchDto = convertSearchDto(roleMenu);
         IPage<RoleMenu> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

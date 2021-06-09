@@ -25,7 +25,7 @@ public class GroupApi implements FeignCrudApi<GroupSearchDto, Long, GroupRequest
     private final AccountGroupApi accountGroupApi;
 
     @Override
-    public AccountGroupApi getFeignApi() {
+    public AccountGroupApi getApi() {
         return this.accountGroupApi;
     }
 }

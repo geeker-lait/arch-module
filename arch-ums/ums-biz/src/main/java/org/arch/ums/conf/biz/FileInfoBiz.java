@@ -78,7 +78,7 @@ public class FileInfoBiz implements CrudBiz<FileInfoRequest, FileInfo, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public FileInfoSearchDto findOne(FileInfoRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         FileInfo fileInfo = resolver(token, request);
         FileInfoSearchDto searchDto = convertSearchDto(fileInfo);
         FileInfo result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -96,7 +96,7 @@ public class FileInfoBiz implements CrudBiz<FileInfoRequest, FileInfo, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public List<FileInfoSearchDto> find(FileInfoRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         FileInfo fileInfo = resolver(token, request);
         FileInfoSearchDto searchDto = convertSearchDto(fileInfo);
         List<FileInfo> fileInfoList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -116,7 +116,7 @@ public class FileInfoBiz implements CrudBiz<FileInfoRequest, FileInfo, java.lang
     @NonNull
     @Transactional(readOnly = true)
     public IPage<FileInfoSearchDto> page(FileInfoRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         FileInfo fileInfo = resolver(token, request);
         FileInfoSearchDto searchDto = convertSearchDto(fileInfo);
         IPage<FileInfo> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

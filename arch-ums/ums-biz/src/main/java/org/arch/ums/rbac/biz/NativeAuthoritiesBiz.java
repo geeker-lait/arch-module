@@ -375,7 +375,7 @@ public class NativeAuthoritiesBiz implements AuthoritiesService {
         // Map(tenantAuthority, Map ( roleAuthority, map ( uri / path, Set ( permission)))
 
         switch (resourceClass.getName()) {
-            case "org.arch.ums.account.entity.Resource":
+            case "org.arch.ums.account.entity.ResourceSearchDto":
                 return findAuthoritiesByRoleIdOfTenant(tenantId,
                                                        roleId,
                                                        () -> {
@@ -402,7 +402,7 @@ public class NativeAuthoritiesBiz implements AuthoritiesService {
                                                        String.format("获取角色资源信息失败: tenantId=%s, roleId=%s",
                                                                      tenantId, roleId),
                                                        log);
-            case "org.arch.ums.account.entity.Permission":
+            case "org.arch.ums.account.entity.PermissionSearchDto":
                 return findAuthoritiesByRoleIdOfTenant(tenantId,
                                                        roleId,
                                                        () -> {

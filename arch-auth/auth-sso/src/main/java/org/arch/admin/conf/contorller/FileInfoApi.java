@@ -27,7 +27,7 @@ public class FileInfoApi implements FeignCrudApi<FileInfoSearchDto, Long, FileIn
     private final ConfFileInfoApi confFileInfoApi;
 
     @Override
-    public ConfFileInfoApi getFeignApi() {
+    public ConfFileInfoApi getApi() {
         return this.confFileInfoApi;
     }
 

@@ -73,7 +73,7 @@ public class TagBiz implements CrudBiz<TagRequest, Tag, java.lang.Long, TagSearc
     @NonNull
     @Transactional(readOnly = true)
     public TagSearchDto findOne(TagRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Tag tag = resolver(token, request);
         TagSearchDto searchDto = convertSearchDto(tag);
         Tag result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -91,7 +91,7 @@ public class TagBiz implements CrudBiz<TagRequest, Tag, java.lang.Long, TagSearc
     @NonNull
     @Transactional(readOnly = true)
     public List<TagSearchDto> find(TagRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Tag tag = resolver(token, request);
         TagSearchDto searchDto = convertSearchDto(tag);
         List<Tag> tagList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -111,7 +111,7 @@ public class TagBiz implements CrudBiz<TagRequest, Tag, java.lang.Long, TagSearc
     @NonNull
     @Transactional(readOnly = true)
     public IPage<TagSearchDto> page(TagRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Tag tag = resolver(token, request);
         TagSearchDto searchDto = convertSearchDto(tag);
         IPage<Tag> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

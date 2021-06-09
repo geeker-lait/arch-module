@@ -73,7 +73,7 @@ public class MemberLevelBiz implements CrudBiz<MemberLevelRequest, MemberLevel, 
     @NonNull
     @Transactional(readOnly = true)
     public MemberLevelSearchDto findOne(MemberLevelRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         MemberLevel memberLevel = resolver(token, request);
         MemberLevelSearchDto searchDto = convertSearchDto(memberLevel);
         MemberLevel result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -91,7 +91,7 @@ public class MemberLevelBiz implements CrudBiz<MemberLevelRequest, MemberLevel, 
     @NonNull
     @Transactional(readOnly = true)
     public List<MemberLevelSearchDto> find(MemberLevelRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         MemberLevel memberLevel = resolver(token, request);
         MemberLevelSearchDto searchDto = convertSearchDto(memberLevel);
         List<MemberLevel> memberLevelList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -111,7 +111,7 @@ public class MemberLevelBiz implements CrudBiz<MemberLevelRequest, MemberLevel, 
     @NonNull
     @Transactional(readOnly = true)
     public IPage<MemberLevelSearchDto> page(MemberLevelRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         MemberLevel memberLevel = resolver(token, request);
         MemberLevelSearchDto searchDto = convertSearchDto(memberLevel);
         IPage<MemberLevel> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

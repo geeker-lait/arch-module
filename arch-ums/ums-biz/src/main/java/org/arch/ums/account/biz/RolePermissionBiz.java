@@ -87,7 +87,7 @@ public class RolePermissionBiz implements CrudBiz<RolePermissionRequest, RolePer
     @NonNull
     @Transactional(readOnly = true)
     public RolePermissionSearchDto findOne(RolePermissionRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         RolePermission rolePermission = resolver(token, request);
         RolePermissionSearchDto searchDto = convertSearchDto(rolePermission);
         RolePermission result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -105,7 +105,7 @@ public class RolePermissionBiz implements CrudBiz<RolePermissionRequest, RolePer
     @NonNull
     @Transactional(readOnly = true)
     public List<RolePermissionSearchDto> find(RolePermissionRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         RolePermission rolePermission = resolver(token, request);
         RolePermissionSearchDto searchDto = convertSearchDto(rolePermission);
         List<RolePermission> rolePermissionList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -125,7 +125,7 @@ public class RolePermissionBiz implements CrudBiz<RolePermissionRequest, RolePer
     @NonNull
     @Transactional(readOnly = true)
     public IPage<RolePermissionSearchDto> page(RolePermissionRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         RolePermission rolePermission = resolver(token, request);
         RolePermissionSearchDto searchDto = convertSearchDto(rolePermission);
         IPage<RolePermission> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

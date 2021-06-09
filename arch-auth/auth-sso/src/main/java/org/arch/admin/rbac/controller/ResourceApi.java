@@ -25,7 +25,7 @@ public class ResourceApi implements FeignCrudApi<ResourceSearchDto, Long, Resour
     private final AccountResourceApi accountResourceApi;
 
     @Override
-    public AccountResourceApi getFeignApi() {
+    public AccountResourceApi getApi() {
         return this.accountResourceApi;
     }
 

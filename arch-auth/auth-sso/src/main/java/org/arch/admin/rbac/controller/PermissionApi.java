@@ -25,7 +25,7 @@ public class PermissionApi implements FeignCrudApi<PermissionSearchDto, Long, Pe
     private final AccountPermissionApi accountPermissionApi;
 
     @Override
-    public AccountPermissionApi getFeignApi() {
+    public AccountPermissionApi getApi() {
         return this.accountPermissionApi;
     }
 

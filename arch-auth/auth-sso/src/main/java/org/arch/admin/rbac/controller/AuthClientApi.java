@@ -26,7 +26,7 @@ public class AuthClientApi implements FeignCrudApi<AuthClientSearchDto, Long, Au
     private final AccountAuthClientApi accountAuthClientApi;
 
     @Override
-    public AccountAuthClientApi getFeignApi() {
+    public AccountAuthClientApi getApi() {
         return this.accountAuthClientApi;
     }
 

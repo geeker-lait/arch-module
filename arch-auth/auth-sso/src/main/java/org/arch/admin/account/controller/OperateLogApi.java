@@ -26,7 +26,7 @@ public class OperateLogApi implements FeignCrudApi<OperateLogSearchDto, Long, Op
     private final AccountOperateLogApi accountOperateLogApi;
 
     @Override
-    public AccountOperateLogApi getFeignApi() {
+    public AccountOperateLogApi getApi() {
         return this.accountOperateLogApi;
     }
 

@@ -3,6 +3,7 @@ package org.arch.admin.rbac.service;
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
 import org.arch.ums.account.api.AccountRolePermissionApi;
+import org.arch.ums.account.dto.PermissionSearchDto;
 import org.arch.ums.account.entity.Permission;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ import static java.util.Arrays.asList;
  */
 @Service
 @RequiredArgsConstructor
-public class RolePermissionsServiceImpl implements RolePermissionsService<Permission> {
+public class RolePermissionsServiceImpl implements RolePermissionsService<PermissionSearchDto> {
 
     private final AccountRolePermissionApi accountRolePermissionApi;
     private final TenantContextHolder tenantContextHolder;
@@ -78,17 +79,17 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
 
     @NonNull
     @Override
-    public List<Permission> findAllResourcesByRoleId(@NonNull Long roleId) throws RolePermissionsException {
+    public List<PermissionSearchDto> findAllResourcesByRoleId(@NonNull Long roleId) throws RolePermissionsException {
         Long tenantId = Long.valueOf(tenantContextHolder.getTenantId());
         return findAllResourcesByRoleIdOfTenant(tenantId, roleId);
     }
 
     @NonNull
     @Override
-    public List<Permission> findAllResourcesByRoleIdOfTenant(@NonNull Long tenantId,
+    public List<PermissionSearchDto> findAllResourcesByRoleIdOfTenant(@NonNull Long tenantId,
                                                              @NonNull Long roleId) throws RolePermissionsException {
         try {
-            Response<List<Permission>> response =
+            Response<List<PermissionSearchDto>> response =
                     this.accountRolePermissionApi.findAllResourcesByRoleIdOfTenant(tenantId, roleId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new ArrayList<>(0));
         } catch (Exception e) {
@@ -98,10 +99,10 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
 
     @NonNull
     @Override
-    public List<Permission> findAllResourcesByRoleIdOfScopeId(@NonNull Long scopeId,
+    public List<PermissionSearchDto> findAllResourcesByRoleIdOfScopeId(@NonNull Long scopeId,
                                                               @NonNull Long roleId) throws RolePermissionsException {
         try {
-            Response<List<Permission>> response =
+            Response<List<PermissionSearchDto>> response =
                     this.accountRolePermissionApi.findAllResourcesByRoleIdOfScopeId(scopeId, roleId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new ArrayList<>(0));
         } catch (Exception e) {
@@ -111,7 +112,7 @@ public class RolePermissionsServiceImpl implements RolePermissionsService<Permis
 
     @NonNull
     @Override
-    public Class<Permission> getUpdateResourcesClass() {
-        return Permission.class;
+    public Class<PermissionSearchDto> getUpdateResourcesClass() {
+        return PermissionSearchDto.class;
     }
 }

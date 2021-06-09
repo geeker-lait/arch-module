@@ -25,7 +25,7 @@ public class RoleApi implements FeignCrudApi<RoleSearchDto, Long, RoleRequest, A
     private final AccountRoleApi accountRoleApi;
 
     @Override
-    public AccountRoleApi getFeignApi() {
+    public AccountRoleApi getApi() {
         return this.accountRoleApi;
     }
 

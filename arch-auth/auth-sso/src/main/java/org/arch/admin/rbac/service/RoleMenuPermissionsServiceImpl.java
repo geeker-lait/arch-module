@@ -3,6 +3,7 @@ package org.arch.admin.rbac.service;
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
 import org.arch.ums.account.api.AccountRoleMenuApi;
+import org.arch.ums.account.dto.MenuSearchDto;
 import org.arch.ums.account.entity.Menu;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ import static java.util.Arrays.asList;
  */
 @Service
 @RequiredArgsConstructor
-public class RoleMenuPermissionsServiceImpl implements RolePermissionsService<Menu> {
+public class RoleMenuPermissionsServiceImpl implements RolePermissionsService<MenuSearchDto> {
 
     private final AccountRoleMenuApi accountRoleMenuApi;
     private final TenantContextHolder tenantContextHolder;
@@ -78,17 +79,17 @@ public class RoleMenuPermissionsServiceImpl implements RolePermissionsService<Me
 
     @NonNull
     @Override
-    public List<Menu> findAllResourcesByRoleId(@NonNull Long roleId) throws RolePermissionsException {
+    public List<MenuSearchDto> findAllResourcesByRoleId(@NonNull Long roleId) throws RolePermissionsException {
         Long tenantId = Long.valueOf(tenantContextHolder.getTenantId());
         return findAllResourcesByRoleIdOfTenant(tenantId, roleId);
     }
 
     @NonNull
     @Override
-    public List<Menu> findAllResourcesByRoleIdOfTenant(@NonNull Long tenantId,
+    public List<MenuSearchDto> findAllResourcesByRoleIdOfTenant(@NonNull Long tenantId,
                                                        @NonNull Long roleId) throws RolePermissionsException {
         try {
-            Response<List<Menu>> response =
+            Response<List<MenuSearchDto>> response =
                     this.accountRoleMenuApi.findAllResourcesByRoleIdOfTenant(tenantId, roleId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new ArrayList<>(0));
         } catch (Exception e) {
@@ -98,10 +99,10 @@ public class RoleMenuPermissionsServiceImpl implements RolePermissionsService<Me
 
     @NonNull
     @Override
-    public List<Menu> findAllResourcesByRoleIdOfScopeId(@NonNull Long scopeId,
-                                                        @NonNull Long roleId) throws RolePermissionsException {
+    public List<MenuSearchDto> findAllResourcesByRoleIdOfScopeId(@NonNull Long scopeId,
+                                                                 @NonNull Long roleId) throws RolePermissionsException {
         try {
-            Response<List<Menu>> response =
+            Response<List<MenuSearchDto>> response =
                     this.accountRoleMenuApi.findAllResourcesByRoleIdOfScopeId(scopeId, roleId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new ArrayList<>(0));
         } catch (Exception e) {
@@ -111,7 +112,7 @@ public class RoleMenuPermissionsServiceImpl implements RolePermissionsService<Me
 
     @NonNull
     @Override
-    public Class<Menu> getUpdateResourcesClass() {
-        return Menu.class;
+    public Class<MenuSearchDto> getUpdateResourcesClass() {
+        return MenuSearchDto.class;
     }
 }

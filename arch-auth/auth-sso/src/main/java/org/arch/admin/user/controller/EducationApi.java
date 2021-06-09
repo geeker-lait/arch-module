@@ -27,7 +27,7 @@ public class EducationApi implements FeignCrudApi<EducationSearchDto, Long, Educ
     private final UserEducationApi userEducationApi;
 
     @Override
-    public UserEducationApi getFeignApi() {
+    public UserEducationApi getApi() {
         return this.userEducationApi;
     }
 

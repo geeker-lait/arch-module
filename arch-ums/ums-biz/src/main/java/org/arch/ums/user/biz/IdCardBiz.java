@@ -72,7 +72,7 @@ public class IdCardBiz implements CrudBiz<IdCardRequest, IdCard, java.lang.Long,
     @NonNull
     @Transactional(readOnly = true)
     public IdCardSearchDto findOne(IdCardRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         IdCard idCard = resolver(token, request);
         IdCardSearchDto searchDto = convertSearchDto(idCard);
         IdCard result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -90,7 +90,7 @@ public class IdCardBiz implements CrudBiz<IdCardRequest, IdCard, java.lang.Long,
     @NonNull
     @Transactional(readOnly = true)
     public List<IdCardSearchDto> find(IdCardRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         IdCard idCard = resolver(token, request);
         IdCardSearchDto searchDto = convertSearchDto(idCard);
         List<IdCard> idCardList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -110,7 +110,7 @@ public class IdCardBiz implements CrudBiz<IdCardRequest, IdCard, java.lang.Long,
     @NonNull
     @Transactional(readOnly = true)
     public IPage<IdCardSearchDto> page(IdCardRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         IdCard idCard = resolver(token, request);
         IdCardSearchDto searchDto = convertSearchDto(idCard);
         IPage<IdCard> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

@@ -229,7 +229,7 @@ public interface CrudBiz<R, T extends Model<T>, ID extends Serializable,
         if (isNull(idValue)) {
             throw new BusinessException("id 不能为 null");
         }
-        TokenInfo tokenInfo = SecurityUtils.getCurrentUser();
+        TokenInfo tokenInfo = SecurityUtils.getTokenInfo();
         T entity = resolver(tokenInfo, request);
         // id 具有唯一性, 不需要租户 id 来区分, 对于用户来说租户 id 不会变, 不必要更新;
         // 如果更新租户 id, 对于行级租户同时会更新有租户字段的索引, 影响 sql 执行性能

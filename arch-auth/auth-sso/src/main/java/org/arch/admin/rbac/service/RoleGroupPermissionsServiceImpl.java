@@ -3,6 +3,7 @@ package org.arch.admin.rbac.service;
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
 import org.arch.ums.account.api.AccountRoleGroupApi;
+import org.arch.ums.account.dto.GroupSearchDto;
 import org.arch.ums.account.entity.Group;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ import static java.util.Arrays.asList;
  */
 @Service
 @RequiredArgsConstructor
-public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<Group> {
+public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<GroupSearchDto> {
 
     private final AccountRoleGroupApi accountRoleGroupApi;
     private final TenantContextHolder tenantContextHolder;
@@ -83,7 +84,7 @@ public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<G
 
     @NonNull
     @Override
-    public Class<Group> getUpdateResourcesClass() {
-        return Group.class;
+    public Class<GroupSearchDto> getUpdateResourcesClass() {
+        return GroupSearchDto.class;
     }
 }

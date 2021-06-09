@@ -2,9 +2,9 @@ package org.arch.ums.account.api;
 
 
 import org.arch.framework.web.feign.config.DeFaultFeignConfig;
+import org.arch.ums.account.dto.PermissionSearchDto;
 import org.arch.ums.account.dto.RolePermissionRequest;
 import org.arch.ums.account.dto.RolePermissionSearchDto;
-import org.arch.ums.account.entity.Permission;
 import org.arch.ums.common.service.RolePermissionApi;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-ums-api", contextId = "arch-ums-api-rolePermission", path = "/ums/account/role/permission",
         configuration = DeFaultFeignConfig.class)
-public interface AccountRolePermissionApi extends RolePermissionApi<Permission, Long,
+public interface AccountRolePermissionApi extends RolePermissionApi<PermissionSearchDto, Long,
         RolePermissionSearchDto, RolePermissionRequest, Long> {
 
 }

@@ -35,6 +35,10 @@
         </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>
+            <artifactId>ums-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
             <artifactId>ums-commons</artifactId>
         </dependency>
 
@@ -160,27 +164,9 @@
             <artifactId>jsr305</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>ums-crud</artifactId>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 
 </project>

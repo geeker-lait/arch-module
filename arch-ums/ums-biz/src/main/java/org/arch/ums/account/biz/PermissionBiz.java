@@ -76,7 +76,7 @@ public class PermissionBiz implements CrudBiz<PermissionRequest, Permission, jav
     @NonNull
     @Transactional(readOnly = true)
     public PermissionSearchDto findOne(PermissionRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Permission permission = resolver(token, request);
         PermissionSearchDto searchDto = convertSearchDto(permission);
         Permission result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -94,7 +94,7 @@ public class PermissionBiz implements CrudBiz<PermissionRequest, Permission, jav
     @NonNull
     @Transactional(readOnly = true)
     public List<PermissionSearchDto> find(PermissionRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Permission permission = resolver(token, request);
         PermissionSearchDto searchDto = convertSearchDto(permission);
         List<Permission> permissionList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -114,7 +114,7 @@ public class PermissionBiz implements CrudBiz<PermissionRequest, Permission, jav
     @NonNull
     @Transactional(readOnly = true)
     public IPage<PermissionSearchDto> page(PermissionRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Permission permission = resolver(token, request);
         PermissionSearchDto searchDto = convertSearchDto(permission);
         IPage<Permission> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

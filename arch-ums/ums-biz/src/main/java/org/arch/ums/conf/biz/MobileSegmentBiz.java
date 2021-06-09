@@ -79,7 +79,7 @@ public class MobileSegmentBiz implements CrudBiz<MobileSegmentRequest, MobileSeg
     @NonNull
     @Transactional(readOnly = true)
     public MobileSegmentSearchDto findOne(MobileSegmentRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         MobileSegment mobileSegment = resolver(token, request);
         MobileSegmentSearchDto searchDto = convertSearchDto(mobileSegment);
         MobileSegment result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -97,7 +97,7 @@ public class MobileSegmentBiz implements CrudBiz<MobileSegmentRequest, MobileSeg
     @NonNull
     @Transactional(readOnly = true)
     public List<MobileSegmentSearchDto> find(MobileSegmentRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         MobileSegment mobileSegment = resolver(token, request);
         MobileSegmentSearchDto searchDto = convertSearchDto(mobileSegment);
         List<MobileSegment> mobileSegmentList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -117,7 +117,7 @@ public class MobileSegmentBiz implements CrudBiz<MobileSegmentRequest, MobileSeg
     @NonNull
     @Transactional(readOnly = true)
     public IPage<MobileSegmentSearchDto> page(MobileSegmentRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         MobileSegment mobileSegment = resolver(token, request);
         MobileSegmentSearchDto searchDto = convertSearchDto(mobileSegment);
         IPage<MobileSegment> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
@@ -196,7 +196,7 @@ public class MobileSegmentBiz implements CrudBiz<MobileSegmentRequest, MobileSeg
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Boolean addMobileSegment(MultipartFile file, String delimiter) throws IOException {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Boolean checkFailure = check(delimiter, token);
         if (!checkFailure) {
             return checkFailure;

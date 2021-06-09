@@ -76,7 +76,7 @@ public class RoleBiz implements CrudBiz<RoleRequest, Role, java.lang.Long, RoleS
     @NonNull
     @Transactional(readOnly = true)
     public RoleSearchDto findOne(RoleRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Role role = resolver(token, request);
         RoleSearchDto searchDto = convertSearchDto(role);
         Role result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -94,7 +94,7 @@ public class RoleBiz implements CrudBiz<RoleRequest, Role, java.lang.Long, RoleS
     @NonNull
     @Transactional(readOnly = true)
     public List<RoleSearchDto> find(RoleRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Role role = resolver(token, request);
         RoleSearchDto searchDto = convertSearchDto(role);
         List<Role> roleList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -114,7 +114,7 @@ public class RoleBiz implements CrudBiz<RoleRequest, Role, java.lang.Long, RoleS
     @NonNull
     @Transactional(readOnly = true)
     public IPage<RoleSearchDto> page(RoleRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         Role role = resolver(token, request);
         RoleSearchDto searchDto = convertSearchDto(role);
         IPage<Role> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);

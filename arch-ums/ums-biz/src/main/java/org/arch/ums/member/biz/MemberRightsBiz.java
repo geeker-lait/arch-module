@@ -73,7 +73,7 @@ public class MemberRightsBiz implements CrudBiz<MemberRightsRequest, MemberRight
     @NonNull
     @Transactional(readOnly = true)
     public MemberRightsSearchDto findOne(MemberRightsRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         MemberRights memberRights = resolver(token, request);
         MemberRightsSearchDto searchDto = convertSearchDto(memberRights);
         MemberRights result = getCrudService().findOneByMapParams(searchDto.searchParams());
@@ -91,7 +91,7 @@ public class MemberRightsBiz implements CrudBiz<MemberRightsRequest, MemberRight
     @NonNull
     @Transactional(readOnly = true)
     public List<MemberRightsSearchDto> find(MemberRightsRequest request) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         MemberRights memberRights = resolver(token, request);
         MemberRightsSearchDto searchDto = convertSearchDto(memberRights);
         List<MemberRights> memberRightsList = getCrudService().findAllByMapParams(searchDto.searchParams());
@@ -111,7 +111,7 @@ public class MemberRightsBiz implements CrudBiz<MemberRightsRequest, MemberRight
     @NonNull
     @Transactional(readOnly = true)
     public IPage<MemberRightsSearchDto> page(MemberRightsRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getCurrentUser();
+        TokenInfo token = SecurityUtils.getTokenInfo();
         MemberRights memberRights = resolver(token, request);
         MemberRightsSearchDto searchDto = convertSearchDto(memberRights);
         IPage<MemberRights> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
