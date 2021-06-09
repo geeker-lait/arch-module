@@ -121,14 +121,16 @@ public class XmindParamParser {
         Param preParam = new Param().setName(firstLetterToLower(newParamName))
                                     .setDescr(inOrOutParamDescr)
                                     .setTyp(newType);
-        Param postParam = resolveParamNotModel(moduleSet, module, interfac, inOrOut, children, preParam, paramType);
-        if (nonNull(postParam)) {
-            // 子节点参数覆盖父节点参数
-            preParam.setTyp(postParam.getTyp())
-                    .setName(postParam.getName())
-                    .setDescr(postParam.getDescr())
-                    .getAnnotations().addAll(postParam.getAnnotations());
+        if (nonNull(children)) {
+            Param postParam = resolveParamNotModel(moduleSet, module, interfac, inOrOut, children, preParam, paramType);
+            if (nonNull(postParam)) {
+                // 子节点参数覆盖父节点参数
+                preParam.setTyp(postParam.getTyp())
+                        .setName(postParam.getName())
+                        .setDescr(postParam.getDescr())
+                        .getAnnotations().addAll(postParam.getAnnotations());
 
+            }
         }
         if (inOrOut) {
             curl.getInputs().add(preParam);

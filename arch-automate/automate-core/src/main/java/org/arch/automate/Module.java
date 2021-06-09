@@ -59,7 +59,7 @@ public class Module {
             return false;
         }
         Module module = (Module) o;
-        return name.equals(module.name) && Objects.equals(typ, module.typ) && Objects.equals(comment, module.comment) && Objects.equals(pkg, module.pkg) && databases.equals(module.databases) && apis.equals(module.apis) && models.equals(module.models);
+        return Objects.equals(name, module.name) && Objects.equals(typ, module.typ) && Objects.equals(comment, module.comment) && Objects.equals(pkg, module.pkg) && databases.equals(module.databases) && apis.equals(module.apis) && models.equals(module.models);
     }
 
     @Override
