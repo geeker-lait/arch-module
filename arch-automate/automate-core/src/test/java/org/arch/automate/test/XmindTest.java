@@ -3,11 +3,11 @@ package org.arch.automate.test;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveException;
-import org.arch.framework.beans.schema.database.Database;
 import org.arch.automate.Project;
 import org.arch.automate.reader.xmind.meta.JsonRootBean;
 import org.arch.automate.reader.xmind.parser.XmindParser;
 import org.arch.automate.reader.xmind.utils.FreeMarkerUtil;
+import org.arch.framework.beans.schema.database.Database;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +35,7 @@ public class XmindTest {
     public void parse() throws DocumentException, ArchiveException, IOException {
         //        String fileName = "minds\\ofs-alarm-er.xmind";
 //        String fileName = "minds"+ File.separator +"ofs-alarm-center3.xmind";
+//        String fileName = "minds\\arch-pay.xmind";
         String fileName = "minds"+ File.separator +"ofs-alarm-center.xmind";
 //        String fileName = "minds"+ File.separator +"xmind-example.xmind";
         Resource resource = new ClassPathResource(fileName);
