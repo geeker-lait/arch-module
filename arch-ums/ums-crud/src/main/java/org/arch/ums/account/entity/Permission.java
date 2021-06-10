@@ -1,8 +1,5 @@
 package org.arch.ums.account.entity;
 
-import java.time.LocalDateTime;
-
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -13,51 +10,64 @@ import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
- * 账号-标签(Tag) 实体类
+ * 账号-权限(Permission) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 21:25:30
+ * @date 2021-03-17 21:25:28
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("account_tag")
-public class Tag extends CrudEntity<Tag> {
+@TableName("account_permission")
+public class Permission extends CrudEntity<Permission> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键
+     * 账号-菜单ID
      */
     @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 用户id
+     * 权限码
      */
-    @TableField(value = "`account_id`")
-    private Long accountId;
+    @TableField(value = "`permission_code`")
+    private String permissionCode;
 
     /**
-     * 标签类目
+     * 权限名称
      */
-    @TableField(value = "`tag_category`")
-    private String tagCategory;
+    @TableField(value = "`permission_name`")
+    private String permissionName;
 
     /**
-     * 标签名
+     * 权限值
      */
-    @TableField(value = "`tag_name`")
-    private String tagName;
+    @TableField(value = "`permission_val`")
+    private String permissionVal;
 
     /**
-     * 标签色
+     * uri
      */
-    @TableField(value = "`tag_color`")
-    private String tagColor;
+    @TableField(value = "`permission_uri`")
+    private String permissionUri;
+
+    /**
+     * 权限类型：0->目录；1->菜单；2->按钮（接口绑定权限）, 4->链接
+     */
+    @TableField(value = "`resource_type`")
+    private Integer resourceType;
+
+    /**
+     * 排序
+     */
+    @TableField(value = "`sorted`")
+    private Integer sorted;
 
     /**
      * 租户 id

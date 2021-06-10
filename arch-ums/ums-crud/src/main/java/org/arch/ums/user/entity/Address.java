@@ -1,8 +1,5 @@
-package org.arch.ums.account.entity;
+package org.arch.ums.user.entity;
 
-import java.time.LocalDateTime;
-
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -11,41 +8,93 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
+import org.arch.framework.encrypt.EncryptField;
+import org.arch.framework.ums.enums.AddressType;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
- * 账号-角色资源表(RoleResource) 实体类
+ * 用户地址表(Address) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 21:25:29
+ * @date 2021-03-17 22:16:37
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("account_role_resource")
-public class RoleResource extends CrudEntity<RoleResource> {
+@TableName("user_address")
+public class Address extends CrudEntity<Address> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * id
+     * 用户地址信息表id
      */
     @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 角色ID
+     * 用户id
      */
-    @TableField(value = "`role_id`")
-    private Long roleId;
+    @TableField(value = "`user_id`")
+    private Long userId;
 
     /**
-     * 资源ID
+     * 省
      */
-    @TableField(value = "`resource_id`")
-    private Long resourceId;
+    @TableField(value = "`province`")
+    private String province;
+
+    /**
+     * 市
+     */
+    @TableField(value = "`city`")
+    private String city;
+
+    /**
+     * 区
+     */
+    @TableField(value = "`district`")
+    private String district;
+
+    /**
+     * 街道
+     */
+    @TableField(value = "`street`")
+    private String street;
+
+    /**
+     * 详细地址
+     */
+    @TableField(value = "`address`")
+    private String address;
+
+    /**
+     * 地址类型:工作地址/家庭地址/收获地址/..
+     */
+    @TableField(value = "`address_type`")
+    private AddressType addressType;
+
+    /**
+     * 顺序
+     */
+    @TableField(value = "`sorted`")
+    private Integer sorted;
+
+    /**
+     * 联系人
+     */
+    @TableField(value = "`contacts`")
+    private String contacts;
+
+    /**
+     * 手机号
+     */
+    @TableField(value = "`phone_num`")
+    @EncryptField(encryptType = "FPE")
+    private String phoneNum;
 
     /**
      * 租户 id

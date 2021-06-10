@@ -29,7 +29,7 @@ public interface AccountIdentifierApi extends FeignApi<IdentifierSearchDto, Iden
         Long> {
 
     /**
-     * 通过 {@link Identifier#getIdentifier()} 来获取 {@link Identifier}
+     * 通过 {@link IdentifierRequest#getIdentifier()} 来获取 {@link AuthLoginDto}
      *
      * @param identifier 用户唯一标识
      * @return 返回 {@link AuthLoginDto}
@@ -79,7 +79,7 @@ public interface AccountIdentifierApi extends FeignApi<IdentifierSearchDto, Iden
      * & account_name:<br>
      * 1. 更新 deleted 字段值为 1.<br>
      *
-     * @param identifier {@link Identifier#getIdentifier()}
+     * @param identifier {@link IdentifierRequest#getIdentifier()}
      * @return 是否删除成功.
      */
     @DeleteMapping(value = "/username/{identifier}")
@@ -94,8 +94,8 @@ public interface AccountIdentifierApi extends FeignApi<IdentifierSearchDto, Iden
      * 添加后缀防止用户重新通过此第三方注册时触发唯一索引问题;<br>
      * 添加 序号 以防止多次删除同一个第三方账号时触发唯一索引问题.<br>
      *
-     * @param aid        {@link Identifier#getAid()}
-     * @param identifier {@link Identifier#getIdentifier()}
+     * @param aid        {@link IdentifierRequest#getAid()}
+     * @param identifier {@link IdentifierRequest#getIdentifier()}
      * @return 是否解绑成功.
      */
     @DeleteMapping(value = "/unbinding/{aid}/{identifier}")

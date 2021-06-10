@@ -27,7 +27,7 @@ import static java.util.Objects.nonNull;
 @RestController
 @RequestMapping("/form/layout")
 public class FormLayoutController implements CrudBiz<FormLayoutRequest, FormLayout, Long,
-        FormLayoutSearchDto, FormLayoutService> {
+        FormLayoutSearchDto, FormLayoutSearchDto, FormLayoutService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormLayoutService formLayoutService;

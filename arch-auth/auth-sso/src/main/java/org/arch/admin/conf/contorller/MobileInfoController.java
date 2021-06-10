@@ -11,8 +11,6 @@ import org.arch.ums.conf.api.ConfMobileSegmentApi;
 import org.arch.ums.conf.dto.MobileInfoRequest;
 import org.arch.ums.conf.dto.MobileSegmentRequest;
 import org.arch.ums.conf.dto.MobileSegmentSearchDto;
-import org.arch.ums.conf.entity.MobileSegment;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_INFO_FAILED;
@@ -89,15 +88,10 @@ public class MobileInfoController {
                 if (segmentSearchDtoList.size() == 0) {
                     return Response.failed(CommonStatusCode.MOBILE_SEGMENT_NOT_DATA);
                 }
-                Map<Integer, MobileSegment> segmentMap =
+                Map<Integer, MobileSegmentSearchDto> segmentMap =
                         segmentSearchDtoList.stream()
-                                .map(dto -> {
-                                    MobileSegment mobileSegment = new MobileSegment();
-                                    BeanUtils.copyProperties(dto, mobileSegment);
-                                    return mobileSegment;
-                                })
-                                .collect(Collectors.toMap(MobileSegment::getPrefix,
-                                        mobileSegment -> mobileSegment));
+                                .collect(Collectors.toMap(MobileSegmentSearchDto::getPrefix,
+                                                          Function.identity()));
                 // 存储解析错误的行信息
                 List<String> errorList = new ArrayList<>();
                 // 解析手机号段信息. 格式: 1999562	甘肃-兰州

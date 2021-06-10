@@ -1,113 +1,76 @@
-package org.arch.ums.account.entity;
+package org.arch.ums.user.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
 import org.arch.framework.encrypt.EncryptField;
+import org.arch.framework.ums.enums.Mno;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 账号-关系(Relationship) 实体类
+ * 用户电话信息(Phone) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 21:25:28
+ * @date 2021-03-17 22:16:12
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("account_relationship")
-public class Relationship extends CrudEntity<Relationship> {
+@TableName("user_phone")
+public class Phone extends CrudEntity<Phone> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * id
+     * 用户电话信息表ID
      */
     @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 父节点ID（数据库自增）, 没有父节点则为 -1
+     * 用户ID
      */
-    @TableField(value = "`pid`")
-    private Long pid;
+    @TableField(value = "`user_id`")
+    private Long userId;
 
     /**
-     * 组
+     * 手机号
      */
-    @TableField(value = "`org`")
-    private Long org;
+    @TableField(value = "`phone_no`")
+    @EncryptField(encryptType = "FPE")
+    private String phoneNo;
 
     /**
-     * 深度
+     * 省份
      */
-    @TableField(value = "`deep`")
-    private Long deep;
+    @TableField(value = "`province`")
+    private String province;
+
+    /**
+     * 城市
+     */
+    @TableField(value = "`city`")
+    private String city;
+
+    /**
+     * 运营商: 移动/电信/联通/电话..
+     */
+    @TableField(value = "`mno`")
+    private Mno mno;
 
     /**
      * 顺序
      */
-    @TableField(value = "`seq`")
-    private Long seq;
-
-    /**
-     * 父节点顺序: 3,4,5,6(对应: deep-4, deep-3, deep-2, deep-1)
-     */
-    @TableField(value = "`pseq`")
-    private String pseq;
-
-    /**
-     * seq 向量
-     */
-    @TableField(value = "`vector`")
-    private String vector;
-
-    /**
-     * 推荐人ID, 没有推荐人则为 -1
-     */
-    @TableField(value = "`from_user_id`")
-    private Long fromUserId;
-
-    /**
-     * 推荐人姓名
-     */
-    @TableField(value = "`from_user_name`")
-    private String fromUserName;
-
-    /**
-     * 推荐人手机
-     */
-    @TableField(value = "`from_user_phone`")
-    @EncryptField(encryptType = "FPE")
-    private String fromUserPhone;
-
-    /**
-     * 账号ID
-     */
-    @TableField(value = "`to_user_id`")
-    private Long toUserId;
-
-    /**
-     * 用户名
-     */
-    @TableField(value = "`to_user_name`")
-    private String toUserName;
-
-    /**
-     * 用户手机
-     */
-    @TableField(value = "`to_user_phone`")
-    @EncryptField(encryptType = "FPE")
-    private String toUserPhone;
+    @TableField(value = "`sorted`")
+    private Integer sorted;
 
     /**
      * 租户 id

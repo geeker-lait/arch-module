@@ -1,8 +1,5 @@
 package org.arch.ums.account.entity;
 
-import java.time.LocalDateTime;
-
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -13,39 +10,40 @@ import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
- * 账号-角色(Role) 实体类
+ * 账号-资源类目(Category) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 21:25:29
+ * @date 2021-03-17 21:25:26
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("account_role")
-public class Role extends CrudEntity<Role> {
+@TableName("account_category")
+public class Category extends CrudEntity<Category> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 账号角色ID
+     * 资源类目ID
      */
     @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 角色名
+     * 父节点ID
      */
-    @TableField(value = "`role_name`")
-    private String roleName;
+    @TableField(value = "`pid`")
+    private Long pid;
 
     /**
-     * 角色icon
+     * 资源类目名
      */
-    @TableField(value = "`icon`")
-    private String icon;
+    @TableField(value = "`category_name`")
+    private String categoryName;
 
     /**
      * 顺序

@@ -24,7 +24,7 @@ public class Auth2ConnectionDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * {@link Identifier#getId()}
+	 * {@link IdentifierRequest#getId()}
 	 */
 	private Long id;
 	/**

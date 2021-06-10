@@ -1,88 +1,55 @@
-package org.arch.ums.account.entity;
+package org.arch.ums.conf.entity;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.arch.framework.crud.CrudEntity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
- * 账号-岗位(Post) 实体类
+ * 手机号段信息(MobileSegment) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 21:25:28
+ * @date 2021-03-17 21:27:02
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("account_post")
-public class Post extends CrudEntity<Post> {
+@TableName("conf_mobile_segment")
+public class MobileSegment extends Model<MobileSegment> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键
+     * 手机号段信息id
      */
     @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 父id
+     * 手机前缀(3/4)
      */
-    @TableField(value = "`post_pid`")
-    private Long postPid;
+    @TableField(value = "`prefix`")
+    private Integer prefix;
 
     /**
-     * 岗位名
+     * 运营商
      */
-    @TableField(value = "`post_name`")
-    private String postName;
+    @TableField(value = "`mno`")
+    private String mno;
 
     /**
-     * 岗位code
+     * 是否虚拟号段: 1 是, 0 否, 默认: 0
      */
-    @TableField(value = "`post_code`")
-    private String postCode;
-
-    /**
-     * icon
-     */
-    @TableField(value = "`post_icon`")
-    private String postIcon;
-
-    /**
-     * 薪资
-     */
-    @TableField(value = "`salary`")
-    private BigDecimal salary;
-
-    /**
-     * 租户 id
-     */
-    @TableField(value = "`tenant_id`")
-    private Integer tenantId;
-
-    /**
-     * 应用 id
-     */
-    @TableField(value = "`app_id`")
-    private Integer appId;
-
-    /**
-     * 店铺 id
-     */
-    @TableField(value = "`store_id`")
-    private Integer storeId;
+    @TableField(value = "`virtual`")
+    private Boolean virtual;
 
     /**
      * 乐观锁, 默认: 0

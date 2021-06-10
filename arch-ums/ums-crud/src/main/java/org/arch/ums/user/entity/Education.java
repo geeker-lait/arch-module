@@ -1,6 +1,5 @@
-package org.arch.ums.account.entity;
+package org.arch.ums.user.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -9,42 +8,75 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
+import org.arch.framework.encrypt.EncryptField;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * 账号-角色权限表(RolePermission) 实体类
+ * 用户学历信息(Education) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 21:25:29
+ * @date 2021-03-17 21:30:12
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("account_role_permission")
-public class RolePermission extends CrudEntity<RolePermission> {
+@TableName("user_education")
+public class Education extends CrudEntity<Education> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * id
+     * 用户学历信息表ID
      */
     @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 角色ID
+     * 用户ID
      */
-    @TableField(value = "`role_id`")
-    private Long roleId;
+    @TableField(value = "`user_id`")
+    private Long userId;
 
     /**
-     * 权限ID
+     * 证书编码
      */
-    @TableField(value = "`permission_id`")
-    private Long permissionId;
+    @TableField(value = "`certificate_no`")
+    @EncryptField(encryptType = "TEXT_ENCRYPT")
+    private String certificateNo;
+
+    /**
+     * 证书名称
+     */
+    @TableField(value = "`certificate_name`")
+    private String certificateName;
+
+    /**
+     * 证书登记机构
+     */
+    @TableField(value = "`certificate_org`")
+    private String certificateOrg;
+
+    /**
+     * 学历(如: 大专, 本科, 硕士, 博士)
+     */
+    @TableField(value = "`certificate_level`")
+    private String certificateLevel;
+
+    /**
+     * 顺序
+     */
+    @TableField(value = "`sorted`")
+    private Integer sorted;
+
+    /**
+     * 颁发时间
+     */
+    @TableField(value = "`awardtime`")
+    private LocalDate awardtime;
 
     /**
      * 租户 id

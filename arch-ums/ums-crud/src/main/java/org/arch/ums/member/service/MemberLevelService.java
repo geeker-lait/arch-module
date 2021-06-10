@@ -7,8 +7,6 @@ import org.arch.ums.member.dao.MemberLevelDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.Long;
-
 import org.arch.framework.crud.CrudService;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;

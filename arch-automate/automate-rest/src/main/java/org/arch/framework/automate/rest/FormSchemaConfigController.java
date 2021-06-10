@@ -27,7 +27,7 @@ import static java.util.Objects.nonNull;
 @RestController
 @RequestMapping("/form/schema/config")
 public class FormSchemaConfigController implements CrudBiz<FormSchemaConfigRequest, FormSchemaConfig, Long
-        , FormSchemaConfigSearchDto, FormSchemaConfigService> {
+        , FormSchemaConfigSearchDto, FormSchemaConfigSearchDto, FormSchemaConfigService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormSchemaConfigService formSchemaConfigService;

@@ -2,11 +2,9 @@ package org.arch.ums.account.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.beans.Response;
 import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.consts.RoleConstants;
@@ -155,69 +153,16 @@ public class AuthClientBiz implements CrudBiz<AuthClientRequest, AuthClient, jav
     }
 
     /**
-     * 根据 entity 条件查询对象.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request 实体的 request 封装类型
-     * @return {@link Response}
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public AuthClientSearchDto findOne(AuthClientRequest request) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        AuthClient authClient = resolver(token, request);
-        AuthClientSearchDto searchDto = convertSearchDto(authClient);
-        AuthClient result = getCrudService().findOneByMapParams(searchDto.searchParams());
-        return convertReturnDto(result);
-    }
-
-    /**
-     * 根据 entity 条件查询对象列表.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request 实体的 request 类型
-     * @return {@link Response}
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public List<AuthClientSearchDto> find(AuthClientRequest request) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        AuthClient authClient = resolver(token, request);
-        AuthClientSearchDto searchDto = convertSearchDto(authClient);
-        List<AuthClient> authClientList = getCrudService().findAllByMapParams(searchDto.searchParams());
-        return authClientList.stream().map(this::convertReturnDto).collect(Collectors.toList());
-    }
-
-    /**
-     * 分页查询.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request    实体的 request 类型
-     * @param pageNumber 第几页
-     * @param pageSize   页大小
-     * @return {@link IPage}
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public IPage<AuthClientSearchDto> page(AuthClientRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        AuthClient authClient = resolver(token, request);
-        AuthClientSearchDto searchDto = convertSearchDto(authClient);
-        IPage<AuthClient> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
-        return page.convert(this::convertReturnDto);
-    }
-
-    /**
      * 根据 id 更新实体
      *
-     * @param entity 实体
+     * @param request 实体 request
      * @return 返回更新后的实体
      */
+    @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public boolean updateById(AuthClient entity) {
+    public Boolean updateById(AuthClientRequest request) {
+        TokenInfo tokenInfo = SecurityUtils.getTokenInfo();
+        AuthClient entity = resolver(tokenInfo, request);
         boolean updateById = authClientService.updateById(entity);
         setRedisSyncFlag();
         return updateById;
@@ -227,27 +172,36 @@ public class AuthClientBiz implements CrudBiz<AuthClientRequest, AuthClient, jav
     /**
      * 保存单个实体
      *
-     * @param t 实体
+     * @param request 实体 request
      * @return 返回保存的实体
      */
+    @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public boolean save(AuthClient t) {
-        final boolean save = authClientService.save(t);
+    public AuthClientSearchDto save(AuthClientRequest request) {
+        TokenInfo tokenInfo = SecurityUtils.getTokenInfo();
+        AuthClient authClient = resolver(tokenInfo, request);
+        final boolean save = authClientService.save(authClient);
         setRedisSyncFlag();
-        return save;
+        return convertReturnDto(authClient);
     }
 
     /**
      * 保存多个实体
      *
-     * @param authClientList 实体
+     * @param authClientRequestList 实体 request List
      * @return 返回保存的实体
      */
+    @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public boolean saveList(List<AuthClient> authClientList) {
+    public List<AuthClientSearchDto> saveAll(List<AuthClientRequest> authClientRequestList) {
+        TokenInfo tokenInfo = SecurityUtils.getTokenInfo();
+        List<AuthClient> authClientList =
+                authClientRequestList.stream()
+                                     .map(request -> resolver(tokenInfo, request))
+                                     .collect(Collectors.toList());
         final boolean saveBatch = authClientService.saveList(authClientList);
         setRedisSyncFlag();
-        return saveBatch;
+        return authClientList.stream().map(this::convertReturnDto).collect(Collectors.toList());
     }
 
     /***
@@ -271,12 +225,15 @@ public class AuthClientBiz implements CrudBiz<AuthClientRequest, AuthClient, jav
     /***
      * 逻辑删除实体
      *
-     * @param t 需要删除的实体
+     * @param request 需要删除的实体
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public boolean deleteById(AuthClient t) {
-        t.setDeleted(FALSE);
-        LambdaUpdateWrapper<AuthClient> updateWrapper = Wrappers.lambdaUpdate(t).set(AuthClient::getDeleted, 1);
+    public Boolean deleteById(AuthClientRequest request) {
+        TokenInfo tokenInfo = SecurityUtils.getTokenInfo();
+        AuthClient authClient = resolver(tokenInfo, request);
+        request.setDeleted(FALSE);
+        LambdaUpdateWrapper<AuthClient> updateWrapper = Wrappers.lambdaUpdate(authClient).set(AuthClient::getDeleted,
+                                                                                              Boolean.TRUE);
         // 逻辑删除
         final boolean remove = authClientService.updateBySpec(updateWrapper);
         setRedisSyncFlag();

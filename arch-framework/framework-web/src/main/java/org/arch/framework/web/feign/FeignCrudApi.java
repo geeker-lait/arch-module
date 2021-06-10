@@ -185,6 +185,26 @@ public interface FeignCrudApi<DTO, ID extends Serializable, R,
     }
 
     /**
+     * 批量逻辑删除
+     *
+     * @param ids 主键集合
+     * @return 是否删除成功
+     */
+    @DeleteMapping(path = "/batch")
+    default Response<Boolean> deleteAllById(@RequestBody List<ID> ids) {
+        try {
+            return getApi().deleteAllById(ids);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            if (e instanceof IncorrectResultSizeDataAccessException) {
+                return Response.error(ResponseStatusCode.FAILED.getCode(), "查询到多个结果");
+            } else {
+                return Response.error(ResponseStatusCode.FAILED.getCode(), e.getMessage());
+            }
+        }
+    }
+
+    /**
      * 根据 id 更新实体, 直接更新 不为 null 的值.
      *
      * @param request 实体类对应的 {@code TRequest}

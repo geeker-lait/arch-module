@@ -10,14 +10,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 public class AdviceConfiguration {
 
     @Bean
-//    @ConditionalOnMissingClass({"org.arch.framework.beans.exception.i18n.UnifiedMessageSource"})
     public UnifiedMessageSource unifiedMessageSource() {
         return new UnifiedMessageSource();
     }
 
     @Bean
-//    @ConditionalOnMissingClass({"org.arch.framework.beans.exception.handler.RestExceptionHandler"})
-    public ResponseBodyAdvice<Object> responseBodyAdvice() {
+    public ResponseBodyAdvice<Object> restResponseBodyAdvice() {
         return new RestExceptionHandler();
     }
 }

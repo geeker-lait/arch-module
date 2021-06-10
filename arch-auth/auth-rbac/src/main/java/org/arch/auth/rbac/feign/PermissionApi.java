@@ -27,7 +27,7 @@ import java.util.List;
 public interface PermissionApi extends FeignApi<PermissionSearchDto, PermissionRequest, Long> {
 
     /**
-     * 多租户根据 {@code permissionIds} 获取 {@link Permission} 列表.
+     * 多租户根据 {@code permissionIds} 获取 {@link PermissionSearchDto} 列表.
      *
      * @param tenantId      多租户 ID
      * @param permissionIds 权限 ID 列表

@@ -1,8 +1,8 @@
-package org.arch.ums.account.entity;
+package org.arch.ums.user.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -15,37 +15,73 @@ import org.arch.framework.crud.CrudEntity;
 import java.io.Serializable;
 
 /**
- * 账号-角色组织或机构(RoleGroup) 实体类
+ * 用户工作信息(Job) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 21:25:29
+ * @date 2021-03-17 21:30:11
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("account_role_group")
-public class RoleGroup extends CrudEntity<RoleGroup> {
+@TableName("user_job")
+public class Job extends CrudEntity<Job> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * id
+     * 用户工作信息表ID
      */
     @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 角色ID
+     * 用户ID
      */
-    @TableField(value = "`role_id`")
-    private Long roleId;
+    @TableField(value = "`user_id`")
+    private Long userId;
 
     /**
-     * 组织ID
+     * 公司行业
      */
-    @TableField(value = "`group_id`")
-    private Long groupId;
+    @TableField(value = "`group_channel`")
+    private String groupChannel;
+
+    /**
+     * 公司名称
+     */
+    @TableField(value = "`group_name`")
+    private String groupName;
+
+    /**
+     * 职位名称
+     */
+    @TableField(value = "`post_name`")
+    private String postName;
+
+    /**
+     * 职级
+     */
+    @TableField(value = "`post_level`")
+    private String postLevel;
+
+    /**
+     * 顺序
+     */
+    @TableField(value = "`sorted`")
+    private Integer sorted;
+
+    /**
+     * 入职时间
+     */
+    @TableField(value = "`hiredate_time`")
+    private LocalDate hiredateTime;
+
+    /**
+     * 离职时间
+     */
+    @TableField(value = "`dimission_time`")
+    private LocalDate dimissionTime;
 
     /**
      * 租户 id

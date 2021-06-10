@@ -27,7 +27,7 @@ import static java.util.Objects.nonNull;
 @RestController
 @RequestMapping("/form/field/option")
 public class FormFieldOptionController implements CrudBiz<FormFieldOptionRequest, FormFieldOption, Long,
-        FormFieldOptionSearchDto, FormFieldOptionService> {
+        FormFieldOptionSearchDto, FormFieldOptionSearchDto, FormFieldOptionService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormFieldOptionService formFieldOptionService;

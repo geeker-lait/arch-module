@@ -27,7 +27,7 @@ import static java.util.Objects.nonNull;
 @RestController
 @RequestMapping("/form/field/typ")
 public class FormFieldTypController implements CrudBiz<FormFieldTypRequest, FormFieldTyp, Long,
-        FormFieldTypSearchDto, FormFieldTypService> {
+        FormFieldTypSearchDto,  FormFieldTypSearchDto, FormFieldTypService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormFieldTypService formFieldTypService;

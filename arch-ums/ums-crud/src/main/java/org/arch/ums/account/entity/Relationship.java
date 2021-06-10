@@ -1,101 +1,112 @@
-package org.arch.ums.user.entity;
+package org.arch.ums.account.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
 import org.arch.framework.encrypt.EncryptField;
-import org.arch.framework.ums.enums.AddressType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 用户地址表(Address) 实体类
+ * 账号-关系(Relationship) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 22:16:37
+ * @date 2021-03-17 21:25:28
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("user_address")
-public class Address extends CrudEntity<Address> {
+@TableName("account_relationship")
+public class Relationship extends CrudEntity<Relationship> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户地址信息表id
+     * id
      */
     @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 用户id
+     * 父节点ID（数据库自增）, 没有父节点则为 -1
      */
-    @TableField(value = "`user_id`")
-    private Long userId;
+    @TableField(value = "`pid`")
+    private Long pid;
 
     /**
-     * 省
+     * 组
      */
-    @TableField(value = "`province`")
-    private String province;
+    @TableField(value = "`org`")
+    private Long org;
 
     /**
-     * 市
+     * 深度
      */
-    @TableField(value = "`city`")
-    private String city;
-
-    /**
-     * 区
-     */
-    @TableField(value = "`district`")
-    private String district;
-
-    /**
-     * 街道
-     */
-    @TableField(value = "`street`")
-    private String street;
-
-    /**
-     * 详细地址
-     */
-    @TableField(value = "`address`")
-    private String address;
-
-    /**
-     * 地址类型:工作地址/家庭地址/收获地址/..
-     */
-    @TableField(value = "`address_type`")
-    private AddressType addressType;
+    @TableField(value = "`deep`")
+    private Long deep;
 
     /**
      * 顺序
      */
-    @TableField(value = "`sorted`")
-    private Integer sorted;
+    @TableField(value = "`seq`")
+    private Long seq;
 
     /**
-     * 联系人
+     * 父节点顺序: 3,4,5,6(对应: deep-4, deep-3, deep-2, deep-1)
      */
-    @TableField(value = "`contacts`")
-    private String contacts;
+    @TableField(value = "`pseq`")
+    private String pseq;
 
     /**
-     * 手机号
+     * seq 向量
      */
-    @TableField(value = "`phone_num`")
+    @TableField(value = "`vector`")
+    private String vector;
+
+    /**
+     * 推荐人ID, 没有推荐人则为 -1
+     */
+    @TableField(value = "`from_user_id`")
+    private Long fromUserId;
+
+    /**
+     * 推荐人姓名
+     */
+    @TableField(value = "`from_user_name`")
+    private String fromUserName;
+
+    /**
+     * 推荐人手机
+     */
+    @TableField(value = "`from_user_phone`")
     @EncryptField(encryptType = "FPE")
-    private String phoneNum;
+    private String fromUserPhone;
+
+    /**
+     * 账号ID
+     */
+    @TableField(value = "`to_user_id`")
+    private Long toUserId;
+
+    /**
+     * 用户名
+     */
+    @TableField(value = "`to_user_name`")
+    private String toUserName;
+
+    /**
+     * 用户手机
+     */
+    @TableField(value = "`to_user_phone`")
+    @EncryptField(encryptType = "FPE")
+    private String toUserPhone;
 
     /**
      * 租户 id

@@ -27,7 +27,7 @@ import static java.util.Objects.nonNull;
 @RestController
 @RequestMapping("/form/interface")
 public class FormInterfaceController implements CrudBiz<FormInterfaceRequest, FormInterface, Long,
-        FormInterfaceSearchDto, FormInterfaceService> {
+        FormInterfaceSearchDto, FormInterfaceSearchDto, FormInterfaceService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormInterfaceService formInterfaceService;

@@ -28,7 +28,7 @@ import java.util.List;
 public interface AccountResourceApi extends FeignApi<ResourceSearchDto, ResourceRequest, Long> {
 
     /**
-     * 多租户根据 {@code resourceIds} 获取 {@link Resource} 列表.
+     * 多租户根据 {@code resourceIds} 获取 {@link ResourceSearchDto} 列表.
      *
      * @param tenantId    多租户 ID
      * @param resourceIds 资源 ID 列表

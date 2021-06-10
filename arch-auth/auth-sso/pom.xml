@@ -76,6 +76,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>ums-rest</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
             <exclusions>

@@ -27,7 +27,7 @@ import static java.util.Objects.nonNull;
 @RestController
 @RequestMapping("/form/table/instance")
 public class FormTableInstanceController implements CrudBiz<FormTableInstanceRequest, FormTableInstance,
-        Long, FormTableInstanceSearchDto, FormTableInstanceService> {
+        Long, FormTableInstanceSearchDto, FormTableInstanceSearchDto, FormTableInstanceService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormTableInstanceService formTableInstanceService;

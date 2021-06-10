@@ -1,24 +1,17 @@
 package org.arch.ums.conf.biz;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.conf.dto.DictionaryRequest;
 import org.arch.ums.conf.dto.DictionarySearchDto;
 import org.arch.ums.conf.entity.Dictionary;
 import org.arch.ums.conf.rest.DictionaryRest;
 import org.arch.ums.conf.service.DictionaryService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 
@@ -60,62 +53,6 @@ public class DictionaryBiz implements CrudBiz<DictionaryRequest, Dictionary, jav
     @Override
     public DictionarySearchDto getSearchDto() {
         return new DictionarySearchDto();
-    }
-
-    /**
-     * 根据 entity 条件查询对象.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request 实体的 request 类型
-     * @return DTO
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public DictionarySearchDto findOne(DictionaryRequest request) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        Dictionary dictionary = resolver(token, request);
-        DictionarySearchDto searchDto = convertSearchDto(dictionary);
-        Dictionary result = getCrudService().findOneByMapParams(searchDto.searchParams());
-        return convertReturnDto(result);
-    }
-
-    /**
-     * 根据 entity 条件查询对象列表.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request 实体的 request 类型
-     * @return DTO List
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public List<DictionarySearchDto> find(DictionaryRequest request) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        Dictionary dictionary = resolver(token, request);
-        DictionarySearchDto searchDto = convertSearchDto(dictionary);
-        List<Dictionary> dictionaryList = getCrudService().findAllByMapParams(searchDto.searchParams());
-        return dictionaryList.stream().map(this::convertReturnDto).collect(Collectors.toList());
-    }
-
-    /**
-     * 分页查询.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request    实体的 request 类型
-     * @param pageNumber 第几页
-     * @param pageSize   页大小
-     * @return {@link IPage}
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public IPage<DictionarySearchDto> page(DictionaryRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        Dictionary dictionary = resolver(token, request);
-        DictionarySearchDto searchDto = convertSearchDto(dictionary);
-        IPage<Dictionary> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
-        return page.convert(this::convertReturnDto);
     }
 
 }

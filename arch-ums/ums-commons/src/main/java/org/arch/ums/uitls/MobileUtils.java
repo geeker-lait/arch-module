@@ -5,7 +5,7 @@ import org.arch.framework.beans.exception.constant.CommonStatusCode;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.ums.conf.dto.MobileInfoRequest;
 import org.arch.ums.conf.dto.MobileSegmentRequest;
-import org.arch.ums.conf.entity.MobileSegment;
+import org.arch.ums.conf.dto.MobileSegmentSearchDto;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -78,7 +78,7 @@ public class MobileUtils {
      */
     @NonNull
     public static List<MobileInfoRequest> getMobileInfo(@NonNull String delimiter, @NonNull BufferedReader bufferedReader,
-                                                        @NonNull Map<Integer, MobileSegment> segmentMap,
+                                                        @NonNull Map<Integer, MobileSegmentSearchDto> segmentMap,
                                                         @NonNull List<String> errorList) {
 
         // 解析手机归属地信息. 格式: 1999562	甘肃-兰州
@@ -110,8 +110,8 @@ public class MobileUtils {
 
                                  Integer segmentPrefix3 = Integer.valueOf(prefix.substring(0, 3));
                                  Integer segmentPrefix4 = Integer.valueOf(prefix.substring(0, 4));
-                                 MobileSegment segmentInfo = segmentMap.getOrDefault(segmentPrefix4,
-                                                                                     null);
+                                 MobileSegmentSearchDto segmentInfo = segmentMap.getOrDefault(segmentPrefix4,
+                                                                                              null);
                                  if (isNull(segmentInfo)) {
                                      segmentInfo = segmentMap.getOrDefault(segmentPrefix3, null);
                                  }

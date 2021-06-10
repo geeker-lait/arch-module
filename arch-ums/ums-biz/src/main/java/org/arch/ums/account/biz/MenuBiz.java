@@ -1,13 +1,11 @@
 package org.arch.ums.account.biz;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.dto.MenuRequest;
 import org.arch.ums.account.dto.MenuSearchDto;
 import org.arch.ums.account.entity.Menu;
@@ -62,62 +60,6 @@ public class MenuBiz implements CrudBiz<MenuRequest, Menu, java.lang.Long, MenuS
     @Override
     public MenuSearchDto getSearchDto() {
         return new MenuSearchDto();
-    }
-
-    /**
-     * 根据 entity 条件查询对象.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request 实体的 request 类型
-     * @return DTO
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public MenuSearchDto findOne(MenuRequest request) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        Menu menu = resolver(token, request);
-        MenuSearchDto searchDto = convertSearchDto(menu);
-        Menu result = getCrudService().findOneByMapParams(searchDto.searchParams());
-        return convertReturnDto(result);
-    }
-
-    /**
-     * 根据 entity 条件查询对象列表.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request 实体的 request 类型
-     * @return DTO List
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public List<MenuSearchDto> find(MenuRequest request) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        Menu menu = resolver(token, request);
-        MenuSearchDto searchDto = convertSearchDto(menu);
-        List<Menu> menuList = getCrudService().findAllByMapParams(searchDto.searchParams());
-        return menuList.stream().map(this::convertReturnDto).collect(Collectors.toList());
-    }
-
-    /**
-     * 分页查询.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request    实体的 request 类型
-     * @param pageNumber 第几页
-     * @param pageSize   页大小
-     * @return {@link IPage}
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public IPage<MenuSearchDto> page(MenuRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        Menu menu = resolver(token, request);
-        MenuSearchDto searchDto = convertSearchDto(menu);
-        IPage<Menu> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
-        return page.convert(this::convertReturnDto);
     }
 
     /**

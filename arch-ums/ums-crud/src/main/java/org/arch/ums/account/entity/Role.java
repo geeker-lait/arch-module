@@ -1,71 +1,50 @@
-package org.arch.ums.user.entity;
+package org.arch.ums.account.entity;
+
+import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
-import org.arch.framework.encrypt.EncryptField;
-import org.arch.framework.ums.enums.Mno;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
- * 用户电话信息(Phone) 实体类
+ * 账号-角色(Role) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 22:16:12
+ * @date 2021-03-17 21:25:29
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("user_phone")
-public class Phone extends CrudEntity<Phone> {
+@TableName("account_role")
+public class Role extends CrudEntity<Role> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户电话信息表ID
+     * 账号角色ID
      */
     @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 用户ID
+     * 角色名
      */
-    @TableField(value = "`user_id`")
-    private Long userId;
+    @TableField(value = "`role_name`")
+    private String roleName;
 
     /**
-     * 手机号
+     * 角色icon
      */
-    @TableField(value = "`phone_no`")
-    @EncryptField(encryptType = "FPE")
-    private String phoneNo;
-
-    /**
-     * 省份
-     */
-    @TableField(value = "`province`")
-    private String province;
-
-    /**
-     * 城市
-     */
-    @TableField(value = "`city`")
-    private String city;
-
-    /**
-     * 运营商: 移动/电信/联通/电话..
-     */
-    @TableField(value = "`mno`")
-    private Mno mno;
+    @TableField(value = "`icon`")
+    private String icon;
 
     /**
      * 顺序

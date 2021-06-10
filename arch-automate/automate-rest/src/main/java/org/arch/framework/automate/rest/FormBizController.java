@@ -26,7 +26,7 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/biz")
-public class FormBizController implements CrudBiz<FormBizRequest, FormBiz, Long, FormBizSearchDto,
+public class FormBizController implements CrudBiz<FormBizRequest, FormBiz, Long, FormBizSearchDto, FormBizSearchDto,
         FormBizService> {
 
     private final TenantContextHolder tenantContextHolder;

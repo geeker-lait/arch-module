@@ -1,4 +1,4 @@
-package org.arch.ums.account.entity;
+package org.arch.ums.user.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -8,67 +8,87 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
-import org.arch.framework.ums.enums.ResourceType;
+import org.arch.framework.encrypt.EncryptField;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * 账号-权限(Permission) 实体类
+ * 用户身份证表(IdCard) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 21:25:28
+ * @date 2021-03-17 21:30:12
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("account_permission")
-public class Permission extends CrudEntity<Permission> {
+@TableName("user_id_card")
+public class IdCard extends CrudEntity<IdCard> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 账号-菜单ID
+     * 用户身份证表ID
      */
     @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 权限码
+     * 用户ID
      */
-    @TableField(value = "`permission_code`")
-    private String permissionCode;
+    @TableField(value = "`user_id`")
+    private Long userId;
 
     /**
-     * 权限名称
+     * 身份证号
      */
-    @TableField(value = "`permission_name`")
-    private String permissionName;
+    @TableField(value = "`id_card`")
+    @EncryptField(encryptType = "FPE", idCard = true)
+    private String idCard;
 
     /**
-     * 权限值
+     * 名字
      */
-    @TableField(value = "`permission_val`")
-    private String permissionVal;
+    @TableField(value = "`name`")
+    private String name;
 
     /**
-     * uri
+     * 年龄
      */
-    @TableField(value = "`permission_uri`")
-    private String permissionUri;
+    @TableField(value = "`age`")
+    private Integer age;
 
     /**
-     * 权限类型：0->目录；1->菜单；2->按钮（接口绑定权限）, 4->链接
+     * 性别
      */
-    @TableField(value = "`resource_type`")
-    private Integer resourceType;
+    @TableField(value = "`sex`")
+    private Integer sex;
 
     /**
-     * 排序
+     * 生日
      */
-    @TableField(value = "`sorted`")
-    private Integer sorted;
+    @TableField(value = "`birthday`")
+    private LocalDate birthday;
+
+    /**
+     * 民族
+     */
+    @TableField(value = "`nation`")
+    private String nation;
+
+    /**
+     * 居住地
+     */
+    @TableField(value = "`domicile`")
+    private String domicile;
+
+    /**
+     * 颁发机构
+     */
+    @TableField(value = "`sign_org`")
+    private String signOrg;
 
     /**
      * 租户 id

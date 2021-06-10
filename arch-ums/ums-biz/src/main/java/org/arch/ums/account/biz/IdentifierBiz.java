@@ -2,7 +2,6 @@ package org.arch.ums.account.biz;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -354,62 +353,6 @@ public class IdentifierBiz implements CrudBiz<IdentifierRequest, Identifier, jav
                                  int indexOf = identifier.indexOf(AccountConstants.OAUTH_IDENTIFIER_SEPARATOR);
                                  return identifier.substring(0, indexOf);
                              }));
-    }
-
-    /**
-     * 根据 entity 条件查询对象.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request 实体的 request 封装类型
-     * @return {@link Response}
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public IdentifierSearchDto findOne(IdentifierRequest request) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        Identifier identifier = resolver(token, request);
-        IdentifierSearchDto searchDto = convertSearchDto(identifier);
-        Identifier result = getCrudService().findOneByMapParams(searchDto.searchParams());
-        return convertReturnDto(result);
-    }
-
-    /**
-     * 根据 entity 条件查询对象列表.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request 实体的 request 封装类型
-     * @return {@link Response}
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public List<IdentifierSearchDto> find(IdentifierRequest request) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        Identifier identifier = resolver(token, request);
-        IdentifierSearchDto searchDto = convertSearchDto(identifier);
-        List<Identifier> identifierList = getCrudService().findAllByMapParams(searchDto.searchParams());
-        return identifierList.stream().map(this::convertReturnDto).collect(Collectors.toList());
-    }
-
-    /**
-     * 分页查询.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request    实体的 request 类型
-     * @param pageNumber 第几页
-     * @param pageSize   页大小
-     * @return {@link Response}
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public IPage<IdentifierSearchDto> page(IdentifierRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        Identifier identifier = resolver(token, request);
-        IdentifierSearchDto searchDto = convertSearchDto(identifier);
-        IPage<Identifier> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
-        return page.convert(this::convertReturnDto);
     }
 
     /**

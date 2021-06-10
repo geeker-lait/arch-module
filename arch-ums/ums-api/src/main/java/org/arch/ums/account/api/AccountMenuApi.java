@@ -28,7 +28,7 @@ import java.util.List;
 public interface AccountMenuApi extends FeignApi<MenuSearchDto, MenuRequest, Long> {
 
     /**
-     * 多租户根据 {@code menuIds} 获取 {@link Menu} 列表.
+     * 多租户根据 {@code menuIds} 获取 {@link MenuSearchDto} 列表.
      *
      * @param tenantId 多租户 ID
      * @param menuIds  菜单 ID 列表

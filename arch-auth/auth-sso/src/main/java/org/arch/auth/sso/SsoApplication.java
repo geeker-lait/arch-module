@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @since 2021.1.5 14:09
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.arch.admin", "org.arch.auth.sso"},
+@ComponentScan(basePackages = {"org.arch.admin", "org.arch.auth.sso", "org.arch.ums"},
 excludeFilters = {
        @ComponentScan.Filter(type = FilterType.REGEX, pattern = "org.arch.ums.*.rest.*Rest")
 })

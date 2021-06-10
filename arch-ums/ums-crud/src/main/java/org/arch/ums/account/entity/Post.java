@@ -1,67 +1,69 @@
 package org.arch.ums.account.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
-import org.arch.framework.encrypt.EncryptClass;
-import org.arch.framework.encrypt.EncryptField;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
- * 账号名(Name) 实体类
+ * 账号-岗位(Post) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 22:41:13
+ * @date 2021-03-17 21:25:28
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("account_name")
-@EncryptClass
-public class Name extends CrudEntity<Name> {
+@TableName("account_post")
+public class Post extends CrudEntity<Post> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 账号-标识 ID
+     * 主键
      */
-    @TableId(value = "`id`", type = IdType.INPUT)
+    @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 账号ID/用户ID/会员ID/商户ID
+     * 父id
      */
-    @TableField(value = "`account_id`")
-    private Long accountId;
+    @TableField(value = "`post_pid`")
+    private Long postPid;
 
     /**
-     * 用户昵称可随机生成
+     * 岗位名
      */
-    @TableField(value = "`nick_name`")
-    @EncryptField(encryptType = "FPE", filterRegx = "\\d{11}")
-    private String nickName;
+    @TableField(value = "`post_name`")
+    private String postName;
 
     /**
-     * 头像
+     * 岗位code
      */
-    @TableField(value = "`avatar`")
-    private String avatar;
+    @TableField(value = "`post_code`")
+    private String postCode;
 
     /**
-     * 来源, 推广统计用
+     * icon
      */
-    @TableField(value = "`source`")
-    private String source;
+    @TableField(value = "`post_icon`")
+    private String postIcon;
+
+    /**
+     * 薪资
+     */
+    @TableField(value = "`salary`")
+    private BigDecimal salary;
 
     /**
      * 租户 id

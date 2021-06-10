@@ -1,69 +1,84 @@
-package org.arch.ums.conf.entity;
+package org.arch.ums.account.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
+import org.arch.framework.encrypt.EncryptClass;
+import org.arch.framework.encrypt.EncryptField;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 手机号归属地信息(MobileInfo) 实体类
+ * 账号名(Name) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 21:28:41
+ * @date 2021-03-17 22:41:13
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("conf_mobile_info")
-public class MobileInfo extends Model<MobileInfo> {
+@TableName("account_name")
+@EncryptClass
+public class Name extends CrudEntity<Name> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 手机号归属地信息id
+     * 账号-标识 ID
      */
-    @TableId(value = "`id`")
+    @TableId(value = "`id`", type = IdType.INPUT)
     private Long id;
 
     /**
-     * 手机前缀(7)
+     * 账号ID/用户ID/会员ID/商户ID
      */
-    @TableField(value = "`prefix`")
-    private Integer prefix;
+    @TableField(value = "`account_id`")
+    private Long accountId;
 
     /**
-     * 省份
+     * 用户昵称可随机生成
      */
-    @TableField(value = "`province`")
-    private String province;
+    @TableField(value = "`nick_name`")
+    @EncryptField(encryptType = "FPE", filterRegx = "\\d{11}")
+    private String nickName;
 
     /**
-     * 城市
+     * 头像
      */
-    @TableField(value = "`city`")
-    private String city;
+    @TableField(value = "`avatar`")
+    private String avatar;
 
     /**
-     * 运营商
+     * 来源, 推广统计用
      */
-    @TableField(value = "`mno`")
-    private String mno;
+    @TableField(value = "`source`")
+    private String source;
 
     /**
-     * 是否虚拟号段: 1 是, 0 否, 默认: 0
+     * 租户 id
      */
-    @TableField(value = "`virtual`")
-    private Boolean virtual;
+    @TableField(value = "`tenant_id`")
+    private Integer tenantId;
+
+    /**
+     * 应用 id
+     */
+    @TableField(value = "`app_id`")
+    private Integer appId;
+
+    /**
+     * 店铺 id
+     */
+    @TableField(value = "`store_id`")
+    private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0

@@ -1,74 +1,67 @@
-package org.arch.ums.account.entity;
+package org.arch.ums.conf.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.arch.framework.crud.CrudEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 账号-资源类目(Category) 实体类
+ * 手机号归属地信息(MobileInfo) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 21:25:26
+ * @date 2021-03-17 21:28:41
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("account_category")
-public class Category extends CrudEntity<Category> {
+@TableName("conf_mobile_info")
+public class MobileInfo extends Model<MobileInfo> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 资源类目ID
+     * 手机号归属地信息id
      */
     @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 父节点ID
+     * 手机前缀(7)
      */
-    @TableField(value = "`pid`")
-    private Long pid;
+    @TableField(value = "`prefix`")
+    private Integer prefix;
 
     /**
-     * 资源类目名
+     * 省份
      */
-    @TableField(value = "`category_name`")
-    private String categoryName;
+    @TableField(value = "`province`")
+    private String province;
 
     /**
-     * 顺序
+     * 城市
      */
-    @TableField(value = "`sorted`")
-    private Integer sorted;
+    @TableField(value = "`city`")
+    private String city;
 
     /**
-     * 租户 id
+     * 运营商
      */
-    @TableField(value = "`tenant_id`")
-    private Integer tenantId;
+    @TableField(value = "`mno`")
+    private String mno;
 
     /**
-     * 应用 id
+     * 是否虚拟号段: 1 是, 0 否, 默认: 0
      */
-    @TableField(value = "`app_id`")
-    private Integer appId;
-
-    /**
-     * 店铺 id
-     */
-    @TableField(value = "`store_id`")
-    private Integer storeId;
+    @TableField(value = "`virtual`")
+    private Boolean virtual;
 
     /**
      * 乐观锁, 默认: 0

@@ -1,6 +1,7 @@
 package org.arch.auth.sso.config;
 
 import org.arch.framework.web.mvc.config.TokenInfoWebMvcConfigurer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.dcenter.ums.security.common.config.SecurityCoreAutoConfigurer;
@@ -15,6 +16,7 @@ import top.dcenter.ums.security.common.config.SecurityCoreAutoConfigurer;
 @Configuration
 public class SsoWebSecurityConfigurer {
     @Bean
+    @ConditionalOnMissingClass("top.dcenter.ums.security.common.config.SecurityCoreAutoConfigurer")
     public SecurityCoreAutoConfigurer securityCoreAutoConfigurer() {
         return new SecurityCoreAutoConfigurer();
     }

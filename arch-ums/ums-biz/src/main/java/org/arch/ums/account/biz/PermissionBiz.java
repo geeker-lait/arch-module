@@ -1,13 +1,11 @@
 package org.arch.ums.account.biz;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.utils.SecurityUtils;
 import org.arch.ums.account.dto.PermissionRequest;
 import org.arch.ums.account.dto.PermissionSearchDto;
 import org.arch.ums.account.entity.Permission;
@@ -63,62 +61,6 @@ public class PermissionBiz implements CrudBiz<PermissionRequest, Permission, jav
     @Override
     public PermissionSearchDto getSearchDto() {
         return new PermissionSearchDto();
-    }
-
-    /**
-     * 根据 entity 条件查询对象.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request 实体的 request 类型
-     * @return DTO
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public PermissionSearchDto findOne(PermissionRequest request) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        Permission permission = resolver(token, request);
-        PermissionSearchDto searchDto = convertSearchDto(permission);
-        Permission result = getCrudService().findOneByMapParams(searchDto.searchParams());
-        return convertReturnDto(result);
-    }
-
-    /**
-     * 根据 entity 条件查询对象列表.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request 实体的 request 类型
-     * @return DTO List
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public List<PermissionSearchDto> find(PermissionRequest request) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        Permission permission = resolver(token, request);
-        PermissionSearchDto searchDto = convertSearchDto(permission);
-        List<Permission> permissionList = getCrudService().findAllByMapParams(searchDto.searchParams());
-        return permissionList.stream().map(this::convertReturnDto).collect(Collectors.toList());
-    }
-
-    /**
-     * 分页查询.
-     * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     *
-     * @param request    实体的 request 类型
-     * @param pageNumber 第几页
-     * @param pageSize   页大小
-     * @return {@link IPage}
-     */
-    @Override
-    @NonNull
-    @Transactional(readOnly = true)
-    public IPage<PermissionSearchDto> page(PermissionRequest request, Integer pageNumber, Integer pageSize) {
-        TokenInfo token = SecurityUtils.getTokenInfo();
-        Permission permission = resolver(token, request);
-        PermissionSearchDto searchDto = convertSearchDto(permission);
-        IPage<Permission> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
-        return page.convert(this::convertReturnDto);
     }
 
     /**

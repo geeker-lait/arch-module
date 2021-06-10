@@ -6,7 +6,6 @@ import org.arch.framework.web.feign.FeignApi;
 import org.arch.framework.web.feign.config.DeFaultFeignConfig;
 import org.arch.ums.account.dto.PermissionRequest;
 import org.arch.ums.account.dto.PermissionSearchDto;
-import org.arch.ums.account.entity.Permission;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -29,7 +28,7 @@ import java.util.List;
 public interface AccountPermissionApi extends FeignApi<PermissionSearchDto, PermissionRequest, Long> {
 
     /**
-     * 多租户根据 {@code permissionIds} 获取 {@link Permission} 列表.
+     * 多租户根据 {@code permissionIds} 获取 {@link PermissionSearchDto} 列表.
      *
      * @param tenantId      多租户 ID
      * @param permissionIds 权限 ID 列表

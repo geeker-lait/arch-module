@@ -27,7 +27,7 @@ import static java.util.Objects.nonNull;
 @RestController
 @RequestMapping("/form/definition")
 public class FormDefinitionController implements CrudBiz<FormDefinitionRequest, FormDefinition, Long,
-        FormDefinitionSearchDto, FormDefinitionService> {
+        FormDefinitionSearchDto, FormDefinitionSearchDto, FormDefinitionService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormDefinitionService formDefinitionService;

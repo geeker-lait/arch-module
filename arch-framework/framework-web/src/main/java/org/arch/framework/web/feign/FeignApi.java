@@ -103,6 +103,15 @@ public interface FeignApi<DTO, R, ID extends Serializable> {
     Response<Boolean> deleteById(@PathVariable("id") ID id);
 
     /**
+     * 批量逻辑删除
+     *
+     * @param ids 主键集合
+     * @return 是否删除成功
+     */
+    @DeleteMapping(path = "/batch")
+    Response<Boolean> deleteAllById(@RequestBody List<ID> ids);
+
+    /**
      * 根据 id 更新实体
      *
      * @param request 实体类对应的 {@code TRequest}

@@ -1,95 +1,50 @@
-package org.arch.ums.user.entity;
+package org.arch.ums.account.entity;
+
+import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
-import org.arch.framework.encrypt.EncryptField;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
- * 用户身份证表(IdCard) 实体类
+ * 账号-角色资源表(RoleResource) 实体类
  *
  * @author YongWu zheng
- * @date 2021-03-17 21:30:12
+ * @date 2021-03-17 21:25:29
  * @since 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("user_id_card")
-public class IdCard extends CrudEntity<IdCard> {
+@TableName("account_role_resource")
+public class RoleResource extends CrudEntity<RoleResource> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户身份证表ID
+     * id
      */
     @TableId(value = "`id`")
     private Long id;
 
     /**
-     * 用户ID
+     * 角色ID
      */
-    @TableField(value = "`user_id`")
-    private Long userId;
+    @TableField(value = "`role_id`")
+    private Long roleId;
 
     /**
-     * 身份证号
+     * 资源ID
      */
-    @TableField(value = "`id_card`")
-    @EncryptField(encryptType = "FPE", idCard = true)
-    private String idCard;
-
-    /**
-     * 名字
-     */
-    @TableField(value = "`name`")
-    private String name;
-
-    /**
-     * 年龄
-     */
-    @TableField(value = "`age`")
-    private Integer age;
-
-    /**
-     * 性别
-     */
-    @TableField(value = "`sex`")
-    private Integer sex;
-
-    /**
-     * 生日
-     */
-    @TableField(value = "`birthday`")
-    private LocalDate birthday;
-
-    /**
-     * 民族
-     */
-    @TableField(value = "`nation`")
-    private String nation;
-
-    /**
-     * 居住地
-     */
-    @TableField(value = "`domicile`")
-    private String domicile;
-
-    /**
-     * 颁发机构
-     */
-    @TableField(value = "`sign_org`")
-    private String signOrg;
+    @TableField(value = "`resource_id`")
+    private Long resourceId;
 
     /**
      * 租户 id
