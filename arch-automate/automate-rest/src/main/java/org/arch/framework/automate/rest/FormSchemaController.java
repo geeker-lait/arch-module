@@ -6,7 +6,7 @@ import org.arch.form.api.dto.FormSchemaSearchDto;
 import org.arch.form.api.request.FormSchemaRequest;
 import org.arch.form.crud.entity.FormSchema;
 import org.arch.form.crud.service.FormSchemaService;
-import org.arch.framework.crud.CrudController;
+import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +26,8 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/schema")
-public class FormSchemaController implements CrudController<FormSchemaRequest, FormSchema, java.lang.Long,
-        FormSchemaSearchDto, FormSchemaService> {
+public class FormSchemaController implements CrudBiz<FormSchemaRequest, FormSchema, Long,
+        FormSchemaSearchDto, FormSchemaSearchDto, FormSchemaService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormSchemaService formSchemaService;

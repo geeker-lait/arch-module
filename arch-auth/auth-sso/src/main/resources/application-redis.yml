@@ -1,6 +1,6 @@
 spring:
   redis:
-    host: 192.168.50.2
+    host: 192.168.31.31
     port: 6379
     password:
     database: 0
@@ -24,7 +24,7 @@ spring:
       on-profile: dev
 
   redis:
-    host: 192.168.50.2
+    host: 192.168.31.31
     port: 6379
     password:
     database: 0

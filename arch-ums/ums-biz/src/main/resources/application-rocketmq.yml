@@ -1,0 +1,34 @@
+spring:
+  cloud:
+    # Spring Cloud Stream 配置项，对应 BindingServiceProperties 类
+    stream:
+      # Binding 配置项，对应 BindingProperties Map
+      bindings:
+        rbacPermissionUpdateConsume:
+          destination: rbacPermissionUpdate-topic # 目的地。这里使用 RocketMQ Topic
+          content-type: application/json # 内容格式。这里使用 JSON
+          group: rbac-update-cache-group # 此 group 要唯一值
+          concurrency: 1
+          # batchMode: tree
+
+      # Spring Cloud Stream RocketMQ 配置项
+      rocketmq:
+        # RocketMQ Binder 配置项，对应 RocketMQBinderConfigurationProperties 类
+        binder:
+          name-server: 192.168.31.31:9876 # RocketMQ Namesrv 地址
+          enable-msg-trace: true
+          customized-trace-topic: rbac_permission_update_trace
+        # RocketMQ 自定义 Binding 配置项，对应 RocketMQBindingProperties Map
+        bindings:
+          rbacPermissionUpdateConsume:
+            # RocketMQ Consumer 配置项，对应 RocketMQConsumerProperties 类
+            consumer:
+              enabled: true # 是否开启消费，默认为 true
+              broadcasting: true # 是否使用广播消费，默认为 false 使用集群消费，如果要使用广播消费值设成true。
+              tags: RPUC
+              orderly: false
+              delayLeveLWhenNextConsume: 3
+              #              suspendCurrentQueueTimeMillis: 1000
+
+rocketmq:
+  name-server: 192.168.31.31:9876

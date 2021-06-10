@@ -6,7 +6,7 @@ import org.arch.application.demo.crud.dto.RbacCategoryRequest;
 import org.arch.application.demo.crud.dto.RbacCategorySearchDto;
 import org.arch.application.demo.crud.entity.RbacCategory;
 import org.arch.application.demo.crud.service.RbacCategoryService;
-import org.arch.framework.crud.CrudController;
+import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +25,7 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/rbacCategory")
-public class RbacCategoryController implements CrudController<RbacCategoryRequest, RbacCategory, Long, RbacCategorySearchDto,
+public class RbacCategoryController implements CrudBiz<RbacCategoryRequest, RbacCategory, Long, RbacCategorySearchDto,
         RbacCategoryService> {
     private final RbacCategoryService rbacCategoryService;
 

@@ -27,7 +27,7 @@ public enum TemplateName {
     API("api.ftl"),
     REST("rest.ftl"),
     HTML("html.ftl"),
-    RABBIT_MQ("mq.ftl"),
+    RABBITMQ("mq.ftl"),
     REDIS("redis.ftl");
     @Getter
     private String template;

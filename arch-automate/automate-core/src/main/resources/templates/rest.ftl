@@ -15,19 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 */
 @RestController
 @RequestMapping("${(name?uncap_first)!""}")
-public interface ${(name?cap_first)!""}${suffix!""}{
-    <#list curls as curl>
-    /**
-     * ${curl.descr}
-     *<#list curl.inputs as inp>
-     * @param ${(inp.typ?cap_first)!""} ${inp.descr!""}</#list>
-     * @return ${(curl.output.typ)!""} ${(curl.output.descr)!""}
-     */
-    <#if client??>
-    @Client()
-    </#if>
-    ${curl.httpMethod}("${(curl.name?uncap_first)!""}")
-    ${(curl.output.typ?cap_first)!"void"} ${(curl.name?uncap_first)!""}(<#list curl.inputs as inp>${(inp.typ?cap_first)!""} ${(inp.name?uncap_first)!""}<#if inp_has_next>, </#if></#list>);
-    </#list>
+public interface ${(name?cap_first)!""}${suffix!""} extends CrudRest<${(name?cap_first)!""}Request, Long, ${(name?cap_first)!""}SearchDto>{
+
 
 }

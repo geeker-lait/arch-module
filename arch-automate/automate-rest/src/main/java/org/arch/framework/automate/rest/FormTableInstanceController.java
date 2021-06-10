@@ -6,7 +6,7 @@ import org.arch.form.api.dto.FormTableInstanceSearchDto;
 import org.arch.form.api.request.FormTableInstanceRequest;
 import org.arch.form.crud.entity.FormTableInstance;
 import org.arch.form.crud.service.FormTableInstanceService;
-import org.arch.framework.crud.CrudController;
+import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +26,8 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/table/instance")
-public class FormTableInstanceController implements CrudController<FormTableInstanceRequest, FormTableInstance,
-        java.lang.Long, FormTableInstanceSearchDto, FormTableInstanceService> {
+public class FormTableInstanceController implements CrudBiz<FormTableInstanceRequest, FormTableInstance,
+        Long, FormTableInstanceSearchDto, FormTableInstanceSearchDto, FormTableInstanceService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormTableInstanceService formTableInstanceService;

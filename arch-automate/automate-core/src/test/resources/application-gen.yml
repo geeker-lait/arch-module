@@ -9,9 +9,9 @@ spring:
       author: lait
       domain: true
       path: E:\\Workspaces\\Java\\Projects\\Geeker
-      basePkg: org.arch.pay
+      basePkg: org.arch.gen
       pom:
-        artifactId: arch-pay
+        artifactId: arch-test
         groupId: org.arch.projects
         version: 0.0.1
         root: true
@@ -101,6 +101,11 @@ spring:
         template: api.ftl
         ext: .java
         suffix: Api
+      - type: rest
+        pkg:
+        template: rest.ftl
+        ext: .java
+        suffix: Rest
       - type: pom
         ext:
         template: pom.ftl
@@ -109,40 +114,42 @@ spring:
     schemas:
       - typ: xmind
         patterns: api,mvc
-        resources: E:\\Documents\\Datums\\pay\\arch-pay.xmind
+        resources: E:\\arch-pay.xmind
+ #       resources: classpath:minds/arch-pay.xmind
+#        resources: classpath:minds/ofs-alarm-center-1.xmind
 
-#      - typ: excel
-#        patterns: mvc
-#        resources: classpath:xls/uni-life-pms.xlsx
-#        configuration: {
-#          table: "表名/Table",
-#          type: "数据类型/Type",
-#          column: "列名/Column",
-#          length: "长度/Length",
-#          isnull: "是否为空/Null",
-#          defaultValue: "默认值/Default",
-#          pk: "是否主键/Primary(Y,N)",
-#          fks: "外键/Forigen(可空)",
-#          uniques: "是否唯一/Unique(Y,N)",
-#          comment: "备注/Comment"
-#        }
-#      - typ: database
-#        patterns: mvc
-#        resources: arch_module
-#        configuration: {
-#          driver: "com.mysql.cj.jdbc.Driver",
-#          url: "139.224.225.88",
-#          port: 3306,
-#          username: "root",
-#          password: "late856147"
-#        }
-#      - typ: database
-#        patterns: api
-#        resources: arch_module_api
-#        configuration: {
-#          driver: "com.mysql.cj.jdbc.Driver",
-#          url: "139.224.225.88",
-#          port: 3306,
-#          username: "root",
-#          password: "late856147"
-#        }
+      - typ: excel
+        patterns: mvc
+        resources: classpath:xls/uni-life-pms.xlsx
+        configuration: {
+          table: "表名/Table",
+          type: "数据类型/Type",
+          column: "列名/Column",
+          length: "长度/Length",
+          isnull: "是否为空/Null",
+          defaultValue: "默认值/Default",
+          pk: "是否主键/Primary(Y,N)",
+          fks: "外键/Forigen(可空)",
+          uniques: "是否唯一/Unique(Y,N)",
+          comment: "备注/Comment"
+        }
+      - typ: database
+        patterns: mvc
+        resources: arch_module
+        configuration: {
+          driver: "com.mysql.cj.jdbc.Driver",
+          url: "139.224.225.88",
+          port: 3306,
+          username: "root",
+          password: "late856147"
+        }
+      - typ: database
+        patterns: api
+        resources: arch_module_api
+        configuration: {
+          driver: "com.mysql.cj.jdbc.Driver",
+          url: "139.224.225.88",
+          port: 3306,
+          username: "root",
+          password: "late856147"
+        }

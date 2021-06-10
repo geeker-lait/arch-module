@@ -72,7 +72,8 @@ public class DelegatingEncryptHandler {
                 }
                 field.setAccessible(true);
                 Object value = field.get(encryptObj);
-                if (hasText(filterRegx) && !matches(filterRegx, (String) value)) {
+                if (EncryptType.FPE.name().equalsIgnoreCase(encryptType)
+                    && hasText(filterRegx) && !matches(filterRegx, (String) value)) {
                     continue;
                 }
                 if (isNull(value)) {

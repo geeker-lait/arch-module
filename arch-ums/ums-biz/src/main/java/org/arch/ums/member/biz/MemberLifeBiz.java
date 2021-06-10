@@ -1,0 +1,58 @@
+package org.arch.ums.member.biz;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.arch.framework.crud.CrudBiz;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.ums.member.dto.MemberLifeRequest;
+import org.arch.ums.member.dto.MemberLifeSearchDto;
+import org.arch.ums.member.entity.MemberLife;
+import org.arch.ums.member.rest.MemberLifeRest;
+import org.arch.ums.member.service.MemberLifeService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
+
+import static java.util.Objects.nonNull;
+
+/**
+ * 会员生命周期(MemberLife) 表 Biz 服务
+ *
+ * @author zheng
+ * @date 2021-06-06 18:52:59
+ * @since 1.0.0
+ */
+@Slf4j
+@RequiredArgsConstructor
+@Service
+public class MemberLifeBiz implements CrudBiz<MemberLifeRequest, MemberLife, java.lang.Long, MemberLifeSearchDto, MemberLifeSearchDto, MemberLifeService>, MemberLifeRest {
+
+    private final TenantContextHolder tenantContextHolder;
+    private final MemberLifeService memberLifeService;
+
+    @Override
+    public MemberLife resolver(TokenInfo token, MemberLifeRequest request) {
+        MemberLife memberLife = new MemberLife();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, memberLife);
+        }
+        if (nonNull(token) && nonNull(token.getTenantId())) {
+            memberLife.setTenantId(token.getTenantId());
+        }
+        else {
+            memberLife.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+        }
+        return memberLife;
+    }
+
+    @Override
+    public MemberLifeService getCrudService() {
+        return memberLifeService;
+    }
+
+    @Override
+    public MemberLifeSearchDto getSearchDto() {
+        return new MemberLifeSearchDto();
+    }
+
+}

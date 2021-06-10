@@ -1,13 +1,13 @@
 package org.arch.auth.rbac.config;
 
-import org.arch.auth.rbac.feign.MenuFeignService;
-import org.arch.auth.rbac.feign.PermissionFeignService;
-import org.arch.auth.rbac.feign.ResourceFeignService;
-import org.arch.auth.rbac.feign.RoleFeignService;
-import org.arch.auth.rbac.feign.RoleGroupFeignService;
-import org.arch.auth.rbac.feign.RoleMenuFeignService;
-import org.arch.auth.rbac.feign.RolePermissionFeignService;
-import org.arch.auth.rbac.feign.RoleResourceFeignService;
+import org.arch.auth.rbac.feign.MenuApi;
+import org.arch.auth.rbac.feign.PermissionApi;
+import org.arch.auth.rbac.feign.ResourceApi;
+import org.arch.auth.rbac.feign.RoleApi;
+import org.arch.auth.rbac.feign.RoleGroupApi;
+import org.arch.auth.rbac.feign.RoleMenuApi;
+import org.arch.auth.rbac.feign.RolePermissionApi;
+import org.arch.auth.rbac.feign.RoleResourceApi;
 import org.arch.auth.rbac.service.ArchRbacUriAuthorizeServiceImpl;
 import org.arch.auth.rbac.service.AuthoritiesService;
 import org.arch.auth.rbac.service.FeignAuthoritiesServiceImpl;
@@ -48,29 +48,29 @@ public class ArchRbacAutoConfiguration {
 
     @Configuration
     @ConditionalOnMissingBean(type = "org.arch.auth.rbac.service.AuthoritiesService")
-    @EnableFeignClients(basePackageClasses = {RoleResourceFeignService.class, RolePermissionFeignService.class,
-            RoleMenuFeignService.class, RoleGroupFeignService.class, MenuFeignService.class,
-            PermissionFeignService.class, ResourceFeignService.class, RoleFeignService.class})
+    @EnableFeignClients(basePackageClasses = {RoleResourceApi.class, RolePermissionApi.class,
+            RoleMenuApi.class, RoleGroupApi.class, MenuApi.class,
+            PermissionApi.class, ResourceApi.class, RoleApi.class})
     static class FeignAutoConfiguration {
 
         @Bean
-        public AuthoritiesService authoritiesService(RoleMenuFeignService roleMenuFeignService,
-                                                     RoleGroupFeignService roleGroupFeignService,
-                                                     RoleResourceFeignService roleResourceFeignService,
-                                                     RolePermissionFeignService rolePermissionFeignService,
-                                                     MenuFeignService menuFeignService,
-                                                     RoleFeignService roleFeignService,
-                                                     PermissionFeignService permissionFeignService,
-                                                     ResourceFeignService resourceFeignService) {
+        public AuthoritiesService authoritiesService(RoleMenuApi roleMenuApi,
+                                                     RoleGroupApi roleGroupApi,
+                                                     RoleResourceApi roleResourceApi,
+                                                     RolePermissionApi rolePermissionApi,
+                                                     MenuApi menuApi,
+                                                     RoleApi roleApi,
+                                                     PermissionApi permissionApi,
+                                                     ResourceApi resourceApi) {
 
-            return new FeignAuthoritiesServiceImpl(roleMenuFeignService,
-                                                   roleGroupFeignService,
-                                                   roleResourceFeignService,
-                                                   rolePermissionFeignService,
-                                                   menuFeignService,
-                                                   roleFeignService,
-                                                   permissionFeignService,
-                                                   resourceFeignService);
+            return new FeignAuthoritiesServiceImpl(roleMenuApi,
+                                                   roleGroupApi,
+                                                   roleResourceApi,
+                                                   rolePermissionApi,
+                                                   menuApi,
+                                                   roleApi,
+                                                   permissionApi,
+                                                   resourceApi);
         }
 
     }

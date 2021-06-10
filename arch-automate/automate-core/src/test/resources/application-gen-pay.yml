@@ -1,0 +1,99 @@
+spring:
+  generator:
+    buildTool: maven
+    template:
+      dir: templates
+      resource-mode: classpath
+    project:
+      cover: true
+      author: lait
+      domain: true
+      path: E:\\Workspaces\\Java\\Projects\\Geeker
+      basePkg: org.arch
+      pom:
+        artifactId: arch-pay
+        groupId: org.arch.projects
+        version: 0.0.1
+        root: true
+        dependencyManagement:
+          - artifactId: spring-boot-dependencies
+            groupId: org.springframework.boot
+            version: 2.4.2
+            type: pom
+            scope: import
+        modules:
+          - artifactId: pay-api
+            pattern: api
+            documentTypes: api
+          - artifactId: pay-rest
+            documentTypes: rest
+          - artifactId: pay-crud
+            documentTypes: entity,mapper,dao,service
+    documents:
+      - type: entity
+        pkg: entity
+        template: entity.ftl
+        suffix: Entity
+      - type: mapper
+        pkg: mapper
+        template: mapper.ftl
+        suffix: Mapper
+      - type: mapper-xml
+        template: mapper-xml.ftl
+      - type: dao
+        pkg: dao
+        template: dao.ftl
+        suffix: Dao
+        ext: .java
+      - type: service
+        pkg: service
+        template: service.ftl
+        suffix: Service
+      - type: controller
+        pkg: controller
+        template: controller.ftl
+        suffix: Controller
+      - type: dto
+        pkg: dto
+        template: dto.ftl
+        suffix: Dto
+      - type: application
+        pkg:
+        template: application.ftl
+        suffix: Application
+        bootstrap: Test
+      - type: yml
+        pkg:
+        template: yml.ftl
+        ext: .yml
+        bootstrap:
+        suffix:
+      - type: ddl
+        pkg: ddl
+        template: ddl.ftl
+        ext: .sql
+        suffix: -schema
+      - type: docker
+        pkg:
+        template: docker.ftl
+        ext:
+        suffix:
+      - type: api
+        pkg:
+        template: api.ftl
+        ext: .java
+        suffix: Api
+      - type: rest
+        pkg:
+        template: rest.ftl
+        ext: .java
+        suffix: Rest
+      - type: pom
+        ext:
+        template: pom.ftl
+        suffix:
+
+    schemas:
+      - typ: xmind
+        patterns: api,mvc
+        resources: E:\\arch-pay.xmind

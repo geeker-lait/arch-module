@@ -6,7 +6,7 @@ import org.arch.form.api.dto.FormDefinitionSearchDto;
 import org.arch.form.api.request.FormDefinitionRequest;
 import org.arch.form.crud.entity.FormDefinition;
 import org.arch.form.crud.service.FormDefinitionService;
-import org.arch.framework.crud.CrudController;
+import org.arch.framework.crud.CrudBiz;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +26,8 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/definition")
-public class FormDefinitionController implements CrudController<FormDefinitionRequest, FormDefinition, java.lang.Long,
-        FormDefinitionSearchDto, FormDefinitionService> {
+public class FormDefinitionController implements CrudBiz<FormDefinitionRequest, FormDefinition, Long,
+        FormDefinitionSearchDto, FormDefinitionSearchDto, FormDefinitionService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormDefinitionService formDefinitionService;

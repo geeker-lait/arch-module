@@ -6,13 +6,11 @@ import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.constant.AuthStatusCode;
 import org.arch.framework.beans.exception.constant.CommonStatusCode;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.ums.conf.client.ConfMobileInfoFeignService;
-import org.arch.ums.conf.client.ConfMobileSegmentFeignService;
+import org.arch.ums.conf.api.ConfMobileInfoApi;
+import org.arch.ums.conf.api.ConfMobileSegmentApi;
 import org.arch.ums.conf.dto.MobileInfoRequest;
 import org.arch.ums.conf.dto.MobileSegmentRequest;
 import org.arch.ums.conf.dto.MobileSegmentSearchDto;
-import org.arch.ums.conf.entity.MobileSegment;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,12 +24,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.nonNull;
-import static org.arch.framework.beans.exception.constant.CommonStatusCode.*;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_INFO_FAILED;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_INFO_PARTIAL_FAILED;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_SEGMENT_FAILED;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.SAVES_MOBILE_SEGMENT_PARTIAL_FAILED;
 import static org.arch.framework.utils.SecurityUtils.isAdminForRole;
-import static org.arch.ums.uitls.MobileUtils.*;
+import static org.arch.ums.uitls.MobileUtils.check;
+import static org.arch.ums.uitls.MobileUtils.getBooleanResponse;
+import static org.arch.ums.uitls.MobileUtils.getMobileInfo;
+import static org.arch.ums.uitls.MobileUtils.getMobileSegment;
 
 /**
  * 更新与增量添加手机号段信息, 手机归属地信息.<br>
@@ -48,8 +52,8 @@ import static org.arch.ums.uitls.MobileUtils.*;
 @RequiredArgsConstructor
 public class MobileInfoController {
 
-    private final ConfMobileInfoFeignService confMobileInfoFeignService;
-    private final ConfMobileSegmentFeignService confMobileSegmentFeignService;
+    private final ConfMobileInfoApi confMobileInfoApi;
+    private final ConfMobileSegmentApi confMobileSegmentApi;
 
     /**
      * 批量上传手机归属地信息, 批量保存, 如果主键或唯一索引重复则更新. 注意: 必须拥有 ROLE_ADMIN 角色才能上传.<br>
@@ -67,16 +71,16 @@ public class MobileInfoController {
                                            @RequestParam("delimiter") String delimiter,
                                            TokenInfo token) {
         try {
-            Response<Boolean> checkFailure = check(delimiter, token);
-            if (nonNull(checkFailure)) {
-                return checkFailure;
+            Boolean checkFailure = check(delimiter, token);
+            if (!checkFailure) {
+                return Response.success(checkFailure);
             }
             // 权限校验
             if (isAdminForRole(token)) {
                 BufferedReader bufferedReader =
                         new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
                 // 获取手机号段信息
-                Response<List<MobileSegmentSearchDto>> response = this.confMobileSegmentFeignService.list();
+                Response<List<MobileSegmentSearchDto>> response = this.confMobileSegmentApi.list();
                 List<MobileSegmentSearchDto> segmentSearchDtoList = response.getSuccessData();
                 if (segmentSearchDtoList == null) {
                     return Response.failed(CommonStatusCode.QUERY_MOBILE_SEGMENT_FAILED);
@@ -84,21 +88,16 @@ public class MobileInfoController {
                 if (segmentSearchDtoList.size() == 0) {
                     return Response.failed(CommonStatusCode.MOBILE_SEGMENT_NOT_DATA);
                 }
-                Map<Integer, MobileSegment> segmentMap =
+                Map<Integer, MobileSegmentSearchDto> segmentMap =
                         segmentSearchDtoList.stream()
-                                .map(dto -> {
-                                    MobileSegment mobileSegment = new MobileSegment();
-                                    BeanUtils.copyProperties(dto, mobileSegment);
-                                    return mobileSegment;
-                                })
-                                .collect(Collectors.toMap(MobileSegment::getPrefix,
-                                        mobileSegment -> mobileSegment));
+                                .collect(Collectors.toMap(MobileSegmentSearchDto::getPrefix,
+                                                          Function.identity()));
                 // 存储解析错误的行信息
                 List<String> errorList = new ArrayList<>();
                 // 解析手机号段信息. 格式: 1999562	甘肃-兰州
                 List<MobileInfoRequest> mobileInfoList = getMobileInfo(delimiter, bufferedReader, segmentMap, errorList);
 
-                Response<Boolean> savesResponse = this.confMobileInfoFeignService.insertOnDuplicateKeyUpdate(mobileInfoList);
+                Response<Boolean> savesResponse = this.confMobileInfoApi.insertOnDuplicateKeyUpdate(mobileInfoList);
                 return getBooleanResponse(errorList, savesResponse,
                         SAVES_MOBILE_INFO_FAILED,
                         SAVES_MOBILE_INFO_PARTIAL_FAILED);
@@ -127,9 +126,9 @@ public class MobileInfoController {
                                               @RequestParam("delimiter") String delimiter,
                                               TokenInfo token) {
         try {
-            Response<Boolean> checkFailure = check(delimiter, token);
-            if (nonNull(checkFailure)) {
-                return checkFailure;
+            Boolean checkFailure = check(delimiter, token);
+            if (!checkFailure) {
+                return Response.success(checkFailure);
             }
             // 权限校验
             if (isAdminForRole(token)) {
@@ -141,7 +140,7 @@ public class MobileInfoController {
                 List<MobileSegmentRequest> mobileSegmentList = getMobileSegment(delimiter, bufferedReader, errorList);
 
                 Response<Boolean> savesResponse =
-                        this.confMobileSegmentFeignService.insertOnDuplicateKeyUpdate(mobileSegmentList);
+                        this.confMobileSegmentApi.insertOnDuplicateKeyUpdate(mobileSegmentList);
                 return getBooleanResponse(errorList, savesResponse,
                         SAVES_MOBILE_SEGMENT_FAILED,
                         SAVES_MOBILE_SEGMENT_PARTIAL_FAILED);

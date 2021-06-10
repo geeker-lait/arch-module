@@ -8,8 +8,6 @@ import org.arch.ums.account.dto.RolePermissionSearchDto;
 import org.arch.ums.account.dto.RoleResourceSearchDto;
 import org.arch.ums.account.dto.RoleSearchDto;
 import org.arch.ums.account.entity.Permission;
-import org.arch.ums.account.entity.Resource;
-import org.arch.ums.account.entity.Role;
 import org.arch.ums.account.vo.MenuVo;
 import org.slf4j.Logger;
 import org.slf4j.MDC;
@@ -151,11 +149,11 @@ public interface AuthoritiesService {
      * @param tenantId                  多租户 ID
      * @param roleId                    角色 ID
      * @param permissionSupplier        获取 {@code P} 类型列表的 {@link Supplier}
-     * @param roleSupplier              获取 {@link Role} 的 {@link Supplier}
+     * @param roleSupplier              获取 {@link RoleSearchDto} 的 {@link Supplier}
      * @param permissionMapCollector    转换为 {@code map (uri/path, Set(permission))} 的 {@link Collector}
      * @param errorMsg                  错误提示信息
      * @param log                       log
-     * @param <P>   {@link Permission} or {@link Resource}
+     * @param <P>   {@link java.security.Permissions} or {@link ResourceSearchDto}
      * @return Map(tenantAuthority, Map(roleAuthority, map(uri/path, Set(permission))), 如果不存在这返回空集合.
      */
     @NonNull

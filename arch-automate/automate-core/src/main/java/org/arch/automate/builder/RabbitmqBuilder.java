@@ -20,7 +20,7 @@ public class RabbitmqBuilder implements Buildable {
 
     @Override
     public TemplateName getTemplateName() {
-        return TemplateName.RABBIT_MQ;
+        return TemplateName.RABBITMQ;
     }
 
     @Override

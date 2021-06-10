@@ -31,7 +31,7 @@ public class RestBuilder extends AbstractBuilder implements Buildable {
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas) {
         log.info("rest builder building {}", schemaDatas);
         // 根据schema创建项目
-        buildApiPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaDatas);
+        buildMvcPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaDatas);
     }
 
 }
