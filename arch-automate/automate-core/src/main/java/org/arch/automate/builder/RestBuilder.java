@@ -13,19 +13,25 @@ import org.springframework.stereotype.Component;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * @author lait.zhang@gmail.com
+ * @description: TODO
+ * @weixin PN15855012581
+ * @date :
+ */
 @Slf4j
 @Component
-public class RabbitmqBuilder implements Buildable {
-
-
+public class RestBuilder extends AbstractBuilder implements Buildable {
     @Override
     public TemplateName getTemplateName() {
-        return TemplateName.RABBITMQ;
+        return TemplateName.REST;
     }
 
     @Override
     public void build(Path path, TemplateEngine engine, ProjectProperties projectProperties, PomProperties pomProperties, DocumentProperties documentProperties, List<SchemaData> schemaDatas) {
-
+        log.info("rest builder building {}", schemaDatas);
+        // 根据schema创建项目
+        buildMvcPackageFile(path, engine, projectProperties, pomProperties, documentProperties, schemaDatas);
     }
 
 }

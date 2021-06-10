@@ -5,7 +5,7 @@ spring:
   profiles:
     active:  ${profile:dev}
   config:
-    import: classpath:application-gen.yml,classpath:application-db.yml
+    import: classpath:application-gen-pay.yml,classpath:application-db.yml
 
     #  datasource:
 #    username: root

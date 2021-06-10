@@ -28,6 +28,7 @@ public class MavenGenerator extends AbstractGenerator {
             List<DependencieProterties> dependenciesPropertiesList = new ArrayList<>();
             doBuild(path, pomProperties, dependenciesPropertiesList, schemaDatas);
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage());
         }
     }

@@ -25,8 +25,9 @@ public enum TemplateName {
     APPLICATION("application.ftl"),
     DOCKER("docker.ftl"),
     API("api.ftl"),
+    REST("rest.ftl"),
     HTML("html.ftl"),
-    REBBITMQ("mq.ftl"),
+    RABBITMQ("mq.ftl"),
     REDIS("redis.ftl");
     @Getter
     private String template;

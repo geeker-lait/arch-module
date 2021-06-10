@@ -1,7 +1,7 @@
 package ${package!""};
 
-import ${basePkg!""}.entity.${(name?cap_first)!""};
-import ${basePkg!""}.mapper.${(name?cap_first)!""}Mapper;
+import ${basePkg!""}.${domain!""}.entity.${(name?cap_first)!""}<#list documents as doc><#if doc.type == "entity">${(doc.suffix)?cap_first}</#if></#list>;
+import ${basePkg!""}.${domain!""}.mapper.${(name?cap_first)!""}<#list documents as doc><#if doc.type == "mapper">${(doc.suffix)?cap_first}</#if></#list>;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudDao;
@@ -19,5 +19,5 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 @Repository
 public class ${(name?cap_first)!""}${suffix!""} extends CrudServiceImpl<${(name?cap_first)!""}Mapper, ${(name?cap_first)!""}Entity> implements CrudDao<${(name?cap_first)!""}Entity>{
-    private final ${(name?cap_first)!""}Mapper ${name!""}Mapper;
+    private final ${(name?cap_first)!""}Mapper ${(name?uncap_first)!""}Mapper;
 }

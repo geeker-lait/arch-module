@@ -1,8 +1,9 @@
-package ${pkg!""};
+package ${package!""};
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudService;
+import ${basePkg!""}.${domain!""}.entity.${(name?cap_first)!""}<#list documents as doc><#if doc.type == "entity">${(doc.suffix)?cap_first}</#if></#list>;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +15,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ${(name?cap_first)!""}${suffix!""} extends CrudService<${(name?cap_first)!""}<#list documents as doc><#if doc.type == "entity">${(doc.type)?cap_first}</#if></#list>, Long> <#list interfaces as ints><#if ints.name?contains(name?cap_first)>implements ${(ints.name?cap_first)!""}Api</#if></#list>{
-    private final ${(name?cap_first)!""}Dao ${name!""}Dao = (${(name?cap_first)!""}Dao) crudDao;
+public class ${(name?cap_first)!""}${suffix!""} extends CrudService<${(name?cap_first)!""}<#list documents as doc><#if doc.type == "entity">${(doc.suffix)?cap_first}</#if></#list>, Long> <#list interfaces as ints><#if ints.name?contains(name?cap_first)>implements ${(ints.name?cap_first)!""}Api</#if></#list>{
+    private final ${(name?cap_first)!""}Dao ${(name?uncap_first)!""}Dao = (${(name?cap_first)!""}Dao) crudDao;
 }

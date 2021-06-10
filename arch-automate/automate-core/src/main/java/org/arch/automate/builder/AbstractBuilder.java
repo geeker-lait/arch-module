@@ -3,6 +3,7 @@ package org.arch.automate.builder;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.json.JSONUtil;
 import com.google.common.base.CaseFormat;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.automate.config.GeneratorConfig;
 import org.arch.automate.core.AbstractGenerator;
@@ -102,11 +103,12 @@ public abstract class AbstractBuilder {
     }
 
 
-    protected String buildAndGetCurrentPkg(Path path, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaData schemaData) throws IOException {
+    protected CurrentDomainPkg buildAndGetCurrentPkg(Path path, ProjectProperties projectProperties, DocumentProperties documentProperties, SchemaData schemaData) throws IOException {
         // 创建模块src目录,标准化目录创建
         for (String dir : Generable.SRC_DIR) {
             Files.createDirectories(path.resolve(dir));
         }
+        CurrentDomainPkg currentDomainPkg = new CurrentDomainPkg();
         // 设置默认包和后缀名
         String pkg = StringUtils.isNoneBlank(documentProperties.getPkg()) ? documentProperties.getPkg() : documentProperties.getType();
         String currentPkg;
@@ -127,8 +129,9 @@ public abstract class AbstractBuilder {
         //String currentPkg = getCurrentPkg(projectProperties, documentProperties, schemaData);
         Path packPath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
         Files.createDirectories(packPath);
-
-        return currentPkg;
+        currentDomainPkg.setCurrentPkg(currentPkg);
+        currentDomainPkg.setDomain(domain);
+        return currentDomainPkg;
     }
 
     protected void buildMvcPackageFile(Path path, TemplateEngine templateEngine, ProjectProperties projectProperties,
@@ -145,8 +148,9 @@ public abstract class AbstractBuilder {
                             );
             for (SchemaData schemaData : schemaDatas) {
                 if (schemaData.getSchemaPattern() == SchemaPattern.MVC) {
-                    String currentPkg = buildAndGetCurrentPkg(path, projectProperties, documentProperties, schemaData);
-                    Path cpath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
+                    CurrentDomainPkg currentDomainPkg = buildAndGetCurrentPkg(path, projectProperties, documentProperties, schemaData);
+                    Path cpath = path.resolve(Generable.MAIN_JAVA.concat(currentDomainPkg.getCurrentPkg().replaceAll("\\.",
+                                                                                                      Matcher.quoteReplacement(File.separator))));
                     for (Table table : schemaData.getDatabase().getTables()) {
                         tableSchemaToCamel(table);
                         String fileName = buildFileName(documentProperties, table.getName(), projectProperties.getStuffixed());
@@ -155,7 +159,8 @@ public abstract class AbstractBuilder {
                         // 创建文件
                         buildFile(projectProperties.getCover(), filePath);
                         Map<String, Object> dataMap = buildData(projectProperties, documentProperties, table);
-                        dataMap.put("package", currentPkg);
+                        dataMap.put("package", currentDomainPkg.getCurrentPkg());
+                        dataMap.put("domain", currentDomainPkg.getDomain());
                         dataMap.put("interfaces",
                                 ofNullable(schemaDataInterfacesMap.get(schemaData.getIdentifier()))
                                         .orElse(new ArrayList<>()));
@@ -177,8 +182,9 @@ public abstract class AbstractBuilder {
         try {
             for (SchemaData schemaData : schemaDatas) {
                 if (schemaData.getSchemaPattern() == SchemaPattern.API) {
-                    String currentPkg = buildAndGetCurrentPkg(path, projectProperties, documentProperties, schemaData);
-                    Path cpath = path.resolve(Generable.MAIN_JAVA.concat(currentPkg.replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
+                    CurrentDomainPkg currentDomainPkg = buildAndGetCurrentPkg(path, projectProperties, documentProperties, schemaData);
+                    Path cpath = path.resolve(Generable.MAIN_JAVA.concat(currentDomainPkg.getCurrentPkg().replaceAll("\\.",
+                                                                                                      Matcher.quoteReplacement(File.separator))));
                     List<Interfac> interfaces = schemaData.getApi().getInterfaces();
                     // 写入文件
                     for (Interfac interfac : interfaces) {
@@ -191,7 +197,8 @@ public abstract class AbstractBuilder {
                         dataMap.putAll(JSONUtil.parseObj(projectProperties));
                         dataMap.putAll(JSONUtil.parseObj(documentProperties));
                         dataMap.putAll(JSONUtil.parseObj(interfac));
-                        dataMap.put("package", currentPkg);
+                        dataMap.put("package", currentDomainPkg.getCurrentPkg());
+                        dataMap.put("domain", currentDomainPkg.getDomain());
                         // 获取模板并渲染
                         String code = templateEngine.getTemplate(documentProperties.getTemplate()).render(dataMap);
                         // 写入文件
@@ -203,9 +210,9 @@ public abstract class AbstractBuilder {
                             Path rp = cpath;
                             if (StringUtils.isNoneBlank(im.getPkg())) {
                                 rp = cpath.resolve(Paths.get(im.getPkg().replaceAll("\\.", Matcher.quoteReplacement(File.separator))));
-                                inMap.put("package", currentPkg + "." + im.getPkg());
+                                inMap.put("package", currentDomainPkg.currentPkg + "." + im.getPkg());
                             } else {
-                                inMap.put("package", currentPkg);
+                                inMap.put("package", currentDomainPkg.currentPkg);
                             }
                             rp = Paths.get(rp.toString().concat(File.separator).concat(im.getName()).concat(ext));
                             inMap.put("model", im);
@@ -229,5 +236,11 @@ public abstract class AbstractBuilder {
             c.setTyp(JdbcTypeUtils.getFieldType(c.getTyp()).getSimpleName());
         });
         return null;
+    }
+
+    @Data
+    protected class CurrentDomainPkg{
+        private String currentPkg;
+        private String domain;
     }
 }

@@ -101,6 +101,11 @@ spring:
         template: api.ftl
         ext: .java
         suffix: Api
+      - type: rest
+        pkg:
+        template: rest.ftl
+        ext: .java
+        suffix: Rest
       - type: pom
         ext:
         template: pom.ftl
@@ -109,7 +114,8 @@ spring:
     schemas:
       - typ: xmind
         patterns: api,mvc
-        resources: classpath:minds/arch-pay.xmind
+        resources: E:\\arch-pay.xmind
+ #       resources: classpath:minds/arch-pay.xmind
 #        resources: classpath:minds/ofs-alarm-center-1.xmind
 
       - typ: excel

@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 @Component
 @FeignClient(name = "arch-${basePkg?keep_after_last(".")}-api", contextId = "arch-${basePkg?keep_after_last(".")}-api-${(name?cap_first)!""}", path="<#if basePkg??>/${basePkg?keep_after_last(".")}</#if>/${(name?uncap_first)!""}",
 configuration = DeFaultFeignConfig.class)
-public interface ${(name?cap_first)!""}${suffix!""} extends BaseFeignService<${(name?cap_first)!""}SearchDto, ${(name?cap_first)!""}Request, ${_pkType!"java.lang.Long"}> {
+public interface ${(name?cap_first)!""}${suffix!""} extends FeignApi<${(name?cap_first)!""}SearchDto, ${(name?cap_first)!""}Request, ${_pkType!"java.lang.Long"}> {
 
 
 }
