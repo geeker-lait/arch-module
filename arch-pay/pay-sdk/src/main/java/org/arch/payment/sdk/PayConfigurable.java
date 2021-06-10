@@ -33,12 +33,6 @@ public interface PayConfigurable extends Attrs {
      */
     String getPid();
 
-    /**
-     * 获取收款账号
-     *
-     * @return 收款账号
-     */
-    String getSeller();
 
     /**
      * 授权令牌

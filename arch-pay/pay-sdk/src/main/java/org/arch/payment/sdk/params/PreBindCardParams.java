@@ -18,6 +18,7 @@ public class PreBindCardParams implements PayParams {
     private PayHeader payHeader;
     // 绑卡四要素
     private PayFourElements bindCardElements;
+    private PayFourElements bindCardElements;
 
 
 }

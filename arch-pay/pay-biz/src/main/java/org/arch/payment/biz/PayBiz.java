@@ -1,18 +1,19 @@
 package org.arch.payment.biz;
 
-import lombok.extern.slf4j.Slf4j;
 import org.arch.payment.api.PayChannelAccountDto;
 import org.arch.payment.rest.PayRest;
-import org.springframework.stereotype.Service;
+import org.arch.payment.sdk.RefundResult;
+import org.arch.payment.sdk.order.impl.QueryOrder;
+import org.arch.payment.sdk.order.impl.RefundOrder;
+import org.arch.payment.sdk.order.impl.TransferOrder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 
-@Slf4j
-@Service
-public class PayBiz implements PayRest {
+
+public abstract class PayBiz implements PayRest {
     @Override
     public Map<String, Object> add(PayChannelAccountDto payChannelAccountDto) {
         return null;
