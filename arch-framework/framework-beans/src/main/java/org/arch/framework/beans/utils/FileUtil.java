@@ -8,7 +8,6 @@ import cn.hutool.poi.excel.ExcelUtil;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,11 +44,11 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     /**
      * MultipartFile转File
      */
-    public static File toFile(MultipartFile multipartFile){
+    public static File toFile(MultipartFile multipartFile) {
         // 获取文件名
         String fileName = multipartFile.getOriginalFilename();
         // 获取文件后缀
-        String prefix="."+getExtensionName(fileName);
+        String prefix = "." + getExtensionName(fileName);
         File file = null;
         try {
             // 用uuid作为文件名，防止生成的临时文件重复
@@ -64,13 +63,14 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * 获取文件扩展名,不带 .
+     *
      * @param filename
      * @return
      */
     public static String getExtensionName(String filename) {
         if ((filename != null) && (filename.length() > 0)) {
             int dot = filename.lastIndexOf('.');
-            if ((dot >-1) && (dot < (filename.length() - 1))) {
+            if ((dot > -1) && (dot < (filename.length() - 1))) {
                 return filename.substring(dot + 1);
             }
         }
@@ -83,7 +83,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     public static String getFileNameNoEx(String filename) {
         if ((filename != null) && (filename.length() > 0)) {
             int dot = filename.lastIndexOf('.');
-            if ((dot >-1) && (dot < (filename.length()))) {
+            if ((dot > -1) && (dot < (filename.length()))) {
                 return filename.substring(0, dot);
             }
         }
@@ -93,7 +93,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     /**
      * 文件大小转换
      */
-    public static String getSize(long size){
+    public static String getSize(long size) {
         String resultSize;
         if (size / GB >= 1) {
             //如果当前Byte的值大于等于1GB
@@ -113,7 +113,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     /**
      * inputStream 转 File
      */
-    static File inputStreamToFile(InputStream ins, String name) throws Exception{
+    static File inputStreamToFile(InputStream ins, String name) throws Exception {
         File file = new File(System.getProperty("java.io.tmpdir") + File.separator + name);
         if (file.exists()) {
             return file;
@@ -160,10 +160,10 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     public static String fileToBase64(File file) throws Exception {
         FileInputStream inputFile = new FileInputStream(file);
         String base64;
-        byte[] buffer = new byte[(int)file.length()];
+        byte[] buffer = new byte[(int) file.length()];
         inputFile.read(buffer);
         inputFile.close();
-        base64=Base64.encode(buffer);
+        base64 = Base64.encode(buffer);
         return base64.replaceAll("[\\s*\t\n\r]", "");
     }
 
@@ -171,16 +171,16 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * 导出excel
      */
     public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response) throws IOException {
-        String tempPath =System.getProperty("java.io.tmpdir") + IdUtil.fastSimpleUUID() + ".xlsx";
+        String tempPath = System.getProperty("java.io.tmpdir") + IdUtil.fastSimpleUUID() + ".xlsx";
         File file = new File(tempPath);
-        BigExcelWriter writer= ExcelUtil.getBigWriter(file);
+        BigExcelWriter writer = ExcelUtil.getBigWriter(file);
         // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(list, true);
         //response为HttpServletResponse对象
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         //test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码
-        response.setHeader("Content-Disposition","attachment;filename=file.xlsx");
-        ServletOutputStream out=response.getOutputStream();
+        response.setHeader("Content-Disposition", "attachment;filename=file.xlsx");
+        ServletOutputStream out = response.getOutputStream();
         // 终止后删除临时文件
         file.deleteOnExit();
         writer.flush(out, true);
@@ -193,13 +193,13 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         String music = "mp3 wav wma mpa ram ra aac aif m4a";
         String video = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg";
         String image = "bmp dib pcp dif wmf gif jpg tif eps psd cdr iff tga pcd mpt png jpeg";
-        if(image.contains(type)){
+        if (image.contains(type)) {
             return "图片";
-        } else if(documents.contains(type)){
+        } else if (documents.contains(type)) {
             return "文档";
-        } else if(music.contains(type)){
+        } else if (music.contains(type)) {
             return "音乐";
-        } else if(video.contains(type)){
+        } else if (video.contains(type)) {
             return "视频";
         } else {
             return "其他";
@@ -207,13 +207,15 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     public static String getFileTypeByMimeType(String type) {
-        String mimeType = new MimetypesFileTypeMap().getContentType("." + type);
-        return mimeType.split("/")[0];
+        //String mimeType = new MimetypesFileTypeMap().getContentType("." + type);
+        //return mimeType.split("/")[0];
+        return "";
     }
+
     public static void checkSize(long maxSize, long size) {
         // 1M
         int len = 1024 * 1024;
-        if(size > (maxSize * len)){
+        if (size > (maxSize * len)) {
             //throw new BadRequestException("文件超出规定大小");
         }
     }
@@ -253,18 +255,19 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * 下载文件
-     * @param request /
+     *
+     * @param request  /
      * @param response /
-     * @param file /
+     * @param file     /
      */
-    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file, boolean deleteOnExit){
+    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file, boolean deleteOnExit) {
         response.setCharacterEncoding(request.getCharacterEncoding());
         response.setContentType("application/octet-stream");
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(file);
-            response.setHeader("Content-Disposition", "attachment; filename="+file.getName());
-            IOUtils.copy(fis,response.getOutputStream());
+            response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+            IOUtils.copy(fis, response.getOutputStream());
             response.flushBuffer();
         } catch (Exception e) {
             e.printStackTrace();
@@ -272,7 +275,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             if (fis != null) {
                 try {
                     fis.close();
-                    if(deleteOnExit){
+                    if (deleteOnExit) {
                         file.deleteOnExit();
                     }
                 } catch (IOException e) {

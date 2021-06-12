@@ -214,6 +214,7 @@ public abstract class AbstractBuilder {
                             } else {
                                 inMap.put("package", currentDomainPkg.currentPkg);
                             }
+                            Files.createDirectories(rp);
                             rp = Paths.get(rp.toString().concat(File.separator).concat(im.getName()).concat(ext));
                             inMap.put("model", im);
                             // 获取模板并渲染
