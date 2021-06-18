@@ -6,7 +6,6 @@ import org.arch.framework.beans.exception.BusinessException;
 import org.arch.framework.id.IdService;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.AccountType;
-import org.arch.framework.ums.enums.LoginType;
 import org.arch.framework.ums.enums.Role;
 import org.arch.framework.ums.jwt.claim.JwtArchClaimNames;
 import org.arch.framework.ums.userdetails.ArchUser;
@@ -60,6 +59,21 @@ public class SecurityUtils {
             return toTokenInfoFromUserDetails((JwtAuthenticationToken) authentication);
         }
         throw new AuthenticationException(HttpStatus.UNAUTHORIZED.value(), "找不到当前登录的信息");
+    }
+
+    /**
+     * 获取当前登录的账户信息
+     *
+     * @return  {@link TokenInfo}, 用户未登录则返回 null
+     */
+    @Nullable
+    public static TokenInfo getTokenInfo() {
+        try {
+            return getCurrentUser();
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 
     /**

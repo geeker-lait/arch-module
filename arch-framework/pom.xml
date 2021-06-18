@@ -13,13 +13,14 @@
 
     <modules>
         <module>framework-api</module>
-        <module>framework-automate</module>
         <module>framework-beans</module>
         <module>framework-core</module>
         <module>framework-utils</module>
+        <module>framework-web</module>
         <module>framework-mq</module>
         <module>framework-config</module>
         <module>framework-spi</module>
+        <module>framework-cache</module>
     </modules>
 
 </project>

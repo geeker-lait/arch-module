@@ -1,6 +1,6 @@
 //package com.yonghui.arch.event.listener;
 //
-//import com.yonghui.arch.event.config.WorkSeqConfig;
+//import com.yonghui.arch.event.properties.WorkSeqConfig;
 //import com.yonghui.arch.event.event.FulfilEvent;
 //import com.yonghui.arch.event.service.FulfilService;
 //import org.springframework.beans.factory.annotation.Autowired;

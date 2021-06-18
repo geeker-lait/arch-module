@@ -47,10 +47,10 @@
 //        String bucketNamePublic = "yueshang-skit-public";
 //        String bucketNamePrivate = "yueshang-skit";
 //
-//        BosClientConfiguration config = new BosClientConfiguration();
-//        config.setCredentials(new DefaultBceCredentials(ak, sk));
-//        config.setEndpoint(endpoint);
-//        BosClient client = new BosClient(config);
+//        BosClientConfiguration properties = new BosClientConfiguration();
+//        properties.setCredentials(new DefaultBceCredentials(ak, sk));
+//        properties.setEndpoint(endpoint);
+//        BosClient client = new BosClient(properties);
 //
 //        //上传图片
 //        // 获取数据流

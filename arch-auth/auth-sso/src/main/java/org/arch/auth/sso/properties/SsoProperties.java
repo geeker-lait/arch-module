@@ -12,6 +12,7 @@ import java.time.Duration;
 
 /**
  * sso 属性
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.6 23:15

@@ -46,7 +46,7 @@ public class MerchantSignAndVerify {
     }
 
     //证书配置文件名
-    /*private static String certConfigName = "cert-config.properties";
+    /*private static String certConfigName = "cert-properties.properties";
 
 
     static {
@@ -80,7 +80,7 @@ public class MerchantSignAndVerify {
                 try {
                     in.close();
                 } catch (IOException e) {
-                    logger.error("关闭cert-config.properties流异常");
+                    logger.error("关闭cert-properties.properties流异常");
                     e.printStackTrace();
                 }
             }

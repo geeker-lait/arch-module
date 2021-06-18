@@ -13,9 +13,12 @@
 
     <modules>
         <module>pay-api</module>
-        <module>pay-core</module>
+        <module>pay-biz</module>
         <module>pay-channel</module>
-
+        <module>pay-core</module>
+        <module>pay-crud</module>
+        <module>pay-rest</module>
+        <module>pay-sdk</module>
     </modules>
 
     <dependencyManagement>

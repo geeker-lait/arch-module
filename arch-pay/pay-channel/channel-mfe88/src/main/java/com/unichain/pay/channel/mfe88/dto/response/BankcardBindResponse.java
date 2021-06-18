@@ -15,7 +15,6 @@ public class BankcardBindResponse extends BasePayResponse {
     private String dealMsg;
     private String orderNo;
     private String cxOrderNo;
-    private String needSms;
     private String sign;
 
 

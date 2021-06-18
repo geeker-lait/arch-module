@@ -17,13 +17,18 @@
         </dependency>
 
         <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-commons</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-commons</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>framework-core</artifactId>
+            <artifactId>framework-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>
@@ -87,12 +92,6 @@
         </dependency>
 
         <dependency>
-            <groupId>top.dcenter</groupId>
-            <artifactId>ums-commons</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-extension</artifactId>
             <scope>provided</scope>
@@ -104,6 +103,7 @@
             <artifactId>jsr305</artifactId>
             <optional>true</optional>
         </dependency>
+
 
     </dependencies>
 

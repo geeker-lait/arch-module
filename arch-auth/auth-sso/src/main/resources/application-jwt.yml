@@ -87,7 +87,7 @@ ums:
       # 1. 属性 refreshTokenParameterName 只有在 allowFormEncodedBodyParameter 或 allowUriQueryParameter 其中一方为 true 时生效.
       # 2. 目前 allowFormEncodedBodyParameter, allowUriQueryParameter 属性还不能配置, 默认都为 false, refreshTokenParameterName 总是失效.
       refresh-token-parameter-name: refresh_token
-      
+
     blacklist:
       # 是否支持 jwt 黑名单功能, 默认: true.
       # 如果为 false, jwtToken 与 refreshToken 会保存到 redis

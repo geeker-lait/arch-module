@@ -7,6 +7,7 @@ import top.dcenter.ums.security.core.oauth.properties.Auth2Properties;
 
 /**
  * 第三方登录用户的 accessToken 与 refreshToken 刷新的定时任务.
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.11 20:44

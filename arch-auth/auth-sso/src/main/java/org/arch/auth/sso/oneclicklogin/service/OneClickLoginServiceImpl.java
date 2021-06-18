@@ -14,6 +14,7 @@ import static java.util.Objects.isNull;
 
 /**
  * 一键登录服务：根据 accessToken 从服务商获取用户手机号
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.5.14 20:01
@@ -33,7 +34,7 @@ public class OneClickLoginServiceImpl implements OneClickLoginService {
     public void otherParamsHandler(@NonNull UserDetails userDetails, Map<String, String> otherParamMap) {
         log.debug("login username: {}", userDetails.getUsername());
         if (isNull(otherParamMap)) {
-        	return;
+            return;
         }
         // TODO: 2021.5.22 待实现
         log.debug("request other params: {}", otherParamMap.toString());

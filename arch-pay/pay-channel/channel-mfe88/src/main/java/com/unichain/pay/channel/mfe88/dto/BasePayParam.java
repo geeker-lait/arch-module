@@ -36,7 +36,6 @@ public abstract class BasePayParam implements DirectiveRequest {
 
     private String service;
 
-    @Override
     public DirectiveRequest convert(Map<String, Object> map, PayRequest payRequest) {
         BeanUtils.copyProperties(map, this);
         return this;

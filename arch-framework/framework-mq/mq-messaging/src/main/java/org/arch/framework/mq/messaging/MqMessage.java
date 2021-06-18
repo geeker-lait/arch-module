@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-@RequiredArgsConstructor
 @NoArgsConstructor
 @AllArgsConstructor
 public class MqMessage implements Serializable {

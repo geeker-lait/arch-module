@@ -11,20 +11,16 @@ import org.arch.framework.api.IdKey;
 import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.beans.exception.constant.ResponseStatusCode;
-import org.arch.framework.feign.exception.FeignCallException;
 import org.arch.framework.id.IdService;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.framework.utils.SecurityUtils;
-import org.arch.ums.account.dto.Auth2ConnectionDto;
-import org.arch.ums.account.dto.AuthLoginDto;
-import org.arch.ums.account.dto.IdentifierRequest;
-import org.arch.ums.account.dto.IdentifierSearchDto;
-import org.arch.ums.account.dto.OauthTokenRequest;
+import org.arch.framework.web.feign.exception.FeignCallException;
+import org.arch.ums.account.api.AccountIdentifierApi;
+import org.arch.ums.account.api.AccountOauthTokenApi;
+import org.arch.ums.account.dto.*;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.entity.OauthToken;
-import org.arch.ums.account.client.AccountIdentifierFeignService;
-import org.arch.ums.account.client.AccountOauthTokenFeignService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -66,6 +62,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * arch 第三方登录时, 自动注册, 更新第三方用户信息, 绑定第三方用户到本地的服务实现..
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.9 17:25
@@ -75,14 +72,14 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 @Slf4j
 public class ArchConnectionServiceImpl implements ConnectionService, ApplicationContextAware {
 
-    private final AccountIdentifierFeignService accountIdentifierFeignService;
+    private final AccountIdentifierApi accountIdentifierApi;
     private final UmsUserDetailsService umsUserDetailsService;
     private final SsoProperties ssoProperties;
     private final TenantContextHolder tenantContextHolder;
     private final PasswordEncoder passwordEncoder;
     private final IdService idService;
     private final Auth2Properties auth2Properties;
-    private final AccountOauthTokenFeignService umsAccountAuthTokenFeignService;
+    private final AccountOauthTokenApi umsAccountAuthTokenFeignService;
     private ApplicationContext applicationContext;
 
     @NonNull
@@ -95,16 +92,14 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
             // 1. 重名检查
             String username = null;
             final List<Boolean> existedByUserIds = umsUserDetailsService.existedByUsernames(usernames);
-            for(int i = 0, len = existedByUserIds.size(); i < len; i++) {
-                if (!existedByUserIds.get(i))
-                {
+            for (int i = 0, len = existedByUserIds.size(); i < len; i++) {
+                if (!existedByUserIds.get(i)) {
                     username = usernames[i];
                     break;
                 }
             }
             // 2. 用户重名, 自动注册失败
-            if (username == null)
-            {
+            if (username == null) {
                 throw new RegisterUserFailureException(ErrorCodeEnum.USERNAME_USED, authUser.getUsername());
             }
 
@@ -114,25 +109,23 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
             String tenantId = tenantContextHolder.getTenantId();
             String defaultAuthorities = RegisterUtils.getDefaultAuthorities(ssoProperties, tenantId);
             ArchUser archUser = (ArchUser) umsUserDetailsService.registerUser(authUser, username,
-                                                                              defaultAuthorities, encodeState);
+                    defaultAuthorities, encodeState);
 
             // 4. 保存第三方用户的 OauthToken 信息
             int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
             OauthTokenRequest oauthToken = toOauthToken(authUser, tenantId,
-                                                        archUser.getIdentifierId(), timeout);
+                    archUser.getIdentifierId(), timeout);
             try {
                 umsAccountAuthTokenFeignService.save(oauthToken);
-            }
-            catch (Exception e) {
-                log.error(e.getMessage(),e);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
                 saveOrUpdateOauthToken(oauthToken, "保存第三方授权登录用户信息失败, 发布重试事件", "save");
             }
             return archUser;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String source = authUser.getSource();
             log.error(String.format("OAuth2自动注册失败: error=%s, provider=%s, authUser=%s",
-                                    e.getMessage(), source, JsonUtil.toJsonString(authUser)), e);
+                    e.getMessage(), source, JsonUtil.toJsonString(authUser)), e);
             throw new RegisterUserFailureException(ErrorCodeEnum.USER_REGISTER_FAILURE, source);
         }
 
@@ -149,9 +142,9 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
             if ((connectionData instanceof ConnectionDataDto)) {
                 ConnectionDataDto connectionDataDto = (ConnectionDataDto) connectionData;
                 OauthTokenRequest oauthToken = toOauthToken(authUser,
-                                                            tenantContextHolder.getTenantId(),
-                                                            connectionDataDto.getIdentifierId(),
-                                                            timeout);
+                        tenantContextHolder.getTenantId(),
+                        connectionDataDto.getIdentifierId(),
+                        timeout);
                 updateByIdentifierId(oauthToken);
                 return;
             }
@@ -161,27 +154,25 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
                 // 2.1 已登录的情况
                 TokenInfo currentUser = SecurityUtils.getCurrentUser();
                 OauthTokenRequest oauthToken = toOauthToken(authUser,
-                                                            tenantContextHolder.getTenantId(),
-                                                            currentUser.getIdentifierId(),
-                                                            timeout);
+                        tenantContextHolder.getTenantId(),
+                        currentUser.getIdentifierId(),
+                        timeout);
                 updateByIdentifierId(oauthToken);
-            }
-            catch (AuthenticationException e) {
+            } catch (AuthenticationException e) {
                 // 2.2 未登录的情况
                 String[] usernames = umsUserDetailsService.generateUsernames(authUser);
                 ArchUser archUser = (ArchUser) umsUserDetailsService.loadUserByUserId(usernames[0]);
                 OauthTokenRequest oauthToken = toOauthToken(authUser,
-                                                            tenantContextHolder.getTenantId(),
-                                                            archUser.getIdentifierId(),
-                                                            timeout);
+                        tenantContextHolder.getTenantId(),
+                        archUser.getIdentifierId(),
+                        timeout);
                 updateByIdentifierId(oauthToken);
             }
 
-        }
-        catch (FeignException e) {
+        } catch (FeignException e) {
             String source = authUser.getSource();
             log.error(String.format("更新第三方授权登录用户信息失败: error=%s, provider=%s, authUser=%s",
-                                    e.getMessage(), source, JsonUtil.toJsonString(authUser)), e);
+                    e.getMessage(), source, JsonUtil.toJsonString(authUser)), e);
             throw new UpdateConnectionException(ErrorCodeEnum.UPDATE_CONNECTION_DATA_FAILURE, source);
         }
 
@@ -193,7 +184,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
                                                                             @NonNull String providerUserId) {
         try {
             String identifier = RegisterUtils.getIdentifierForOauth2(providerId, providerUserId);
-            Response<AuthLoginDto> response = accountIdentifierFeignService.loadAccountByIdentifier(identifier);
+            Response<AuthLoginDto> response = accountIdentifierApi.loadAccountByIdentifier(identifier);
             final AuthLoginDto authLoginDto = response.getSuccessData();
             if (isNull(authLoginDto)) {
                 return null;
@@ -208,10 +199,9 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
             connectionDataDto.setImageUrl(authLoginDto.getAvatar());
 
             return Collections.singletonList(connectionDataDto);
-        }
-        catch (FeignException e) {
+        } catch (FeignException e) {
             String msg = String.format("获取第三方登录信息失败: providerId=%s, providerUserId=%s",
-                                          providerId, providerUserId);
+                    providerId, providerUserId);
             throw new FeignCallException(ResponseStatusCode.FAILED, null, msg, e);
         }
     }
@@ -220,34 +210,34 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
     @Override
     public MultiValueMap<String, ConnectionDto> listAllConnections(@NonNull String userId) {
         Response<Map<String, List<Auth2ConnectionDto>>> response =
-                accountIdentifierFeignService.listAllConnections(Long.valueOf(userId));
+                accountIdentifierApi.listAllConnections(Long.valueOf(userId));
         Map<String, List<Auth2ConnectionDto>> allConnections = response.getSuccessData();
         if (isNull(allConnections)) {
-        	return new LinkedMultiValueMap<>(0);
+            return new LinkedMultiValueMap<>(0);
         }
         Set<Map.Entry<String, List<Auth2ConnectionDto>>> entries = allConnections.entrySet();
         MultiValueMap<String, ConnectionDto> connectionMap = new LinkedMultiValueMap<>(allConnections.size());
         for (Map.Entry<String, List<Auth2ConnectionDto>> entry : entries) {
             List<ConnectionDto> connectionDtoList =
                     entry.getValue()
-                         .stream()
-                         .map(dto -> {
-                             String identifier = dto.getIdentifier();
-                             String[] providers = RegisterUtils.getProvideIdAndProviderUserIdByIdentifierForOauth2(identifier);
-                             String providerId = null;
-                             String providerUserId = null;
-                             if (nonNull(providers)) {
-                                 providerId = providers[0];
-                                 providerUserId = providers[1];
-                             }
-                             return ConnectionDto.builder()
-                                                 .id(dto.getId().toString())
-                                                 .userId(identifier)
-                                                 .providerId(providerId)
-                                                 .providerUserId(providerUserId)
-                                                 .build();
-                         })
-                         .collect(Collectors.toList());
+                            .stream()
+                            .map(dto -> {
+                                String identifier = dto.getIdentifier();
+                                String[] providers = RegisterUtils.getProvideIdAndProviderUserIdByIdentifierForOauth2(identifier);
+                                String providerId = null;
+                                String providerUserId = null;
+                                if (nonNull(providers)) {
+                                    providerId = providers[0];
+                                    providerUserId = providers[1];
+                                }
+                                return ConnectionDto.builder()
+                                        .id(dto.getId().toString())
+                                        .userId(identifier)
+                                        .providerId(providerId)
+                                        .providerUserId(providerUserId)
+                                        .build();
+                            })
+                            .collect(Collectors.toList());
             connectionMap.put(entry.getKey(), connectionDtoList);
         }
         return connectionMap;
@@ -255,9 +245,10 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
 
     /**
      * 解除绑定(第三方)
-     * @param userId            解绑的用户 Id, 即 {@link Identifier#getIdentifier()}
-     * @param providerId        第三方服务商 Id
-     * @param providerUserId    第三方用户 Id
+     *
+     * @param userId         解绑的用户 Id, 即 {@link Identifier#getIdentifier()}
+     * @param providerId     第三方服务商 Id
+     * @param providerUserId 第三方用户 Id
      */
     @Override
     public void unbinding(@NonNull String userId, @NonNull String providerId, @NonNull String providerUserId) {
@@ -267,17 +258,17 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
             TokenInfo currentUser = SecurityUtils.getCurrentUser();
             if (currentUser.getAccountName().equals(userId)) {
                 log.debug("用户 {} 进行解绑操作时, 不能解绑的已登录的账号; providerId: {}, providerUserId: {}",
-                          userId, providerId, providerUserId);
+                        userId, providerId, providerUserId);
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_LOGGED_ERROR, userId);
             }
             IdentifierRequest identifierRequest = new IdentifierRequest();
             identifierRequest.setAid(currentUser.getAccountId());
             identifierRequest.setTenantId(currentUser.getTenantId());
-            Response<List<IdentifierSearchDto>> listResponse = accountIdentifierFeignService.find(identifierRequest);
+            Response<List<IdentifierSearchDto>> listResponse = accountIdentifierApi.find(identifierRequest);
             List<IdentifierSearchDto> identifierList = listResponse.getSuccessData();
             if (isEmpty(identifierList)) {
                 log.debug("用户 {} 进行解绑操作时, 获取用户信息失败; providerId: {}, providerUserId: {}",
-                         userId, providerId, providerUserId);
+                        userId, providerId, providerUserId);
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_ERROR, userId);
             }
             // 检查 userId 是否在 identifierList 中
@@ -290,31 +281,30 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
             }
             if (isNull(unbindingIdentifier)) {
                 log.debug("用户 {} 进行解绑操作时, 不能解绑的不属于自己的第三方账号; providerId: {}, providerUserId: {}",
-                          userId, providerId, providerUserId);
+                        userId, providerId, providerUserId);
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_ILLEGAL, userId);
             }
             if (!unbindingIdentifier.getLoginType().equals(OAUTH2.ordinal())) {
                 log.debug("用户 {} 进行解绑操作时, 只能解绑第三方的账号; providerId: {}, providerUserId: {}",
-                          userId, providerId, providerUserId);
+                        userId, providerId, providerUserId);
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_NOT_OAUTH2, userId);
             }
             if (identifierList.size() == 1) {
                 log.debug("用户 {} 进行解绑操作时, 不支持解绑自己; providerId: {}, providerUserId: {}",
-                          userId, providerId, providerUserId);
+                        userId, providerId, providerUserId);
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_YOURSELF_ERROR, userId);
             }
 
             // 2. 解绑
-            Response<Boolean> response = accountIdentifierFeignService.unbinding(unbindingIdentifier.getAid(),
-                                                                                 unbindingIdentifier.getIdentifier());
+            Response<Boolean> response = accountIdentifierApi.unbinding(unbindingIdentifier.getAid(),
+                                                                        unbindingIdentifier.getIdentifier());
             Boolean successData = response.getSuccessData();
             if (isNull(successData) || !successData) {
                 throw new UnBindingException(ErrorCodeEnum.UN_BINDING_ERROR, userId);
             }
-        }
-        catch (FeignException e) {
+        } catch (FeignException e) {
             String msg = String.format("用户解绑失败: userId=%s, providerId=%s, providerUserId=%s",
-                                       userId, providerId, providerUserId);
+                    userId, providerId, providerUserId);
             throw new FeignCallException(ResponseStatusCode.FAILED, null, msg, e);
         }
     }
@@ -325,11 +315,11 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
         try {
             // 1. 获取 principal 对应的 Identifier 相关信息.
             ArchUser archUser = (ArchUser) principal;
-            Response<AuthLoginDto> authLoginDtoResponse = accountIdentifierFeignService.loadAccountByIdentifier(archUser.getUsername());
+            Response<AuthLoginDto> authLoginDtoResponse = accountIdentifierApi.loadAccountByIdentifier(archUser.getUsername());
             AuthLoginDto authLoginDto = authLoginDtoResponse.getSuccessData();
             if (isNull(authLoginDto)) {
                 log.warn("用户 {} 进行绑定操作时, 获取用户信息失败; providerId: {}, providerUserId: {}",
-                         principal.getUsername(), providerId, authUser.getUuid());
+                        principal.getUsername(), providerId, authUser.getUuid());
                 throw new BindingException(ErrorCodeEnum.BINDING_ERROR, principal.getUsername());
             }
 
@@ -345,13 +335,11 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
                 }
                 // authUser 已经绑定在其他账号上
                 throw new BindingException(ErrorCodeEnum.BOUND_ERROR, principal.getUsername());
-            }
-            catch (UserNotExistException e) {
+            } catch (UserNotExistException e) {
                 String msg = String.format("用户 %s 进行绑定操作时, 查询第三方是否已经绑定失败; providerId: %s, providerUserId: %s",
-                                           principal.getUsername(), providerId, authUser.getUuid());
+                        principal.getUsername(), providerId, authUser.getUuid());
                 log.error(msg, e);
-            }
-            catch (UsernameNotFoundException e) {
+            } catch (UsernameNotFoundException e) {
                 // 用户不存在, 继续执行绑定操作
             }
 
@@ -371,9 +359,8 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
                     .setLoginType(OAUTH2.ordinal());
             // 绑定
             try {
-                accountIdentifierFeignService.save(identifierRequest);
-            }
-            catch (Exception e) {
+                accountIdentifierApi.save(identifierRequest);
+            } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 throw new BindingException(ErrorCodeEnum.BINDING_ERROR, principal.getUsername());
             }
@@ -381,21 +368,19 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
             // 4. 保存第三方用户的 OauthToken 信息
             int timeout = auth2Properties.getProxy().getHttpConfig().getTimeout();
             OauthTokenRequest oauthToken = toOauthToken(authUser,
-                                                        tenantContextHolder.getTenantId(),
-                                                        identifierRequest.getId(),
-                                                        timeout);
+                    tenantContextHolder.getTenantId(),
+                    identifierRequest.getId(),
+                    timeout);
             try {
                 umsAccountAuthTokenFeignService.save(oauthToken);
-            }
-            catch (Exception e) {
-                log.error(e.getMessage(),e);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
                 saveOrUpdateOauthToken(oauthToken, "保存第三方授权登录用户信息失败, 发布重试事件", "save");
             }
 
-        }
-        catch (FeignException e) {
+        } catch (FeignException e) {
             String msg = String.format("用户绑定失败: userId=%s, providerId=%s, providerUserId=%s",
-                                       principal.getUsername(), providerId, authUser.getUuid());
+                    principal.getUsername(), providerId, authUser.getUuid());
             throw new FeignCallException(ResponseStatusCode.FAILED, null, msg, e);
         }
 
@@ -413,8 +398,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
             if (isNull(successData) || !successData) {
                 saveOrUpdateOauthToken(oauthToken, "更新第三方授权登录用户信息失败, 发布重试事件: ", "updateByIdentifierId");
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             saveOrUpdateOauthToken(oauthToken, "更新第三方授权登录用户信息失败, 发布重试事件", "updateByIdentifierId");
         }
@@ -426,7 +410,7 @@ public class ArchConnectionServiceImpl implements ConnectionService, Application
         log.warn(errorMsg + "traceId={}", traceId);
         publishRetryEvent(this.applicationContext, traceId,
                           this.umsAccountAuthTokenFeignService,
-                          AccountOauthTokenFeignService.class,
+                          AccountOauthTokenApi.class,
                           methodName,
                           new Class[]{OauthToken.class},
                           oauthToken);

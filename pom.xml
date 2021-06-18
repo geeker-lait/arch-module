@@ -26,6 +26,8 @@
         <module>arch-alarm</module>
         <module>arch-application</module>
         <module>arch-auth</module>
+        <module>arch-form</module>
+        <module>arch-automate</module>
         <module>arch-framework</module>
         <module>arch-gateway</module>
         <module>arch-mms</module>
@@ -33,9 +35,9 @@
         <module>arch-pay</module>
         <module>arch-pms</module>
         <module>arch-rule</module>
+        <module>arch-sms</module>
         <module>arch-ums</module>
         <module>arch-workflow</module>
-        <module>arch-sms</module>
     </modules>
 
 
@@ -75,12 +77,30 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
 
-            <!-- arch projects -->
+            <!-- arch-pay#arch-pay#arch-pay#arch-pay#arch-pay#arch-pay#arch-pay -->
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>pay-api</artifactId>
@@ -88,27 +108,91 @@
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
+                <artifactId>pay-biz</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
                 <artifactId>pay-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>framework-core</artifactId>
+                <artifactId>pay-crud</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>pay-rest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>pay-sdk</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>framework-automate</artifactId>
+                <artifactId>channel-alipay</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>framework-api</artifactId>
+                <artifactId>channel-huifu</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>channel-lianlian</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>channel-mfe88</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>channel-weixin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>channel-yeepay</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- arch-pay#arch-pay#arch-pay#arch-pay#arch-pay#arch-pay#arch-pay -->
 
+            <!--arhc-sms#arhc-sms#arhc-sms#arhc-sms#arhc-sms#arhc-sms#arhc-sms#-->
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>sms-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>sms-channel</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>sms-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>sms-crud</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>sms-rest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!--arhc-sms#arhc-sms#arhc-sms#arhc-sms#arhc-sms#arhc-sms#arhc-sms#-->
+
+            <!-- arch-automate#arch-pay#arch-automate#arch-automate#arch-automate -->
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>automate-api</artifactId>
@@ -121,11 +205,50 @@
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
+                <artifactId>automate-crud</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
                 <artifactId>automate-rest</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <!-- arch-automate#arch-pay#arch-automate#arch-automate#arch-automate -->
 
+            <!-- arch-form#arch-form#arch-form#arch-form#arch-form#arch-form#arch-form -->
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>form-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>form-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>form-crud</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>form-rest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- arch-form#arch-form#arch-form#arch-form#arch-form#arch-form#arch-form -->
 
+            <!-- arch-framework#arch-framework#arch-framework#arch-framework#arch-framework# -->
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>framework-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>framework-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>framework-utils</artifactId>
@@ -136,16 +259,26 @@
                 <artifactId>framework-beans</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-
             <dependency>
-                <artifactId>mq-messaging</artifactId>
                 <groupId>org.arch.projects</groupId>
+                <artifactId>framework-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>framework-mq</artifactId>
+                <artifactId>framework-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arch.projects</groupId>
+                <artifactId>framework-spi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- arch-framework#arch-framework#arch-framework#arch-framework#arch-framework# -->
+
+            <dependency>
+                <artifactId>mq-messaging</artifactId>
+                <groupId>org.arch.projects</groupId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -166,11 +299,6 @@
             <dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>mq-consumer-spring-boot-starter</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>framework-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -195,15 +323,16 @@
                 <artifactId>auth-sso</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
+            <!--<dependency>
                 <groupId>org.arch.projects</groupId>
                 <artifactId>auth-oauth</artifactId>
                 <version>${project.version}</version>
-            </dependency>
+            </dependency>-->
+
 
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>ums-account</artifactId>
+                <artifactId>ums-commons</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -213,35 +342,19 @@
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>ums-commons</artifactId>
+                <artifactId>ums-biz</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>ums-feign-api</artifactId>
+                <artifactId>ums-crud</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.arch.projects</groupId>
-                <artifactId>ums-member</artifactId>
+                <artifactId>ums-rest</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>ums-merchant</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>ums-user</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.arch.projects</groupId>
-                <artifactId>ums-conf</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
 
             <!-- auth -->
             <dependency>
@@ -251,15 +364,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jsonwebtoken.version}</version>
             </dependency>
 
-            <!-- spring -->
+            <!-- spring#spring#spring#spring#spring#spring#spring#spring -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -288,21 +399,20 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-
-            <!-- apache -->
-            <dependency>
-                <groupId>org.apache.rocketmq</groupId>
-                <artifactId>rocketmq-spring-boot-starter</artifactId>
-                <version>2.0.4</version>
-            </dependency>
-
             <dependency>
                 <groupId>com.alibaba.rocketmq</groupId>
                 <artifactId>rocketmq-client</artifactId>
                 <version>3.2.6</version>
             </dependency>
+            <!-- spring#spring#spring#spring#spring#spring#spring#spring -->
 
+
+            <!-- apache#apache#apache#apachea#pache#apache#apache#apache-->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>2.0.4</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
@@ -343,7 +453,28 @@
                 <artifactId>commons-beanutils</artifactId>
                 <version>1.9.4</version>
             </dependency>
-
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>1.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-digester3</artifactId>
+                <version>3.2</version>
+                <!--<classifier>with-deps</classifier>-->
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>1.20</version>
+            </dependency>
+            <!-- apache#apache#apache#apachea#pache#apache#apache#apache-->
 
             <!-- commons -->
             <dependency>
@@ -373,11 +504,6 @@
                 <version>5.4.1</version>
             </dependency>
             <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>30.0-jre</version>
-            </dependency>
-            <dependency>
                 <groupId>io.beanmapper</groupId>
                 <artifactId>beanmapper</artifactId>
                 <version>3.1.0</version>
@@ -388,11 +514,28 @@
                 <version>2.10.10</version>
             </dependency>
 
+
+            <!--google -->
             <!-- 解决: 未知的枚举常量 javax.annotation.meta.When.MAYBE -->
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>3.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>30.0-jre</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.7</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>3.4.1</version>
             </dependency>
 
             <!-- other -->
@@ -402,12 +545,13 @@
                 <version>1.27</version>
             </dependency>
 
+
+            <!--Feign-->
             <dependency>
                 <groupId>io.github.openfeign</groupId>
                 <artifactId>feign-core</artifactId>
                 <version>10.10.1</version>
             </dependency>
-            <!--Feign-->
             <dependency>
                 <groupId>io.github.openfeign.form</groupId>
                 <artifactId>feign-form</artifactId>
@@ -419,21 +563,10 @@
                 <version>3.8.0</version>
             </dependency>
             <dependency>
-                <groupId>commons-fileupload</groupId>
-                <artifactId>commons-fileupload</artifactId>
-                <version>1.4</version>
-            </dependency>
-            <dependency>
                 <groupId>io.github.openfeign</groupId>
                 <artifactId>feign-httpclient</artifactId>
                 <version>11.0</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>4.5.13</version>
-            </dependency>
-
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-boot-starter</artifactId>
@@ -472,7 +605,6 @@
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>1.2.10</version>
             </dependency>
-            <!--https://blog.battcn.com/2018/06/20/springboot/v2-other-liquibase/-->
             <dependency>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-core</artifactId>
@@ -484,7 +616,11 @@
                 <artifactId>dom4j</artifactId>
                 <version>2.1.3</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20210307</version>
+            </dependency>
 
             <!-- redis -->
             <dependency>
@@ -528,44 +664,43 @@
         </pluginManagement>
     </build>
 
-    <repositories>
+    <!--<repositories>
+        <repository>
+            <id>central</id>
+            <name>aliyun maven</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            &lt;!&ndash; 是否开启发布版构件下载 &ndash;&gt;
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            &lt;!&ndash; 是否开启快照版构件下载 &ndash;&gt;
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
 
-        <!-- <repository>
-             <id>central</id>
-             <name>aliyun maven</name>
-             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-             <layout>default</layout>
-             &lt;!&ndash; 是否开启发布版构件下载 &ndash;&gt;
-             <releases>
-                 <enabled>true</enabled>
-             </releases>
-             &lt;!&ndash; 是否开启快照版构件下载 &ndash;&gt;
-             <snapshots>
-                 <enabled>false</enabled>
-             </snapshots>
-         </repository>
-         <repository>
-             <id>spring-milestones</id>
-             <name>Spring Milestones</name>
-             <url>https://repo.spring.io/milestone</url>
-         </repository>
+        <repository>
+            <id>snoatype-snapshots</id>
+            <name>sonatype snapshots</name>
+            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
 
-         <repository>
-             <id>snoatype-snapshots</id>
-             <name>sonatype snapshots</name>
-             <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-         </repository>
-
-         <repository>
-             <id>central</id>
-             <name>central maven</name>
-             <url>https://repo1.maven.org/maven2/</url>
-         </repository>
-         <repository>
-             <id>central</id>
-             <name>central maven</name>
-             <url>http://central.maven.org/maven2/</url>
-         </repository>-->
-    </repositories>
+        <repository>
+            <id>central</id>
+            <name>central maven</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <name>central maven</name>
+            <url>http://central.maven.org/maven2/</url>
+        </repository>
+    </repositories>-->
 
 </project>

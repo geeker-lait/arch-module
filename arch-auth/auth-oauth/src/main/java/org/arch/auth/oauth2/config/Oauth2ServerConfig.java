@@ -1,4 +1,4 @@
-//package org.arch.auth.oauth2.config;
+//package org.arch.auth.oauth2.properties;
 //
 //import org.arch.auth.oauth2.component.JwtTokenEnhancer;
 //import org.arch.auth.oauth2.service.UserDetailsServiceImpl;
@@ -8,11 +8,11 @@
 //import org.springframework.core.io.ClassPathResource;
 //import org.springframework.security.authentication.AuthenticationManager;
 //import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
-//import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
-//import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
-//import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
-//import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+//import org.springframework.security.oauth2.properties.annotation.configurers.ClientDetailsServiceConfigurer;
+//import org.springframework.security.oauth2.properties.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+//import org.springframework.security.oauth2.properties.annotation.web.configuration.EnableAuthorizationServer;
+//import org.springframework.security.oauth2.properties.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+//import org.springframework.security.oauth2.properties.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 //import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 //import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 //import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;

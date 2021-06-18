@@ -47,7 +47,8 @@ public class LoginController {
 
     /**
      * 登录页面
-     * @return  跳转到登录页面
+     *
+     * @return 跳转到登录页面
      */
     @RequestMapping(value = "/login", method = {RequestMethod.GET})
     public String login() {
@@ -56,7 +57,8 @@ public class LoginController {
 
     /**
      * 登出
-     * @return  跳转到登录页面
+     *
+     * @return 跳转到登录页面
      */
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout() {
@@ -67,11 +69,12 @@ public class LoginController {
 
     /**
      * 第三方登录成功后 转发 到此接口来获取 token 与 refreshToken
-     * @param tk        获取  token 与 refreshToken 的 tokenKey.
-     * @param username  账号标识名称
-     * @param id        账号标识 id
-     * @param model     model
-     * @return  转发到自动获取 token 与 refreshToken 的页面.
+     *
+     * @param tk       获取  token 与 refreshToken 的 tokenKey.
+     * @param username 账号标识名称
+     * @param id       账号标识 id
+     * @param model    model
+     * @return 转发到自动获取 token 与 refreshToken 的页面.
      */
     @RequestMapping(value = "/oauth2Token", method = {RequestMethod.GET})
     public String auth2Token(@RequestParam("tk") String tk,
@@ -85,10 +88,11 @@ public class LoginController {
 
     /**
      * 根据 tokenKey 获取 token 与 refreshToken 的接口, 第三方登录专用.
-     * @param tk        获取  token 与 refreshToken 的 tokenKey.
-     * @param username  账号标识名称
-     * @param id        账号标识 id
-     * @return  返回  token 与 refreshToken.
+     *
+     * @param tk       获取  token 与 refreshToken 的 tokenKey.
+     * @param username 账号标识名称
+     * @param id       账号标识 id
+     * @return 返回  token 与 refreshToken.
      */
     @RequestMapping(value = "/oauth2Callback", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody

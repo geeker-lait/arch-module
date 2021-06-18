@@ -22,6 +22,7 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
 
 /**
  * 图片上下传控制器
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.2.27 11:15
@@ -37,7 +38,8 @@ public class UploadController {
 
     /**
      * 上传图片
-     * @param files:     上传文件
+     *
+     * @param files: 上传文件
      * @return 返回删除文件的路径集合
      */
     @NonNull
@@ -52,8 +54,7 @@ public class UploadController {
                 imageUrlList.add(upload.getFullFilePath());
             }
             return Response.success(imageUrlList);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("上传图片失败", e);
             return Response.error(FAILED.getCode(), "上传图片失败");
         }
@@ -61,7 +62,8 @@ public class UploadController {
 
     /**
      * 上传头像
-     * @param file:     上传文件
+     *
+     * @param file: 上传文件
      * @return 返回删除文件的路径集合
      */
     @NonNull
@@ -71,8 +73,7 @@ public class UploadController {
         try {
             FileInfoDto upload = fileUploader.upload(file, uploadType, true);
             return Response.success(Collections.singletonList(upload.getFullFilePath()));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("上传图片失败", e);
             return Response.error(FAILED.getCode(), "上传图片失败");
         }

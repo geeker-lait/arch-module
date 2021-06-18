@@ -2,8 +2,9 @@ package org.arch.admin.rbac.service;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
+import org.arch.ums.account.api.AccountRoleMenuApi;
+import org.arch.ums.account.dto.MenuSearchDto;
 import org.arch.ums.account.entity.Menu;
-import org.arch.ums.account.client.AccountRoleMenuFeignService;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
@@ -34,9 +35,9 @@ import static java.util.Arrays.asList;
  */
 @Service
 @RequiredArgsConstructor
-public class RoleMenuPermissionsServiceImpl implements RolePermissionsService<Menu> {
+public class RoleMenuPermissionsServiceImpl implements RolePermissionsService<MenuSearchDto> {
 
-    private final AccountRoleMenuFeignService roleMenuFeignService;
+    private final AccountRoleMenuApi accountRoleMenuApi;
     private final TenantContextHolder tenantContextHolder;
 
     @Override
@@ -51,12 +52,11 @@ public class RoleMenuPermissionsServiceImpl implements RolePermissionsService<Me
                                                    Long... resourceIds) throws RolePermissionsException {
         try {
             Response<Boolean> response =
-                    this.roleMenuFeignService.updateResourcesByRoleIdOfTenant(tenantId, roleId, asList(resourceIds));
+                    this.accountRoleMenuApi.updateResourcesByRoleIdOfTenant(tenantId, roleId, asList(resourceIds));
             return Optional.ofNullable(response.getSuccessData()).orElse(false);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.UPDATE_ROLE_PERMISSIONS_FAILURE,
-                                               tenantId + ":" + roleId + ":" + Arrays.toString(resourceIds), e);
+                    tenantId + ":" + roleId + ":" + Arrays.toString(resourceIds), e);
 
         }
     }
@@ -68,54 +68,51 @@ public class RoleMenuPermissionsServiceImpl implements RolePermissionsService<Me
                                                     Long... resourceIds) throws RolePermissionsException {
         try {
             Response<Boolean> response =
-                    this.roleMenuFeignService.updateResourcesByRoleIdOfScopeId(scopeId, roleId, asList(resourceIds));
+                    this.accountRoleMenuApi.updateResourcesByRoleIdOfScopeId(scopeId, roleId, asList(resourceIds));
             return Optional.ofNullable(response.getSuccessData()).orElse(false);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.UPDATE_ROLE_PERMISSIONS_FAILURE,
-                                               scopeId + ":" + roleId + ":" + Arrays.toString(resourceIds), e);
+                    scopeId + ":" + roleId + ":" + Arrays.toString(resourceIds), e);
 
         }
     }
 
     @NonNull
     @Override
-    public List<Menu> findAllResourcesByRoleId(@NonNull Long roleId) throws RolePermissionsException {
+    public List<MenuSearchDto> findAllResourcesByRoleId(@NonNull Long roleId) throws RolePermissionsException {
         Long tenantId = Long.valueOf(tenantContextHolder.getTenantId());
         return findAllResourcesByRoleIdOfTenant(tenantId, roleId);
     }
 
     @NonNull
     @Override
-    public List<Menu> findAllResourcesByRoleIdOfTenant(@NonNull Long tenantId,
+    public List<MenuSearchDto> findAllResourcesByRoleIdOfTenant(@NonNull Long tenantId,
                                                        @NonNull Long roleId) throws RolePermissionsException {
         try {
-            Response<List<Menu>> response =
-                    this.roleMenuFeignService.findAllResourcesByRoleIdOfTenant(tenantId, roleId);
+            Response<List<MenuSearchDto>> response =
+                    this.accountRoleMenuApi.findAllResourcesByRoleIdOfTenant(tenantId, roleId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new ArrayList<>(0));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.QUERY_ROLE_PERMISSIONS_FAILURE, tenantId + ":" + roleId, e);
         }
     }
 
     @NonNull
     @Override
-    public List<Menu> findAllResourcesByRoleIdOfScopeId(@NonNull Long scopeId,
-                                                        @NonNull Long roleId) throws RolePermissionsException {
+    public List<MenuSearchDto> findAllResourcesByRoleIdOfScopeId(@NonNull Long scopeId,
+                                                                 @NonNull Long roleId) throws RolePermissionsException {
         try {
-            Response<List<Menu>> response =
-                    this.roleMenuFeignService.findAllResourcesByRoleIdOfScopeId(scopeId, roleId);
+            Response<List<MenuSearchDto>> response =
+                    this.accountRoleMenuApi.findAllResourcesByRoleIdOfScopeId(scopeId, roleId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new ArrayList<>(0));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.QUERY_ROLE_PERMISSIONS_FAILURE, scopeId + ":" + roleId, e);
         }
     }
 
     @NonNull
     @Override
-    public Class<Menu> getUpdateResourcesClass() {
-        return Menu.class;
+    public Class<MenuSearchDto> getUpdateResourcesClass() {
+        return MenuSearchDto.class;
     }
 }

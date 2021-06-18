@@ -6,15 +6,14 @@ import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.ums.bean.TokenInfo;
-import org.arch.framework.utils.HttpRequestUtils;
 import org.arch.payment.core.PayDispatcher;
 import org.arch.payment.sdk.DirectiveCode;
-import org.arch.payment.sdk.PayRequest;
-import org.arch.payment.sdk.PayResponse;
-import org.arch.payment.sdk.request.BindCardRequest;
-import org.arch.payment.sdk.request.PayingRequest;
-import org.arch.payment.sdk.request.PreBindCardRequest;
-import org.arch.payment.sdk.request.PrePayingRequest;
+import org.arch.payment.sdk.bean.PayRequest;
+import org.arch.payment.sdk.bean.PayResponse;
+import org.arch.payment.sdk.params.BindCardParams;
+import org.arch.payment.sdk.params.PayingParams;
+import org.arch.payment.sdk.params.PreBindCardParams;
+import org.arch.payment.sdk.params.PrePayingParams;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,17 +42,17 @@ public class PayController {
      * 绑卡验证
      *
      * @param httpServletRequest
-     * @param preBindCardRequest
+     * @param preBindCardParams
      * @return
      */
     @PostMapping(value = "preBindCard")
     @ResponseBody
     @ApiOperation(value = "绑卡验证", authorizations = @Authorization(value = "token"))
-    public PayResponse preBindcard(HttpServletRequest httpServletRequest, TokenInfo token, PreBindCardRequest preBindCardRequest) {
+    public PayResponse preBindcard(HttpServletRequest httpServletRequest, TokenInfo token, PreBindCardParams preBindCardParams) {
         PayRequest payRequest = PayRequest.of(DirectiveCode.PRE_BINDCARD_DIRECTIVE)
-                .setIp(HttpRequestUtils.getIpAddress(httpServletRequest))
-                .setDeviceId(HttpRequestUtils.getDeviceId(httpServletRequest))
-                .init(preBindCardRequest);
+                .init(httpServletRequest)
+                .setPayParams(preBindCardParams);
+
 
         payDispatcher.dispatch(payRequest);
         return null;
@@ -64,14 +63,14 @@ public class PayController {
      *
      * @param httpServletRequest
      * @param token
-     * @param bindCardRequest
+     * @param bindCardParams
      * @return
      */
     @PostMapping(value = "bindCard")
     @ResponseBody
     @ApiOperation(value = "确认绑卡", authorizations = @Authorization(value = "token"))
-    public PayResponse bindcard(HttpServletRequest httpServletRequest, TokenInfo token, BindCardRequest bindCardRequest) {
-        PayRequest payRequest = PayRequest.of(DirectiveCode.BINDCARD_DIRECTIVE);
+    public PayResponse bindcard(HttpServletRequest httpServletRequest, TokenInfo token, BindCardParams bindCardParams) {
+        PayRequest payRequest = PayRequest.of(DirectiveCode.BINDCARD_DIRECTIVE).init(httpServletRequest).setPayParams(bindCardParams);
         // 获取token
 
         // 获取ip地址
@@ -85,13 +84,13 @@ public class PayController {
      * 预付
      *
      * @param httpServletRequest
-     * @param prePayingRequest
+     * @param prePayingParams
      */
     @PostMapping(value = "prePay")
     @ResponseBody
     @ApiOperation(value = "支付验证/预支付", authorizations = @Authorization(value = "token"))
-    public PayResponse prePaying(HttpServletRequest httpServletRequest, TokenInfo token, PrePayingRequest prePayingRequest) {
-        PayRequest payRequest = PayRequest.of(DirectiveCode.PRE_PAY_DIRECTIVE).init(prePayingRequest);
+    public PayResponse prePaying(HttpServletRequest httpServletRequest, TokenInfo token, PrePayingParams prePayingParams) {
+        PayRequest payRequest = PayRequest.of(DirectiveCode.PRE_PAY_DIRECTIVE).init(httpServletRequest).setPayParams(prePayingParams);
         payDispatcher.dispatch(payRequest);
         return null;
     }
@@ -106,9 +105,9 @@ public class PayController {
     @ResponseBody
     @ApiOperation(value = "支付确认/支付", authorizations = @Authorization(value = "token"))
 //    @Transactional(rollbackFor = Exception.class)
-    public PayResponse paying(HttpServletRequest httpServletRequest, TokenInfo token, PayingRequest payingRequest) {
+    public PayResponse paying(HttpServletRequest httpServletRequest, TokenInfo token, PayingParams payingParams) {
         PayRequest payRequest = PayRequest.of(DirectiveCode.PAY_DIRECTIVE)
-                .init(payingRequest);
+                .setPayParams(payingParams);
         payDispatcher.dispatch(payRequest);
         return null;
     }

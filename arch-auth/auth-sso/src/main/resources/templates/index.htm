@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>index</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js" type="text/javascript"></script>
 </head>
 <body>
 hello <span th:text="${username}">world!</span><br>
 roles: <span th:text="${roles}"/>
-    <!-- 通过 th:action 的方式支持 csrf 或者 添加隐藏域<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
-    <form th:action="@{/logout?logout}" method="post">
-        <input type="submit" value="退出登录post"/>
-    </form>
+<!-- 通过 th:action 的方式支持 csrf 或者 添加隐藏域<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
+<form method="post" th:action="@{/logout?logout}">
+    <input type="submit" value="退出登录post"/>
+</form>
 
 <br><br>
 <h5>启动 basic-detail-example 示例 端口分别为 9090/9091, 跨域设置属性通过 ums.client.cors.xxx 设置, 详情参考 basic-detail-example 中的

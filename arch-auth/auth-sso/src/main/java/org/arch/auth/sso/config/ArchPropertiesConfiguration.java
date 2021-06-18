@@ -9,6 +9,7 @@ import org.springframework.core.annotation.Order;
 
 /**
  * arch sso 属性自动配置
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.6 23:16

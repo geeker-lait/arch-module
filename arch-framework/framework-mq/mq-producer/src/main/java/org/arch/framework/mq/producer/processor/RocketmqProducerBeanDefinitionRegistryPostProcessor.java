@@ -32,7 +32,7 @@ public class RocketmqProducerBeanDefinitionRegistryPostProcessor implements Bean
         MiddlewareConfig config = midConfig.getConfig(midConfig.getAppId(), midConfig.getSecret());
         List<RocketmqProducerConfigModel> rocketMQProducerVos = config.getRocketmqProducerConfigModels();
         if (rocketMQProducerVos.isEmpty()) {
-            throw new ComponentInitException("must be exist rocket mq producer component config");
+            throw new ComponentInitException("must be exist rocket mq producer component properties");
         } else {
             Iterator<RocketmqProducerConfigModel> var = rocketMQProducerVos.iterator();
 
@@ -56,9 +56,9 @@ public class RocketmqProducerBeanDefinitionRegistryPostProcessor implements Bean
                 registry.registerBeanDefinition(connectionFactoryBeanName, beanDefinition);
                 if (StringUtils.isBlank(suffix)) {
                     beanDefinition.setPrimary(true);
-                    log.info("arch middleware dynamic registerBeanDefinition [{}] isPrimary [{}] ,Using producer config [{}]", new Object[]{connectionFactoryBeanName, true, producerVo});
+                    log.info("arch middleware dynamic registerBeanDefinition [{}] isPrimary [{}] ,Using producer properties [{}]", new Object[]{connectionFactoryBeanName, true, producerVo});
                 } else {
-                    log.info("arch middleware dynamic registerBeanDefinition [{}] isPrimary [{}] ,Using producer config [{}]", new Object[]{connectionFactoryBeanName, false, producerVo});
+                    log.info("arch middleware dynamic registerBeanDefinition [{}] isPrimary [{}] ,Using producer properties [{}]", new Object[]{connectionFactoryBeanName, false, producerVo});
                 }
             }
 

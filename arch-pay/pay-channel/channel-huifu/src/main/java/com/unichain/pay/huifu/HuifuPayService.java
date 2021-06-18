@@ -3,7 +3,7 @@
 //import com.alibaba.fastjson.JSON;
 //import com.alibaba.fastjson.TypeReference;
 //import com.unichain.framework.mvc.exception.BusinessException;
-//import com.unichain.pay.base.payapi.huifupay.config.HuifuProperties;
+//import com.unichain.pay.base.payapi.huifupay.properties.HuifuProperties;
 //import com.unichain.pay.base.payapi.huifupay.dto.CardBinQueryDto;
 //import com.unichain.pay.base.payapi.huifupay.utils.SignUtils;
 //import com.unichain.pay.base.payapi.huifupay.vo.CardBinResVo;

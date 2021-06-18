@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.auth.sso.recommend.service.RecommendAndPromotionService;
 import org.arch.framework.event.RegisterEvent;
-import org.arch.framework.ums.enums.AccountType;
 import org.arch.framework.ums.userdetails.ArchUser;
-import org.arch.framework.utils.SecurityUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -20,6 +18,7 @@ import static org.arch.framework.utils.RetryUtils.publishRetryEvent;
 
 /**
  * 注册事件监听器
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.6 12:57
@@ -38,8 +37,8 @@ public class RegisterListener implements ApplicationListener<RegisterEvent>, App
         ArchUser archUser = event.getArchUser();
         // 记录日志
         log.info("用户注册成功: 租户: {}, identifier: {}, aid: {}, loginType: {}, source: {}",
-                 archUser.getTenantId(), archUser.getUsername(), archUser.getAccountId(),
-                 archUser.getLoginType(), event.getSource());
+                archUser.getTenantId(), archUser.getUsername(), archUser.getAccountId(),
+                archUser.getLoginType(), event.getSource());
 
         // 用户推荐 或 推广统计
         userRecommendationOrPromotion(event.getSource());
@@ -48,7 +47,7 @@ public class RegisterListener implements ApplicationListener<RegisterEvent>, App
 
     private void userRecommendationOrPromotion(String source) {
         if (isNull(source)) {
-        	return;
+            return;
         }
         String decodeRecommendationOrPromotionCode =
                 recommendAndPromotionService.decodeRecommendationOrPromotionCode(source);
@@ -58,11 +57,11 @@ public class RegisterListener implements ApplicationListener<RegisterEvent>, App
             String traceId = getTraceId();
             log.warn("用户推荐 或 推广统计处理失败, 发布重试事件, traceId={}", traceId);
             publishRetryEvent(this.applicationContext, traceId,
-                              this.recommendAndPromotionService,
-                              RecommendAndPromotionService.class,
-                              "userRecommendOrPromotionHandler",
-                              new Class[] {String.class},
-                              decodeRecommendationOrPromotionCode);
+                    this.recommendAndPromotionService,
+                    RecommendAndPromotionService.class,
+                    "userRecommendOrPromotionHandler",
+                    new Class[]{String.class},
+                    decodeRecommendationOrPromotionCode);
         }
     }
 

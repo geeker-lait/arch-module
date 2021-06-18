@@ -70,7 +70,7 @@ public class NotifyTest {
         try {
 
             // 自己的公钥(测试)
-            String publickey = public_key;// 直接写死 config json里面的publickey
+            String publickey = public_key;// 直接写死 properties json里面的publickey
             java.security.spec.X509EncodedKeySpec bobPubKeySpec = new java.security.spec.X509EncodedKeySpec(
                     new BASE64Decoder().decodeBuffer(publickey));
             // RSA对称加密算法

@@ -2,14 +2,14 @@ package org.arch.auth.rbac.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.auth.rbac.feign.MenuFeignService;
-import org.arch.auth.rbac.feign.PermissionFeignService;
-import org.arch.auth.rbac.feign.ResourceFeignService;
-import org.arch.auth.rbac.feign.RoleFeignService;
-import org.arch.auth.rbac.feign.RoleGroupFeignService;
-import org.arch.auth.rbac.feign.RoleMenuFeignService;
-import org.arch.auth.rbac.feign.RolePermissionFeignService;
-import org.arch.auth.rbac.feign.RoleResourceFeignService;
+import org.arch.auth.rbac.feign.MenuApi;
+import org.arch.auth.rbac.feign.PermissionApi;
+import org.arch.auth.rbac.feign.ResourceApi;
+import org.arch.auth.rbac.feign.RoleApi;
+import org.arch.auth.rbac.feign.RoleGroupApi;
+import org.arch.auth.rbac.feign.RoleMenuApi;
+import org.arch.auth.rbac.feign.RolePermissionApi;
+import org.arch.auth.rbac.feign.RoleResourceApi;
 import org.arch.ums.account.dto.MenuSearchDto;
 import org.arch.ums.account.dto.PermissionSearchDto;
 import org.arch.ums.account.dto.ResourceSearchDto;
@@ -54,14 +54,14 @@ import static top.dcenter.ums.security.core.util.ConvertUtil.string2Set;
 @RequiredArgsConstructor
 public class FeignAuthoritiesServiceImpl implements AuthoritiesService {
 
-    private final RoleMenuFeignService roleMenuFeignService;
-    private final RoleGroupFeignService roleGroupFeignService;
-    private final RoleResourceFeignService roleResourceFeignService;
-    private final RolePermissionFeignService rolePermissionFeignService;
-    private final MenuFeignService menuFeignService;
-    private final RoleFeignService roleFeignService;
-    private final PermissionFeignService permissionFeignService;
-    private final ResourceFeignService resourceFeignService;
+    private final RoleMenuApi roleMenuApi;
+    private final RoleGroupApi roleGroupApi;
+    private final RoleResourceApi roleResourceApi;
+    private final RolePermissionApi rolePermissionApi;
+    private final MenuApi menuApi;
+    private final RoleApi roleApi;
+    private final PermissionApi permissionApi;
+    private final ResourceApi resourceApi;
 
     @NonNull
     @Override
@@ -90,7 +90,7 @@ public class FeignAuthoritiesServiceImpl implements AuthoritiesService {
     @Override
     public Map<String, Map<String, Set<String>>> getAllGroupRolesOfAllTenant() {
         // Map(tenantAuthority, Map(groupAuthority, Set(roleAuthority)))
-        return ofNullable(this.roleGroupFeignService.listAllGroups().getSuccessData())
+        return ofNullable(this.roleGroupApi.listAllGroups().getSuccessData())
                 .orElse(new HashMap<>(0));
     }
 
@@ -101,10 +101,10 @@ public class FeignAuthoritiesServiceImpl implements AuthoritiesService {
                                                                                 Long... roleIds) {
         try {
             // Map(tenantAuthority, Map (groupAuthority, Set(roleAuthority)))
-            return ofNullable(this.roleGroupFeignService.findGroupRolesByGroupIdOfTenant(tenantId,
-                                                                                         groupId,
-                                                                                         asList(roleIds))
-                                                        .getSuccessData())
+            return ofNullable(this.roleGroupApi.findGroupRolesByGroupIdOfTenant(tenantId,
+                                                                                groupId,
+                                                                                asList(roleIds))
+                                               .getSuccessData())
                     .orElse(new HashMap<>(0));
         }
         catch (Exception e) {
@@ -152,16 +152,16 @@ public class FeignAuthoritiesServiceImpl implements AuthoritiesService {
     private Map<String, Map<String, Map<MenuVo, Set<MenuVo>>>> listAllMenuOfAllTenant() {
         //@formatter:off
         CompletableFuture<List<MenuSearchDto>> menuCompletableFuture =
-                CompletableFuture.supplyAsync(() -> ofNullable(menuFeignService.list()
+                CompletableFuture.supplyAsync(() -> ofNullable(menuApi.list()
                                                                                .getSuccessData())
                                                                     .orElse(new ArrayList<>(0)));
 
         CompletableFuture<List<RoleSearchDto>> roleCompletableFuture =
-                CompletableFuture.supplyAsync(() -> ofNullable(roleFeignService.list()
+                CompletableFuture.supplyAsync(() -> ofNullable(roleApi.list()
                                                                                .getSuccessData())
                                                         .orElse(new ArrayList<>(0)));
         CompletableFuture<List<RoleMenuSearchDto>> roleMenuCompletableFuture =
-                CompletableFuture.supplyAsync(() -> ofNullable(roleMenuFeignService.list()
+                CompletableFuture.supplyAsync(() -> ofNullable(roleMenuApi.list()
                                                                                    .getSuccessData())
                                                         .orElse(new ArrayList<>(0)));
 
@@ -200,12 +200,12 @@ public class FeignAuthoritiesServiceImpl implements AuthoritiesService {
                                                                     @RequestBody List<Long> menuIds) {
         //@formatter:off
         CompletableFuture<List<MenuSearchDto>> menuCompletableFuture =
-                CompletableFuture.supplyAsync(() -> ofNullable(menuFeignService.findByMenuIds(tenantId, menuIds)
+                CompletableFuture.supplyAsync(() -> ofNullable(menuApi.findByMenuIds(tenantId, menuIds)
                                                                                .getSuccessData())
                                                                .orElse(new ArrayList<>(0)));
 
         CompletableFuture<RoleSearchDto> roleCompletableFuture =
-                CompletableFuture.supplyAsync(() -> roleFeignService.findById(roleId).getSuccessData());
+                CompletableFuture.supplyAsync(() -> roleApi.findById(roleId).getSuccessData());
 
         final String mdcTraceId = MDC.get(MDC_KEY);
         CompletableFuture<Map<MenuVo, Set<MenuVo>>> resultCompletableFuture =
@@ -232,16 +232,16 @@ public class FeignAuthoritiesServiceImpl implements AuthoritiesService {
     private Map<String, Map<String, Map<String, Set<String>>>> listAllResourceAuthorities() {
         //@formatter:off
         CompletableFuture<List<ResourceSearchDto>> resourceCompletableFuture =
-                CompletableFuture.supplyAsync(() -> ofNullable(resourceFeignService.list()
+                CompletableFuture.supplyAsync(() -> ofNullable(resourceApi.list()
                                                                                    .getSuccessData())
                         .orElse(new ArrayList<>(0)));
 
         CompletableFuture<List<RoleSearchDto>> roleCompletableFuture =
-                CompletableFuture.supplyAsync(() -> ofNullable(roleFeignService.list()
+                CompletableFuture.supplyAsync(() -> ofNullable(roleApi.list()
                                                                                .getSuccessData())
                         .orElse(new ArrayList<>(0)));
         CompletableFuture<List<RoleResourceSearchDto>> roleResourceCompletableFuture =
-                CompletableFuture.supplyAsync(() -> ofNullable(roleResourceFeignService.list()
+                CompletableFuture.supplyAsync(() -> ofNullable(roleResourceApi.list()
                                                                                        .getSuccessData())
                         .orElse(new ArrayList<>(0)));
 
@@ -269,16 +269,16 @@ public class FeignAuthoritiesServiceImpl implements AuthoritiesService {
     private Map<String, Map<String, Map<String, Set<String>>>> listAllPermissionAuthorities() {
         //@formatter:off
         CompletableFuture<List<PermissionSearchDto>> permissionCompletableFuture =
-                CompletableFuture.supplyAsync(() -> ofNullable(permissionFeignService.list()
+                CompletableFuture.supplyAsync(() -> ofNullable(permissionApi.list()
                                                                                    .getSuccessData())
                         .orElse(new ArrayList<>(0)));
 
         CompletableFuture<List<RoleSearchDto>> roleCompletableFuture =
-                CompletableFuture.supplyAsync(() -> ofNullable(roleFeignService.list()
+                CompletableFuture.supplyAsync(() -> ofNullable(roleApi.list()
                                                                                .getSuccessData())
                         .orElse(new ArrayList<>(0)));
         CompletableFuture<List<RolePermissionSearchDto>> rolePermissionCompletableFuture =
-                CompletableFuture.supplyAsync(() -> ofNullable(rolePermissionFeignService.list()
+                CompletableFuture.supplyAsync(() -> ofNullable(rolePermissionApi.list()
                                                                                        .getSuccessData())
                         .orElse(new ArrayList<>(0)));
 
@@ -310,15 +310,15 @@ public class FeignAuthoritiesServiceImpl implements AuthoritiesService {
                                                                                              Long... resourceIds) {
         // Map(tenantAuthority, Map ( roleAuthority, map ( uri / path, Set ( permission)))
         switch (resourceClass.getName()) {
-            case "org.arch.ums.account.entity.Resource":
+            case "org.arch.ums.account.entity.ResourceSearchDto":
                 return findAuthoritiesByRoleIdOfTenant(tenantId,
                                                        roleId,
-                                                       () -> ofNullable(resourceFeignService
+                                                       () -> ofNullable(resourceApi
                                                                                 .findByResourceIds(tenantId,
                                                                                                    asList(resourceIds))
                                                                                 .getSuccessData())
                                                                .orElse(new ArrayList<>(0)),
-                                                       () -> roleFeignService.findById(roleId).getSuccessData(),
+                                                       () -> roleApi.findById(roleId).getSuccessData(),
                                                        toMap(ResourceSearchDto::getResourcePath,
                                                              resource -> string2Set(resource.getResourceVal(),
                                                                                     AUTHORITY_SEPARATOR),
@@ -329,15 +329,15 @@ public class FeignAuthoritiesServiceImpl implements AuthoritiesService {
                                                        String.format("获取角色资源权限信息失败: tenantId=%s, roleId=%s",
                                                                      tenantId, roleId),
                                                        log);
-            case "org.arch.ums.account.entity.Permission":
+            case "org.arch.ums.account.entity.PermissionSearchDto":
                 return findAuthoritiesByRoleIdOfTenant(tenantId,
                                                        roleId,
-                                                       () -> ofNullable(permissionFeignService
+                                                       () -> ofNullable(permissionApi
                                                                                 .findByPermissionIds(tenantId,
                                                                                                      asList(resourceIds))
                                                                                 .getSuccessData())
                                                                .orElse(new ArrayList<>(0)),
-                                                       () -> roleFeignService.findById(roleId).getSuccessData(),
+                                                       () -> roleApi.findById(roleId).getSuccessData(),
                                                        toMap(PermissionSearchDto::getPermissionUri,
                                                              resource -> string2Set(resource.getPermissionVal(),
                                                                                     AUTHORITY_SEPARATOR),

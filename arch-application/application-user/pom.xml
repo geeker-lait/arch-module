@@ -14,21 +14,8 @@
 
         <dependency>
             <groupId>org.arch.projects</groupId>
-            <artifactId>ums-account</artifactId>
+            <artifactId>ums-crud</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>ums-user</artifactId>
-        </dependency>
-        <!--<dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>ums-member</artifactId>
-        </dependency>-->
-        <!--<dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>ums-merchant</artifactId>
-        </dependency>
-        -->
 
     </dependencies>
 

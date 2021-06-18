@@ -23,10 +23,7 @@
             <artifactId>mq-messaging</artifactId>
             <groupId>org.arch.projects</groupId>
         </dependency>
-        <dependency>
-            <groupId>org.arch.projects</groupId>
-            <artifactId>framework-mq</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-config</artifactId>

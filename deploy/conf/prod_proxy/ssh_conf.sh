@@ -7,7 +7,7 @@
 106.12.71.2     s11.tastelifer.com
 106.12.71.3     s21.tastelifer.com
 
-# vim ~/.ssh/config
+# vim ~/.ssh/properties
 Host s01
   HostName s01.tastelifer.com
   User root

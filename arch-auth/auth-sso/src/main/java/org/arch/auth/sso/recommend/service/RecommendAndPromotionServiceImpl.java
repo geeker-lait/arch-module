@@ -10,13 +10,13 @@ import org.arch.framework.beans.utils.StringUtils;
 import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.ums.enums.SourceType;
 import org.arch.framework.utils.SecurityUtils;
+import org.arch.ums.account.api.AccountMemberApi;
+import org.arch.ums.account.api.AccountRelationshipApi;
 import org.arch.ums.account.dto.MemberSearchDto;
 import org.arch.ums.account.dto.RelationshipRequest;
 import org.arch.ums.account.dto.RelationshipSearchDto;
 import org.arch.ums.account.entity.Relationship;
-import org.arch.ums.account.client.AccountMemberFeignService;
-import org.arch.ums.account.client.AccountRelationshipFeignService;
-import org.arch.ums.user.client.UserPhoneFeignService;
+import org.arch.ums.user.api.UserPhoneApi;
 import org.arch.ums.user.dto.PhoneRequest;
 import org.arch.ums.user.dto.PhoneSearchDto;
 import org.springframework.beans.BeansException;
@@ -35,6 +35,7 @@ import static org.arch.framework.utils.RetryUtils.publishRetryEvent;
 
 /**
  * 推广与用户推荐服务实现
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.8 23:59
@@ -47,9 +48,9 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
     public static final String PSEQ_SEPARATOR = ",";
     public static final int PSEQ_LENGTH = 4;
 
-    private final AccountRelationshipFeignService accountRelationshipFeignService;
-    private final UserPhoneFeignService userPhoneFeignService;
-    private final AccountMemberFeignService accountMemberFeignService;
+    private final AccountRelationshipApi accountRelationshipApi;
+    private final UserPhoneApi userPhoneApi;
+    private final AccountMemberApi accountMemberApi;
     private ApplicationContext applicationContext;
 
     @NonNull
@@ -60,7 +61,7 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
         // 检查是否是会员账号
         if (!isMemberId(currentUser)) {
             throw new BusinessException(CommonStatusCode.GENERATE_USER_RECOMMEND_CODE_FAILED, new Object[0],
-                                        "生成用户推荐码失败, 不是会员账号: userId=" + currentUser.getUserId());
+                    "生成用户推荐码失败, 不是会员账号: userId=" + currentUser.getUserId());
         }
 
         RelationshipRequest relationship = new RelationshipRequest();
@@ -68,7 +69,7 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
         relationship.setFromUserId(-1L);
         try {
             // 前提: Relationship toUserId fromUserId 必须记录唯一
-            Response<RelationshipSearchDto> response = this.accountRelationshipFeignService.findOne(relationship);
+            Response<RelationshipSearchDto> response = this.accountRelationshipApi.findOne(relationship);
             RelationshipSearchDto successData = response.getSuccessData();
             if (isNull(successData)) {
                 PhoneSearchDto phone = getPhone(currentUser);
@@ -80,18 +81,18 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
                 relationship.setToUserName(currentUser.getNickName());
                 relationship.setToUserPhone(phone.getPhoneNo());
                 relationship.setDeleted(Boolean.FALSE);
-                Response<RelationshipSearchDto> saveResponse = this.accountRelationshipFeignService.save(relationship);
+                Response<RelationshipSearchDto> saveResponse = this.accountRelationshipApi.save(relationship);
                 successData = saveResponse.getSuccessData();
                 if (isNull(successData)) {
                     throw new BusinessException(CommonStatusCode.GENERATE_USER_RECOMMEND_CODE_FAILED, new Object[0],
-                                                "生成用户推荐码失败: identifierId=" + currentUser.getIdentifierId());
+                            "生成用户推荐码失败: identifierId=" + currentUser.getIdentifierId());
                 }
             }
 
-            MemberSearchDto member = accountMemberFeignService.findById(successData.getToUserId()).getSuccessData();
+            MemberSearchDto member = accountMemberApi.findById(successData.getToUserId()).getSuccessData();
             if (isNull(member)) {
                 throw new BusinessException(CommonStatusCode.QUERY_MEMBER_INFO_FAILED, new Object[0],
-                                            "获取会员信息失败: memberId=" + successData.getToUserId());
+                        "获取会员信息失败: memberId=" + successData.getToUserId());
             }
 
             String delimiter = USER.getDelimiter();
@@ -103,14 +104,12 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
 
             return encodeRecommendationOrPromotionCode(recommendCode);
 
-        }
-        catch (BusinessException e) {
+        } catch (BusinessException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new BusinessException(CommonStatusCode.GENERATE_USER_RECOMMEND_CODE_FAILED, new Object[0],
-                                        "生成用户推荐码失败: identifierId=" + currentUser.getIdentifierId());
+                    "生成用户推荐码失败: identifierId=" + currentUser.getIdentifierId());
         }
     }
 
@@ -228,15 +227,15 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
         //noinspection AlibabaUndefineMagicConstant
         if (2 != splits.length) {
             throw new BusinessException(EXTRACT_USER_RECOMMEND_CODE_FAILED,
-                                        new Object[]{recommendCode},
-                                        "提取 USER 推荐码失败");
+                    new Object[]{recommendCode},
+                    "提取 USER 推荐码失败");
         }
 
-        Response<RelationshipSearchDto> response = this.accountRelationshipFeignService.findById(Long.valueOf(splits[0]));
+        Response<RelationshipSearchDto> response = this.accountRelationshipApi.findById(Long.valueOf(splits[0]));
         RelationshipSearchDto successData = response.getSuccessData();
         if (isNull(successData)) {
-        	throw new BusinessException(QUERY_USER_RECOMMEND_CODE_FAILED, new Object[]{recommendCode},
-                                        "查询 USER 推荐码失败");
+            throw new BusinessException(QUERY_USER_RECOMMEND_CODE_FAILED, new Object[]{recommendCode},
+                    "查询 USER 推荐码失败");
         }
         TokenInfo currentUser = SecurityUtils.getCurrentUser();
         PhoneSearchDto phone = getPhone(currentUser);
@@ -254,17 +253,17 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
         toUserRelationship.setToUserName(currentUser.getNickName());
         toUserRelationship.setToUserPhone(phone.getPhoneNo());
         toUserRelationship.setDeleted(Boolean.FALSE);
-        Response<RelationshipSearchDto> saveResponse = this.accountRelationshipFeignService.save(toUserRelationship);
+        Response<RelationshipSearchDto> saveResponse = this.accountRelationshipApi.save(toUserRelationship);
         successData = saveResponse.getSuccessData();
         if (isNull(successData)) {
             String traceId = getTraceId();
             log.warn("保存用户推荐关系失败, 发布重试事件: recommendCode={}, accountId={}, traceId={}",
-                     recommendCode, currentUser.getAccountId(), traceId);
+                    recommendCode, currentUser.getAccountId(), traceId);
             publishRetryEvent(this.applicationContext, getTraceId(),
-                              this.accountRelationshipFeignService,
-                              AccountRelationshipFeignService.class,
+                              this.accountRelationshipApi,
+                              AccountRelationshipApi.class,
                               "save",
-                              new Class[] {Relationship.class},
+                              new Class[]{Relationship.class},
                               toUserRelationship);
         }
 
@@ -279,8 +278,9 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
 
     /**
      * 获取 pseq
-     * @param relationship  上级的 {@link Relationship}
-     * @return  pseq(2,4,5,6 | 2 | 2,4)
+     *
+     * @param relationship 上级的 {@link Relationship}
+     * @return pseq(2, 4, 5, 6 | 2 | 2, 4)
      */
     @NonNull
     private String getPseq(@NonNull RelationshipSearchDto relationship) {
@@ -311,11 +311,11 @@ public class RecommendAndPromotionServiceImpl implements RecommendAndPromotionSe
     private PhoneSearchDto getPhone(@NonNull TokenInfo currentUser) {
         PhoneRequest phone = new PhoneRequest();
         phone.setUserId(currentUser.getAccountId());
-        Response<PhoneSearchDto> phoneResponse = this.userPhoneFeignService.findOne(phone);
+        Response<PhoneSearchDto> phoneResponse = this.userPhoneApi.findOne(phone);
         PhoneSearchDto phoneSuccessData = phoneResponse.getSuccessData();
         if (isNull(phoneSuccessData)) {
             throw new BusinessException(CommonStatusCode.SERVER_BUSY, new Object[0],
-                                        "查询用户电话信息失败: accountId=" + currentUser.getAccountId());
+                    "查询用户电话信息失败: accountId=" + currentUser.getAccountId());
         }
         return phoneSuccessData;
     }

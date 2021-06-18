@@ -1,19 +1,10 @@
-//package org.arch.application.portal.controller.form;
-//
-//import com.github.pagehelper.PageInfo;
-//import io.swagger.annotations.ApiImplicitParam;
-//import io.swagger.annotations.ApiImplicitParams;
-//import io.swagger.annotations.ApiOperation;
-//import org.arch.framework.automate.from.entity.bak.Form;
-//import org.arch.framework.automate.from.entity.bak.FormAndRows;
-//import org.arch.framework.automate.from.service.bak.FormService;
-//import org.arch.framework.beans.Response;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.*;
-//
-//@RestController
-//public class FormController {
-//
+package org.arch.application.portal.controller.form;
+
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class FormController {
+
 //    @Autowired
 //    private FormService formService;
 //
@@ -124,6 +115,6 @@
 //        }
 //        return Response.success();
 //    }
-//
-//
-//}
+
+
+}

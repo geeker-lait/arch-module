@@ -1,5 +1,6 @@
 package org.arch.framework.beans.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -111,4 +112,19 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return str == null || str.length() == 0;
     }
 
+    /**
+     * @param content 需要加密串
+     * @param charset 字符集
+     * @return 加密后的字节数组
+     */
+    public static byte[] getContentBytes(String content, String charset) {
+        if (StringUtils.isEmpty(charset)) {
+            return content.getBytes();
+        }
+        try {
+            return content.getBytes(charset);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("转码过程中出现错误,指定的编码集不对,您目前指定的编码集是:" + charset);
+        }
+    }
 }

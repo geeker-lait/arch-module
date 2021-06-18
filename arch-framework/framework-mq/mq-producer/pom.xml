@@ -21,8 +21,6 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-spi</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>

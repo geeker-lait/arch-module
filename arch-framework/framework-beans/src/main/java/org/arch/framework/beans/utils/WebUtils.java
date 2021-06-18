@@ -8,7 +8,6 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -211,7 +210,7 @@ public class WebUtils {
             }
             String contentType = null;
             try {
-                contentType = new MimetypesFileTypeMap().getContentType(file);
+                //contentType = new MimetypesFileTypeMap().getContentType(file);
             } catch (Exception e) {
             }
             if (contentType != null) {

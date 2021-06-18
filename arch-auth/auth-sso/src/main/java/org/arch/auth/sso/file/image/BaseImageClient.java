@@ -10,18 +10,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import top.dcenter.ums.security.common.utils.UuidUtils;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Date;
 
 import static java.util.Objects.isNull;
 
 /**
  * 通用图片操作客户端
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.2.27 11:51
@@ -62,8 +58,9 @@ public abstract class BaseImageClient implements ImageClient {
 
     /**
      * 根据 fileName 与 pathPrefix 创建新的文件名
-     * @param fileName      临时文件名
-     * @param pathPrefix    路径前缀
+     *
+     * @param fileName   临时文件名
+     * @param pathPrefix 路径前缀
      */
     protected void createNewFileName(@NonNull String fileName, @Nullable String pathPrefix) {
         if (isNull(pathPrefix)) {
@@ -72,11 +69,11 @@ public abstract class BaseImageClient implements ImageClient {
         this.suffix = FileUtil.getSuffix(fileName);
         if (!FileUtil.isPicture(this.suffix)) {
             throw new GlobalFileException("存储类型[" + this.storageType + "] 非法的图片文件[" + fileName + "]！" +
-                                                  "目前只支持以下图片格式：[jpg, jpeg, png, gif, bmp]");
+                    "目前只支持以下图片格式：[jpg, jpeg, png, gif, bmp]");
         }
         String newFileName = DateUtil.format(new Date(), "yyyyMMddHHmmssSSS");
         String uuid = UuidUtils.getUUID().substring(0, 6);
-        this.newFileName = pathPrefix + (newFileName  + uuid + this.suffix);
+        this.newFileName = pathPrefix + (newFileName + uuid + this.suffix);
     }
 
     /**

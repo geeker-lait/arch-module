@@ -38,7 +38,7 @@ public @interface EncryptField {
     String encryptType() default "";
 
     /**
-     * 对符合此正则表达式的字段值进行加解密,
+     * 对符合此正则表达式的字段值进行加解密, 当 encryptType=FPE 时有效
      */
     String filterRegx() default "";
 

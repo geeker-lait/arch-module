@@ -2,6 +2,7 @@ package org.arch.auth.sso.exception;
 
 /**
  * 文件相关的异常
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.2.27 12:01

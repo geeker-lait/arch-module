@@ -14,6 +14,7 @@ import top.dcenter.ums.security.core.auth.provider.UsernamePasswordAuthenticatio
 
 /**
  * 自定义密码校验逻辑: 添加用户 {@link LoginType} 类型校验, 非密码校验类型(PHONE/OAUTH2) 直接验证不通过
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.2.2 11:22
@@ -39,8 +40,7 @@ public class ArchUsernamePasswordAuthenticationProvider extends UsernamePassword
 
         String presentedPassword = authentication.getCredentials().toString();
 
-        if (!(userDetails instanceof ArchUser))
-        {
+        if (!(userDetails instanceof ArchUser)) {
             logger.debug("Authentication failed: password does not match stored value");
 
             throw new BadCredentialsException(messages.getMessage(
@@ -50,7 +50,7 @@ public class ArchUsernamePasswordAuthenticationProvider extends UsernamePassword
 
         ArchUser archUser = ((ArchUser) userDetails);
         if (!isValidLoginType(archUser) || !getPasswordEncoder().matches(presentedPassword,
-                                                                         userDetails.getPassword())) {
+                userDetails.getPassword())) {
             logger.debug("Authentication failed: password does not match stored value");
 
             throw new BadCredentialsException(messages.getMessage(
@@ -62,6 +62,6 @@ public class ArchUsernamePasswordAuthenticationProvider extends UsernamePassword
     private boolean isValidLoginType(ArchUser archUser) {
         // 是否是密码校验类型, 非密码校验类型(PHONE/OAUTH2) 则返回 false
         return archUser.getLoginType().equals(LoginType.USERNAME.ordinal())
-               || archUser.getLoginType().equals(LoginType.EMAIL.ordinal());
+                || archUser.getLoginType().equals(LoginType.EMAIL.ordinal());
     }
 }

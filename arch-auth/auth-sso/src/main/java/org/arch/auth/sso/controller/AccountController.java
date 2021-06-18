@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
 import org.arch.framework.event.DeleteAccountEvent;
-import org.arch.ums.account.client.AccountIdentifierFeignService;
+import org.arch.ums.account.api.AccountIdentifierApi;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -18,6 +18,7 @@ import static java.util.Objects.nonNull;
 
 /**
  * 账号相关操作控制器
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.3 16:45
@@ -28,26 +29,26 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class AccountController implements ApplicationContextAware {
 
-    private final AccountIdentifierFeignService accountIdentifierFeignService;
+    private final AccountIdentifierApi accountIdentifierApi;
     private ApplicationContext applicationContext;
 
     /**
      * 删除账号
+     *
      * @param accountId 账号ID/用户ID/会员ID/商户ID
-     * @return  true 表示成功, false 表示失败
+     * @return true 表示成功, false 表示失败
      */
     @DeleteMapping("/{accountId}")
     public Response<Boolean> deleteAccount(@PathVariable("accountId") Long accountId) {
         try {
-            Response<Boolean> response = accountIdentifierFeignService.deleteByAccountId(accountId);
+            Response<Boolean> response = accountIdentifierApi.deleteByAccountId(accountId);
             Boolean successData = response.getSuccessData();
             if (nonNull(successData) && successData) {
-            	this.applicationContext.publishEvent(new DeleteAccountEvent(accountId));
+                this.applicationContext.publishEvent(new DeleteAccountEvent(accountId));
             }
             return response;
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
             return Response.failed(accountId + " 删除失败");
         }
     }

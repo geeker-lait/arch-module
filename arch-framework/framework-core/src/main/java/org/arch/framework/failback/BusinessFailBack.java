@@ -39,7 +39,7 @@ public abstract class BusinessFailBack {
         List<BusinessFailBackConfig.Channel> channels = config.getChannels();
         for (int i = 0, size = channels.size(); i < size; i++) {
             BusinessFailBackConfig.Channel channel = channels.get(i);
-            // 根据 config 判断 是否可以执行，此处子类根据config 获取熔断逻辑,例如 redis 、local、es 做的滑动窗口统计
+            // 根据 properties 判断 是否可以执行，此处子类根据config 获取熔断逻辑,例如 redis 、local、es 做的滑动窗口统计
             // true 可以执行，  false 降级
             boolean b = preExecute(config, channel);
             if (!b) {
@@ -47,13 +47,13 @@ public abstract class BusinessFailBack {
                 continue;
             }
             try {
-                // 根据 config 配置顺序, 执行
+                // 根据 properties 配置顺序, 执行
                 // todo 是否需要怼结果 r 判断
                 r = businessExecuteFunctionList.get(channel.getChannelCode()).apply(executeParams);
                 executeResult = true;
                 break;
             } catch (Exception e) {
-                log.info("execute fail config:{} businessKey:{}", config, businessKey, e);
+                log.info("execute fail properties:{} businessKey:{}", config, businessKey, e);
             } finally {
                 // 根据config,是否熔断 和执行结果 记录一些操作，根据执行结果记录 滑动窗口数据
                 afterExecute(config, channel, !b, executeResult);

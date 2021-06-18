@@ -2,8 +2,9 @@ package org.arch.admin.rbac.service;
 
 import lombok.RequiredArgsConstructor;
 import org.arch.framework.beans.Response;
+import org.arch.ums.account.api.AccountRoleGroupApi;
+import org.arch.ums.account.dto.GroupSearchDto;
 import org.arch.ums.account.entity.Group;
-import org.arch.ums.account.client.AccountRoleGroupFeignService;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import top.dcenter.ums.security.common.enums.ErrorCodeEnum;
@@ -32,9 +33,9 @@ import static java.util.Arrays.asList;
  */
 @Service
 @RequiredArgsConstructor
-public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<Group> {
+public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<GroupSearchDto> {
 
-    private final AccountRoleGroupFeignService roleGroupFeignService;
+    private final AccountRoleGroupApi accountRoleGroupApi;
     private final TenantContextHolder tenantContextHolder;
 
     @NonNull
@@ -51,14 +52,13 @@ public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<G
                                                 @NonNull Long groupId,
                                                 Long... roleIds) throws RolePermissionsException {
         try {
-            Response<Boolean> response = this.roleGroupFeignService.updateRolesByGroupIdOfTenant(tenantId,
-                                                                                                 groupId,
-                                                                                                 asList(roleIds));
+            Response<Boolean> response = this.accountRoleGroupApi.updateRolesByGroupIdOfTenant(tenantId,
+                                                                                               groupId,
+                                                                                               asList(roleIds));
             return Optional.ofNullable(response.getSuccessData()).orElse(false);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.UPDATE_ROLE_PERMISSIONS_FAILURE,
-                                               tenantId + ":" + groupId + ":" + Arrays.toString(roleIds), e);
+                    tenantId + ":" + groupId + ":" + Arrays.toString(roleIds), e);
 
         }
     }
@@ -75,17 +75,16 @@ public class RoleGroupPermissionsServiceImpl implements RolePermissionsService<G
     public Set<String> findRolesByGroupIdOfTenant(@NonNull Long tenantId,
                                                   @NonNull Long groupId) throws RolePermissionsException {
         try {
-            Response<Set<String>> response = this.roleGroupFeignService.findRolesByGroupIdOfTenant(tenantId, groupId);
+            Response<Set<String>> response = this.accountRoleGroupApi.findRolesByGroupIdOfTenant(tenantId, groupId);
             return Optional.ofNullable(response.getSuccessData()).orElse(new HashSet<>(0));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RolePermissionsException(ErrorCodeEnum.QUERY_ROLE_PERMISSIONS_FAILURE, tenantId + ":" + groupId, e);
         }
     }
 
     @NonNull
     @Override
-    public Class<Group> getUpdateResourcesClass() {
-        return Group.class;
+    public Class<GroupSearchDto> getUpdateResourcesClass() {
+        return GroupSearchDto.class;
     }
 }

@@ -3,9 +3,9 @@
 //import com.alibaba.fastjson.JSON;
 //import com.google.gson.Gson;
 //
-//import com.unichain.pay.huifu.config.BaseResult;
-//import com.unichain.pay.huifu.config.HuifuProperties;
-//import com.unichain.pay.huifu.config.HuifuResponCode;
+//import com.unichain.pay.huifu.properties.BaseResult;
+//import com.unichain.pay.huifu.properties.HuifuProperties;
+//import com.unichain.pay.huifu.properties.HuifuResponCode;
 //import com.unichain.pay.huifu.dto.HuifuBaseReqDTO;
 //import com.unichain.pay.huifu.exception.PayErrException;
 //import com.unichain.pay.huifu.exception.PayErrorCode;

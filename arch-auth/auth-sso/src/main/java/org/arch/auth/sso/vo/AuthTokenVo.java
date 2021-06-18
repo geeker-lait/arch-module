@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 /**
  * 用户认证成功后, 返回前端数据封装对象
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.6 23:46

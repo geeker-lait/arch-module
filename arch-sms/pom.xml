@@ -15,7 +15,8 @@
         <module>sms-api</module>
         <module>sms-channel</module>
         <module>sms-core</module>
-        <module>sms-mvc</module>
+        <module>sms-crud</module>
+        <module>sms-rest</module>
     </modules>
 
 </project>

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 /**
  * @author: PC
  * @version: v1.0
- * @description: com.unichain.pay.base.payapi.huifupay.config
+ * @description: com.unichain.pay.base.payapi.huifupay.properties
  * @date:2019/3/23
  */
 

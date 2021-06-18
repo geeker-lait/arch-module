@@ -25,6 +25,7 @@ import static top.dcenter.ums.security.common.consts.MdcConstants.MDC_KEY;
 
 /**
  * 重试事件监听器
+ *
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.3.2 14:54
@@ -46,8 +47,25 @@ public class RetryListener implements ApplicationListener<RetryEvent> {
         this.maxAttempts = retryProperties.getMaxAttempts();
         scheduledThreadPoolExecutor =
                 new MdcScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
-                                                       new DefaultThreadFactory("sso-retry-listener"),
-                                                       new ThreadPoolExecutor.AbortPolicy());
+                        new DefaultThreadFactory("sso-retry-listener"),
+                        new ThreadPoolExecutor.AbortPolicy());
+    }
+
+    private static boolean isNotVoidOfReturnType(@NonNull Method method) {
+        return !Objects.equals("void", method.getReturnType().getName());
+    }
+
+    private static boolean isResponseOfReturnType(@NonNull Method method) {
+        return method.getReturnType().isAssignableFrom(Response.class);
+    }
+
+    @NonNull
+    private static Boolean isTrue(@NonNull Object obj) {
+        if (obj instanceof Boolean) {
+            return (Boolean) obj;
+        } else {
+            return Boolean.TRUE;
+        }
     }
 
     @Override
@@ -79,8 +97,7 @@ public class RetryListener implements ApplicationListener<RetryEvent> {
             Object result = future.get();
             if (isNull(result) && isNotVoidOfReturnType(retryMethod)) {
                 reset(event);
-            }
-            else if (isResponseOfReturnType(retryMethod)) {
+            } else if (isResponseOfReturnType(retryMethod)) {
                 Response<?> response = (Response<?>) result;
                 Object successData = response.getSuccessData();
                 if (DUPLICATE_KEY.getCode() == response.getCode()) {
@@ -91,8 +108,7 @@ public class RetryListener implements ApplicationListener<RetryEvent> {
                     reset(event);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             reset(event);
         }
@@ -102,24 +118,6 @@ public class RetryListener implements ApplicationListener<RetryEvent> {
     private void reset(@NonNull RetryEvent event) {
         event.addRetryNo();
         this.publisher.publishEvent(event);
-    }
-
-    private static boolean isNotVoidOfReturnType(@NonNull Method method) {
-        return !Objects.equals("void",method.getReturnType().getName());
-    }
-
-    private static boolean isResponseOfReturnType(@NonNull Method method) {
-        return method.getReturnType().isAssignableFrom(Response.class);
-    }
-
-    @NonNull
-    private static Boolean isTrue(@NonNull Object obj) {
-        if (obj instanceof Boolean) {
-            return (Boolean) obj;
-        }
-        else {
-            return Boolean.TRUE;
-        }
     }
 
 }

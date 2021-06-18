@@ -3,7 +3,7 @@ package org.arch.alarm.core.engine.function.general;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorString;
-import com.yonghui.ofs.alarm.center.computer.engine.util.NumberToCNUtil;
+import org.arch.alarm.core.engine.util.NumberToCNUtil;
 
 import java.math.BigDecimal;
 import java.util.Map;
