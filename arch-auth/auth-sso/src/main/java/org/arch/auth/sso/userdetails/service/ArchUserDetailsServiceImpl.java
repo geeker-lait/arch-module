@@ -11,13 +11,13 @@ import org.arch.framework.beans.Response;
 import org.arch.framework.event.RegisterEvent;
 import org.arch.framework.id.IdService;
 import org.arch.framework.ums.enums.AccountType;
-import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.ums.enums.LoginType;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.dto.AuthRegRequest;
 import org.arch.ums.account.entity.Identifier;
-import org.arch.ums.feign.account.client.UmsAccountOauthTokenFeignService;
-import org.arch.ums.feign.account.client.UmsAccountIdentifierFeignService;
+import org.arch.ums.account.client.AccountIdentifierFeignService;
+import org.arch.ums.account.client.AccountOauthTokenFeignService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -39,6 +39,7 @@ import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.exception.RegisterUserFailureException;
 import top.dcenter.ums.security.core.exception.UserNotExistException;
 import top.dcenter.ums.security.core.oauth.properties.Auth2Properties;
+import top.dcenter.ums.security.jwt.properties.JwtProperties;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,7 +49,9 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 import static org.arch.auth.sso.utils.RegisterUtils.toOauthToken;
+import static org.arch.framework.utils.SecurityUtils.ifExpiredOfJwtThenClearAuthentication;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -73,10 +76,14 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
     private final IdService idService;
     private final SsoProperties ssoProperties;
     private final TenantContextHolder tenantContextHolder;
-    private final UmsAccountIdentifierFeignService umsAccountIdentifierFeignService;
+    private final AccountIdentifierFeignService accountIdentifierFeignService;
     private final Auth2Properties auth2Properties;
-    private final UmsAccountOauthTokenFeignService umsAccountAuthTokenFeignService;
+    private final AccountOauthTokenFeignService umsAccountAuthTokenFeignService;
     private final Auth2StateCoder auth2StateCoder;
+    /**
+     * 授权服务器的时钟与资源服务器的时钟可能存在偏差, 设置时钟偏移量以消除不同服务器间的时钟偏差的影响, 通过属性 ums.jwt.clockSkew 设置.
+     */
+    private final JwtProperties jwtProperties;
 
     private ApplicationContext applicationContext;
 
@@ -89,10 +96,16 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
     @NonNull
     @Override
     public UserDetails loadUserByUserId(@NonNull String userId) throws UsernameNotFoundException {
+        /*
+          如果 Authentication 为 AbstractOAuth2TokenAuthenticationToken 且 Jwt 已过期, 那么清除 此
+          AbstractOAuth2TokenAuthenticationToken, 再设置 Authentication 为 AnonymousAuthenticationToken.
+          防止因 session 中的 Jwt 过期而无法查询用户信息.
+         */
+        ifExpiredOfJwtThenClearAuthentication(jwtProperties.getClockSkew());
         try {
             // 根据用户名获取用户信息
             AuthLoginDto authLoginDto;
-            final Response<AuthLoginDto> response = umsAccountIdentifierFeignService.loadAccountByIdentifier(userId);
+            final Response<AuthLoginDto> response = accountIdentifierFeignService.loadAccountByIdentifier(userId);
             authLoginDto = response.getSuccessData();
 
             if (isNull(authLoginDto)) {
@@ -104,7 +117,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                                 authLoginDto.getId(),
                                 authLoginDto.getAid(),
                                 authLoginDto.getTenantId(),
-                                authLoginDto.getChannelType(),
+                                authLoginDto.getLoginType(),
                                 authLoginDto.getNickName(),
                                 authLoginDto.getAvatar(),
                                 true,
@@ -281,7 +294,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
         List<String> usernameList = Arrays.stream(usernames).collect(Collectors.toList());
         Response<List<Boolean>> response;
         try {
-            response = umsAccountIdentifierFeignService.exists(usernameList);
+            response = accountIdentifierFeignService.exists(usernameList);
         }
         catch (FeignException e) {
             throw new IOException("查询用户名是否存在时 IO 异常");
@@ -306,7 +319,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                                          authLoginDto.getId(),
                                          authLoginDto.getAid(),
                                          authLoginDto.getTenantId(),
-                                         authLoginDto.getChannelType(),
+                                         authLoginDto.getLoginType(),
                                          authLoginDto.getNickName(),
                                          authLoginDto.getAvatar(),
                                          true,
@@ -323,7 +336,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
     private AuthLoginDto registerUserAndGetAuthLoginDto(@NonNull AuthRegRequest authRegRequest) {
         Response<AuthLoginDto> response;
         try {
-            response = umsAccountIdentifierFeignService.register(authRegRequest);
+            response = accountIdentifierFeignService.register(authRegRequest);
         }
         catch (FeignException e) {
             log.error(e.getMessage(), e);
@@ -356,8 +369,8 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                              .identifier(username)
                              .credential(passwordEncoder.encode(ssoProperties.getDefaultPassword()))
                              .authorities(authorities)
-                             .avatar(authUser.getAvatar())
-                             .channelType(ChannelType.OAUTH2)
+                             .avatar(ofNullable(authUser.getAvatar()).orElse(ssoProperties.getDefaultAvatar()))
+                             .loginType(LoginType.OAUTH2.ordinal())
                              .nickName(authUser.getUsername())
                              .source(source)
                              .build();
@@ -381,7 +394,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                              .credential(passwordEncoder.encode(ssoProperties.getDefaultPassword()))
                              .authorities(authorities)
                              .avatar(ssoProperties.getDefaultAvatar())
-                             .channelType(ChannelType.PHONE)
+                             .loginType(LoginType.PHONE.ordinal())
                              .nickName(mobile)
                              .source(source)
                              .build();
@@ -411,7 +424,7 @@ public class ArchUserDetailsServiceImpl implements UmsUserDetailsService, Applic
                              .credential(passwordEncoder.encode(regRequest.getPassword()))
                              .authorities(authorities)
                              .avatar(avatar)
-                             .channelType(ChannelType.ACCOUNT)
+                             .loginType(LoginType.USERNAME.ordinal())
                              .nickName(regRequest.getNickName())
                              .source(source)
                              .build();

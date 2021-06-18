@@ -30,15 +30,35 @@
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>framework-beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>framework-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>ums-commons</artifactId>
         </dependency>
+
         <dependency>
             <groupId>top.dcenter</groupId>
             <artifactId>ums-jwt</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-commons</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
         </dependency>
     </dependencies>
 

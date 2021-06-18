@@ -26,11 +26,14 @@ spring:
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  mvc:
+    converters:
+      preferred-json-mapper: jackson
 
   profiles:
-    include: auth,arch,db,mdc,oauth2,feign,redis,vc,jwt,rbac
+    include: auth,arch,db,mdc,oauth2,feign,redis,vc,jwt,rbac,rocketmq
     active: ${profile:dev}
-
 
 management:
   endpoints:
@@ -46,8 +49,11 @@ logging:
   config: classpath:logback-spring.xml
   level:
     # feign 日志配置
+    org.arch.ums: warn
+    org.arch.auth: warn
+    top.dcenter: warn
     org.arch.ums.feign.account.client: warn
-
+    com.alibaba.cloud.stream.binder.rocketmq: warn
 
 ---
 server:
@@ -70,11 +76,19 @@ spring:
   mvc:
     throw-exception-if-no-handler-found: true
 
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
 
 logging:
   config: classpath:logback-spring-dev.xml
   level:
+    org.arch.ums: debug
+    org.arch.auth: debug
+    top.dcenter: debug
     # feign 日志配置
     org.arch.ums.feign.account.client: debug
+    com.alibaba.cloud.stream.binder.rocketmq: debug
 
 debug: true

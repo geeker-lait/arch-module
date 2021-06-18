@@ -72,7 +72,7 @@ public class CategoryService extends CrudService<Category, java.lang.Long> {
 
         LambdaUpdateWrapper<Category> updateWrapper = Wrappers.<Category>lambdaUpdate()
                 .eq(Category::getDeleted, 0)
-                .and(w -> w.in(Category::getId, ids))
+                .in(Category::getId, ids)
                 .set(Category::getDeleted, 1);
 
         // 逻辑删除

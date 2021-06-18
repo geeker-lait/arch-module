@@ -1,14 +1,15 @@
 package org.arch.ums.user.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.beans.Response;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.ums.user.dto.BankCardRequest;
 import org.arch.ums.user.dto.BankCardSearchDto;
 import org.arch.ums.user.entity.BankCard;
 import org.arch.ums.user.service.BankCardService;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.beans.Response;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -28,22 +31,23 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
  * 用户银行卡信息(BankCard) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-03-01 00:21:10
+ * @date 2021-05-15 23:08:41
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user/bank/card")
-public class BankCardController implements CrudController<BankCard, java.lang.Long, BankCardSearchDto, BankCardService> {
+public class BankCardController implements CrudController<BankCardRequest, BankCard, java.lang.Long, BankCardSearchDto, BankCardService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final BankCardService bankCardService;
 
     @Override
-    public BankCard resolver(TokenInfo token, BankCard bankCard) {
-        if (isNull(bankCard)) {
-            bankCard = new BankCard();
+    public BankCard resolver(TokenInfo token, BankCardRequest request) {
+        BankCard bankCard = new BankCard();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, bankCard);
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             bankCard.setTenantId(token.getTenantId());
@@ -68,19 +72,19 @@ public class BankCardController implements CrudController<BankCard, java.lang.Lo
      * 根据 entity 条件查询对象.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param entity 实体类
-     * @param token  token info
+     * @param request 实体的 request 类型
+     * @param token   token info
      * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping("/single")
-    public Response<BankCard> findOne(@RequestBody BankCard entity, TokenInfo token) {
+    public Response<BankCardSearchDto> findOne(@RequestBody @Valid BankCardRequest request, TokenInfo token) {
         try {
-            resolver(token, entity);
-            BankCardSearchDto searchDto = convertSearchDto(entity);
-            BankCard t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
-            return Response.success(t);
+            BankCard bankCard = resolver(token, request);
+            BankCardSearchDto searchDto = convertSearchDto(bankCard);
+            BankCard result = getCrudService().findOneByMapParams(searchDto.searchParams());
+            return Response.success(convertSearchDto(result));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -97,18 +101,19 @@ public class BankCardController implements CrudController<BankCard, java.lang.Lo
      * 根据 entity 条件查询对象列表.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param t     实体类
-     * @param token token info
+     * @param request 实体的 request 类型
+     * @param token   token info
      * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping("/find")
-    public Response<List<BankCard>> find(@RequestBody BankCard t, TokenInfo token) {
-        resolver(token, t);
-        BankCardSearchDto searchDto = convertSearchDto(t);
+    public Response<List<BankCardSearchDto>> find(@RequestBody @Valid BankCardRequest request, TokenInfo token) {
+        BankCard bankCard = resolver(token, request);
+        BankCardSearchDto searchDto = convertSearchDto(bankCard);
         try {
-            return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+            List<BankCard> bankCardList = getCrudService().findAllByMapParams(searchDto.searchParams());
+            return Response.success(bankCardList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -120,7 +125,7 @@ public class BankCardController implements CrudController<BankCard, java.lang.Lo
      * 分页查询.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
      *
-     * @param entity     实体类
+     * @param request    实体的 request 类型
      * @param pageNumber 第几页
      * @param pageSize   页大小
      * @param token      token info
@@ -129,14 +134,15 @@ public class BankCardController implements CrudController<BankCard, java.lang.Lo
     @Override
     @NonNull
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    public Response<IPage<BankCard>> page(@RequestBody BankCard entity,
-                                          @PathVariable(value = "pageNumber") Integer pageNumber,
-                                          @PathVariable(value = "pageSize") Integer pageSize,
-                                          TokenInfo token) {
-        resolver(token, entity);
-        BankCardSearchDto searchDto = convertSearchDto(entity);
+    public Response<IPage<BankCardSearchDto>> page(@RequestBody @Valid BankCardRequest request,
+                                                   @PathVariable(value = "pageNumber") Integer pageNumber,
+                                                   @PathVariable(value = "pageSize") Integer pageSize,
+                                                   TokenInfo token) {
+        BankCard bankCard = resolver(token, request);
+        BankCardSearchDto searchDto = convertSearchDto(bankCard);
         try {
-            return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+            IPage<BankCard> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
+            return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);

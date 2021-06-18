@@ -2,7 +2,6 @@ package org.arch.auth.sso.file.image;
 
 import org.arch.auth.sso.file.FileInfoDto;
 import org.arch.auth.sso.properties.FileProperties;
-import org.arch.framework.ums.enums.StorageType;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,7 +60,7 @@ public class ImageClientAdapter implements ImageClient {
     }
 
     @Override
-    public StorageType getStorageType() {
+    public Integer getStorageType() {
         return this.imageClient.getStorageType();
     }
 }

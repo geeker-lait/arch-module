@@ -1,10 +1,12 @@
 package org.arch.ums.conf.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.ums.enums.StorageType;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -18,7 +20,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FileInfoRequest {
+public class FileInfoRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * id
@@ -33,7 +36,7 @@ public class FileInfoRequest {
     /**
      * 存储类型: aws/aliyun/minio/tencent/qiniu/local/nginx
      */
-    private StorageType storageType;
+    private Integer storageType;
 
     /**
      * 原始文件名称
@@ -76,7 +79,7 @@ public class FileInfoRequest {
     private String fileHash;
 
     /**
-     * 上次的类型
+     * 上传文件类型
      */
     private String uploadType;
 
@@ -98,22 +101,25 @@ public class FileInfoRequest {
     /**
      * 应用 id
      */
+    @JsonIgnore
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @JsonIgnore
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @JsonIgnore
     private Integer rev;
 
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0

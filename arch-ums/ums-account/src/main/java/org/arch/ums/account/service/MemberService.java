@@ -72,7 +72,7 @@ public class MemberService extends CrudService<Member, java.lang.Long> {
 
         LambdaUpdateWrapper<Member> updateWrapper = Wrappers.<Member>lambdaUpdate()
                 .eq(Member::getDeleted, 0)
-                .and(w -> w.in(Member::getId, ids))
+                .in(Member::getId, ids)
                 .set(Member::getDeleted, 1);
 
         // 逻辑删除

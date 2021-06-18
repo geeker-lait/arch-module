@@ -32,7 +32,7 @@ public class RetryEvent extends ApplicationEvent {
      * @param retryObj      重试对象, 通过 {@link ApplicationEvent#getSource()} 获取
      * @param traceId       调用链路追踪 id
      * @param retryClz      重试类型
-     * @param retryMethod   重试方法
+     * @param retryMethod   重试方法, 方法必须幂等性
      * @param retryArgs     重试参数
      */
     public RetryEvent(@NonNull Object retryObj, @Nullable String traceId,

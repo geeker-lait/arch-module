@@ -1,10 +1,12 @@
 package org.arch.ums.account.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.ums.enums.OperatorType;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -17,7 +19,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class OperateLogRequest {
+public class OperateLogRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键
@@ -32,7 +35,7 @@ public class OperateLogRequest {
     /**
      * 操作类型(crud)
      */
-    private OperatorType operatorType;
+    private Integer operatorType;
 
     /**
      * 操作时间
@@ -52,22 +55,25 @@ public class OperateLogRequest {
     /**
      * 应用 id
      */
+    @JsonIgnore
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @JsonIgnore
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @JsonIgnore
     private Integer rev;
 
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0

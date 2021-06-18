@@ -1,8 +1,9 @@
 package org.arch.ums.account.dao;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudDao;
+import org.arch.framework.crud.CrudServiceImpl;
 import org.arch.ums.account.entity.Permission;
 import org.arch.ums.account.mapper.PermissionMapper;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Repository;
  * @since 1.0.0
  */
 @Slf4j
+@RequiredArgsConstructor
 @Repository
-public class PermissionDao extends ServiceImpl<PermissionMapper, Permission> implements CrudDao<Permission> {
-
+public class PermissionDao extends CrudServiceImpl<PermissionMapper, Permission> implements CrudDao<Permission> {
+    private final PermissionMapper permissionMapper;
 }

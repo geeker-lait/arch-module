@@ -6,7 +6,7 @@
     </sql>
 
     <sql id="baseColumn">
-        id,account_id,identifier,credential,channel_type,user_id,locked,st
+        id,account_id,identifier,credential,login_type,user_id,locked,st
     </sql>
 
 </mapper>

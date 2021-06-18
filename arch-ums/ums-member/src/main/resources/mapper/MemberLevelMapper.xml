@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.member.mapper.MemberLevelMapper">
+
+    <resultMap type="org.arch.ums.member.entity.MemberLevel" id="MemberLevelMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="memberName" column="member_name" jdbcType="VARCHAR"/>
+        <result property="growthValue" column="growth_value" jdbcType="INTEGER"/>
+        <result property="referrerNum" column="referrer_num" jdbcType="INTEGER"/>
+        <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
+        <result property="appId" column="app_id" jdbcType="INTEGER"/>
+        <result property="storeId" column="store_id" jdbcType="INTEGER"/>
+        <result property="rev" column="rev" jdbcType="INTEGER"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <sql id="tableName">
+        `member_level`
+    </sql>
+
+    <sql id="baseColumn">
+        `id`, `member_name`, `growth_value`, `referrer_num`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
+    </sql>
+
+</mapper>

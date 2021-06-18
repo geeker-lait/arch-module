@@ -1,9 +1,9 @@
 package org.arch.ums.account.dao;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudDao;
+import org.arch.framework.crud.CrudServiceImpl;
 import org.arch.ums.account.entity.AuthClient;
 import org.arch.ums.account.mapper.AuthClientMapper;
 import org.arch.ums.account.vo.AuthClientVo;
@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Repository
-public class AuthClientDao extends ServiceImpl<AuthClientMapper, AuthClient> implements CrudDao<AuthClient> {
+public class AuthClientDao extends CrudServiceImpl<AuthClientMapper, AuthClient> implements CrudDao<AuthClient> {
 
     private final AuthClientMapper authClientMapper;
     private final TenantContextHolder tenantContextHolder;

@@ -41,6 +41,7 @@ public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> 
                 DatabaseSchemaData databaseSchemaData = new DatabaseSchemaData();
                 databaseSchemaData.setDatabase(db);
                 databaseSchemaData.setSchemaPattern(SchemaPattern.MVC);
+                databaseSchemaData.setIdentifier("" + module.hashCode());
                 databaseSchemaDatas.add(databaseSchemaData);
             });
         });
@@ -56,6 +57,7 @@ public class XmindSchemaReader extends AbstractSchemaReader<XmindConfiguration> 
                 ApiSchemaData apiSchemaData = new ApiSchemaData();
                 apiSchemaData.setApi(api);
                 apiSchemaData.setSchemaPattern(SchemaPattern.API);
+                apiSchemaData.setIdentifier("" + module.hashCode());
                 apiSchemaDatas.add(apiSchemaData);
             });
         });

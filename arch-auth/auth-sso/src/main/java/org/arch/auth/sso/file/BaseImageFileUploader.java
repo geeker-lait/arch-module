@@ -8,9 +8,12 @@ import org.arch.auth.sso.properties.FileProperties;
 import org.arch.framework.beans.Response;
 import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.utils.ConverUtils;
 import org.arch.framework.utils.SecurityUtils;
+import org.arch.ums.conf.dto.FileInfoRequest;
+import org.arch.ums.conf.dto.FileInfoSearchDto;
 import org.arch.ums.conf.entity.FileInfo;
-import org.arch.ums.feign.conf.client.UmsConfFileInfoFeignService;
+import org.arch.ums.conf.client.ConfFileInfoFeignService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -25,6 +28,7 @@ import java.io.InputStream;
 
 import static java.util.Objects.isNull;
 import static org.arch.auth.sso.utils.RegisterUtils.getTraceId;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.DUPLICATE_KEY;
 import static org.arch.framework.utils.RetryUtils.publishRetryEvent;
 
 /**
@@ -37,16 +41,16 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
 
     public static final Logger log = LoggerFactory.getLogger(BaseImageFileUploader.class);
 
-    protected final UmsConfFileInfoFeignService umsConfFileInfoFeignService;
+    protected final ConfFileInfoFeignService confFileInfoFeignService;
     protected final TenantContextHolder tenantContextHolder;
     protected final ImageClient imageClient;
     protected ApplicationContext applicationContext;
 
-    protected BaseImageFileUploader(UmsConfFileInfoFeignService umsConfFileInfoFeignService,
+    protected BaseImageFileUploader(ConfFileInfoFeignService confFileInfoFeignService,
                                     TenantContextHolder tenantContextHolder,
                                     ImageClient imageClient,
                                     FileProperties fileProperties) {
-        this.umsConfFileInfoFeignService = umsConfFileInfoFeignService;
+        this.confFileInfoFeignService = confFileInfoFeignService;
         this.tenantContextHolder = tenantContextHolder;
         this.imageClient = new ImageClientAdapter(fileProperties, imageClient);
     }
@@ -99,7 +103,7 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
     @NonNull
     private FileInfoDto saveFileInfo(@NonNull FileInfoDto fileInfoDto, @NonNull String uploadType, boolean save) {
         if (save) {
-            FileInfo fileInfo = new FileInfo();
+            FileInfoRequest fileInfo = new FileInfoRequest();
             BeanUtil.copyProperties(fileInfoDto, fileInfo);
             try {
                 TokenInfo currentUser = SecurityUtils.getCurrentUser();
@@ -112,30 +116,39 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
             fileInfo.setStorageType(this.imageClient.getStorageType());
             fileInfo.setTenantId(Integer.valueOf(this.tenantContextHolder.getTenantId()));
             fileInfo.setDeleted(Boolean.FALSE);
-            FileInfo successData;
+            FileInfoSearchDto successData;
             try {
-                Response<FileInfo> response = this.umsConfFileInfoFeignService.save(fileInfo);
+                Response<FileInfoSearchDto> response = this.confFileInfoFeignService.save(fileInfo);
                 successData = response.getSuccessData();
                 if (isNull(successData)) {
-                    publishRetryEvent(this.applicationContext, getTraceId(),
-                                      this.umsConfFileInfoFeignService,
-                                      UmsConfFileInfoFeignService.class,
-                                      "save",
-                                      new Class[] {FileInfo.class},
-                                      fileInfo);
-                    successData = fileInfo;
+                    if (DUPLICATE_KEY.getCode() == response.getCode()) {
+                        log.warn("{}, event: {}", response.getMsg(), fileInfo);
+                    }
+                    else {
+                        String traceId = getTraceId();
+                        log.warn("保持对象存储信息到数据库失败, 发布重试事件, traceId={}", traceId);
+                        publishRetryEvent(this.applicationContext, traceId,
+                                          this.confFileInfoFeignService,
+                                          ConfFileInfoFeignService.class,
+                                          "save",
+                                          new Class[] {FileInfo.class},
+                                          fileInfo);
+                    }
+                    successData = ConverUtils.copyProperties(fileInfo, FileInfoSearchDto.class);
                 }
 
             }
             catch (FeignException e) {
                 log.error(e.getMessage(), e);
+                String traceId = getTraceId();
+                log.warn("保持对象存储信息到数据库失败, 发布重试事件, traceId={}", traceId);
                 publishRetryEvent(this.applicationContext, getTraceId(),
-                                  this.umsConfFileInfoFeignService,
-                                  UmsConfFileInfoFeignService.class,
+                                  this.confFileInfoFeignService,
+                                  ConfFileInfoFeignService.class,
                                   "save",
                                   new Class[] {FileInfo.class},
                                   fileInfo);
-                successData = fileInfo;
+                successData = ConverUtils.copyProperties(fileInfo, FileInfoSearchDto.class);
             }
             BeanUtil.copyProperties(successData, fileInfoDto);
         }
@@ -151,26 +164,30 @@ public abstract class BaseImageFileUploader implements FileUploader, Application
     protected boolean removeFile(@NonNull String filePath, @NonNull String uploadType) {
         boolean removeFile = this.imageClient.removeFile(filePath);
         if (removeFile) {
-            FileInfo successData;
+            FileInfoSearchDto successData;
             try {
                 // 这里不关心对象存储信息是否删除成功, 因为不影响业务逻辑, 对象存储信息的一致性可通过定时任务进行补偿
-                Response<FileInfo> response = this.umsConfFileInfoFeignService.deleteByFilePathAndUploadType(filePath,
-                                                                                                             uploadType);
+                Response<FileInfoSearchDto> response =
+                        this.confFileInfoFeignService.deleteByFilePathAndUploadType(filePath, uploadType);
                 successData = response.getSuccessData();
                 if (isNull(successData)) {
-                    publishRetryEvent(this.applicationContext, getTraceId(),
-                                      this.umsConfFileInfoFeignService,
-                                      UmsConfFileInfoFeignService.class,
+                    String traceId = getTraceId();
+                    log.warn("删除对象存储文件的数据库记录失败, 发布重试事件, traceId={}", traceId);
+                    publishRetryEvent(this.applicationContext, traceId,
+                                      this.confFileInfoFeignService,
+                                      ConfFileInfoFeignService.class,
                                       "deleteByFilePathAndUploadType",
                                       new Class[] {String.class, String.class},
                                       filePath, uploadType);
                 }
             }
             catch (FeignException e) {
+                String traceId = getTraceId();
                 log.error(e.getMessage(), e);
-                publishRetryEvent(this.applicationContext, getTraceId(),
-                                  this.umsConfFileInfoFeignService,
-                                  UmsConfFileInfoFeignService.class,
+                log.warn("删除对象存储文件的数据库记录失败, 发布重试事件, traceId={}", traceId);
+                publishRetryEvent(this.applicationContext, traceId,
+                                  this.confFileInfoFeignService,
+                                  ConfFileInfoFeignService.class,
                                   "deleteByFilePathAndUploadType",
                                   new Class[] {String.class, String.class},
                                   filePath, uploadType);

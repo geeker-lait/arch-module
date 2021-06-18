@@ -13,9 +13,9 @@
 
     <modules>
         <module>auth-jwt</module>
-        <module>auth-oauth</module>
         <module>auth-rbac</module>
         <module>auth-sdk</module>
+        <!--<module>auth-oauth</module>-->
         <module>auth-sso</module>
     </modules>
 

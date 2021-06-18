@@ -72,7 +72,7 @@ public class OperateLogService extends CrudService<OperateLog, java.lang.Long> {
 
         LambdaUpdateWrapper<OperateLog> updateWrapper = Wrappers.<OperateLog>lambdaUpdate()
                 .eq(OperateLog::getDeleted, 0)
-                .and(w -> w.in(OperateLog::getId, ids))
+                .in(OperateLog::getId, ids)
                 .set(OperateLog::getDeleted, 1);
 
         // 逻辑删除

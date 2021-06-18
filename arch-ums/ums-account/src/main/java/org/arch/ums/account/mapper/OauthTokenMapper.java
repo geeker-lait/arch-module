@@ -1,7 +1,7 @@
 package org.arch.ums.account.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.arch.framework.crud.CrudMapper;
 import org.arch.ums.account.entity.OauthToken;
 
 /**
@@ -12,6 +12,6 @@ import org.arch.ums.account.entity.OauthToken;
  * @since 1.0.0
  */
 @Mapper
-public interface OauthTokenMapper extends BaseMapper<OauthToken> {
+public interface OauthTokenMapper extends CrudMapper<OauthToken> {
 
 }

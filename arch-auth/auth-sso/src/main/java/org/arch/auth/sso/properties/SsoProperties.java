@@ -26,7 +26,7 @@ public class SsoProperties {
     /**
      * 手机用户默认密码
      */
-    private String defaultPassword = "VR&vU'a#.mt^&%'";
+    private String defaultPassword = "pSOq0XzffkOjK6lA";
 
     /**
      * 默认用户头像

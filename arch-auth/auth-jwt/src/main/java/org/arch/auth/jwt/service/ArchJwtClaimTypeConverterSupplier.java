@@ -59,7 +59,7 @@ public class ArchJwtClaimTypeConverterSupplier implements JwtClaimTypeConverterS
         map.put(JwtArchClaimNames.ACCOUNT_ID.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
         map.put(JwtArchClaimNames.NICK_NAME.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
         map.put(JwtArchClaimNames.AVATAR.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
-        map.put(JwtArchClaimNames.CHANNEL_TYPE.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
+        map.put(JwtArchClaimNames.LOGIN_TYPE.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
         map.put(JwtArchClaimNames.TENANT_ID.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));
         map.put(JwtArchClaimNames.AUTHORITIES.getClaimName(), getCollectionConverter(" "));
         map.put(JwtArchClaimNames.REFRESH_TOKEN_JTI.getClaimName(), getConverter(STRING_TYPE_DESCRIPTOR));

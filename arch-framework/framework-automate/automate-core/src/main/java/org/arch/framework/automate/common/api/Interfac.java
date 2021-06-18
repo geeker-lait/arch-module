@@ -32,11 +32,11 @@ public class Interfac implements Metadata, Import {
      */
     private String pkg;
     /**
-     * api 类似于模块包
+     * api 类似于模块包, 默认值为 {@link Api#getName()}
      */
     private String api;
     /**
-     * api 类似于模块包描述
+     * api 类似于模块包描述, 默认值为 {@link Api#getDescr()}
      */
     private String apiDescr;
     /**

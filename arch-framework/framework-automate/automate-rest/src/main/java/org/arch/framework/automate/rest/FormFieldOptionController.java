@@ -2,11 +2,13 @@ package org.arch.framework.automate.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.automate.api.dto.FormFieldOptionSearchDto;
+import org.arch.framework.automate.api.request.FormFieldOptionRequest;
 import org.arch.framework.automate.from.entity.FormFieldOption;
 import org.arch.framework.automate.from.service.FormFieldOptionService;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
@@ -24,20 +26,24 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/field/option")
-public class FormFieldOptionController implements CrudController<FormFieldOption, java.lang.Long, FormFieldOptionSearchDto, FormFieldOptionService> {
+public class FormFieldOptionController implements CrudController<FormFieldOptionRequest, FormFieldOption, java.lang.Long,
+        FormFieldOptionSearchDto, FormFieldOptionService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormFieldOptionService formFieldOptionService;
 
     @Override
-    public FormFieldOption resolver(TokenInfo token, FormFieldOption formFieldOption) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 formFieldOption 后返回 formFieldOption, 如: tenantId 的处理等.
-        if (nonNull(token) && nonNull(token.getTenantId())) {
-            formFieldOption.setTenantId(token.getTenantId());
-        } else {
-            formFieldOption.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+    public FormFieldOption resolver(TokenInfo token, FormFieldOptionRequest request) {
+        FormFieldOption entity = new FormFieldOption();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, entity);
         }
-        return formFieldOption;
+        if (nonNull(token) && nonNull(token.getTenantId())) {
+            entity.setTenantId(token.getTenantId());
+        } else {
+            entity.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+        }
+        return entity;
     }
 
     @Override

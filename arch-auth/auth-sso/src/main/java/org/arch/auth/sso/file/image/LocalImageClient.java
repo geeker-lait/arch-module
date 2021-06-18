@@ -34,7 +34,7 @@ public class LocalImageClient extends BaseImageClient {
     private Integer imageMaxSize;
 
     public LocalImageClient() {
-        super(StorageType.LOCAL);
+        super(StorageType.LOCAL.ordinal());
     }
 
     public LocalImageClient init(@NonNull String url, @NonNull String rootPath,
@@ -86,7 +86,7 @@ public class LocalImageClient extends BaseImageClient {
                     .setWidth(imageInfo.getWidth())
                     .setHeight(imageInfo.getHeight());
         } catch (Exception e) {
-            throw new LocalUploadFileException("[" + this.storageType.name() + "]文件上传失败：" + e.getMessage() + imageUrl);
+            throw new LocalUploadFileException("存储类型[" + this.storageType + "]文件上传失败：" + e.getMessage() + imageUrl);
         } finally {
             try {
                 is.close();
@@ -100,23 +100,23 @@ public class LocalImageClient extends BaseImageClient {
     public boolean removeFile(@NonNull String pathOrUrl) {
         this.check();
         if (!hasText(pathOrUrl)) {
-            throw new LocalUploadFileException("[" + this.storageType.name() + "]删除文件失败：文件key为空");
+            throw new LocalUploadFileException("存储类型[" + this.storageType + "]删除文件失败：文件key为空");
         }
         File file = new File(this.url + this.rootPath + pathOrUrl);
         if (!file.exists()) {
-            throw new LocalUploadFileException("[" + this.storageType.name() + "]删除文件失败：文件不存在[" + this.rootPath + pathOrUrl + "]");
+            throw new LocalUploadFileException("存储类型[" + this.storageType + "]删除文件失败：文件不存在[" + this.rootPath + pathOrUrl + "]");
         }
         try {
             return file.delete();
         } catch (Exception e) {
-            throw new LocalUploadFileException("[" + this.storageType.name() + "]删除文件失败：" + e.getMessage());
+            throw new LocalUploadFileException("存储类型[" + this.storageType + "]删除文件失败：" + e.getMessage());
         }
     }
 
     @Override
     public void check() {
         if (!hasText(url) || !hasText(rootPath)) {
-            throw new LocalUploadFileException("[" + this.storageType.name() + "]尚未配置文件服务器，文件上传功能暂时不可用！");
+            throw new LocalUploadFileException("存储类型[" + this.storageType + "]尚未配置文件服务器，文件上传功能暂时不可用！");
         }
     }
 }

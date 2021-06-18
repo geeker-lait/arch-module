@@ -2,11 +2,11 @@ package org.arch.ums.account.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudDao;
+import org.arch.framework.crud.CrudServiceImpl;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.entity.Identifier;
 import org.arch.ums.account.mapper.IdentifierMapper;
@@ -27,7 +27,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Repository
-public class IdentifierDao extends ServiceImpl<IdentifierMapper, Identifier> implements CrudDao<Identifier> {
+public class IdentifierDao extends CrudServiceImpl<IdentifierMapper, Identifier> implements CrudDao<Identifier> {
 
     private final IdentifierMapper identifierMapper;
 

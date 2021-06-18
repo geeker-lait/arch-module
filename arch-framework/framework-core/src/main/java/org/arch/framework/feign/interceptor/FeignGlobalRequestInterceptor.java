@@ -3,12 +3,14 @@ package org.arch.framework.feign.interceptor;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.arch.framework.beans.exception.AuthenticationException;
+import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.AbstractOAuth2Token;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
+import top.dcenter.ums.security.common.consts.MdcConstants;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import java.time.Duration;
@@ -16,6 +18,8 @@ import java.time.Instant;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static org.arch.framework.ums.consts.MdcConstants.MDC_KEY;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * Feign 全局请求拦截器.<br>
@@ -54,12 +58,17 @@ public class FeignGlobalRequestInterceptor implements RequestInterceptor {
         // 设置 tenantId
         template.header(tenantHeaderName, tenantContextHolder.getTenantId());
 
+        // 设置 MDC 日志链路追踪 ID
+        String mdcId = MDC.get(MdcConstants.MDC_KEY);
+        if (hasText(mdcId)) {
+            template.header(MDC_KEY, mdcId);
+        }
+
         // 设置 token
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (isNull(authentication)) {
             return;
         }
-
         if (authentication instanceof AbstractOAuth2TokenAuthenticationToken) {
             //noinspection unchecked
             AbstractOAuth2TokenAuthenticationToken<AbstractOAuth2Token> token =

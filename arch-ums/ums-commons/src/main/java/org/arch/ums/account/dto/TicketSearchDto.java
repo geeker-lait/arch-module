@@ -1,5 +1,6 @@
 package org.arch.ums.account.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -21,6 +22,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class TicketSearchDto implements BaseSearchDto {
 
+    private static final long serialVersionUID = 1L;
     /**
      * 账号-券ID
      */
@@ -34,7 +36,7 @@ public class TicketSearchDto implements BaseSearchDto {
     /**
      * 券类型：打折，优惠，抵用....
      */
-    private TicketType ticketType;
+    private Integer ticketType;
 
     /**
      * 券号
@@ -54,22 +56,25 @@ public class TicketSearchDto implements BaseSearchDto {
     /**
      * 应用 id
      */
+    @JsonIgnore
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @JsonIgnore
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @JsonIgnore
     private Integer rev;
 
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
@@ -88,6 +93,6 @@ public class TicketSearchDto implements BaseSearchDto {
         putNoNull("EQ_ticket_no", this.getTicketNo(), map);
         putNoNull("EQ_ticket_val", this.getTicketVal(), map);
         putNoNull("EQ_rev", this.getRev(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
     }
 }

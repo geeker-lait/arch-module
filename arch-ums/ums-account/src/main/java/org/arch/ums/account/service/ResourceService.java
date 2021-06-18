@@ -72,7 +72,7 @@ public class ResourceService extends CrudService<Resource, java.lang.Long> {
 
         LambdaUpdateWrapper<Resource> updateWrapper = Wrappers.<Resource>lambdaUpdate()
                 .eq(Resource::getDeleted, 0)
-                .and(w -> w.in(Resource::getId, ids))
+                .in(Resource::getId, ids)
                 .set(Resource::getDeleted, 1);
 
         // 逻辑删除

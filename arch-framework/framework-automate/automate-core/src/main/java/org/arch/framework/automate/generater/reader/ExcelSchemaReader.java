@@ -53,7 +53,7 @@ public class ExcelSchemaReader extends AbstractSchemaReader<ExcelFiledConfigurat
 
     @Override
     protected List<? extends SchemaData> readApi(ReaderConfiguration<ExcelFiledConfiguration> readerConfiguration) {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -145,6 +145,7 @@ public class ExcelSchemaReader extends AbstractSchemaReader<ExcelFiledConfigurat
             DatabaseSchemaData databaseSchemaData = new DatabaseSchemaData();
             databaseSchemaData.setDatabase(database);
             databaseSchemaData.setSchemaPattern(SchemaPattern.MVC);
+            databaseSchemaData.setIdentifier("" + readerConfiguration.hashCode());
             databaseSchemaDatas.add(databaseSchemaData);
         }
         return databaseSchemaDatas;

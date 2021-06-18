@@ -12,14 +12,14 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>ums-account</module>
-        <module>ums-api</module>
         <module>ums-commons</module>
         <module>ums-feign-api</module>
+        <module>ums-conf</module>
+        <module>ums-account</module>
         <module>ums-member</module>
-        <module>ums-merchant</module>
         <module>ums-user</module>
-        <module>ums-config</module>
+        <module>ums-merchant</module>
+        <module>ums-api</module>
     </modules>
 
 

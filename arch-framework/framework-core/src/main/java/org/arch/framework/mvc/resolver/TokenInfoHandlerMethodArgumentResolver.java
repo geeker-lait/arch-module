@@ -19,7 +19,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class TokenInfoHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(@NonNull MethodParameter parameter) {
-        return TokenInfo.class == parameter.getParameterType();
+        return TokenInfo.class.equals(parameter.getParameterType());
     }
 
     @Override

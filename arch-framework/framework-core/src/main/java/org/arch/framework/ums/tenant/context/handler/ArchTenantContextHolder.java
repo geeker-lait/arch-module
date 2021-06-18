@@ -73,7 +73,7 @@ public class ArchTenantContextHolder implements TenantContextHolder {
     }
 
     /**
-     * 清除线程池的局部变量.
+     * 清除当前线程的值.
      */
     public void removeContext() {
         context.remove();

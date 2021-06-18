@@ -26,13 +26,13 @@ public enum JwtArchClaimNames {
     /**
      * 登录类型
      */
-    CHANNEL_TYPE("channelType", "登录类型"),
+    LOGIN_TYPE("loginType", "登录类型"),
     /**
      * 用户 ID
      */
     USER_ID("userId", "用户 ID"),
     /**
-     * 用户名
+     * 用户名 对应与 AccountIdentifier 的 identifier 字段
      */
     USERNAME("username", "用户名"),
     /**

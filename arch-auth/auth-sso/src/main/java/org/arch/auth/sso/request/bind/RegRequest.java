@@ -2,7 +2,7 @@ package org.arch.auth.sso.request.bind;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.ums.enums.LoginType;
 
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
@@ -35,7 +35,7 @@ public class RegRequest implements Serializable {
     private String username;
     /**
      * 站内账号是密码, 第三方是 accessToken, 手机登录是空字符串或指定字符串. 对应账号-标识 credential<br>
-     * 注意: {@link #channelType} 为 {@link ChannelType#PHONE} 时有后端赋值 "空字符串或指定字符串"
+     * 注意: {@link #loginType} 为 {@link LoginType#PHONE} 时有后端赋值 "空字符串或指定字符串"
      */
     @Pattern(regexp = "\\w{8,32}", message = "密码长度必须大于等于 8 位")
     private String password;
@@ -46,10 +46,10 @@ public class RegRequest implements Serializable {
     private String authorities;
 
     /**
-     * 登录类型: 站内用户(ACCOUNT), 邮箱(EMAIL), 手机(PHONE), 第三方(OAUTH2),
+     * 登录类型: 用户名密码(USERNAME), 邮箱(EMAIL), 手机(PHONE), 第三方(OAUTH2),
      * 由后端赋值
      */
-    private ChannelType channelType;
+    private Integer loginType;
     /**
      * 头像
      */

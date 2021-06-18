@@ -2,11 +2,13 @@ package org.arch.framework.automate.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
 import org.arch.framework.automate.api.dto.FormSchemaSearchDto;
+import org.arch.framework.automate.api.request.FormSchemaRequest;
 import org.arch.framework.automate.from.entity.FormSchema;
 import org.arch.framework.automate.from.service.FormSchemaService;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
@@ -24,20 +26,24 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form/schema")
-public class FormSchemaController implements CrudController<FormSchema, java.lang.Long, FormSchemaSearchDto, FormSchemaService> {
+public class FormSchemaController implements CrudController<FormSchemaRequest, FormSchema, java.lang.Long,
+        FormSchemaSearchDto, FormSchemaService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final FormSchemaService formSchemaService;
 
     @Override
-    public FormSchema resolver(TokenInfo token, FormSchema formSchema) {
-        // TODO 默认实现不处理, 根据 TokenInfo 处理 formSchema 后返回 formSchema, 如: tenantId 的处理等.
-        if (nonNull(token) && nonNull(token.getTenantId())) {
-            formSchema.setTenantId(token.getTenantId());
-        } else {
-            formSchema.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+    public FormSchema resolver(TokenInfo token, FormSchemaRequest request) {
+        FormSchema entity = new FormSchema();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, entity);
         }
-        return formSchema;
+        if (nonNull(token) && nonNull(token.getTenantId())) {
+            entity.setTenantId(token.getTenantId());
+        } else {
+            entity.setTenantId(Integer.parseInt(tenantContextHolder.getTenantId()));
+        }
+        return entity;
     }
 
     @Override

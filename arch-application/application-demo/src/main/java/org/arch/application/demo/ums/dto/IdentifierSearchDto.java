@@ -1,10 +1,10 @@
 package org.arch.application.demo.ums.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.api.crud.BaseSearchDto;
-import org.arch.framework.ums.enums.ChannelType;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -21,6 +21,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class IdentifierSearchDto implements BaseSearchDto {
 
+    private static final long serialVersionUID = 1L;
     /**
      * AccountIdentifier ID
      */
@@ -47,9 +48,9 @@ public class IdentifierSearchDto implements BaseSearchDto {
     private String authorities;
 
     /**
-     * 登录类型【IDENTITYTYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
+     * 登录类型：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
      */
-    private ChannelType channelType;
+    private Integer loginType;
 
     /**
      * 租户 id
@@ -59,16 +60,19 @@ public class IdentifierSearchDto implements BaseSearchDto {
     /**
      * 应用 id
      */
+    @JsonIgnore
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @JsonIgnore
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @JsonIgnore
     private Integer rev;
 
     /**
@@ -86,7 +90,7 @@ public class IdentifierSearchDto implements BaseSearchDto {
         putNoNull("EQ_rev", this.getRev(), map);
         putNoNull("EQ_credential", this.getCredential(), map);
         putNoNull("EQ_authorities", this.getAuthorities(), map);
-        putNoNull("EQ_channel_type", this.getChannelType(), map);
+        putNoNull("EQ_login_type", this.getLoginType(), map);
         putNoNull("EQ_st", this.getSt(), map);
     }
 }

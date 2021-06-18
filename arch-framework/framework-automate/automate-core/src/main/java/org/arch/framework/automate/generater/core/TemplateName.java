@@ -14,6 +14,7 @@ public enum TemplateName {
     MAPPER("mapper.ftl"),
     MAPPER_XML("mapper-xml.ftl"),
     SERVICE("service.ftl"),
+    FEIGN_SERVICE("feign-service.ftl"),
     BIZ("biz.ftl"),
     CONTROLLER("controller.ftl"),
     SEARCH("search.ftl"),

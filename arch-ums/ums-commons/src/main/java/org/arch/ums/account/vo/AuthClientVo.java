@@ -25,9 +25,14 @@ public class AuthClientVo {
     private String clientSecret;
 
     /**
-     * openid/userinfo/token/code/资源服务器标识等
+     * scope id 列表, 如: openid/userinfo/token/code/资源服务器标识等
      */
     private String scopes;
+
+    /**
+     * 角色 id 列表, 通过逗号分割
+     */
+    private String roleIds;
 
     /**
      * 租户 id

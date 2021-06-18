@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.conf.mapper.FileInfoMapper">
+
+    <resultMap type="org.arch.ums.conf.entity.FileInfo" id="FileInfoMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="aid" column="aid" jdbcType="INTEGER"/>
+        <result property="storageType" column="storage_type" jdbcType="INTEGER"/>
+        <result property="originalFileName" column="original_file_name" jdbcType="VARCHAR"/>
+        <result property="size" column="size" jdbcType="INTEGER"/>
+        <result property="suffix" column="suffix" jdbcType="VARCHAR"/>
+        <result property="width" column="width" jdbcType="INTEGER"/>
+        <result property="height" column="height" jdbcType="INTEGER"/>
+        <result property="filePath" column="file_path" jdbcType="VARCHAR"/>
+        <result property="fullFilePath" column="full_file_path" jdbcType="VARCHAR"/>
+        <result property="fileHash" column="file_hash" jdbcType="VARCHAR"/>
+        <result property="uploadType" column="upload_type" jdbcType="VARCHAR"/>
+        <result property="uploadStartTime" column="upload_start_time" jdbcType="TIMESTAMP"/>
+        <result property="uploadEndTime" column="upload_end_time" jdbcType="TIMESTAMP"/>
+        <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
+        <result property="appId" column="app_id" jdbcType="INTEGER"/>
+        <result property="storeId" column="store_id" jdbcType="INTEGER"/>
+        <result property="rev" column="rev" jdbcType="INTEGER"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <sql id="tableName">
+        `conf_file_info`
+    </sql>
+
+    <sql id="baseColumn">
+        `id`, `aid`, `storage_type`, `original_file_name`, `size`, `suffix`, `width`, `height`, `file_path`, `full_file_path`, `file_hash`, `upload_type`, `upload_start_time`, `upload_end_time`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
+    </sql>
+
+</mapper>

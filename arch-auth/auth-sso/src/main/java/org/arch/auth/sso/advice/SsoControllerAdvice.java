@@ -12,17 +12,23 @@ import org.arch.framework.beans.exception.AuthenticationException;
 import org.arch.framework.beans.exception.BaseException;
 import org.arch.framework.beans.exception.BusinessException;
 import org.arch.framework.beans.exception.ValidationException;
-import org.arch.framework.beans.exception.constant.ArgumentStatuesCode;
-import org.arch.framework.beans.exception.constant.AuthStatusCode;
-import org.arch.ums.feign.exception.FeignCallException;
+import org.arch.framework.feign.exception.FeignCallException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.arch.framework.beans.exception.constant.ArgumentStatuesCode.VALIDATE_FAILED;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
+import static org.springframework.util.StringUtils.hasText;
 import static top.dcenter.ums.security.common.consts.SecurityConstants.CONTROLLER_ADVICE_ORDER_DEFAULT_VALUE;
 
 /**
@@ -41,7 +47,7 @@ public class SsoControllerAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Response<String> authenticationException(AuthenticationException e) {
         log.error(e.getMessage(),e);
-        return Response.error(AuthStatusCode.UNAUTHORIZED.getCode(), e.getMessage());
+        return Response.error(e.getResponseCode().getCode(), e.getMessage());
     }
 
     @ExceptionHandler(ArgumentException.class)
@@ -49,7 +55,7 @@ public class SsoControllerAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response<String> argumentException(ArgumentException e) {
         log.error(e.getMessage(),e);
-        return Response.error(ArgumentStatuesCode.VALID_ERROR.getCode(), e.getMessage());
+        return Response.error(e.getResponseCode().getCode(), e.getMessage());
     }
 
     @ExceptionHandler(ValidationException.class)
@@ -57,7 +63,7 @@ public class SsoControllerAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response<String> validationException(ValidationException e) {
         log.error(e.getMessage(),e);
-        return Response.error(ArgumentStatuesCode.VALIDATE_FAILED.getCode(), e.getMessage());
+        return Response.error(e.getResponseCode().getCode(), e.getMessage());
     }
 
     @ExceptionHandler(TooManyResultsException.class)
@@ -114,6 +120,23 @@ public class SsoControllerAdvice {
     public Response<String> businessException(BusinessException e){
         log.error(e.getMessage(),e);
         return Response.error(e.getResponseCode().getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(BindException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response<Map<String, String>> bindException(Exception e){
+        log.warn(e.getMessage(), e);
+        List<FieldError> fieldErrorList = ((BindException) e).getBindingResult().getFieldErrors();
+        Map<String, String> errorMap = new HashMap<>(fieldErrorList.size());
+        for (FieldError fieldError : fieldErrorList) {
+            String defaultMessage = fieldError.getDefaultMessage();
+            if (hasText(defaultMessage)) {
+                errorMap.put(fieldError.getField(), defaultMessage);
+            }
+        }
+        Response<Map<String, String>> response = Response.error(VALIDATE_FAILED.getCode(), null);
+        return response.setData(errorMap);
     }
 
     @ExceptionHandler(BaseException.class)

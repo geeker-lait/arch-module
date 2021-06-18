@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -16,7 +17,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class FormBizRequest {
+public class FormBizRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * id主键

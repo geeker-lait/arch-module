@@ -8,5 +8,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.arch.auth.sdk.jwt.properties.ArchOauth2ResourceServerJwtProperties,\
   org.arch.auth.sdk.config.TenantContextFilterAutoConfigurer,\
   org.arch.auth.sdk.config.AuthSdkCsrfAutoConfigurer,\
-  org.arch.auth.sdk.config.TokenInfoWebMvcConfigurer,\
+  org.arch.framework.mvc.config.TokenInfoWebMvcConfigurer,\
   org.arch.auth.sdk.config.AuthSdkRedisAutoConfiguration

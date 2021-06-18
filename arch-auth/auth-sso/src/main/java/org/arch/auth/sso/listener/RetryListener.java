@@ -19,6 +19,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.isNull;
+import static org.arch.framework.beans.exception.constant.CommonStatusCode.DUPLICATE_KEY;
 import static org.springframework.util.StringUtils.hasText;
 import static top.dcenter.ums.security.common.consts.MdcConstants.MDC_KEY;
 
@@ -54,7 +55,7 @@ public class RetryListener implements ApplicationListener<RetryEvent> {
         int retryNo = event.getRetryNo();
         // 重试失败, 记录日志, 定时任务 或 人工处理
         if (retryNo >= maxAttempts) {
-            log.error("重试 {} 次失败: {}", retryNo, event.toString());
+            log.error("重试 {} 次失败, event: {}", retryNo, event.toString());
             return;
         }
 
@@ -82,7 +83,11 @@ public class RetryListener implements ApplicationListener<RetryEvent> {
             else if (isResponseOfReturnType(retryMethod)) {
                 Response<?> response = (Response<?>) result;
                 Object successData = response.getSuccessData();
-                if (isNull(successData) || isFalse(successData)) {
+                if (DUPLICATE_KEY.getCode() == response.getCode()) {
+                    log.warn("重试 {} 次中断: {}, event: {}", retryNo, response.getMsg(), event.toString());
+                    return;
+                }
+                if (isNull(successData) || !isTrue(successData)) {
                     reset(event);
                 }
             }
@@ -108,8 +113,13 @@ public class RetryListener implements ApplicationListener<RetryEvent> {
     }
 
     @NonNull
-    private static Boolean isFalse(@NonNull Object obj) {
-        return obj instanceof Boolean ? !((Boolean) obj) : Boolean.FALSE;
+    private static Boolean isTrue(@NonNull Object obj) {
+        if (obj instanceof Boolean) {
+            return (Boolean) obj;
+        }
+        else {
+            return Boolean.TRUE;
+        }
     }
 
 }

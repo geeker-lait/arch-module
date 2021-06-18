@@ -22,18 +22,43 @@
         </dependency>
 
         <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>auth-jwt</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-rbac</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-stream</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-rbac</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream</artifactId>
+            <version>3.0.3.RELEASE</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>framework-beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.arch.projects</groupId>
+            <artifactId>framework-api</artifactId>
         </dependency>
 
         <dependency>
@@ -55,6 +80,12 @@
                     <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -85,6 +116,16 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <scope>compile</scope>
         </dependency>
 
         <!-- 解决: 未知的枚举常量 javax.annotation.meta.When.MAYBE -->

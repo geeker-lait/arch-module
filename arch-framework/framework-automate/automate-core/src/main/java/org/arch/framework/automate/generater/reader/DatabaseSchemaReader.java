@@ -51,15 +51,14 @@ public class DatabaseSchemaReader extends AbstractSchemaReader<DatabaseConfigura
         DatabaseSchemaData databaseSchemaData = new DatabaseSchemaData();
         databaseSchemaData.setDatabase(database);
         databaseSchemaData.setSchemaPattern(SchemaPattern.MVC);
+        databaseSchemaData.setIdentifier("" + readerConfiguration.hashCode());
         databaseSchemaDatas.add(databaseSchemaData);
         return CollectionUtils.isEmpty(tables) ? Lists.newArrayList() : databaseSchemaDatas;
     }
 
     @Override
     protected List<? extends SchemaData> readApi(ReaderConfiguration<DatabaseConfiguration> readerConfiguration) {
-        List<ApiSchemaData> apiSchemaData = new ArrayList<>();
-
-        return apiSchemaData;
+        return new ArrayList<ApiSchemaData>();
     }
 
     @Override

@@ -7,6 +7,20 @@ arch:
   app:
     client-id: "003"
     client-secret: "003"
+    systemTenantId: "0"
+  encrypt:
+    fpe:
+      password: 8CE4A06235DACD71AD9CA11C5AF21B8C
+      tweak: D9C4BC2E11C8FBAA  # tweak, used in each round and split into right and left sides; fixed length: 16.
+      radix: 10       # radix: 10(数字), 26(数字加前16个小写字母), 36(数字加26个小写字母)
+    text-encryptor:
+      password: AA2DB91EED5CA9F4C1D2DFBFA592666C
+      salt: 6B2EDFD8C0BB6C03
+    totp:
+      key: CWYMX4TZK4O2MMBHMTBKT45A2OTL6NTZMSBYH3VLZTTDTQHRH6ZSHG8G2ZDFH21LZ1XCXB0ZEHTKHNLDNBKXJT8LKO1GLLXY8WV5FO2XSYMAIMONU6QHS1ZSDSVLKMBXZBOV9D5TYMLMVGZ1KFYRH9UOZ2VN0ZXO
+      crypto: HmacSHA1
+      returnDigits: 8
+      slidingWindow: 30S
 
   csrf:
     # 是否支持 csrf, 默认: true

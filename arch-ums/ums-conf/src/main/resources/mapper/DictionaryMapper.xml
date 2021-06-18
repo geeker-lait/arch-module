@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.arch.ums.conf.mapper.DictionaryMapper">
+
+    <resultMap type="org.arch.ums.conf.entity.Dictionary" id="DictionaryMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="mark" column="mark" jdbcType="VARCHAR"/>
+        <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
+        <result property="appId" column="app_id" jdbcType="INTEGER"/>
+        <result property="storeId" column="store_id" jdbcType="INTEGER"/>
+        <result property="rev" column="rev" jdbcType="INTEGER"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <sql id="tableName">
+        `conf_dictionary`
+    </sql>
+
+    <sql id="baseColumn">
+        `id`, `code`, `title`, `mark`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
+    </sql>
+
+</mapper>

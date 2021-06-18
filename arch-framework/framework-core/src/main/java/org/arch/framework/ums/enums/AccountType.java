@@ -1,53 +1,112 @@
 package org.arch.framework.ums.enums;
 
 import org.arch.framework.api.IdKey;
+import org.arch.framework.beans.exception.BusinessException;
+import org.arch.framework.beans.exception.constant.ArgumentStatuesCode;
 import org.springframework.lang.Nullable;
 
+import java.util.concurrent.TimeUnit;
+
 import static java.util.Objects.isNull;
+import static org.apache.commons.lang3.StringUtils.substringAfterLast;
 
 /**
  * 账号类型
  * @author YongWu zheng
  * @since 2021.1.3 15:03
  */
-public enum AccountType {
+public enum AccountType implements DictionaryItemInfo {
 
     /**
-     * 系统账号
+     * 账号
      */
-    ACCOUNT {
+    ACCOUNT("账号", "") {
         @Override
         public IdKey getIdKey() {
             return IdKey.UMS_ACCOUNT_ID;
+        }
+
+        @Override
+        public int getIdLengthNonBizPrefix() {
+            return getIdLengthNonBizPrefix(IdKey.UMS_ACCOUNT_ID);
         }
     },
     /**
      * 用户
      */
-    USER {
+    USER("用户", "") {
         @Override
         public IdKey getIdKey() {
             return IdKey.UMS_USER_ID;
+        }
+
+        @Override
+        public int getIdLengthNonBizPrefix() {
+            return getIdLengthNonBizPrefix(IdKey.UMS_USER_ID);
         }
     },
     /**
      * 会员
      */
-    MEMBER {
+    MEMBER("会员", "") {
         @Override
         public IdKey getIdKey() {
             return IdKey.UMS_MEMBER_ID;
+        }
+
+        @Override
+        public int getIdLengthNonBizPrefix() {
+            return getIdLengthNonBizPrefix(IdKey.UMS_MEMBER_ID);
         }
     },
     /**
      * 商户
      */
-    MERCHANT {
+    MERCHANT("商户", "") {
         @Override
         public IdKey getIdKey() {
             return IdKey.UMS_MERCHANT_ID;
         }
+
+        @Override
+        public int getIdLengthNonBizPrefix() {
+            return getIdLengthNonBizPrefix(IdKey.UMS_MERCHANT_ID);
+        }
     };
+
+    /**
+     * title
+     */
+    private final String title;
+    /**
+     * 备注
+     */
+    private final String mark;
+
+    AccountType(String title, String mark) {
+        this.title = title;
+        this.mark = mark;
+    }
+
+    @Override
+    public String getTitle() {
+        return this.title;
+    }
+
+    @Override
+    public String getVal() {
+        return this.name().toLowerCase();
+    }
+
+    @Override
+    public int getSeq() {
+        return this.ordinal();
+    }
+
+    @Override
+    public String getMark() {
+        return this.mark;
+    }
 
     /**
      * 返回对应的 {@link IdKey}
@@ -55,6 +114,11 @@ public enum AccountType {
      */
     public abstract IdKey getIdKey();
 
+    /**
+     * {@link IdKey} 对应的去除 bizPrefix 长度的 id 长度.
+     * @return 返回 {@link IdKey} 对应的去除 bizPrefix 长度的 id 长度.
+     */
+    public abstract int getIdLengthNonBizPrefix();
     /**
      * 根据 accountType 获取对应的 {@link AccountType}
      * @param accountType   account type 字符串
@@ -71,6 +135,20 @@ public enum AccountType {
         }
         catch (IllegalArgumentException e) {
             return null;
+        }
+    }
+
+    static int getIdLengthNonBizPrefix(IdKey idKey) {
+        String fmtSuffix = idKey.getFmtSuffix();
+        TimeUnit timeUnit = idKey.getTimeUnit();
+        String fmtSuffixLen = substringAfterLast(substringAfterLast(fmtSuffix, "$"), "d");
+        switch(timeUnit) {
+            case SECONDS: case MINUTES:
+                return 10 + Integer.parseInt(fmtSuffixLen);
+            case DAYS:
+                return 5 + Integer.parseInt(fmtSuffixLen);
+            default:
+                throw new BusinessException(ArgumentStatuesCode.VALID_ERROR, null, "获取ID长度错误.");
         }
     }
 

@@ -1,5 +1,6 @@
 package org.arch.auth.sso.config;
 
+import org.arch.framework.mvc.config.TokenInfoWebMvcConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.dcenter.ums.security.common.config.SecurityCoreAutoConfigurer;
@@ -15,5 +16,10 @@ public class SsoWebSecurityConfigurer {
     @Bean
     public SecurityCoreAutoConfigurer securityCoreAutoConfigurer() {
         return new SecurityCoreAutoConfigurer();
+    }
+
+    @Bean
+    public TokenInfoWebMvcConfigurer tokenInfoWebMvcConfigurer() {
+        return new TokenInfoWebMvcConfigurer();
     }
 }

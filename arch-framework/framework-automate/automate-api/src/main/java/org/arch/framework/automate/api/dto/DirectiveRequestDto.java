@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.automate.api.DirectiveRequest;
 
+import java.io.Serializable;
+
 /**
  * @author junboXiang
  * @version V1.0
@@ -13,7 +15,8 @@ import org.arch.framework.automate.api.DirectiveRequest;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class DirectiveRequestDto implements DirectiveRequest {
+public class DirectiveRequestDto implements DirectiveRequest, Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * 表名

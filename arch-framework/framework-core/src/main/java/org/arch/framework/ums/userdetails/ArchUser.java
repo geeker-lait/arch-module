@@ -1,10 +1,8 @@
 package org.arch.framework.ums.userdetails;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.ums.enums.ChannelType;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -69,7 +67,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
     /**
      * 登录类型【IDENTITY TYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博；
      */
-    private final ChannelType channelType;
+    private final Integer loginType;
     /**
      * 昵称
      */
@@ -102,10 +100,10 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      */
     public ArchUser(String username, String password,
                     Long identifierId,
-                    Long accountId, Integer tenantId, ChannelType channelType,
+                    Long accountId, Integer tenantId, Integer loginType,
                     String nickName, String avatar,
                     Collection<? extends GrantedAuthority> authorities) {
-        this(username, password, identifierId, accountId, tenantId, channelType, nickName, avatar,
+        this(username, password, identifierId, accountId, tenantId, loginType, nickName, avatar,
              true, true, true, true, authorities);
     }
 
@@ -121,7 +119,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      * @param identifierId  账号标识(account_identifier) ID
      * @param accountId     用户名 ID
      * @param tenantId      租户 ID
-     * @param channelType   登录类型【IDENTITY TYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博
+     * @param loginType   登录类型【IDENTITY TYPE】：登录类别，如：系统用户、邮箱、手机，或者第三方的QQ、微信、微博
      * @param nickName      昵称
      * @param avatar        头像
      * @param enabled set to <code>true</code> if the user is enabled
@@ -137,7 +135,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
      */
     public ArchUser(String username, String password,
                     Long identifierId,
-                    Long accountId, Integer tenantId, ChannelType channelType,
+                    Long accountId, Integer tenantId, Integer loginType,
                     String nickName, String avatar,
                     boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired,
                     boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
@@ -145,11 +143,11 @@ public class ArchUser implements UserDetails, CredentialsContainer {
         requireNonNull(accountId, "identifierId cannot be null");
         requireNonNull(accountId, "accountId cannot be null");
         requireNonNull(tenantId, "tenantId cannot be null");
-        requireNonNull(channelType, "channelType cannot be null");
+        requireNonNull(loginType, "loginType cannot be null");
         this.identifierId = identifierId;
         this.accountId = accountId;
         this.tenantId = tenantId;
-        this.channelType = channelType;
+        this.loginType = loginType;
         this.nickName = nickName;
         this.avatar = avatar;
 
@@ -182,8 +180,8 @@ public class ArchUser implements UserDetails, CredentialsContainer {
 
     public Integer getTenantId() { return tenantId; }
 
-    public ChannelType getChannelType() {
-        return channelType;
+    public Integer getLoginType() {
+        return loginType;
     }
 
     public String getNickName() {
@@ -253,7 +251,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
 
     private static class AuthorityComparator implements Comparator<GrantedAuthority>,
             Serializable {
-        private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
+        private static final long serialVersionUID = 1L;
 
         @Override
         public int compare(GrantedAuthority g1, GrantedAuthority g2) {
@@ -303,7 +301,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
         sb.append("AccountId: ").append(this.accountId.toString()).append("; ");
         sb.append("IdentifierId: ").append(this.identifierId.toString()).append("; ");
         sb.append("TenantId: ").append(this.tenantId.toString()).append("; ");
-        sb.append("ChannelType: ").append(this.channelType.name()).append("; ");
+        sb.append("LoginType: ").append(this.loginType).append("; ");
         sb.append("Username: ").append(this.username).append("; ");
         sb.append("Password: [PROTECTED]; ");
         sb.append("Enabled: ").append(this.enabled).append("; ");
@@ -423,7 +421,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
                 .identifierId(userDetails.getIdentifierId())
                 .accountId(userDetails.getAccountId())
                 .tenantId(userDetails.getTenantId())
-                .channelType(userDetails.getChannelType())
+                .loginType(userDetails.getLoginType())
                 .accountExpired(!userDetails.isAccountNonExpired())
                 .accountLocked(!userDetails.isAccountNonLocked())
                 .authorities(userDetails.getAuthorities())
@@ -439,7 +437,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
         private Long identifierId;
         private Long accountId;
         private Integer tenantId;
-        private ChannelType channelType;
+        private Integer loginType;
         private String nickName;
         private String avatar;
         private String username;
@@ -496,15 +494,15 @@ public class ArchUser implements UserDetails, CredentialsContainer {
             return this;
         }
         /**
-         * Populates the channelType. This attribute is required.
+         * Populates the loginType. This attribute is required.
          *
-         * @param channelType the channelType. Cannot be null.
+         * @param loginType the loginType. Cannot be null.
          * @return the {@link ArchUser.UserBuilder} for method chaining (i.e. to populate
          * additional attributes for this user)
          */
-        public ArchUser.UserBuilder channelType(ChannelType channelType) {
-            Assert.notNull(channelType, "channelType cannot be null");
-            this.channelType = channelType;
+        public ArchUser.UserBuilder loginType(Integer loginType) {
+            Assert.notNull(loginType, "loginType cannot be null");
+            this.loginType = loginType;
             return this;
         }
         /**
@@ -697,7 +695,7 @@ public class ArchUser implements UserDetails, CredentialsContainer {
 
         public UserDetails build() {
             String encodedPassword = this.passwordEncoder.apply(password);
-            return new ArchUser(username, encodedPassword, identifierId, accountId, tenantId, channelType,
+            return new ArchUser(username, encodedPassword, identifierId, accountId, tenantId, loginType,
                                 nickName, avatar,
                                 !disabled, !accountExpired,
                                 !credentialsExpired, !accountLocked, authorities);

@@ -5,13 +5,16 @@ import org.arch.auth.rbac.config.ArchRbacAutoConfiguration;
 import org.arch.auth.sdk.jwt.properties.ArchJwtProperties;
 import org.arch.auth.sdk.jwt.properties.ArchOauth2ResourceServerJwtProperties;
 import org.arch.auth.sdk.rbac.properties.ArchRbacProperties;
+import org.arch.framework.ums.jwt.bearer.ArchBearerTokenAuthenticationEntryPoint;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import top.dcenter.ums.security.core.premission.config.RoleHierarchyAutoConfiguration;
-import top.dcenter.ums.security.core.premission.config.UriAuthorizeAutoConfigurerAware;
-import top.dcenter.ums.security.core.premission.properties.PermissionProperties;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import top.dcenter.ums.security.core.permission.config.RoleHierarchyAutoConfiguration;
+import top.dcenter.ums.security.core.permission.config.UriAuthorizeAutoConfigurerAware;
+import top.dcenter.ums.security.core.permission.properties.PermissionProperties;
 import top.dcenter.ums.security.jwt.config.JwtPropertiesAutoConfiguration;
 import top.dcenter.ums.security.jwt.properties.JwtProperties;
 
@@ -41,6 +44,12 @@ public class AuthSdkAutoConfiguration {
         copyProperties(archJwtProperties.getBearer(), jwtProperties.getBearer());
         copyProperties(archJwtProperties.getBlacklist(), jwtProperties.getBlacklist());
         copyProperties(archOauth2ResourceServerJwtProperties, oAuth2ResourceServerProperties.getJwt());
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(JwtProperties jwtProperties) {
+        return new ArchBearerTokenAuthenticationEntryPoint(jwtProperties.getBearer().getBearerTokenHeaderName(),
+                                                           jwtProperties.getBearer().getBearerTokenParameterName());
     }
 
 }

@@ -14,17 +14,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 /**
  * 账号-关系(Relationship) 表服务层
  *
  * @author YongWu zheng
- * @date 2021-02-26 13:28:42
+ * @date 2021-03-14 14:36:56
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class RelationshipService extends CrudService<Relationship, java.lang.Long> {
+
     private final RelationshipDao relationshipDao;
 
     /**
@@ -39,7 +42,7 @@ public class RelationshipService extends CrudService<Relationship, java.lang.Lon
         Relationship entity = new Relationship();
         entity.setId(id);
         entity.setDeleted(Boolean.FALSE);
-        LambdaUpdateWrapper<Relationship> updateWrapper = Wrappers.<Relationship>lambdaUpdate(entity)
+        LambdaUpdateWrapper<Relationship> updateWrapper = Wrappers.lambdaUpdate(entity)
                 .set(Relationship::getDeleted, 1);
         return relationshipDao.update(updateWrapper);
     }
@@ -54,7 +57,7 @@ public class RelationshipService extends CrudService<Relationship, java.lang.Lon
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean deleteById(Relationship entity) {
         entity.setDeleted(Boolean.FALSE);
-        LambdaUpdateWrapper<Relationship> updateWrapper = Wrappers.<Relationship>lambdaUpdate(entity)
+        LambdaUpdateWrapper<Relationship> updateWrapper = Wrappers.lambdaUpdate(entity)
                 .set(Relationship::getDeleted, 1);
         // 逻辑删除
         return relationshipDao.update(updateWrapper);
@@ -72,10 +75,26 @@ public class RelationshipService extends CrudService<Relationship, java.lang.Lon
 
         LambdaUpdateWrapper<Relationship> updateWrapper = Wrappers.<Relationship>lambdaUpdate()
                 .eq(Relationship::getDeleted, 0)
-                .and(w -> w.in(Relationship::getId, ids))
+                .in(Relationship::getId, ids)
                 .set(Relationship::getDeleted, 1);
 
         // 逻辑删除
         return relationshipDao.update(updateWrapper);
+    }
+
+    /**
+     * 保存, 如果 seq 或 org 等于 null, 则通过 sql max(org/seq) + 1 自增
+     * @param relationship  {@link Relationship}
+     * @return 是否保存成功
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
+    public boolean saveMax(@NonNull Relationship relationship) {
+        boolean saveMax = relationshipDao.saveMax(relationship);
+        if (isNull(relationship.getOrg()) || isNull(relationship.getSeq())) {
+            Relationship byId = relationshipDao.getById(relationship.getId());
+            relationship.setOrg(byId.getOrg());
+            relationship.setSeq(byId.getSeq());
+        }
+        return saveMax;
     }
 }

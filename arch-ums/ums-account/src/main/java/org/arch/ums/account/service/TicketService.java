@@ -72,7 +72,7 @@ public class TicketService extends CrudService<Ticket, java.lang.Long> {
 
         LambdaUpdateWrapper<Ticket> updateWrapper = Wrappers.<Ticket>lambdaUpdate()
                 .eq(Ticket::getDeleted, 0)
-                .and(w -> w.in(Ticket::getId, ids))
+                .in(Ticket::getId, ids)
                 .set(Ticket::getDeleted, 1);
 
         // 逻辑删除

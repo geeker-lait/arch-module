@@ -1,8 +1,9 @@
 package org.arch.ums.user.dao;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.crud.CrudDao;
+import org.arch.framework.crud.CrudServiceImpl;
 import org.arch.ums.user.entity.Relatives;
 import org.arch.ums.user.mapper.RelativesMapper;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Repository;
  * @since 1.0.0
  */
 @Slf4j
+@RequiredArgsConstructor
 @Repository
-public class RelativesDao extends ServiceImpl<RelativesMapper, Relatives> implements CrudDao<Relatives> {
-
+public class RelativesDao extends CrudServiceImpl<RelativesMapper, Relatives> implements CrudDao<Relatives> {
+    private final RelativesMapper relativesMapper;
 }

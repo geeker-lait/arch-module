@@ -1,10 +1,12 @@
 package org.arch.ums.account.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.arch.framework.ums.enums.ResourceType;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -17,7 +19,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class PermissionRequest {
+public class PermissionRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * 账号-菜单ID
@@ -25,7 +28,7 @@ public class PermissionRequest {
     private Long id;
 
     /**
-     * 权限码(与RequestMethod对应)list(GET)/add(POST)/edit(PUT)/delete(DELETE)/..
+     * 权限码
      */
     private String permissionCode;
 
@@ -47,7 +50,7 @@ public class PermissionRequest {
     /**
      * 权限类型：0->目录；1->菜单；2->按钮（接口绑定权限）, 4->链接
      */
-    private ResourceType resourceType;
+    private Integer resourceType;
 
     /**
      * 排序
@@ -62,22 +65,25 @@ public class PermissionRequest {
     /**
      * 应用 id
      */
+    @JsonIgnore
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @JsonIgnore
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @JsonIgnore
     private Integer rev;
 
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0

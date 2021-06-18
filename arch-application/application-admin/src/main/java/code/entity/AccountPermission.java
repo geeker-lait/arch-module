@@ -28,7 +28,7 @@ public class AccountPermission extends Model<AccountPermission> implements Seria
     @TableId
 	private Long id;
     /**
-     * 权限码(与RequestMethod对应)list(GET)/add(POST)/edit(PUT)/delete(DELETE)/..
+     * 权限码
      */
     private String permissionCode;
     /**

@@ -1,5 +1,6 @@
 package org.arch.ums.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -22,6 +23,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class BankCardSearchDto implements BaseSearchDto {
 
+    private static final long serialVersionUID = 1L;
     /**
      * 用户银行卡信息表ID
      */
@@ -55,7 +57,7 @@ public class BankCardSearchDto implements BaseSearchDto {
     /**
      * 卡类型:0: 储蓄卡, 1: 借记卡
      */
-    private String cardType;
+    private Integer cardType;
 
     /**
      * 基于user_id的顺序
@@ -75,22 +77,25 @@ public class BankCardSearchDto implements BaseSearchDto {
     /**
      * 应用 id
      */
+    @JsonIgnore
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @JsonIgnore
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @JsonIgnore
     private Integer rev;
 
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
@@ -113,6 +118,6 @@ public class BankCardSearchDto implements BaseSearchDto {
         putNoNull("EQ_card_type", this.getCardType(), map);
         putNoNull("EQ_validity", this.getValidity(), map);
         putNoNull("EQ_rev", this.getRev(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
     }
 }

@@ -1,9 +1,9 @@
 package org.arch.ums.account.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.arch.framework.crud.CrudMapper;
 import org.arch.ums.account.entity.AuthClient;
 import org.arch.ums.account.vo.AuthClientVo;
 import org.springframework.lang.NonNull;
@@ -19,7 +19,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @Mapper
-public interface AuthClientMapper extends BaseMapper<AuthClient> {
+public interface AuthClientMapper extends CrudMapper<AuthClient> {
 
     /**
      * 根据 clientId 与 clientSecret 查询 scopes
@@ -43,8 +43,8 @@ public interface AuthClientMapper extends BaseMapper<AuthClient> {
      * @return scopes
      */
     @Nullable
-    @Select(value = "SELECT `tenant_id` as tenantId, `client_id` as clientId, `client_secret` as clientSecret, `scopes` "
-            + "FROM `account_auth_client` WHERE deleted = 0")
+    @Select(value = "SELECT `tenant_id` as tenantId, `client_id` as clientId, `client_secret` as clientSecret, " +
+            "`scopes`, `role_ids` as roleIds FROM `account_auth_client` WHERE deleted = 0")
     List<AuthClientVo> getAllScopes();
 
 }

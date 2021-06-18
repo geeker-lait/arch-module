@@ -1,21 +1,31 @@
 package org.arch.auth.rbac.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.InitializingBean;
+import org.arch.framework.utils.SecurityUtils;
+import org.arch.ums.account.vo.MenuVo;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.lang.NonNull;
-import top.dcenter.ums.security.core.api.premission.service.AbstractUriAuthorizeService;
-import top.dcenter.ums.security.core.api.premission.service.UpdateCacheOfRolesResourcesService;
+import org.springframework.security.core.Authentication;
+import top.dcenter.ums.security.core.api.permission.service.AbstractUriAuthorizeService;
+import top.dcenter.ums.security.core.api.permission.service.UpdateCacheOfRolesResourcesService;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 import top.dcenter.ums.security.core.exception.RolePermissionsException;
-import top.dcenter.ums.security.core.premission.enums.PermissionType;
+import top.dcenter.ums.security.core.permission.enums.PermissionType;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static org.springframework.util.StringUtils.hasText;
 import static top.dcenter.ums.security.common.consts.TenantConstants.DEFAULT_TENANT_PREFIX;
 
 /**
@@ -25,7 +35,8 @@ import static top.dcenter.ums.security.common.consts.TenantConstants.DEFAULT_TEN
  * @since 2020.12.29 20:21
  */
 @RequiredArgsConstructor
-public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService implements UpdateCacheOfRolesResourcesService, InitializingBean {
+public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
+        implements UpdateCacheOfRolesResourcesService, ApplicationListener<ContextRefreshedEvent> {
 
     /**
      * 所有角色 uri(资源) 权限 Map(tenantAuthority/scopeAuthority, Map(role, map(uri/path, Set(permission)))
@@ -36,6 +47,10 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
      * 所有组的角色 Map(tenantAuthority, Map(groupAuthority, Set(roleAuthority)))
      */
     private volatile Map<String, Map<String, Set<String>>> allTenantsGroupsMap;
+    /**
+     * 所有菜单权限 Map(tenantAuthority, Map(roleAuthority, Map(Menu[level,sorted], Set(Menu[sorted])))), 中括号中的排序字段.
+     */
+    private volatile Map<String, Map<String, Map<MenuVo, Set<MenuVo>>>> allTenantsMenusMap;
 
     private final TenantContextHolder tenantContextHolder;
 
@@ -46,109 +61,45 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
     private volatile Boolean isUpdatedOfAllScopes = Boolean.FALSE;
     private volatile Boolean isUpdatedOfAllRoles = Boolean.FALSE;
     private volatile Boolean isUpdatedOfAllGroups = Boolean.FALSE;
+    private volatile Boolean isUpdatedOfAllMenus = Boolean.FALSE;
+
+    @Override
+    public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
+        // 缓存所有 uri(资源) 权限 Map(tenantAuthority/scopeAuthority, Map(role, map(uri/path, Set(permission)))
+        // 角色组(Group) Map(tenantAuthority, Map (groupAuthority, Set(roleAuthority)))
+        // 初始化更新所有的权限
+        synchronized (lock) {
+            this.isUpdatedOfAllRoles = Boolean.FALSE;
+            this.isUpdatedOfAllScopes = Boolean.FALSE;
+            this.isUpdatedOfAllGroups = Boolean.FALSE;
+            this.isUpdatedOfAllMenus = Boolean.FALSE;
+        }
+        updateAuthoritiesOfAllTenant();
+        updateAuthoritiesOfAllScopes();
+        updateAllGroupsOfAllTenant();
+        updateAuthoritiesOfAllMenus();
+    }
 
     /**
-     * @see #updateAuthoritiesOfAllTenant()
+     * 返回当前租户的根据 groupAuthority 获取 group 所拥有的所有角色, 推荐通过 {@link #getRolesByGroupOfTenant(String, String)} 获取.
+     * @param groupAuthority    用户的 group 权限
+     * @return  group 所拥有的所有角色集合
      */
+    @NonNull
     @Override
-    protected void updateAuthoritiesOfAllRoles() {
-        updateAuthoritiesOfAllTenant();
+    public Set<String> getRolesByGroup(@NonNull String groupAuthority) {
+        String tenantId = tenantContextHolder.getTenantId();
+        return getRolesByGroupOfTenant(DEFAULT_TENANT_PREFIX + tenantId, groupAuthority);
     }
 
+    @NonNull
     @Override
-    protected void updateAuthoritiesOfAllTenant() {
+    public Set<String> getRolesByGroupOfTenant(@NonNull String tenantAuthority, @NonNull String groupAuthority) {
         if (this.allTenantsGroupsMap != null) {
-            // 从数据源获取所有角色的权限
-            if (!this.isUpdatedOfAllGroups) {
-                synchronized (lock) {
-                    if (!this.isUpdatedOfAllGroups) {
-                        this.allTenantsGroupsMap.putAll(authoritiesService.getAllGroupRolesOfAllTenant());
-                        this.isUpdatedOfAllGroups = Boolean.TRUE;
-                    }
-                }
-            }
-            return;
+            return getRolesByGroupAndTenant(tenantAuthority, groupAuthority);
         }
-        synchronized (lock) {
-            if (this.allTenantsGroupsMap != null) {
-                if (!this.isUpdatedOfAllGroups) {
-                    this.allTenantsGroupsMap.putAll(authoritiesService.getAllGroupRolesOfAllTenant());
-                    this.isUpdatedOfAllGroups = Boolean.TRUE;
-                }
-                return;
-            }
-            // 从数据源获取所有角色的权限
-            this.allTenantsGroupsMap = new ConcurrentHashMap<>(authoritiesService.getAllGroupRolesOfAllTenant());
-        }
-    }
-
-    protected void updateAllGroupsOfAllTenant() {
-        if (this.allTenantsAuthoritiesMap != null) {
-            // 从数据源获取所有角色的权限
-            if (!this.isUpdatedOfAllRoles) {
-                synchronized (lock) {
-                    if (!this.isUpdatedOfAllRoles) {
-                        this.allTenantsAuthoritiesMap.putAll(authoritiesService.getAllAuthoritiesOfAllTenant());
-                        this.isUpdatedOfAllRoles = Boolean.TRUE;
-                    }
-                }
-            }
-            return;
-        }
-        synchronized (lock) {
-            if (this.allTenantsAuthoritiesMap != null) {
-                if (!this.isUpdatedOfAllRoles) {
-                    this.allTenantsAuthoritiesMap.putAll(authoritiesService.getAllAuthoritiesOfAllTenant());
-                    this.isUpdatedOfAllRoles = Boolean.TRUE;
-                }
-                return;
-            }
-            // 从数据源获取所有角色的权限
-            this.allTenantsAuthoritiesMap = new ConcurrentHashMap<>(authoritiesService.getAllAuthoritiesOfAllTenant());
-        }
-    }
-
-    @Override
-    protected void updateAuthoritiesOfAllScopes() {
-        if (this.allTenantsAuthoritiesMap != null) {
-            // 从数据源获取所有 scopes 的权限
-            if (!this.isUpdatedOfAllScopes) {
-                synchronized (lock) {
-                    if (!this.isUpdatedOfAllScopes) {
-                        this.allTenantsAuthoritiesMap.putAll(authoritiesService.getAllAuthoritiesOfAllScopes());
-                        this.isUpdatedOfAllScopes = Boolean.TRUE;
-                    }
-                }
-            }
-            return;
-        }
-        synchronized (lock) {
-            if (this.allTenantsAuthoritiesMap != null) {
-                if (!this.isUpdatedOfAllScopes) {
-                    this.allTenantsAuthoritiesMap.putAll(authoritiesService.getAllAuthoritiesOfAllScopes());
-                    this.isUpdatedOfAllScopes = Boolean.TRUE;
-                }
-                return;
-            }
-            // 从数据源获取所有 scopes 的权限
-            this.allTenantsAuthoritiesMap = new ConcurrentHashMap<>(authoritiesService.getAllAuthoritiesOfAllScopes());
-        }
-    }
-
-    @NonNull
-    @Override
-    protected Set<String> getRolesByGroup(@NonNull String groupAuthority) {
-        throw new RuntimeException("arch 为多租户应用, 不支持此方法获取 group 所拥有的所有角色; 使用 getRolesByGroupOfTenant 方法");
-    }
-
-    @NonNull
-    @Override
-    protected Set<String> getRolesByGroupOfTenant(@NonNull String tenantAuthority, @NonNull String groupAuthority) {
-        Map<String, Set<String>> tenantGroupRolesMap = this.allTenantsGroupsMap.get(tenantAuthority);
-        if (isNull(tenantGroupRolesMap)) {
-        	return Collections.emptySet();
-        }
-        return tenantGroupRolesMap.get(groupAuthority);
+        updateAllGroupsOfAllTenant();
+        return getRolesByGroupAndTenant(tenantAuthority, groupAuthority);
     }
 
     /**
@@ -195,7 +146,7 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
         if (this.allTenantsAuthoritiesMap != null) {
             return this.allTenantsAuthoritiesMap.get(tenantAuthority);
         }
-        initUpdateAllAuthorities();
+        updateAuthoritiesOfAllTenant();
         return this.allTenantsAuthoritiesMap.get(tenantAuthority);
     }
 
@@ -209,17 +160,80 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
             );
             return scopeMap;
         }
-        initUpdateAllAuthorities();
+        updateAuthoritiesOfAllScopes();
         scopeAuthoritySet.forEach((scopeAuthority) ->
                                           scopeMap.putAll(this.allTenantsAuthoritiesMap.get(scopeAuthority))
         );
         return scopeMap;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void afterPropertiesSet() {
-        // 缓存所有 uri(资源) 权限 Map(tenantAuthority/scopeAuthority, Map(role, map(uri/path, Set(permission)))
-        initUpdateAllAuthorities();
+    @NonNull
+    public Map<MenuVo, Set<MenuVo>> getMenuByRole(@NonNull String roleAuthority) {
+        // Map(Menu[level,sorted], List(Menu[sorted])), 中括号中的排序字段
+        String tenantId = tenantContextHolder.getTenantId();
+        String tenantAuthority = DEFAULT_TENANT_PREFIX + tenantId;
+        return getMenuByRoleOfTenant(tenantAuthority, roleAuthority);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @NonNull
+    public Map<MenuVo, Set<MenuVo>> getMenusOfUser(@NonNull Authentication authentication) {
+        // Map(Menu[level,sorted], List(Menu[sorted])), 中括号中的排序字段
+        final Map<MenuVo, Set<MenuVo>> menuMap = new LinkedHashMap<>(16);
+        final Map<MenuVo, Set<MenuVo>> tempMap = new HashMap<>(16);
+        String tenantAuthority = SecurityUtils.getTenantAuthority(authentication);
+        if (!hasText(tenantAuthority)) {
+            String tenantId = tenantContextHolder.getTenantId();
+            tenantAuthority = DEFAULT_TENANT_PREFIX + tenantId;
+        }
+        Set<String> rolesOfUser = getRolesOfUser(authentication);
+        // 各个角色 menu 的并集
+        for (String roleAuthority : rolesOfUser) {
+            Map<MenuVo, Set<MenuVo>> menuByRoleOfTenant = getMenuByRoleOfTenant(tenantAuthority, roleAuthority);
+            menuByRoleOfTenant.forEach((menu, menuSet) -> tempMap.compute(menu, (key, set) -> {
+                if (isNull(set)) {
+                    return menuSet;
+                }
+                set.addAll(menuSet);
+                return set;
+            }));
+        }
+        // key 排序
+        List<MenuVo> menuKeyList = tempMap.keySet()
+                                          .stream()
+                                          .sorted((m1, m2) -> {
+                                              if (m1.getLevel() > m2.getLevel()) {
+                                                  return 1;
+                                              }
+                                              else if (m1.getLevel() < m2.getLevel()) {
+                                                  return -1;
+                                              }
+                                              else {
+                                                  return m1.getSorted().compareTo(m2.getSorted());
+                                              }
+                                          })
+                                          .collect(Collectors.toList());
+        // value 排序
+        menuKeyList.forEach(menuKey -> {
+            Set<MenuVo> menuSet = tempMap.get(menuKey);
+            List<MenuVo> menuList = menuSet.stream()
+                                           .sorted(Comparator.comparing(MenuVo::getSorted))
+                                           .collect(Collectors.toList());
+            menuMap.put(menuKey, new LinkedHashSet<>(menuList));
+        });
+        return menuMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @NonNull
+    public Map<MenuVo, Set<MenuVo>> getMenuByRoleOfTenant(@NonNull String tenantAuthority,
+                                                       @NonNull String roleAuthority) {
+
+        return this.allTenantsMenusMap.get(tenantAuthority).get(roleAuthority);
     }
 
     @Override
@@ -232,9 +246,9 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
     public boolean updateAuthoritiesByRoleIdOfTenant(@NonNull Long tenantId, @NonNull Long roleId,
                                                      @NonNull Class<?> resourceClass,
                                                      Long... resourceIds) throws RolePermissionsException {
-        // Map(tenantAuthority, Map ( role, map ( uri / path, Set ( permission)))
+        // Map(tenantAuthority, Map ( roleAuthority, map ( uri / path, Set ( permission)))
         Map<String, Map<String, Map<String, Set<String>>>> authoritiesByRoleIdOfTenant =
-                this.authoritiesService.getAuthoritiesByRoleIdOfTenant(tenantId, roleId, resourceClass, resourceIds);
+                this.authoritiesService.getAuthoritiesByRoleIdOfTenant(tenantId.intValue(), roleId, resourceClass, resourceIds);
         updateCacheAuthoritiesByTenantIdOrScopeId(authoritiesByRoleIdOfTenant);
         return true;
     }
@@ -243,7 +257,7 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
     public boolean updateAuthoritiesByRoleIdOfScopeId(@NonNull Long scopeId, @NonNull Long roleId,
                                                       @NonNull Class<?> resourceClass,
                                                       Long... resourceIds) throws RolePermissionsException {
-        // Map(scopeAuthority, Map ( role, map ( uri / path, Set ( permission)))
+        // Map(scopeAuthority, Map ( roleAuthority, map ( uri / path, Set ( permission)))
         Map<String, Map<String, Map<String, Set<String>>>> authoritiesByRoleIdOfTenant =
                 this.authoritiesService.getAuthoritiesByRoleIdOfScopeId(scopeId, roleId, resourceClass, resourceIds);
         updateCacheAuthoritiesByTenantIdOrScopeId(authoritiesByRoleIdOfTenant);
@@ -252,7 +266,8 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
 
     @Override
     public boolean updateRolesByGroupId(@NonNull Long groupId, Long... roleIds) throws RolePermissionsException {
-        throw new RuntimeException("arch 为多租户应用, 不支持此方法更新 group 所拥有的所有角色; 使用 updateRolesByGroupIdOfTenant 方法");
+        String tenantId = this.tenantContextHolder.getTenantId();
+        return updateRolesByGroupIdOfTenant(Long.valueOf(tenantId), groupId, roleIds);
     }
 
     @Override
@@ -260,9 +275,18 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
                                                 Long... roleIds) throws RolePermissionsException {
         // Map(tenantAuthority, Map (groupAuthority, Set(roleAuthority)))
         Map<String, Map<String, Set<String>>> tenantGroupRolesMap =
-                this.authoritiesService.getGroupRolesByGroupIdOfTenant(tenantId, groupId, roleIds);
+                this.authoritiesService.getGroupRolesByGroupIdOfTenant(tenantId.intValue(), groupId, roleIds);
         updateCacheGroupRolesByTenantIdAndGroupId(tenantGroupRolesMap);
         return true;
+    }
+
+    @NonNull
+    private Set<String> getRolesByGroupAndTenant(@NonNull String tenantAuthority, @NonNull String groupAuthority) {
+        Map<String, Set<String>> tenantGroupRolesMap = this.allTenantsGroupsMap.get(tenantAuthority);
+        if (isNull(tenantGroupRolesMap)) {
+            return Collections.emptySet();
+        }
+        return tenantGroupRolesMap.get(groupAuthority);
     }
 
     private void updateCacheGroupRolesByTenantIdAndGroupId(@NonNull Map<String, Map<String, Set<String>>>
@@ -305,16 +329,113 @@ public class ArchRbacUriAuthorizeServiceImpl extends AbstractUriAuthorizeService
         });
     }
 
-    private void initUpdateAllAuthorities() {
-        // 初始化更新所有的权限
-        synchronized (lock) {
-            this.isUpdatedOfAllRoles = Boolean.FALSE;
-            this.isUpdatedOfAllScopes = Boolean.FALSE;
-            this.isUpdatedOfAllGroups = Boolean.FALSE;
+    private void updateAuthoritiesOfAllTenant() {
+        if (this.allTenantsAuthoritiesMap != null) {
+            // 从数据源获取所有角色与 scopes 的权限
+            if (!this.isUpdatedOfAllRoles) {
+                syncUpdateAllAuthoritiesOfRoles();
+            }
+            return;
         }
-        updateAuthoritiesOfAllTenant();
-        updateAuthoritiesOfAllScopes();
-        updateAllGroupsOfAllTenant();
+        synchronized (lock) {
+            if (this.allTenantsAuthoritiesMap != null) {
+                syncUpdateAllAuthoritiesOfRoles();
+                return;
+            }
+            // 从数据源获取所有角色的权限
+            this.allTenantsAuthoritiesMap = new ConcurrentHashMap<>(authoritiesService.getAllAuthoritiesOfAllTenant());
+        }
+    }
+
+    private void updateAuthoritiesOfAllScopes() {
+        if (this.allTenantsAuthoritiesMap != null) {
+            // 从数据源获取所有角色与 scopes 的权限
+            if (!this.isUpdatedOfAllRoles) {
+                syncUpdateAllAuthoritiesOfScopes();
+            }
+            return;
+        }
+        synchronized (lock) {
+            if (this.allTenantsAuthoritiesMap != null) {
+                syncUpdateAllAuthoritiesOfScopes();
+                return;
+            }
+            // 从数据源获取所有 scopes 的权限
+            this.allTenantsAuthoritiesMap = new ConcurrentHashMap<>(authoritiesService.getAllAuthoritiesOfAllScopes());
+        }
+    }
+
+    private void updateAuthoritiesOfAllMenus() {
+        if (this.allTenantsMenusMap != null) {
+            // 从数据源获取所有角色与 menu 的权限
+            if (!this.isUpdatedOfAllMenus) {
+                syncUpdateAllAuthoritiesOfMenus();
+            }
+            return;
+        }
+        synchronized (lock) {
+            if (this.allTenantsMenusMap != null) {
+                syncUpdateAllAuthoritiesOfMenus();
+                return;
+            }
+            // 从数据源获取所有 menu 的权限
+            // Map(tenantAuthority, Map(roleAuthority, Map(Menu[level,sorted], List(Menu[sorted])))), 中括号中的排序字段.
+            this.allTenantsMenusMap = new ConcurrentHashMap<>(authoritiesService.getAllMenuOfAllTenant());
+        }
+    }
+
+    private void updateAllGroupsOfAllTenant() {
+        if (this.allTenantsGroupsMap != null) {
+            // 从数据源获取所有角色的权限
+            if (!this.isUpdatedOfAllGroups) {
+                syncUpdateAllGroups();
+            }
+            return;
+        }
+        synchronized (lock) {
+            if (this.allTenantsGroupsMap != null) {
+                syncUpdateAllGroups();
+                return;
+            }
+            // 从数据源获取所有角色的权限
+            this.allTenantsGroupsMap = new ConcurrentHashMap<>(authoritiesService.getAllGroupRolesOfAllTenant());
+        }
+    }
+
+    private void syncUpdateAllGroups() {
+        synchronized (lock) {
+            if (!this.isUpdatedOfAllGroups) {
+                this.allTenantsGroupsMap.putAll(authoritiesService.getAllGroupRolesOfAllTenant());
+                this.isUpdatedOfAllGroups = Boolean.TRUE;
+            }
+        }
+    }
+
+    private void syncUpdateAllAuthoritiesOfMenus() {
+        synchronized (lock) {
+            if (!this.isUpdatedOfAllMenus) {
+                this.allTenantsMenusMap.putAll(authoritiesService.getAllMenuOfAllTenant());
+                this.isUpdatedOfAllMenus = Boolean.TRUE;
+            }
+        }
+    }
+
+    private void syncUpdateAllAuthoritiesOfRoles() {
+        synchronized (lock) {
+            if (!this.isUpdatedOfAllRoles) {
+                this.allTenantsAuthoritiesMap.putAll(authoritiesService.getAllAuthoritiesOfAllTenant());
+                this.isUpdatedOfAllRoles = Boolean.TRUE;
+            }
+        }
+    }
+
+    private void syncUpdateAllAuthoritiesOfScopes() {
+        synchronized (lock) {
+            if (!this.isUpdatedOfAllScopes) {
+                this.allTenantsAuthoritiesMap.putAll(authoritiesService.getAllAuthoritiesOfAllScopes());
+                this.isUpdatedOfAllScopes = Boolean.TRUE;
+            }
+        }
     }
 
 }

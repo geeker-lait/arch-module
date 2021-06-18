@@ -1,5 +1,6 @@
 package org.arch.ums.account.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -20,6 +21,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class NameSearchDto implements BaseSearchDto {
 
+    private static final long serialVersionUID = 1L;
     /**
      * 账号-标识 ID
      */
@@ -53,22 +55,25 @@ public class NameSearchDto implements BaseSearchDto {
     /**
      * 应用 id
      */
+    @JsonIgnore
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @JsonIgnore
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @JsonIgnore
     private Integer rev;
 
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
@@ -80,13 +85,13 @@ public class NameSearchDto implements BaseSearchDto {
         putNoNull("EQ_id", this.getId(), map);
         putNoNull("EQ_tenant_id", this.getTenantId(), map);
         putNoNull("EQ_account_id", this.getAccountId(), map);
+        putNoNull("EQ_source", this.getSource(), map);
         putNoNull("EQ_deleted", this.getDeleted(), map);
         putNoNull("EQ_app_id", this.getAppId(), map);
         putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_nick_name", this.getNickName(), map);
         putNoNull("EQ_avatar", this.getAvatar(), map);
-        putNoNull("EQ_source", this.getSource(), map);
         putNoNull("EQ_rev", this.getRev(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
     }
 }

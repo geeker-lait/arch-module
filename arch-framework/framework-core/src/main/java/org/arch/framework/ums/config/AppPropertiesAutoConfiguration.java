@@ -2,6 +2,7 @@ package org.arch.framework.ums.config;
 
 import org.arch.framework.ums.properties.AppProperties;
 import org.arch.framework.ums.properties.AuthClientScopesCacheProperties;
+import org.arch.framework.ums.properties.EncryptProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -14,6 +15,7 @@ import org.springframework.core.annotation.Order;
  */
 @Configuration
 @Order(98)
-@EnableConfigurationProperties({AppProperties.class, AuthClientScopesCacheProperties.class})
+@EnableConfigurationProperties({AppProperties.class, AuthClientScopesCacheProperties.class,
+        EncryptProperties.class})
 public class AppPropertiesAutoConfiguration {
 }

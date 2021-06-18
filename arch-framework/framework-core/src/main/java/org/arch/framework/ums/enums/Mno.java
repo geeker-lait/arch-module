@@ -10,18 +10,34 @@ public enum Mno {
     /**
      * 移动
      */
-    CMCC,
+    CMCC("中国移动"),
     /**
      * 联通
      */
-    CUCC,
+    CUCC("中国联通"),
     /**
      * 电信
      */
-    CTCC,
+    CTCC("中国电信"),
+    /**
+     * 广电
+     */
+    CBNI("中国广电"),
     /**
      * 座机
      */
-    LANDLINE
+    LANDLINE("座机");
 
+    /**
+     * 描述
+     */
+    private final String desc;
+
+    Mno(String desc) {
+        this.desc = desc;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
 }

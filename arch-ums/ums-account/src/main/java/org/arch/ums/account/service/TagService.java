@@ -72,7 +72,7 @@ public class TagService extends CrudService<Tag, java.lang.Long> {
 
         LambdaUpdateWrapper<Tag> updateWrapper = Wrappers.<Tag>lambdaUpdate()
                 .eq(Tag::getDeleted, 0)
-                .and(w -> w.in(Tag::getId, ids))
+                .in(Tag::getId, ids)
                 .set(Tag::getDeleted, 1);
 
         // 逻辑删除

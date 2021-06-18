@@ -18,20 +18,23 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-jwt</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>nimbus-jose-jwt</artifactId>
-                    <groupId>com.nimbusds</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <groupId>com.nimbusds</groupId>
         </dependency>
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>auth-rbac</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-stream</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream</artifactId>
+            <version>3.0.3.RELEASE</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -46,14 +49,36 @@
         </dependency>
 
         <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-rbac</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-jwt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -63,6 +88,10 @@
             <groupId>io.lettuce</groupId>
             <artifactId>lettuce-core</artifactId>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
         </dependency>
     </dependencies>
 

@@ -29,6 +29,16 @@
             <artifactId>feign-core</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>io.github.openfeign.form</groupId>
+            <artifactId>feign-form-spring</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-openfeign-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -103,6 +113,11 @@
             <artifactId>ums-commons</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>top.dcenter</groupId>
+            <artifactId>ums-jwt</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.arch.projects</groupId>
@@ -112,6 +127,10 @@
         <dependency>
             <groupId>org.arch.projects</groupId>
             <artifactId>framework-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>

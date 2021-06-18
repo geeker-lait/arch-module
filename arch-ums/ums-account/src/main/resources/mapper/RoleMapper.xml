@@ -11,7 +11,7 @@
         <result property="appId" column="app_id" jdbcType="INTEGER"/>
         <result property="storeId" column="store_id" jdbcType="INTEGER"/>
         <result property="rev" column="rev" jdbcType="INTEGER"/>
-        <result property="st" column="st" jdbcType="TIMESTAMP"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
         <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
     </resultMap>
 
@@ -20,7 +20,7 @@
     </sql>
 
     <sql id="baseColumn">
-        `id`, `role_name`, `icon`, `sorted`, `tenant_id`, `app_id`, `store_id`, `rev`, `st`, `deleted`
+        `id`, `role_name`, `icon`, `sorted`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
     </sql>
 
 </mapper>

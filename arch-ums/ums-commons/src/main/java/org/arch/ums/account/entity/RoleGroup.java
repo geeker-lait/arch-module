@@ -1,6 +1,9 @@
 package org.arch.ums.account.entity;
 
+import java.time.LocalDateTime;
+
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -10,13 +13,12 @@ import lombok.experimental.Accessors;
 import org.arch.framework.crud.CrudEntity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 账号-角色组织或机构(RoleGroup) 实体类
  *
  * @author YongWu zheng
- * @date 2021-01-29 21:25:21
+ * @date 2021-03-17 21:25:29
  * @since 1.0.0
  */
 @Data
@@ -30,47 +32,55 @@ public class RoleGroup extends CrudEntity<RoleGroup> {
     /**
      * id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "`id`")
     private Long id;
 
     /**
      * 角色ID
      */
+    @TableField(value = "`role_id`")
     private Long roleId;
 
     /**
      * 组织ID
      */
+    @TableField(value = "`group_id`")
     private Long groupId;
 
     /**
      * 租户 id
      */
+    @TableField(value = "`tenant_id`")
     private Integer tenantId;
 
     /**
      * 应用 id
      */
+    @TableField(value = "`app_id`")
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @TableField(value = "`store_id`")
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @TableField(value = "`rev`")
     private Integer rev;
 
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    @TableField(value = "`dt`")
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
      */
+    @TableField(value = "`deleted`")
     private Boolean deleted;
 
 

@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.node.MissingNode;
-import org.arch.framework.ums.enums.ChannelType;
+import org.arch.framework.ums.enums.LoginType;
 import org.arch.framework.ums.userdetails.ArchUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -43,25 +43,25 @@ public class ArchUserDeserializer extends StdDeserializer<ArchUser> {
         Set<? extends GrantedAuthority> authorities =
                 mapper.convertValue(jsonNode.get("authorities"), new TypeReference<Set<SimpleGrantedAuthority>>() {});
         JsonNode password = this.readJsonNode(jsonNode, "password");
-        String channelTypeString = this.readJsonNode(jsonNode, "channelType").asText("");
+        String loginTypeString = this.readJsonNode(jsonNode, "loginType").asText("");
         JsonNode nickName = this.readJsonNode(jsonNode, "nickName");
         JsonNode avatar = this.readJsonNode(jsonNode, "avatar");
-        ChannelType channelType;
+        int loginType;
         try {
-            channelType = ChannelType.valueOf(channelTypeString.trim().toUpperCase());
+            loginType = Integer.parseInt(loginTypeString.trim());
         }
         catch (Exception e) {
             throw new InvalidFormatException(jp,
-                                             "转换 ChannelType 时发生错误",
-                                             channelTypeString,
-                                             ChannelType.class);
+                                             "转换 LoginType 时发生错误",
+                                             loginTypeString,
+                                             LoginType.class);
         }
         ArchUser result = new ArchUser(this.readJsonNode(jsonNode, "username").asText(),
                                        password.asText(""),
                                        this.readJsonNode(jsonNode, "identifierId").asLong(),
                                        this.readJsonNode(jsonNode, "accountId").asLong(),
                                        this.readJsonNode(jsonNode, "tenantId").asInt(),
-                                       channelType,
+                                       loginType,
                                        nickName.asText(""),
                                        avatar.asText(""),
                                        this.readJsonNode(jsonNode, "enabled").asBoolean(),

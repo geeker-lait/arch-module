@@ -1,10 +1,10 @@
 package org.arch.ums.account.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.arch.framework.crud.CrudMapper;
 import org.arch.ums.account.dto.AuthLoginDto;
 import org.arch.ums.account.entity.Identifier;
 import org.springframework.lang.NonNull;
@@ -20,7 +20,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @Mapper
-public interface IdentifierMapper extends BaseMapper<Identifier> {
+public interface IdentifierMapper extends CrudMapper<Identifier> {
 
     /**
      * 查询 identifiers 是否已经存在.
@@ -40,7 +40,7 @@ public interface IdentifierMapper extends BaseMapper<Identifier> {
      */
     @Nullable
     @Select(value = "SELECT a.id AS id, a.aid AS aid, a.identifier AS identifier, a.credential AS credential, a.tenant_id AS tenantId," +
-            " a.channel_type AS channelType, a.authorities AS authorities, an.nick_name AS nickName, an.avatar AS avatar " +
+            " a.login_type AS loginType, a.authorities AS authorities, an.nick_name AS nickName, an.avatar AS avatar " +
             " FROM (SELECT ai.* FROM account_identifier AS ai " +
             "       WHERE tenant_id = #{tenantId} AND identifier = #{identifier} AND `deleted` = 0 LIMIT 1) a" +
             " INNER JOIN account_name AS an ON a.aid = an.account_id AND a.tenant_id = an.tenant_id")
@@ -55,7 +55,7 @@ public interface IdentifierMapper extends BaseMapper<Identifier> {
      */
     @Nullable
     @Select(value = "SELECT * FROM account_identifier " +
-            " WHERE tenant_id = #{tenantId} AND identifier like #{identifier} AND deleted = 1 ORDER BY st DESC LIMIT 1")
+            " WHERE tenant_id = #{tenantId} AND identifier like #{identifier} AND deleted = 1 ORDER BY dt DESC LIMIT 1")
     Identifier selectLogicDeleted(@NonNull @Param("tenantId") Integer tenantId,
                                   @NonNull @Param("identifier") String likeIdentifier);
 

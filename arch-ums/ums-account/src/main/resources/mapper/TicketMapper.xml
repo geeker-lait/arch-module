@@ -5,14 +5,14 @@
     <resultMap type="org.arch.ums.account.entity.Ticket" id="TicketMap">
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="accountId" column="account_id" jdbcType="INTEGER"/>
-        <result property="ticketType" column="ticket_type" jdbcType="VARCHAR"/>
+        <result property="ticketType" column="ticket_type" jdbcType="INTEGER"/>
         <result property="ticketNo" column="ticket_no" jdbcType="VARCHAR"/>
         <result property="ticketVal" column="ticket_val" jdbcType="VARCHAR"/>
         <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
         <result property="appId" column="app_id" jdbcType="INTEGER"/>
         <result property="storeId" column="store_id" jdbcType="INTEGER"/>
         <result property="rev" column="rev" jdbcType="INTEGER"/>
-        <result property="st" column="st" jdbcType="TIMESTAMP"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
         <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
     </resultMap>
 
@@ -21,7 +21,7 @@
     </sql>
 
     <sql id="baseColumn">
-        `id`, `account_id`, `ticket_type`, `ticket_no`, `ticket_val`, `tenant_id`, `app_id`, `store_id`, `rev`, `st`, `deleted`
+        `id`, `account_id`, `ticket_type`, `ticket_no`, `ticket_val`, `tenant_id`, `app_id`, `store_id`, `rev`, `dt`, `deleted`
     </sql>
 
 </mapper>

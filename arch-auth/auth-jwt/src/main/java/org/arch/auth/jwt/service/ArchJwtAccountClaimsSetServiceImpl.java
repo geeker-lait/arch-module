@@ -62,7 +62,7 @@ public class ArchJwtAccountClaimsSetServiceImpl implements CustomClaimsSetServic
             builder.claim(JwtArchClaimNames.IDENTIFIER_ID.getClaimName(), user.getIdentifierId());
             builder.claim(JwtArchClaimNames.ACCOUNT_ID.getClaimName(), user.getAccountId());
             builder.claim(JwtArchClaimNames.TENANT_ID.getClaimName(), user.getTenantId());
-            builder.claim(JwtArchClaimNames.CHANNEL_TYPE.getClaimName(), user.getChannelType());
+            builder.claim(JwtArchClaimNames.LOGIN_TYPE.getClaimName(), user.getLoginType());
             builder.claim(JwtArchClaimNames.NICK_NAME.getClaimName(), user.getNickName());
             builder.claim(JwtArchClaimNames.AVATAR.getClaimName(), user.getAvatar());
             builder.claim(principalClaimName, user.getUsername());

@@ -1,5 +1,6 @@
 package org.arch.ums.account.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -21,6 +22,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class PostSearchDto implements BaseSearchDto {
 
+    private static final long serialVersionUID = 1L;
     /**
      * 主键
      */
@@ -59,22 +61,25 @@ public class PostSearchDto implements BaseSearchDto {
     /**
      * 应用 id
      */
+    @JsonIgnore
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @JsonIgnore
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @JsonIgnore
     private Integer rev;
 
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
@@ -94,6 +99,6 @@ public class PostSearchDto implements BaseSearchDto {
         putNoNull("EQ_post_icon", this.getPostIcon(), map);
         putNoNull("EQ_salary", this.getSalary(), map);
         putNoNull("EQ_rev", this.getRev(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
     }
 }

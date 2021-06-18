@@ -72,7 +72,7 @@ public class PermissionService extends CrudService<Permission, java.lang.Long> {
 
         LambdaUpdateWrapper<Permission> updateWrapper = Wrappers.<Permission>lambdaUpdate()
                 .eq(Permission::getDeleted, 0)
-                .and(w -> w.in(Permission::getId, ids))
+                .in(Permission::getId, ids)
                 .set(Permission::getDeleted, 1);
 
         // 逻辑删除

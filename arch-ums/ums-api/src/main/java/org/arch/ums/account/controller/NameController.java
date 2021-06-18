@@ -1,25 +1,29 @@
 package org.arch.ums.account.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arch.framework.beans.Response;
-import org.arch.framework.crud.CrudController;
-import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.ums.account.dto.NameRequest;
 import org.arch.ums.account.dto.NameSearchDto;
 import org.arch.ums.account.entity.Name;
 import org.arch.ums.account.service.NameService;
+import org.arch.framework.crud.CrudController;
+import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.framework.beans.Response;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -27,22 +31,23 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
  * 账号名(Name) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-01-30 11:38:35
+ * @date 2021-05-15 22:04:17
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/name")
-public class NameController implements CrudController<Name, Long, NameSearchDto, NameService> {
+public class NameController implements CrudController<NameRequest, Name, java.lang.Long, NameSearchDto, NameService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final NameService nameService;
 
     @Override
-    public Name resolver(TokenInfo token, Name name) {
-        if (isNull(name)) {
-            name =  new Name();
+    public Name resolver(TokenInfo token, NameRequest request) {
+        Name name = new Name();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, name);
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             name.setTenantId(token.getTenantId());
@@ -66,22 +71,27 @@ public class NameController implements CrudController<Name, Long, NameSearchDto,
     /**
      * 根据 entity 条件查询对象.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     * @param entity    实体类
-     * @param token     token info
-     * @return  {@link Response}
+     *
+     * @param request 实体的 request 类型
+     * @param token   token info
+     * @return {@link Response}
      */
     @Override
+    @NonNull
     @GetMapping("/single")
-    public Response<Name> findOne(@RequestBody Name entity, TokenInfo token) {
+    public Response<NameSearchDto> findOne(@RequestBody @Valid NameRequest request, TokenInfo token) {
         try {
-            resolver(token, entity);
-            NameSearchDto searchDto = convertSearchDto(entity);
-            Name t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
-            return Response.success(t);
-        } catch (Exception e) {
+            Name name = resolver(token, request);
+            NameSearchDto searchDto = convertSearchDto(name);
+            Name result = getCrudService().findOneByMapParams(searchDto.searchParams());
+            return Response.success(convertSearchDto(result));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
             if (e instanceof IncorrectResultSizeDataAccessException) {
-                return Response.error(FAILED.getCode(),"查询到多个结果");
-            } else {
+                return Response.error(FAILED.getCode(), "查询到多个结果");
+            }
+            else {
                 return Response.error(FAILED.getCode(), e.getMessage());
             }
         }
@@ -90,35 +100,54 @@ public class NameController implements CrudController<Name, Long, NameSearchDto,
     /**
      * 根据 entity 条件查询对象列表.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     * @param t         实体类
-     * @param token     token info
-     * @return  {@link Response}
+     *
+     * @param request 实体的 request 类型
+     * @param token   token info
+     * @return {@link Response}
      */
     @Override
+    @NonNull
     @GetMapping("/find")
-    public Response<List<Name>> find(@RequestBody Name t, TokenInfo token) {
-        resolver(token, t);
-        NameSearchDto searchDto = convertSearchDto(t);
-        return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+    public Response<List<NameSearchDto>> find(@RequestBody @Valid NameRequest request, TokenInfo token) {
+        Name name = resolver(token, request);
+        NameSearchDto searchDto = convertSearchDto(name);
+        try {
+            List<Name> nameList = getCrudService().findAllByMapParams(searchDto.searchParams());
+            return Response.success(nameList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
     }
 
     /**
      * 分页查询.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     * @param entity        实体类
-     * @param pageNumber    第几页
-     * @param pageSize      页大小
-     * @param token         token info
-     * @return  {@link Response}
+     *
+     * @param request    实体的 request 类型
+     * @param pageNumber 第几页
+     * @param pageSize   页大小
+     * @param token      token info
+     * @return {@link Response}
      */
     @Override
+    @NonNull
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    public Response<IPage<Name>> page(@RequestBody Name entity,
-                                       @PathVariable(value = "pageNumber") Integer pageNumber,
-                                       @PathVariable(value = "pageSize") Integer pageSize,
-                                       TokenInfo token) {
-        resolver(token, entity);
-        NameSearchDto searchDto = convertSearchDto(entity);
-        return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+    public Response<IPage<NameSearchDto>> page(@RequestBody @Valid NameRequest request,
+                                               @PathVariable(value = "pageNumber") Integer pageNumber,
+                                               @PathVariable(value = "pageSize") Integer pageSize,
+                                               TokenInfo token) {
+        Name name = resolver(token, request);
+        NameSearchDto searchDto = convertSearchDto(name);
+        try {
+            IPage<Name> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
+            return Response.success(page.convert(this::convertSearchDto));
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Response.error(FAILED.getCode(), e.getMessage());
+        }
     }
+
 }

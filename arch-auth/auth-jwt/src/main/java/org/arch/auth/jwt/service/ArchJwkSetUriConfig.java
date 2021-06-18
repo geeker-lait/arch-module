@@ -16,7 +16,9 @@ import static org.arch.framework.ums.consts.ClientConstants.CLIENT_ID_HEADER_NAM
 /**
  * 用于从 jwk set uri 获取 JWk 时传递 header 的参数,
  * 获取 jwk set 后缓存的时间, 访问 jwk set uri 的频率 的参数接口,
- * 通过 UmsNimbusJwtDecoder.RestOperationsResourceRetriever 传递 header 参数.
+ * 通过 {@code UmsNimbusJwtDecoder.RestOperationsResourceRetriever} 传递 header 参数;
+ * {@code auth-sso ArchJwkEndpointPermissionServiceImpl} 获取
+ * header 对应的参数值.
  * @author YongWu zheng
  * @weixin z56133
  * @since 2021.1.19 16:31

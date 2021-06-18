@@ -6,9 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.arch.framework.beans.Response;
 import org.arch.framework.crud.CrudController;
 import org.arch.framework.ums.bean.TokenInfo;
+import org.arch.ums.account.dto.OauthTokenRequest;
 import org.arch.ums.account.dto.OauthTokenSearchDto;
 import org.arch.ums.account.entity.OauthToken;
 import org.arch.ums.account.service.OauthTokenService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +23,8 @@ import top.dcenter.ums.security.core.api.tenant.handler.TenantContextHolder;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAILED;
 
@@ -30,22 +32,23 @@ import static org.arch.framework.beans.exception.constant.ResponseStatusCode.FAI
  * 第三方账号授权(OauthToken) 表服务控制器
  *
  * @author YongWu zheng
- * @date 2021-01-30 11:38:48
+ * @date 2021-05-15 22:05:25
  * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/oauth/token")
-public class OauthTokenController implements CrudController<OauthToken, Long, OauthTokenSearchDto, OauthTokenService> {
+public class OauthTokenController implements CrudController<OauthTokenRequest, OauthToken, java.lang.Long, OauthTokenSearchDto, OauthTokenService> {
 
     private final TenantContextHolder tenantContextHolder;
     private final OauthTokenService oauthTokenService;
 
     @Override
-    public OauthToken resolver(TokenInfo token, OauthToken oauthToken) {
-        if (isNull(oauthToken)) {
-            oauthToken =  new OauthToken();
+    public OauthToken resolver(TokenInfo token, OauthTokenRequest request) {
+        OauthToken oauthToken = new OauthToken();
+        if (nonNull(request)) {
+            BeanUtils.copyProperties(request, oauthToken);
         }
         if (nonNull(token) && nonNull(token.getTenantId())) {
             oauthToken.setTenantId(token.getTenantId());
@@ -86,24 +89,27 @@ public class OauthTokenController implements CrudController<OauthToken, Long, Oa
     /**
      * 根据 entity 条件查询对象.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     * @param entity    实体类
-     * @param token     token info
-     * @return  {@link Response}
+     *
+     * @param request 实体的 request 类型
+     * @param token   token info
+     * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping("/single")
-    public Response<OauthToken> findOne(@RequestBody OauthToken entity, TokenInfo token) {
+    public Response<OauthTokenSearchDto> findOne(@RequestBody @Valid OauthTokenRequest request, TokenInfo token) {
         try {
-            resolver(token, entity);
-            OauthTokenSearchDto searchDto = convertSearchDto(entity);
-            OauthToken t = getCrudService().findOneByMapParams(searchDto.getSearchParams());
-            return Response.success(t);
-        } catch (Exception e) {
+            OauthToken oauthToken = resolver(token, request);
+            OauthTokenSearchDto searchDto = convertSearchDto(oauthToken);
+            OauthToken result = getCrudService().findOneByMapParams(searchDto.searchParams());
+            return Response.success(convertSearchDto(result));
+        }
+        catch (Exception e) {
             log.error(e.getMessage(), e);
             if (e instanceof IncorrectResultSizeDataAccessException) {
-                return Response.error(FAILED.getCode(),"查询到多个结果");
-            } else {
+                return Response.error(FAILED.getCode(), "查询到多个结果");
+            }
+            else {
                 return Response.error(FAILED.getCode(), e.getMessage());
             }
         }
@@ -112,18 +118,20 @@ public class OauthTokenController implements CrudController<OauthToken, Long, Oa
     /**
      * 根据 entity 条件查询对象列表.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     * @param t         实体类
-     * @param token     token info
-     * @return  {@link Response}
+     *
+     * @param request 实体的 request 类型
+     * @param token   token info
+     * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping("/find")
-    public Response<List<OauthToken>> find(@RequestBody OauthToken t, TokenInfo token) {
-        resolver(token, t);
-        OauthTokenSearchDto searchDto = convertSearchDto(t);
+    public Response<List<OauthTokenSearchDto>> find(@RequestBody @Valid OauthTokenRequest request, TokenInfo token) {
+        OauthToken oauthToken = resolver(token, request);
+        OauthTokenSearchDto searchDto = convertSearchDto(oauthToken);
         try {
-            return Response.success(getCrudService().findAllByMapParams(searchDto.getSearchParams()));
+            List<OauthToken> oauthTokenList = getCrudService().findAllByMapParams(searchDto.searchParams());
+            return Response.success(oauthTokenList.stream().map(this::convertSearchDto).collect(Collectors.toList()));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -134,27 +142,30 @@ public class OauthTokenController implements CrudController<OauthToken, Long, Oa
     /**
      * 分页查询.
      * 注意: 此 API 适合 Feign 远程调用 或 HttpClient 包 json 字符串放入 body 也行.
-     * @param entity        实体类
-     * @param pageNumber    第几页
-     * @param pageSize      页大小
-     * @param token         token info
-     * @return  {@link Response}
+     *
+     * @param request    实体的 request 类型
+     * @param pageNumber 第几页
+     * @param pageSize   页大小
+     * @param token      token info
+     * @return {@link Response}
      */
     @Override
     @NonNull
     @GetMapping(value = "/page/{pageNumber}/{pageSize}")
-    public Response<IPage<OauthToken>> page(@RequestBody OauthToken entity,
-                                      @PathVariable(value = "pageNumber") Integer pageNumber,
-                                      @PathVariable(value = "pageSize") Integer pageSize,
-                                      TokenInfo token) {
-        resolver(token, entity);
-        OauthTokenSearchDto searchDto = convertSearchDto(entity);
+    public Response<IPage<OauthTokenSearchDto>> page(@RequestBody @Valid OauthTokenRequest request,
+                                                     @PathVariable(value = "pageNumber") Integer pageNumber,
+                                                     @PathVariable(value = "pageSize") Integer pageSize,
+                                                     TokenInfo token) {
+        OauthToken oauthToken = resolver(token, request);
+        OauthTokenSearchDto searchDto = convertSearchDto(oauthToken);
         try {
-            return Response.success(getCrudService().findPage(searchDto.getSearchParams(), pageNumber, pageSize));
+            IPage<OauthToken> page = getCrudService().findPage(searchDto.searchParams(), pageNumber, pageSize);
+            return Response.success(page.convert(this::convertSearchDto));
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.error(FAILED.getCode(), e.getMessage());
         }
     }
+
 }

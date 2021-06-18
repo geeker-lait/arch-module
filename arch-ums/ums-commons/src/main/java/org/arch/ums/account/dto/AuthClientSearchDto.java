@@ -1,5 +1,6 @@
 package org.arch.ums.account.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -21,6 +22,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class AuthClientSearchDto implements BaseSearchDto {
 
+    private static final long serialVersionUID = 1L;
     /**
      * 授权客户端ID
      */
@@ -37,14 +39,19 @@ public class AuthClientSearchDto implements BaseSearchDto {
     private String clientSecret;
 
     /**
-     * openid/userinfo/token/code/资源服务器标识等
+     * scope id 列表, 如: openid/userinfo/token/code/资源服务器标识等
      */
     private String scopes;
 
     /**
+     * 角色 id 列表, 通过逗号分割
+     */
+    private String roleIds;
+
+    /**
      * 客户端类型: web, 安卓, ios, 小程序…
      */
-    private ClientType clientType;
+    private Integer clientType;
 
     /**
      * 租户 id
@@ -54,22 +61,25 @@ public class AuthClientSearchDto implements BaseSearchDto {
     /**
      * 应用 id
      */
+    @JsonIgnore
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @JsonIgnore
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @JsonIgnore
     private Integer rev;
 
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
@@ -87,7 +97,8 @@ public class AuthClientSearchDto implements BaseSearchDto {
         putNoNull("EQ_store_id", this.getStoreId(), map);
         putNoNull("EQ_client_type", this.getClientType(), map);
         putNoNull("EQ_rev", this.getRev(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
         putNoNull("EQ_scopes", this.getScopes(), map);
+        putNoNull("EQ_role_ids", this.getRoleIds(), map);
     }
 }

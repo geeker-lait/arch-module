@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -17,7 +18,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class OauthTokenRequest {
+public class OauthTokenRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * account_oauth_token id
@@ -147,6 +149,6 @@ public class OauthTokenRequest {
     /**
      * 时间戳
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
 }

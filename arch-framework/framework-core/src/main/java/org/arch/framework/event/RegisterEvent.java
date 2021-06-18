@@ -17,6 +17,9 @@ public class RegisterEvent extends ApplicationEvent {
 
     @Getter
     private final ArchUser archUser;
+    /**
+     * 推广或用户推荐
+     */
     @Getter
     private final String source;
 

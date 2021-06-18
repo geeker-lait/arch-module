@@ -1,5 +1,6 @@
 package org.arch.ums.conf.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -22,6 +23,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class FileInfoSearchDto implements BaseSearchDto {
 
+    private static final long serialVersionUID = 1L;
     /**
      * id
      */
@@ -35,7 +37,7 @@ public class FileInfoSearchDto implements BaseSearchDto {
     /**
      * 存储类型: aws/aliyun/minio/tencent/qiniu/local/nginx
      */
-    private StorageType storageType;
+    private Integer storageType;
 
     /**
      * 原始文件名称
@@ -78,7 +80,7 @@ public class FileInfoSearchDto implements BaseSearchDto {
     private String fileHash;
 
     /**
-     * 上次的类型
+     * 上传文件类型
      */
     private String uploadType;
 
@@ -100,22 +102,25 @@ public class FileInfoSearchDto implements BaseSearchDto {
     /**
      * 应用 id
      */
+    @JsonIgnore
     private Integer appId;
 
     /**
      * 店铺 id
      */
+    @JsonIgnore
     private Integer storeId;
 
     /**
      * 乐观锁, 默认: 0
      */
+    @JsonIgnore
     private Integer rev;
 
     /**
      * 时间戳/创建时间
      */
-    private LocalDateTime st;
+    private LocalDateTime dt;
 
     /**
      * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
@@ -143,6 +148,6 @@ public class FileInfoSearchDto implements BaseSearchDto {
         putNoNull("EQ_upload_start_time", this.getUploadStartTime(), map);
         putNoNull("EQ_upload_end_time", this.getUploadEndTime(), map);
         putNoNull("EQ_rev", this.getRev(), map);
-        putNoNull("EQ_st", this.getSt(), map);
+        putNoNull("EQ_dt", this.getDt(), map);
     }
 }

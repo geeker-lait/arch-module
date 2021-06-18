@@ -20,6 +20,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class FormBizSearchDto implements BaseSearchDto {
 
+    private static final long serialVersionUID = 1L;
     /**
      * id主键
      */

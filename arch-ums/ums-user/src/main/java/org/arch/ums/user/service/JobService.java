@@ -72,7 +72,7 @@ public class JobService extends CrudService<Job, java.lang.Long> {
 
         LambdaUpdateWrapper<Job> updateWrapper = Wrappers.<Job>lambdaUpdate()
                 .eq(Job::getDeleted, 0)
-                .and(w -> w.in(Job::getId, ids))
+                .in(Job::getId, ids)
                 .set(Job::getDeleted, 1);
 
         // 逻辑删除

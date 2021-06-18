@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.arch.ums.account.entity.Identifier;
-import org.springframework.security.core.SpringSecurityCoreVersion;
 
 import java.io.Serializable;
 
@@ -22,7 +21,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Auth2ConnectionDto implements Serializable {
-	private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * {@link Identifier#getId()}

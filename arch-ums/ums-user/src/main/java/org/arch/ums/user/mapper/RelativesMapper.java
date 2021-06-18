@@ -1,7 +1,7 @@
 package org.arch.ums.user.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.arch.framework.crud.CrudMapper;
 import org.arch.ums.user.entity.Relatives;
 
 /**
@@ -12,6 +12,6 @@ import org.arch.ums.user.entity.Relatives;
  * @since 1.0.0
  */
 @Mapper
-public interface RelativesMapper extends BaseMapper<Relatives> {
+public interface RelativesMapper extends CrudMapper<Relatives> {
 
 }
